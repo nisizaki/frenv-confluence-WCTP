@@ -4,7 +4,7 @@ English | [日本語](README-ja.md) | [Tagalog](README-tl.md) | [简体中文](R
 
 This repository collects the Isabelle/HOL development of full beta/sigma confluence of FREnv and the associated Lean 4 development. It is intended to accompany a paper submitted to WCTP 2026.
 
-**Verification:** both the Isabelle2025-2 build and the Lean 4.33.0 build/audit passed on clean GitHub Actions runners on 2026-09-13, at commit `52881ab`, which is the revision that contains the Lean confluence proof. See [the verification record](docs/verification.md) for the exact checked commits and logs.
+**Verification:** both the Isabelle2025-2 build and the Lean 4.33.0 build/audit passed on clean GitHub Actions runners on 2026-09-13, at commit `725b0b6`, which is the revision that contains the Lean confluence proof. See [the verification record](docs/verification.md) for the exact checked commits and logs.
 
 **Both developments now prove full confluence, by independent routes.** Isabelle contains the full-confluence theorem and its dependencies. The Lean development proves the same statement for its own encoding, as `LambdaFrenv.frenv_beta_sigma_confluent`, following the same mathematical route (auxiliary calculus, sigma normalization, beta over sigma, translation) but with its own definitions and proofs. The two encodings still differ — Lean has a primitive constants type — and this artifact does not claim a proved equivalence between them.
 

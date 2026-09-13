@@ -4,7 +4,7 @@
 
 Naglalaman ang repositoryong ito ng pormalisasyon sa Isabelle/HOL ng confluence ng buong beta/sigma reduction ng FREnv, kasama ang kaugnay na pormalisasyon sa Lean 4. Inihanda ito bilang artifact na kasama ng isang papel na isusumite sa WCTP 2026.
 
-**Beripikasyon:** parehong matagumpay ang build sa Isabelle2025-2 at ang build at audit sa Lean 4.33.0 sa malilinis na GitHub Actions runner noong 2026-09-13, sa commit `52881ab`, ang rebisyong naglalaman ng patunay ng confluence sa Lean. Tingnan ang [tala ng beripikasyon](docs/verification.md) para sa eksaktong mga commit na sinuri at sa mga log.
+**Beripikasyon:** parehong matagumpay ang build sa Isabelle2025-2 at ang build at audit sa Lean 4.33.0 sa malilinis na GitHub Actions runner noong 2026-09-13, sa commit `725b0b6`, ang rebisyong naglalaman ng patunay ng confluence sa Lean. Tingnan ang [tala ng beripikasyon](docs/verification.md) para sa eksaktong mga commit na sinuri at sa mga log.
 
 **Napapatunayan na ng dalawang pormalisasyon ang buong confluence, sa magkahiwalay na paraan.** Nasa Isabelle ang teorema ng confluence para sa buong reduction at ang mga depensiya nito. Pinapatunayan din ng pormalisasyon sa Lean ang parehong pahayag para sa sarili nitong encoding, bilang `LambdaFrenv.frenv_beta_sigma_confluent`, sa pamamagitan ng parehong ruta (pantulong na calculus, sigma normalization, beta over sigma, translation) ngunit sa sarili nitong mga depinisyon at patunay. Nananatiling magkaiba ang dalawang encoding — may primitive constants type ang Lean — at hindi inaangkin ng artifact na ito na napatunayan ang equivalence ng mga ito.
 

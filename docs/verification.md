@@ -29,7 +29,7 @@ The Lean sources were subsequently extended with a full confluence proof. The ex
 
 The main declaration is `LambdaFrenv.frenv_beta_sigma_confluent`. `LambdaFrenv.not_parStronglyConfluent` additionally refutes the strong-confluence target that the earlier revision had left open.
 
-This extended development was then verified on clean runners as well. Both jobs of [run 34749588018](https://github.com/nisizaki/frenv-confluence-WCTP/actions/runs/34749588018) succeeded on 2026-09-13 at artifact commit `52881aba05bc997bfde438566e8a2b17ddd98e2e` (branch `lean4-confluence`), on `ubuntu-24.04` x86_64 runners: the Isabelle job in 2 m 52 s and the Lean job in 19 s. The Lean job log reports `Build completed successfully (16 jobs)` and prints, for `LambdaFrenv.frenv_beta_sigma_confluent`, the axioms `[propext, Classical.choice, Quot.sound]`; the job fails if any audited theorem depends on `sorryAx`, and it did not. The local build was on aarch64 and the CI build on x86_64, so the result is not architecture-specific.
+This extended development was then verified on clean runners as well. Both jobs of [run 34750771522](https://github.com/nisizaki/frenv-confluence-WCTP/actions/runs/34750771522) succeeded on 2026-09-13 at artifact commit `725b0b698632235c1f4881966e0c1653331f1b99` on `main`, on `ubuntu-24.04` x86_64 runners: the Isabelle job in 2 m 10 s and the Lean job in 21 s. The Lean job log reports `Build completed successfully (16 jobs)` and prints, for `LambdaFrenv.frenv_beta_sigma_confluent`, the axioms `[propext, Classical.choice, Quot.sound]`; the job fails if any audited theorem depends on `sorryAx`, and it did not. The local build was on aarch64 and the CI build on x86_64, so the result is not architecture-specific.
 
 ## Isabelle result
 
