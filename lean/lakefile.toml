@@ -1,0 +1,6 @@
+name = "frenv-lean4"
+version = "0.1.0"
+defaultTargets = ["LambdaFrenv"]
+
+[[lean_lib]]
+name = "LambdaFrenv"

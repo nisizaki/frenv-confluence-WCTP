@@ -1,0 +1,4 @@
+lean/.lake/
+.isabelle/
+*.log
+__pycache__/

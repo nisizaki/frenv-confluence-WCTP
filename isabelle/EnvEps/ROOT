@@ -1,0 +1,48 @@
+session EnvEps = "Abstract-Rewriting" +
+  description
+    "Isabelle/HOL formalization of lambda_EnvEps (the untyped lambda
+     calculus with environments and environment abstraction), following
+     the paper-proof transcription in ../docs/enve-*.md."
+  options [document = false, quick_and_dirty = false]
+  sessions
+    FREnv
+  theories
+    EnvEps_Syntax
+    EnvEps_Sigma
+    EnvEps_BetaSigma
+    EnvEps_Term_Length
+    EnvEps_Sigma_Length_Decrease
+    EnvEps_Sigma_Termination
+    EnvEps_Sigma_Congruence
+    EnvEps_Sigma_Assoc_Peak
+    EnvEps_Sigma_Inner_Peaks
+    EnvEps_Sigma_Root_Peaks
+    Newmans_Lemma
+    EnvEps_Sigma_Local_Confluence
+    EnvEps_Sigma_Confluence
+    EnvEps_Sigma_Normal_Form
+    EnvEps_Sigma_Normal_Form_Grammar
+    EnvEps_Sigma_Nf_Equiv
+    EnvEps_Beta_Step
+    EnvEps_BetaSigma_Congruence
+    EnvEps_Beta_Over_Sigma
+    EnvEps_Beta_Over_Sigma_Congruence
+    EnvEps_Beta_Normal_Form_Simulation
+    EnvEps_Parallel_Reduction
+    EnvEps_Parallel_Reduction_Reflexivity
+    EnvEps_Parallel_Reduction_Simulation
+    EnvEps_Parallel_Reduction_Soundness
+    EnvEps_Complete_Development
+    EnvEps_Parallel_Reduction_Composition_Compatibility
+    EnvEps_Parallel_Reduction_Triangle_Property
+    Diamond_Implies_Confluence
+    EnvEps_Parallel_Reduction_Confluence
+    EnvEps_Beta_Over_Sigma_Confluence
+    EnvEps_Beta_Sigma_Full_Confluence
+    EnvEps_FREnv_Translation
+    EnvEps_FREnv_Translation_Surjective
+    EnvEps_FREnv_Translation_Inversion
+    EnvEps_FREnv_Translation_Simulation
+    EnvEps_FREnv_Translation_Lifting
+    EnvEps_FREnv_Translation_Multi_Step_Lifting
+    FREnv_Full_Confluence_Via_Translation

@@ -1,0 +1,10 @@
+* text=auto
+*.thy text eol=lf
+*.lean text eol=lf
+*.md text eol=lf
+*.json text eol=lf
+*.toml text eol=lf
+*.yml text eol=lf
+ROOT text eol=lf
+ROOTS text eol=lf
+lean-toolchain text eol=lf

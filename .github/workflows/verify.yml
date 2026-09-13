@@ -1,0 +1,44 @@
+name: Verify proof artifact
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  isabelle:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 90
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Isabelle2025-2
+        run: |
+          curl --fail --location --retry 3 https://isabelle.in.tum.de/dist/Isabelle2025-2_linux.tar.gz -o "$RUNNER_TEMP/isabelle.tar.gz"
+          tar -xzf "$RUNNER_TEMP/isabelle.tar.gz" -C "$RUNNER_TEMP"
+          echo "$RUNNER_TEMP/Isabelle2025-2/bin" >> "$GITHUB_PATH"
+      - name: Verify all Isabelle sessions with proof checking enabled
+        run: |
+          isabelle version
+          isabelle build -v -j 1 -o threads=2 -o quick_and_dirty=false -D isabelle
+  lean:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    defaults:
+      run:
+        working-directory: lean
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Elan
+        run: |
+          curl --fail --location --retry 3 https://elan.lean-lang.org/elan-init.sh -o "$RUNNER_TEMP/elan-init.sh"
+          sh "$RUNNER_TEMP/elan-init.sh" -y --default-toolchain none
+          echo "$HOME/.elan/bin" >> "$GITHUB_PATH"
+      - name: Build the pinned Lean project and inspect theorem axioms
+        run: |
+          lake env lean --version
+          lake build
+          lake env lean Audit.lean | tee "$RUNNER_TEMP/lean-audit.log"
+          if grep -q 'sorryAx' "$RUNNER_TEMP/lean-audit.log"; then
+            echo 'An audited theorem depends on sorryAx.' >&2
+            exit 1
+          fi

@@ -1,0 +1,708 @@
+{
+  "isabelle": {
+    "url": "https://github.com/nisizaki/frenv-yamauchi",
+    "commit": "b5e666f51d0ad2e45e71c46ee8ace41c656dbd6c"
+  },
+  "lean": {
+    "url": "https://github.com/nisizaki/frenv-lean4",
+    "commit": "b9bf34a8ea306eda158a54487d9fc7a92285d2d2"
+  },
+  "files": [
+    {
+      "path": "isabelle/FREnv/FREnv_BetaSigma.thy",
+      "source": "FREnv/FREnv_BetaSigma.thy",
+      "repository": "isabelle",
+      "upstream_sha256": "6715f915ffd604358fe67788f5786337f0e574d8dee7d85a89e3b841dbbcddf7"
+    },
+    {
+      "path": "isabelle/FREnv/FREnv_BetaSigma_Assoc_Peak.thy",
+      "source": "FREnv/FREnv_BetaSigma_Assoc_Peak.thy",
+      "repository": "isabelle",
+      "upstream_sha256": "09ba9011872debbe09fcd38a9659d1c4685b23f230de71349a9f1c752c6a69e1"
+    },
+    {
+      "path": "isabelle/FREnv/FREnv_BetaSigma_Congruence.thy",
+      "source": "FREnv/FREnv_BetaSigma_Congruence.thy",
+      "repository": "isabelle",
+      "upstream_sha256": "a1b4384ee1f4739e9ebb282c2416b4672cb5a8ed9ca2895cc8b2d662fac6a96f"
+    },
+    {
+      "path": "isabelle/FREnv/FREnv_BetaSigma_Congruence_Peaks.thy",
+      "source": "FREnv/FREnv_BetaSigma_Congruence_Peaks.thy",
+      "repository": "isabelle",
+      "upstream_sha256": "71820048f6cc4165842695e521361697c761dec20982732fa175fa265d0da117"
+    },
+    {
+      "path": "isabelle/FREnv/FREnv_BetaSigma_DApp_Peak.thy",
+      "source": "FREnv/FREnv_BetaSigma_DApp_Peak.thy",
+      "repository": "isabelle",
+      "upstream_sha256": "829492c809c947025aeefb569c9e861f7ba8226cf3018a76aa63f867a1c0375e"
+    },
+    {
+      "path": "isabelle/FREnv/FREnv_BetaSigma_Local_Confluence.thy",
+      "source": "FREnv/FREnv_BetaSigma_Local_Confluence.thy",
+      "repository": "isabelle",
+      "upstream_sha256": "388837c751c91b5a41d4677be61ba159aef471b083a564fc11eccb85acbf34e3"
+    },
+    {
+      "path": "isabelle/FREnv/FREnv_BetaSigma_Root_Peaks.thy",
+      "source": "FREnv/FREnv_BetaSigma_Root_Peaks.thy",
+      "repository": "isabelle",
+      "upstream_sha256": "822cad1d5349e19d2ead24435cb4709f483e08d3a5399f04945c331e2754de68"
+    },
+    {
+      "path": "isabelle/FREnv/FREnv_Sigma.thy",
+      "source": "FREnv/FREnv_Sigma.thy",
+      "repository": "isabelle",
+      "upstream_sha256": "55e95198fffe69df4913413e47efe66a76ab46b77fcefdb2f59b3789d2573ef7"
+    },
+    {
+      "path": "isabelle/FREnv/FREnv_Syntax.thy",
+      "source": "FREnv/FREnv_Syntax.thy",
+      "repository": "isabelle",
+      "upstream_sha256": "01f41b31ac053124fbaf7d379d0d946da53b532ed26f493cceb93fa509d85e82"
+    },
+    {
+      "path": "isabelle/FREnv/ROOT",
+      "source": "FREnv/ROOT",
+      "repository": "isabelle",
+      "upstream_sha256": "fe70b274f9db0fab4ce88ec2de35235083f2c43270c38a7543558233b00fb6e1"
+    },
+    {
+      "path": "isabelle/EnvEps/Diamond_Implies_Confluence.thy",
+      "source": "EnvEps/Diamond_Implies_Confluence.thy",
+      "repository": "isabelle",
+      "upstream_sha256": "0f014910684ac42b91f89e0d1b8ca57fabefa8f353dfd3be121ddbeeb2c07cee"
+    },
+    {
+      "path": "isabelle/EnvEps/EnvEps_BetaSigma.thy",
+      "source": "EnvEps/EnvEps_BetaSigma.thy",
+      "repository": "isabelle",
+      "upstream_sha256": "818690970b6dfbe68e6ddb5b112c9a0bf5c6e9f01585c27e4f5ba338aa2503b5"
+    },
+    {
+      "path": "isabelle/EnvEps/EnvEps_BetaSigma_Congruence.thy",
+      "source": "EnvEps/EnvEps_BetaSigma_Congruence.thy",
+      "repository": "isabelle",
+      "upstream_sha256": "edf8ac28c05f51adbdd65feb703003125a8a7af0f8687ff57b840c6677559090"
+    },
+    {
+      "path": "isabelle/EnvEps/EnvEps_Beta_Normal_Form_Simulation.thy",
+      "source": "EnvEps/EnvEps_Beta_Normal_Form_Simulation.thy",
+      "repository": "isabelle",
+      "upstream_sha256": "7431acea648f43d226100ba023bd47d284313b6bfc6af1a45f705c14f7109da8"
+    },
+    {
+      "path": "isabelle/EnvEps/EnvEps_Beta_Over_Sigma.thy",
+      "source": "EnvEps/EnvEps_Beta_Over_Sigma.thy",
+      "repository": "isabelle",
+      "upstream_sha256": "fb5fc52a912310bce9519c577ff43e262bd5a9af9cee7b44ec228b1cf98595e0"
+    },
+    {
+      "path": "isabelle/EnvEps/EnvEps_Beta_Over_Sigma_Confluence.thy",
+      "source": "EnvEps/EnvEps_Beta_Over_Sigma_Confluence.thy",
+      "repository": "isabelle",
+      "upstream_sha256": "d7a34d31837324fc5a66652fa095d699e7209df7a5be96733d0d5dd5f0633876"
+    },
+    {
+      "path": "isabelle/EnvEps/EnvEps_Beta_Over_Sigma_Congruence.thy",
+      "source": "EnvEps/EnvEps_Beta_Over_Sigma_Congruence.thy",
+      "repository": "isabelle",
+      "upstream_sha256": "7c1aa71b00e71643100c3fde7eb1d555d65314a111fea31f0740508fd20d01b0"
+    },
+    {
+      "path": "isabelle/EnvEps/EnvEps_Beta_Sigma_Full_Confluence.thy",
+      "source": "EnvEps/EnvEps_Beta_Sigma_Full_Confluence.thy",
+      "repository": "isabelle",
+      "upstream_sha256": "40959d0fe23cef342dbba1109b160c4ed7f026fffbba8908db90370588458649"
+    },
+    {
+      "path": "isabelle/EnvEps/EnvEps_Beta_Step.thy",
+      "source": "EnvEps/EnvEps_Beta_Step.thy",
+      "repository": "isabelle",
+      "upstream_sha256": "5745a3c4c403d4655adc2ba5721a1e1b8c76b99ee2ce47951b9774712c2d4195"
+    },
+    {
+      "path": "isabelle/EnvEps/EnvEps_Complete_Development.thy",
+      "source": "EnvEps/EnvEps_Complete_Development.thy",
+      "repository": "isabelle",
+      "upstream_sha256": "38c453815c8712aea49516f8c9ec6d5c9f887acbe9f4273c075c8a82b3227992"
+    },
+    {
+      "path": "isabelle/EnvEps/EnvEps_FREnv_Translation.thy",
+      "source": "EnvEps/EnvEps_FREnv_Translation.thy",
+      "repository": "isabelle",
+      "upstream_sha256": "80010ec66cd6a44ef2e28b0570e2bcaa0f50bd0d58948edee0b418bdc528f323"
+    },
+    {
+      "path": "isabelle/EnvEps/EnvEps_FREnv_Translation_Inversion.thy",
+      "source": "EnvEps/EnvEps_FREnv_Translation_Inversion.thy",
+      "repository": "isabelle",
+      "upstream_sha256": "dcff391ccdc2f6b454d201a28c599cfc3f37d4d51c1a0223cd90043ab03bed07"
+    },
+    {
+      "path": "isabelle/EnvEps/EnvEps_FREnv_Translation_Lifting.thy",
+      "source": "EnvEps/EnvEps_FREnv_Translation_Lifting.thy",
+      "repository": "isabelle",
+      "upstream_sha256": "e7b16f0e66f493d0bf27b2d2f3fe16f99940bb2b899f6ea2cd89ff1d9cbe1ae2"
+    },
+    {
+      "path": "isabelle/EnvEps/EnvEps_FREnv_Translation_Multi_Step_Lifting.thy",
+      "source": "EnvEps/EnvEps_FREnv_Translation_Multi_Step_Lifting.thy",
+      "repository": "isabelle",
+      "upstream_sha256": "32987cf9df49717042eb93fe82c8a9fce6d1f0efbf4c96e0c80cb99792336c19"
+    },
+    {
+      "path": "isabelle/EnvEps/EnvEps_FREnv_Translation_Simulation.thy",
+      "source": "EnvEps/EnvEps_FREnv_Translation_Simulation.thy",
+      "repository": "isabelle",
+      "upstream_sha256": "c7cef5ea45a5c76b12294e30e364d3e63137c045ac9ee2c56e42b46fe30f2017"
+    },
+    {
+      "path": "isabelle/EnvEps/EnvEps_FREnv_Translation_Surjective.thy",
+      "source": "EnvEps/EnvEps_FREnv_Translation_Surjective.thy",
+      "repository": "isabelle",
+      "upstream_sha256": "71b660bf56850aedab2a015bd5c8cb5d0df8a31ce75ad8fdbe97b14c92915688"
+    },
+    {
+      "path": "isabelle/EnvEps/EnvEps_Parallel_Reduction.thy",
+      "source": "EnvEps/EnvEps_Parallel_Reduction.thy",
+      "repository": "isabelle",
+      "upstream_sha256": "8c34517d326d5c5fd9cf2b3485dc5d90f87a7dcd9ad1d273532627a98534a870"
+    },
+    {
+      "path": "isabelle/EnvEps/EnvEps_Parallel_Reduction_Composition_Compatibility.thy",
+      "source": "EnvEps/EnvEps_Parallel_Reduction_Composition_Compatibility.thy",
+      "repository": "isabelle",
+      "upstream_sha256": "8c7c62b1ba116eb745773931fa1b735f6e8a3e7987ca8818852e4c3747e96163"
+    },
+    {
+      "path": "isabelle/EnvEps/EnvEps_Parallel_Reduction_Confluence.thy",
+      "source": "EnvEps/EnvEps_Parallel_Reduction_Confluence.thy",
+      "repository": "isabelle",
+      "upstream_sha256": "877cdd224e902bb5e4a83d0df09e5ed4730a1b3c85571488f59cb0bffc4f315e"
+    },
+    {
+      "path": "isabelle/EnvEps/EnvEps_Parallel_Reduction_Reflexivity.thy",
+      "source": "EnvEps/EnvEps_Parallel_Reduction_Reflexivity.thy",
+      "repository": "isabelle",
+      "upstream_sha256": "5b4736b02fcc67356411e7782c2aec9a03bbb5e00d8cf7e32534a97dde50841f"
+    },
+    {
+      "path": "isabelle/EnvEps/EnvEps_Parallel_Reduction_Simulation.thy",
+      "source": "EnvEps/EnvEps_Parallel_Reduction_Simulation.thy",
+      "repository": "isabelle",
+      "upstream_sha256": "a5370d614d73d207403ff0da8e92ed1f6bbd3061f2b74febb61fd42b98893de8"
+    },
+    {
+      "path": "isabelle/EnvEps/EnvEps_Parallel_Reduction_Soundness.thy",
+      "source": "EnvEps/EnvEps_Parallel_Reduction_Soundness.thy",
+      "repository": "isabelle",
+      "upstream_sha256": "00688d0f593ab75d4e8ed69ad634469cd5533c44a2b6144378deb2691939ee79"
+    },
+    {
+      "path": "isabelle/EnvEps/EnvEps_Parallel_Reduction_Triangle_Property.thy",
+      "source": "EnvEps/EnvEps_Parallel_Reduction_Triangle_Property.thy",
+      "repository": "isabelle",
+      "upstream_sha256": "b47e9e0b8f2426344826a74860750d12ed1a3e8845b6b396c0afb59e8b650a9b"
+    },
+    {
+      "path": "isabelle/EnvEps/EnvEps_Sigma.thy",
+      "source": "EnvEps/EnvEps_Sigma.thy",
+      "repository": "isabelle",
+      "upstream_sha256": "e15e0bcbd4e0091aa06b5dcf1dd9bd07a0b6a8673c3fa80cbe893d5dc70c48b8"
+    },
+    {
+      "path": "isabelle/EnvEps/EnvEps_Sigma_Assoc_Peak.thy",
+      "source": "EnvEps/EnvEps_Sigma_Assoc_Peak.thy",
+      "repository": "isabelle",
+      "upstream_sha256": "d5c5313696086b7f7e623d3666dd29cde30011b90794cba5675c2b6290cbb7c1"
+    },
+    {
+      "path": "isabelle/EnvEps/EnvEps_Sigma_Confluence.thy",
+      "source": "EnvEps/EnvEps_Sigma_Confluence.thy",
+      "repository": "isabelle",
+      "upstream_sha256": "3fd7994bc1aa9ee7403ea7f7b5d812f88486225fc1b79dedf06630dfd07e035e"
+    },
+    {
+      "path": "isabelle/EnvEps/EnvEps_Sigma_Congruence.thy",
+      "source": "EnvEps/EnvEps_Sigma_Congruence.thy",
+      "repository": "isabelle",
+      "upstream_sha256": "22d55394be756b7ea9fd7bdb8897f4a7bcea7270a9f87b64d6c19766e6bf0f20"
+    },
+    {
+      "path": "isabelle/EnvEps/EnvEps_Sigma_Inner_Peaks.thy",
+      "source": "EnvEps/EnvEps_Sigma_Inner_Peaks.thy",
+      "repository": "isabelle",
+      "upstream_sha256": "e95b33d4bc0ac6c9fb599ab22873fdd287de16e65aa2b38998d8672e79fc39e1"
+    },
+    {
+      "path": "isabelle/EnvEps/EnvEps_Sigma_Length_Decrease.thy",
+      "source": "EnvEps/EnvEps_Sigma_Length_Decrease.thy",
+      "repository": "isabelle",
+      "upstream_sha256": "2e870e1a424e9238aef43cc87f63c790ef8c142430da6b6df59f7dea4e822d9b"
+    },
+    {
+      "path": "isabelle/EnvEps/EnvEps_Sigma_Local_Confluence.thy",
+      "source": "EnvEps/EnvEps_Sigma_Local_Confluence.thy",
+      "repository": "isabelle",
+      "upstream_sha256": "06b3069e730d4c4babed78814ab7b5e4a875eff169a8b367be96e27a830daa80"
+    },
+    {
+      "path": "isabelle/EnvEps/EnvEps_Sigma_Nf_Equiv.thy",
+      "source": "EnvEps/EnvEps_Sigma_Nf_Equiv.thy",
+      "repository": "isabelle",
+      "upstream_sha256": "99b14ec4270243db8e57ebe4f2bc5eb7ea559383e4dd6c191b7ede0610c797e6"
+    },
+    {
+      "path": "isabelle/EnvEps/EnvEps_Sigma_Normal_Form.thy",
+      "source": "EnvEps/EnvEps_Sigma_Normal_Form.thy",
+      "repository": "isabelle",
+      "upstream_sha256": "7c9902b796401032a7ac66f2b6be52ce392a3b20e131c38811a905538d3b1462"
+    },
+    {
+      "path": "isabelle/EnvEps/EnvEps_Sigma_Normal_Form_Grammar.thy",
+      "source": "EnvEps/EnvEps_Sigma_Normal_Form_Grammar.thy",
+      "repository": "isabelle",
+      "upstream_sha256": "8a215fbc78d873cfd784a98201e5de27e6ff314230b5d6e50d7cad42ed5c1ba8"
+    },
+    {
+      "path": "isabelle/EnvEps/EnvEps_Sigma_Root_Peaks.thy",
+      "source": "EnvEps/EnvEps_Sigma_Root_Peaks.thy",
+      "repository": "isabelle",
+      "upstream_sha256": "fd1f05cdd058f64b94167413185d6d0664e441047d7e849b5682473c75c69f42"
+    },
+    {
+      "path": "isabelle/EnvEps/EnvEps_Sigma_Termination.thy",
+      "source": "EnvEps/EnvEps_Sigma_Termination.thy",
+      "repository": "isabelle",
+      "upstream_sha256": "049d26b48a72315de92fa5f0234ac065ee53ab1fe0743930dbd1f12459cdf935"
+    },
+    {
+      "path": "isabelle/EnvEps/EnvEps_Syntax.thy",
+      "source": "EnvEps/EnvEps_Syntax.thy",
+      "repository": "isabelle",
+      "upstream_sha256": "965f925669cb708077b2c6f574824245f3ae92d3b35166dc56a39b1b8d860b1d"
+    },
+    {
+      "path": "isabelle/EnvEps/EnvEps_Term_Length.thy",
+      "source": "EnvEps/EnvEps_Term_Length.thy",
+      "repository": "isabelle",
+      "upstream_sha256": "039e4bd635c81f761eb69a5d39c321f15630cf16c3bb326bad3c7da3c5ef3394"
+    },
+    {
+      "path": "isabelle/EnvEps/FREnv_Full_Confluence_Via_Translation.thy",
+      "source": "EnvEps/FREnv_Full_Confluence_Via_Translation.thy",
+      "repository": "isabelle",
+      "upstream_sha256": "ba7dc0c097f24ccb80e2dc19904a579e3591d0da457a8b052f5695f0d5d5af5c"
+    },
+    {
+      "path": "isabelle/EnvEps/Newmans_Lemma.thy",
+      "source": "EnvEps/Newmans_Lemma.thy",
+      "repository": "isabelle",
+      "upstream_sha256": "6e21b12f58cf1a2cb108fd29b0e4c0bbf0c76079fa01640ab10d10f04db4cdec"
+    },
+    {
+      "path": "isabelle/EnvEps/ROOT",
+      "source": "EnvEps/ROOT",
+      "repository": "isabelle",
+      "upstream_sha256": "693238a9e7cc6e8a2828b73f74efca34327315c7117d216f4bf4d19bf1efe738"
+    },
+    {
+      "path": "isabelle/vendor/Regular-Sets/Derivatives.thy",
+      "source": "FREnv-to-be-remade/AFP/Regular-Sets/Derivatives.thy",
+      "repository": "isabelle",
+      "upstream_sha256": "cd6e0397b4ac75664367f99298fc2d592944d48b838feacd8ee2b4182f02c9e3"
+    },
+    {
+      "path": "isabelle/vendor/Regular-Sets/Equivalence_Checking.thy",
+      "source": "FREnv-to-be-remade/AFP/Regular-Sets/Equivalence_Checking.thy",
+      "repository": "isabelle",
+      "upstream_sha256": "c992bac41a2605aec806a81dee7e04190cf9033e7fd226233c1c6e937434be70"
+    },
+    {
+      "path": "isabelle/vendor/Regular-Sets/Equivalence_Checking2.thy",
+      "source": "FREnv-to-be-remade/AFP/Regular-Sets/Equivalence_Checking2.thy",
+      "repository": "isabelle",
+      "upstream_sha256": "2a2bc234d80fb71a34e3815694690d30ae944a14a3d405f8a4f12b8a78251530"
+    },
+    {
+      "path": "isabelle/vendor/Regular-Sets/NDerivative.thy",
+      "source": "FREnv-to-be-remade/AFP/Regular-Sets/NDerivative.thy",
+      "repository": "isabelle",
+      "upstream_sha256": "74f5227b2a0bcd94fa6d3cc09c4c679707ba11f5fd1dc76a7b90067f6cf7abc4"
+    },
+    {
+      "path": "isabelle/vendor/Regular-Sets/pEquivalence_Checking.thy",
+      "source": "FREnv-to-be-remade/AFP/Regular-Sets/pEquivalence_Checking.thy",
+      "repository": "isabelle",
+      "upstream_sha256": "4b062fbbe22b15ef97b855ca83a8305278fd2f301ae9993b1619a4ba4fb0eeab"
+    },
+    {
+      "path": "isabelle/vendor/Regular-Sets/Regexp_Constructions.thy",
+      "source": "FREnv-to-be-remade/AFP/Regular-Sets/Regexp_Constructions.thy",
+      "repository": "isabelle",
+      "upstream_sha256": "f050c5580114391a1090c2d24912815629e669d867d160e69a1c35bec83ce465"
+    },
+    {
+      "path": "isabelle/vendor/Regular-Sets/Regexp_Method.thy",
+      "source": "FREnv-to-be-remade/AFP/Regular-Sets/Regexp_Method.thy",
+      "repository": "isabelle",
+      "upstream_sha256": "31627759ea4485b73ea815365c94ba21c64d66b0d24cf6641cfc1e2bf6e52fb2"
+    },
+    {
+      "path": "isabelle/vendor/Regular-Sets/Regular_Exp.thy",
+      "source": "FREnv-to-be-remade/AFP/Regular-Sets/Regular_Exp.thy",
+      "repository": "isabelle",
+      "upstream_sha256": "3af279f9b5cdbcce6b625a8ad304d6210e4a0bf072e4e9c6c5320ab03761eecd"
+    },
+    {
+      "path": "isabelle/vendor/Regular-Sets/Regular_Exp2.thy",
+      "source": "FREnv-to-be-remade/AFP/Regular-Sets/Regular_Exp2.thy",
+      "repository": "isabelle",
+      "upstream_sha256": "8a684deae51111a2ec6394ef4aba407893f73454badbc6b2484f754083d996a7"
+    },
+    {
+      "path": "isabelle/vendor/Regular-Sets/Regular_Set.thy",
+      "source": "FREnv-to-be-remade/AFP/Regular-Sets/Regular_Set.thy",
+      "repository": "isabelle",
+      "upstream_sha256": "ff8e2683f470b3c003fccf7bbc6da0eaa0556e209b9bb19a56507ea9507ff6f0"
+    },
+    {
+      "path": "isabelle/vendor/Regular-Sets/Relation_Interpretation.thy",
+      "source": "FREnv-to-be-remade/AFP/Regular-Sets/Relation_Interpretation.thy",
+      "repository": "isabelle",
+      "upstream_sha256": "4ebba1d2b94a69e3974719871611b9b51effde3b6abe0492d0b7fa3144dd5a1d"
+    },
+    {
+      "path": "isabelle/vendor/Regular-Sets/ROOT",
+      "source": "FREnv-to-be-remade/AFP/Regular-Sets/ROOT",
+      "repository": "isabelle",
+      "upstream_sha256": "6fba9ff2913e4a2d1a3f279a29cca9aedfda35b8800729fb5c154be6acb2b3ff"
+    },
+    {
+      "path": "isabelle/vendor/Regular-Sets/document/root.bib",
+      "source": "FREnv-to-be-remade/AFP/Regular-Sets/document/root.bib",
+      "repository": "isabelle",
+      "upstream_sha256": "71af3343b8b59ca2ea0ecdae614667a1d6af227ffb61f84a94cc2c7287e6ea09"
+    },
+    {
+      "path": "isabelle/vendor/Regular-Sets/document/root.tex",
+      "source": "FREnv-to-be-remade/AFP/Regular-Sets/document/root.tex",
+      "repository": "isabelle",
+      "upstream_sha256": "0019c9b84b9500cfbd78cb33deb0ded4e53c4b91cd51b3f2887fad2721f17359"
+    },
+    {
+      "path": "isabelle/vendor/Abstract-Rewriting/Abstract_Rewriting.thy",
+      "source": "FREnv-to-be-remade/AFP/Abstract-Rewriting/Abstract_Rewriting.thy",
+      "repository": "isabelle",
+      "upstream_sha256": "05bf9ff415b2596fe46da2004d8954c05b08b37ff6cebb174c2bbb5c2707a201"
+    },
+    {
+      "path": "isabelle/vendor/Abstract-Rewriting/Abstract_Rewriting_Impl.thy",
+      "source": "FREnv-to-be-remade/AFP/Abstract-Rewriting/Abstract_Rewriting_Impl.thy",
+      "repository": "isabelle",
+      "upstream_sha256": "fb0a0088dcb364329f42a099a6646ff6fe7b0fd3f432496f9d62748cf92769bb"
+    },
+    {
+      "path": "isabelle/vendor/Abstract-Rewriting/Relation_Closure.thy",
+      "source": "FREnv-to-be-remade/AFP/Abstract-Rewriting/Relation_Closure.thy",
+      "repository": "isabelle",
+      "upstream_sha256": "801b61015034e7ff3648d19a3141bdd198cc449c5bfbf907eae7bb23488f4c24"
+    },
+    {
+      "path": "isabelle/vendor/Abstract-Rewriting/Relative_Rewriting.thy",
+      "source": "FREnv-to-be-remade/AFP/Abstract-Rewriting/Relative_Rewriting.thy",
+      "repository": "isabelle",
+      "upstream_sha256": "16cff3a1e679b7d45b7dd68e4b57fae0f803e4f9e6515dfa7ec7e8374e1d63b5"
+    },
+    {
+      "path": "isabelle/vendor/Abstract-Rewriting/ROOT",
+      "source": "FREnv-to-be-remade/AFP/Abstract-Rewriting/ROOT",
+      "repository": "isabelle",
+      "upstream_sha256": "1950c77be060a7895a827ee9f0104862e5b1636643d0eb91df6c1e08ff5940ce"
+    },
+    {
+      "path": "isabelle/vendor/Abstract-Rewriting/Seq.thy",
+      "source": "FREnv-to-be-remade/AFP/Abstract-Rewriting/Seq.thy",
+      "repository": "isabelle",
+      "upstream_sha256": "714e03754875c159aeb543a5cc575b588d2902c7339856f3bbb0075f2f81ff31"
+    },
+    {
+      "path": "isabelle/vendor/Abstract-Rewriting/SN_Orders.thy",
+      "source": "FREnv-to-be-remade/AFP/Abstract-Rewriting/SN_Orders.thy",
+      "repository": "isabelle",
+      "upstream_sha256": "0b1b89fdee8b1bffb8d4013ac1ef26b160c7b87b1d0675aad163535d810544d6"
+    },
+    {
+      "path": "isabelle/vendor/Abstract-Rewriting/SN_Order_Carrier.thy",
+      "source": "FREnv-to-be-remade/AFP/Abstract-Rewriting/SN_Order_Carrier.thy",
+      "repository": "isabelle",
+      "upstream_sha256": "f584f9cfadc00d8d9419d35b5544d0230a60abd89d5a5b77097116be653b0dca"
+    },
+    {
+      "path": "isabelle/vendor/Abstract-Rewriting/document/root.bib",
+      "source": "FREnv-to-be-remade/AFP/Abstract-Rewriting/document/root.bib",
+      "repository": "isabelle",
+      "upstream_sha256": "a7dd96179ce1612bb7af62eb8606729a18e81ec1e126a634b2e972ff900f2ad6"
+    },
+    {
+      "path": "isabelle/vendor/Abstract-Rewriting/document/root.tex",
+      "source": "FREnv-to-be-remade/AFP/Abstract-Rewriting/document/root.tex",
+      "repository": "isabelle",
+      "upstream_sha256": "e96763ed6d1221d0e1ef690970794b91be238be247bca15bb73da3d0b98c9f21"
+    },
+    {
+      "path": "isabelle/docs/enve-beta-normal-form-simulation.md",
+      "source": "docs/enve-beta-normal-form-simulation.md",
+      "repository": "isabelle",
+      "upstream_sha256": "c37874a0642aa4d355fdf365db469bd562d8e24fcc211d295c0f1fd2851749b9"
+    },
+    {
+      "path": "isabelle/docs/enve-beta-over-sigma-confluence.md",
+      "source": "docs/enve-beta-over-sigma-confluence.md",
+      "repository": "isabelle",
+      "upstream_sha256": "f80a8207ceee4fefb8c8bad1e72039e586ef7f6acc4a983fd7a9d4fa997ad4a4"
+    },
+    {
+      "path": "isabelle/docs/enve-beta-over-sigma-reduction.md",
+      "source": "docs/enve-beta-over-sigma-reduction.md",
+      "repository": "isabelle",
+      "upstream_sha256": "46369b5190fe81e1ed7c2fde59ebf902692126a49c56b5539939cde6fa0fe519"
+    },
+    {
+      "path": "isabelle/docs/enve-beta-sigma-full-confluence.md",
+      "source": "docs/enve-beta-sigma-full-confluence.md",
+      "repository": "isabelle",
+      "upstream_sha256": "2a17cd4c68e00392468884cc233b3ed7acfb60566efb9c76d9ac3511489e99e9"
+    },
+    {
+      "path": "isabelle/docs/enve-complete-development.md",
+      "source": "docs/enve-complete-development.md",
+      "repository": "isabelle",
+      "upstream_sha256": "96c0c24c4f8781b79cf4c098308f0db22dfe122f173fab3f1f928937345ec55c"
+    },
+    {
+      "path": "isabelle/docs/enve-frenv-translation-lifting.md",
+      "source": "docs/enve-frenv-translation-lifting.md",
+      "repository": "isabelle",
+      "upstream_sha256": "1761e656acb82709c512eb8c25999c8fa67b006521b0366fe93652200455f0b8"
+    },
+    {
+      "path": "isabelle/docs/enve-frenv-translation-multi-step-lifting.md",
+      "source": "docs/enve-frenv-translation-multi-step-lifting.md",
+      "repository": "isabelle",
+      "upstream_sha256": "0e12523b3dce774b7dd369060e30939b087eb4acdb6803a15a396f0dfac8afaa"
+    },
+    {
+      "path": "isabelle/docs/enve-frenv-translation-simulation.md",
+      "source": "docs/enve-frenv-translation-simulation.md",
+      "repository": "isabelle",
+      "upstream_sha256": "894722bb24817a656100ed7162d47ce41d923113ebbb6404af67d4f277603ebc"
+    },
+    {
+      "path": "isabelle/docs/enve-frenv-translation-surjective.md",
+      "source": "docs/enve-frenv-translation-surjective.md",
+      "repository": "isabelle",
+      "upstream_sha256": "68ed7228b065c4e60db7d8e22e4fad5e2bcdb5c5fa5e550e37c2ea0b3a42e8e7"
+    },
+    {
+      "path": "isabelle/docs/enve-frenv-translation.md",
+      "source": "docs/enve-frenv-translation.md",
+      "repository": "isabelle",
+      "upstream_sha256": "2d1bc1abf300ca625220dbab88acb9dedeb41fde4b57fc932bd71fbe1bb712be"
+    },
+    {
+      "path": "isabelle/docs/enve-parallel-reduction-composition-compatibility.md",
+      "source": "docs/enve-parallel-reduction-composition-compatibility.md",
+      "repository": "isabelle",
+      "upstream_sha256": "b3f7b2da1af4dbbdcf71454900830eb5a9e3bc9ca76c3b147c64babba9758551"
+    },
+    {
+      "path": "isabelle/docs/enve-parallel-reduction-confluence.md",
+      "source": "docs/enve-parallel-reduction-confluence.md",
+      "repository": "isabelle",
+      "upstream_sha256": "b586c830de6d84cb0c0bfb1027a4e093c8fbe30d415564d227fd14bf7794b96c"
+    },
+    {
+      "path": "isabelle/docs/enve-parallel-reduction-reflexivity.md",
+      "source": "docs/enve-parallel-reduction-reflexivity.md",
+      "repository": "isabelle",
+      "upstream_sha256": "30d323f3ce5708faa1c9dcee022d2d85c9e5fe9767c4aa98b2ea2ee955a76800"
+    },
+    {
+      "path": "isabelle/docs/enve-parallel-reduction-simulation.md",
+      "source": "docs/enve-parallel-reduction-simulation.md",
+      "repository": "isabelle",
+      "upstream_sha256": "413a6f33becef9994b75a8dbfdca497c381fa213ca9eb8a7623fe4b401c094ac"
+    },
+    {
+      "path": "isabelle/docs/enve-parallel-reduction-soundness.md",
+      "source": "docs/enve-parallel-reduction-soundness.md",
+      "repository": "isabelle",
+      "upstream_sha256": "583020c3a29d05e9564bed71c08b8fe8a72ab9a5ee15e06da0fe52360fb13dca"
+    },
+    {
+      "path": "isabelle/docs/enve-parallel-reduction-triangle-property.md",
+      "source": "docs/enve-parallel-reduction-triangle-property.md",
+      "repository": "isabelle",
+      "upstream_sha256": "991937bbf5d1cb4aa722ed25c45de67d832921b3dbeba1b7a2e24cd04d112c0a"
+    },
+    {
+      "path": "isabelle/docs/enve-parallel-reduction.md",
+      "source": "docs/enve-parallel-reduction.md",
+      "repository": "isabelle",
+      "upstream_sha256": "452b12a9051766bdb150f94ece7fb4cb72327c30ec505ecf13a8dbdb20278b7d"
+    },
+    {
+      "path": "isabelle/docs/enve-reduction-beta-sigma.md",
+      "source": "docs/enve-reduction-beta-sigma.md",
+      "repository": "isabelle",
+      "upstream_sha256": "b2f048535867bef1f6e27ad59c3b81c5b28ba4daa2d5517d38b9e670e69e9e5e"
+    },
+    {
+      "path": "isabelle/docs/enve-reduction-sigma.md",
+      "source": "docs/enve-reduction-sigma.md",
+      "repository": "isabelle",
+      "upstream_sha256": "b7b7ab06967329577cfbbffc7354b502c3905a9aa323101ec929db547c725187"
+    },
+    {
+      "path": "isabelle/docs/enve-sigma-normal-form-grammar.md",
+      "source": "docs/enve-sigma-normal-form-grammar.md",
+      "repository": "isabelle",
+      "upstream_sha256": "6a446fe1886246d9c3e90484209bfd2d5cf54eedf06c82878cf20f11ad61185c"
+    },
+    {
+      "path": "isabelle/docs/enve-sigma-normal-form.md",
+      "source": "docs/enve-sigma-normal-form.md",
+      "repository": "isabelle",
+      "upstream_sha256": "862a6402d3d607cfe8c3dc51444dbab869a83115a12e5cf5c48bef7c90064134"
+    },
+    {
+      "path": "isabelle/docs/enve-sigma-reduction-confluence.md",
+      "source": "docs/enve-sigma-reduction-confluence.md",
+      "repository": "isabelle",
+      "upstream_sha256": "40ddf938ffaa6250820a1e13fb37f495a50cbea15ffb71234af6e86903359165"
+    },
+    {
+      "path": "isabelle/docs/enve-sigma-reduction-length-decrease.md",
+      "source": "docs/enve-sigma-reduction-length-decrease.md",
+      "repository": "isabelle",
+      "upstream_sha256": "f292fc3dfaae7e5b1c272f9e9b26574cd6e06ad8596538744c77030995f61555"
+    },
+    {
+      "path": "isabelle/docs/enve-sigma-reduction-local-confluence.md",
+      "source": "docs/enve-sigma-reduction-local-confluence.md",
+      "repository": "isabelle",
+      "upstream_sha256": "ada49571122eeee2aa6e17080d3c984f1200d52e7d27ca3f4edb926685dfa09e"
+    },
+    {
+      "path": "isabelle/docs/enve-sigma-reduction-termination.md",
+      "source": "docs/enve-sigma-reduction-termination.md",
+      "repository": "isabelle",
+      "upstream_sha256": "a2306ac3a8118e26932991972c621debbfc2ac3d71494f9e841ee2966e62579d"
+    },
+    {
+      "path": "isabelle/docs/enve-syntax.md",
+      "source": "docs/enve-syntax.md",
+      "repository": "isabelle",
+      "upstream_sha256": "349f445317b4ec8d4ee3af08e95e7d025961aa572e41589507223d0685cc65d1"
+    },
+    {
+      "path": "isabelle/docs/enve-term-length-measure.md",
+      "source": "docs/enve-term-length-measure.md",
+      "repository": "isabelle",
+      "upstream_sha256": "958c926f1b050eaf7a0341d6c2402743e2f261935d0d6430a623aab40fcc17fc"
+    },
+    {
+      "path": "isabelle/docs/frenv-beta-sigma-full-confluence.md",
+      "source": "docs/frenv-beta-sigma-full-confluence.md",
+      "repository": "isabelle",
+      "upstream_sha256": "43565b2b01a0a167dcd594add3120087f6215f2d225f9aae85a88622902f1836"
+    },
+    {
+      "path": "isabelle/docs/frenv-beta-sigma-local-confluence.md",
+      "source": "docs/frenv-beta-sigma-local-confluence.md",
+      "repository": "isabelle",
+      "upstream_sha256": "3c6051f24a2a97b5130335c9a56158c7bb2fbc55002ab591adb69b1462c1f45a"
+    },
+    {
+      "path": "isabelle/docs/frenv-reduction-beta-sigma.md",
+      "source": "docs/frenv-reduction-beta-sigma.md",
+      "repository": "isabelle",
+      "upstream_sha256": "7dabe1d8d89c807f8714de0c41fa638bafa9e45f2d2b0c3905e4cf13bfc9eed3"
+    },
+    {
+      "path": "isabelle/docs/frenv-reduction-sigma.md",
+      "source": "docs/frenv-reduction-sigma.md",
+      "repository": "isabelle",
+      "upstream_sha256": "edc72df01d9ce4fa4ca18be65227a3f594ceba6ec8fb41c093c8ba3d444e7f02"
+    },
+    {
+      "path": "isabelle/docs/frenv-syntax.md",
+      "source": "docs/frenv-syntax.md",
+      "repository": "isabelle",
+      "upstream_sha256": "f02d2ff11a473712c1bb58148bf1c79336aab24e0159ee1bc11cf46d01a22a44"
+    },
+    {
+      "path": "lean/LambdaFrenv.lean",
+      "source": "LambdaFrenv.lean",
+      "repository": "lean",
+      "upstream_sha256": "0eccaa25a584854c3f07b58e3bec84a8e3f7c3d3d40c0047e3967c03abc22404"
+    },
+    {
+      "path": "lean/lakefile.toml",
+      "source": "lakefile.toml",
+      "repository": "lean",
+      "upstream_sha256": "0e395cc8884ec6c4dbeea1ebbbaeaf9a3740224c7575b2c3851783efef28b9c0"
+    },
+    {
+      "path": "lean/lake-manifest.json",
+      "source": "lake-manifest.json",
+      "repository": "lean",
+      "upstream_sha256": "2d90414a7260f8b839d2aad55e4eefd7ecbf526d02b4c484dc378b449e676bd3"
+    },
+    {
+      "path": "lean/lean-toolchain",
+      "source": "lean-toolchain",
+      "repository": "lean",
+      "upstream_sha256": "b2b5068d5a4835675e651ce83b29c0ddb308d28b80076e7c007aef4630af0477"
+    },
+    {
+      "path": "lean/LambdaFrenv/Basic.lean",
+      "source": "LambdaFrenv/Basic.lean",
+      "repository": "lean",
+      "upstream_sha256": "f5d3058165add8b53ffa0681a2e9bcb01980a5101d2b7de172dcb324a6e2b570"
+    },
+    {
+      "path": "lean/LambdaFrenv/Par.lean",
+      "source": "LambdaFrenv/Par.lean",
+      "repository": "lean",
+      "upstream_sha256": "b0f9cceca3f2049dcf1f45a6402693748f9f361c28fa683501b08c9407bfcf2d"
+    },
+    {
+      "path": "lean/docs/frenv-parallel-reduction.md",
+      "source": "docs/frenv-parallel-reduction.md",
+      "repository": "lean",
+      "upstream_sha256": "5f43a4ffab5b8fcb8f5baf1519350b400ed9444c2f2fbce11820aee10e247600"
+    },
+    {
+      "path": "lean/docs/frenv-reduction-beta-sigma.md",
+      "source": "docs/frenv-reduction-beta-sigma.md",
+      "repository": "lean",
+      "upstream_sha256": "936e59191d24ccae2e9ef22a926e606f58f9e5f98fff3823c4db6db5f8f8a4d7"
+    },
+    {
+      "path": "lean/docs/frenv-reduction-sigma.md",
+      "source": "docs/frenv-reduction-sigma.md",
+      "repository": "lean",
+      "upstream_sha256": "65f287a5ee7d0939ffad00bfd0b7c83ba3db1655b93f9550948693901a8d602f"
+    },
+    {
+      "path": "lean/docs/frenv-syntax.md",
+      "source": "docs/frenv-syntax.md",
+      "repository": "lean",
+      "upstream_sha256": "8de2543f3e722e04addb8f088fbd67b122ab5714774b06561ce4787ada7a93ed"
+    }
+  ]
+}
