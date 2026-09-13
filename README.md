@@ -1,5 +1,7 @@
 # FREnv Confluence — WCTP 2026 Artifact
 
+English | [日本語](README-ja.md) | [Tagalog](README-tl.md) | [简体中文](README-zh.md)
+
 This repository collects the Isabelle/HOL development of full beta/sigma confluence of FREnv and the associated Lean 4 development. It is intended to accompany a paper submitted to WCTP 2026.
 
 **Verification:** both the Isabelle2025-2 build and the Lean 4.33.0 build/audit passed on clean GitHub Actions runners on 2026-09-13. See [the verification record](docs/verification.md) for the exact checked commit and logs.
