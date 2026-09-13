@@ -2,6 +2,8 @@
 
 This repository collects the Isabelle/HOL development of full beta/sigma confluence of FREnv and the associated Lean 4 development. It is intended to accompany a paper submitted to WCTP 2026.
 
+**Verification:** both the Isabelle2025-2 build and the Lean 4.33.0 build/audit passed on clean GitHub Actions runners on 2026-09-13. See [the verification record](docs/verification.md) for the exact checked commit and logs.
+
 **The two developments have different completion statuses.** Isabelle contains the full-confluence theorem and its dependencies. The imported Lean development contains syntax, reduction relations, and proved parallel-reduction infrastructure; it does **not** yet prove confluence. A successful Lean build verifies the declarations that are present, not the remaining confluence obligations.
 
 ## Layout
@@ -75,7 +77,7 @@ The checked-in `lean-toolchain` selects **leanprover/lean4:v4.33.0**. Elan downl
 
 | Development | Main checked content | Full FREnv confluence |
 |---|---|---|
-| Isabelle/HOL | Auxiliary-calculus confluence, translation, surjectivity, simulation, lifting, and the final confluence theorem | Theorem supplied; see the verification record |
+| Isabelle/HOL | Auxiliary-calculus confluence, translation, surjectivity, simulation, lifting, and the final confluence theorem | Verified by the recorded strict session build |
 | Lean 4 | Syntax with constants, beta/sigma reduction, parallel reduction, closure congruence, embedding, and simulation | Not supplied in the imported revision |
 
 The languages also differ: Isabelle uses string names and has no primitive constants; Lean parameterizes variables and constants by types. This artifact does not claim a proved equivalence of the two encodings. The [proof map](docs/proof-map.md) explains these differences.
