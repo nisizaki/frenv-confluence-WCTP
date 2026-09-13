@@ -24,6 +24,7 @@ The source snapshots were obtained on 2026-09-13. [UPSTREAM.json](UPSTREAM.json)
 4. Two stale theory introduction paragraphs that described already repaired gaps were updated; the formal definitions and proof bodies were not changed. The old vendor path in the introduction to `Newmans_Lemma.thy` was updated.
 5. A few Japanese labels in the mathematical Markdown files were translated into English. Historical thesis and roadmap numbering was preserved.
 6. `lean/Audit.lean`, platform-specific verification instructions, and independent CI jobs were added. Lean's definitions and proofs were copied without semantic changes.
+7. CI obtains Isabelle2025-2 from its official Cambridge mirror with bounded connection and transfer timeouts, avoiding a stalled connection to the main site's distribution redirect.
 
 This packaging does not complete Lean's remaining proof obligations or change either calculus to make the encodings coincide.
 

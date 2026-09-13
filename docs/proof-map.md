@@ -25,6 +25,8 @@ The authoritative final declaration is `frenv_beta_sigma_confluent` in
 
 The [session configuration](../isabelle/EnvEps/ROOT) lists the formal theories; Isabelle follows their actual imports. The [mathematical notes](../isabelle/docs/) give more detailed English explanations. The active FREnv and EnvEps developments are included in full so that this proof route and the related local-confluence result can both be checked. The abandoned historical FREnv development is excluded; only its required AFP library snapshots are retained under `vendor/`.
 
+For a file-by-file view, see the [application theory index](theory-index.md), which lists all 48 theories and their direct imports.
+
 ## Lean development
 
 [Basic.lean](../lean/LambdaFrenv/Basic.lean) defines the term type, beta/sigma reduction, its reflexive-transitive closure, and generic confluence predicates. [Par.lean](../lean/LambdaFrenv/Par.lean) defines parallel reduction and proves its embedding and simulation properties as well as closure congruence.

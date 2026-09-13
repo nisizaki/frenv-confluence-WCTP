@@ -13,7 +13,7 @@ jobs:
       - uses: actions/checkout@v4
       - name: Install Isabelle2025-2
         run: |
-          curl --fail --location --retry 3 https://isabelle.in.tum.de/dist/Isabelle2025-2_linux.tar.gz -o "$RUNNER_TEMP/isabelle.tar.gz"
+          curl --fail --location --connect-timeout 30 --max-time 1800 --retry 2 https://www.cl.cam.ac.uk/research/hvg/Isabelle/dist/Isabelle2025-2_linux.tar.gz -o "$RUNNER_TEMP/isabelle.tar.gz"
           tar -xzf "$RUNNER_TEMP/isabelle.tar.gz" -C "$RUNNER_TEMP"
           echo "$RUNNER_TEMP/Isabelle2025-2/bin" >> "$GITHUB_PATH"
       - name: Verify all Isabelle sessions with proof checking enabled
