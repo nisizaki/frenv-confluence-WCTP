@@ -4,9 +4,9 @@
 
 本仓库收录了使用 Isabelle/HOL 形式化的 FREnv 完整 β/σ 归约关系的合流性证明，以及相关的 Lean 4 形式化开发。本仓库旨在作为提交至 WCTP 2026 的论文的配套验证材料。
 
-**验证结果：** 2026 年 9 月 13 日，Isabelle2025-2 的构建与 Lean 4.33.0 的构建及审计均在干净的 GitHub Actions 运行器上通过。所验证的准确提交版本及日志见[验证记录](docs/verification.md)。
+**验证结果：** 2026 年 9 月 13 日，Isabelle2025-2 的构建与 Lean 4.33.0 的构建及审计均在干净的 GitHub Actions 运行器上、于包含 Lean 合流性证明的提交 `52881ab` 上通过。所验证的准确提交版本及日志见[验证记录](docs/verification.md)。
 
-**两项形式化开发的完成程度不同。** Isabelle 包含完整归约关系的合流性定理及其依赖项。导入的 Lean 开发包含语法、归约关系以及已证明的并行归约基础结果，但**尚未证明合流性本身**。Lean 构建成功仅表示现有声明通过验证，并不表示剩余的合流性证明义务已完成。
+**两项形式化开发现均已各自独立证明了完整的合流性。** Isabelle 包含完整归约关系的合流性定理及其依赖项。Lean 开发亦针对自身的编码证明了同一命题，即 `LambdaFrenv.frenv_beta_sigma_confluent`，所采用的证明路线相同（辅助演算、σ 正规化、σ 上的 β、翻译），但定义与证明均为 Lean 自身的。两种编码仍有差异——Lean 具有原始常量类型——本验证材料并不声称二者的等价性已获证明。
 
 ## 目录结构
 
@@ -23,10 +23,11 @@ lean/
   lakefile.toml         Lake 项目配置
   lake-manifest.json    依赖清单（无外部软件包）
   LambdaFrenv.lean       库入口文件
-  LambdaFrenv/          定义及已证明的辅助引理
+  LambdaFrenv/          定义与证明，含合流性定理
+  LambdaFrenv/EnvEps/   辅助演算及其合流性证明
   Audit.lean            检查声明并输出定理所依赖的公理
-  docs/                 英文规范及尚未完成的证明义务
-  README.md             Lean 构建说明及准确的验证范围
+  docs/                 语法与归约关系的英文规范
+  README.md             Lean 构建说明、模块结构及证明路线
 docs/
   proof-map.md          主要结果、依赖路径及两项开发的差异
   verification.md       验证记录
@@ -73,14 +74,20 @@ lake build
 lake env lean Audit.lean
 ```
 
-仓库中的 `lean-toolchain` 指定了 **leanprover/lean4:v4.33.0**。Elan 会在需要时下载该版本。本项目不依赖 Mathlib，也不需要下载缓存。关于已证明的声明，以及命题定义与命题证明之间的区别，请参阅 [Lean 使用说明](lean/README.md)。
+仓库中的 `lean-toolchain` 指定了 **leanprover/lean4:v4.33.0**。Elan 会在需要时下载该版本。本项目不依赖 Mathlib，也不需要下载缓存。本次构建确立了
+
+```text
+LambdaFrenv.frenv_beta_sigma_confluent
+```
+
+即 Isabelle 中该定理在 Lean 中的对应结果。关于模块结构与证明路线，请参阅 [Lean 使用说明](lean/README.md)。
 
 ## 结果与范围
 
 | 形式化开发 | 主要验证内容 | FREnv 完整归约关系的合流性 |
 |---|---|---|
 | Isabelle/HOL | 辅助演算的合流性、翻译、满射性、模拟、提升以及最终合流性定理 | 已通过记录中的严格会话构建验证 |
-| Lean 4 | 含常量的语法、β/σ 归约、并行归约、归约闭包对项构造子的相容性、嵌入及模拟 | 导入的版本未提供该证明 |
+| Lean 4 | 抽象重写与 Newman 引理、辅助演算、σ 的停机性与合流性、σ 正规形、并行 β 的菱形性质、复合相容性、翻译与提升 | 已通过记录中的 Lean 构建验证 |
 
 两项开发所使用的语言也有差异：Isabelle 使用字符串表示名称，且没有原始常量；Lean 使用类型来参数化变量和常量。本验证材料并不声称这两种编码的等价性已经得到证明。[证明路线图](docs/proof-map.md)说明了这些差异。
 

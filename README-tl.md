@@ -4,9 +4,9 @@
 
 Naglalaman ang repositoryong ito ng pormalisasyon sa Isabelle/HOL ng confluence ng buong beta/sigma reduction ng FREnv, kasama ang kaugnay na pormalisasyon sa Lean 4. Inihanda ito bilang artifact na kasama ng isang papel na isusumite sa WCTP 2026.
 
-**Beripikasyon:** parehong matagumpay ang build sa Isabelle2025-2 at ang build at audit sa Lean 4.33.0 sa malilinis na GitHub Actions runner noong 2026-09-13. Tingnan ang [tala ng beripikasyon](docs/verification.md) para sa eksaktong commit na sinuri at sa mga log.
+**Beripikasyon:** parehong matagumpay ang build sa Isabelle2025-2 at ang build at audit sa Lean 4.33.0 sa malilinis na GitHub Actions runner noong 2026-09-13, sa commit `52881ab`, ang rebisyong naglalaman ng patunay ng confluence sa Lean. Tingnan ang [tala ng beripikasyon](docs/verification.md) para sa eksaktong mga commit na sinuri at sa mga log.
 
-**Magkaiba ang antas ng pagkakumpleto ng dalawang pormalisasyon.** Nasa Isabelle ang teorema ng confluence para sa buong reduction at ang mga depensiya nito. Ang kinopyang pormalisasyon sa Lean ay may syntax, mga relation ng reduction, at napatunayang mga batayan para sa parallel reduction; **hindi pa nito napapatunayan ang confluence**. Ang matagumpay na Lean build ay nagpapatunay na tama ang mga deklarasyong naroon, hindi na nalutas na ang natitirang mga obligasyon sa patunay ng confluence.
+**Napapatunayan na ng dalawang pormalisasyon ang buong confluence, sa magkahiwalay na paraan.** Nasa Isabelle ang teorema ng confluence para sa buong reduction at ang mga depensiya nito. Pinapatunayan din ng pormalisasyon sa Lean ang parehong pahayag para sa sarili nitong encoding, bilang `LambdaFrenv.frenv_beta_sigma_confluent`, sa pamamagitan ng parehong ruta (pantulong na calculus, sigma normalization, beta over sigma, translation) ngunit sa sarili nitong mga depinisyon at patunay. Nananatiling magkaiba ang dalawang encoding — may primitive constants type ang Lean — at hindi inaangkin ng artifact na ito na napatunayan ang equivalence ng mga ito.
 
 ## Estruktura ng mga direktoryo
 
@@ -23,10 +23,11 @@ lean/
   lakefile.toml         Konpigurasyon ng Lake project
   lake-manifest.json    Manifest ng mga depensiya (walang panlabas na package)
   LambdaFrenv.lean       Pangunahing entry point ng library
-  LambdaFrenv/          Mga depinisyon at napatunayang pantulong na lemma
+  LambdaFrenv/          Mga depinisyon at patunay, kasama ang teorema ng confluence
+  LambdaFrenv/EnvEps/   Ang pantulong na calculus at ang patunay ng confluence nito
   Audit.lean            Sinusuri ang mga deklarasyon at inililista ang mga axiom ng mga teorema
-  docs/                 Mga espesipikasyon at natitirang obligasyon sa Ingles
-  README.md             Mga tagubilin sa Lean build at eksaktong saklaw
+  docs/                 Mga espesipikasyon ng syntax at reduction sa Ingles
+  README.md             Mga tagubilin sa Lean build, estruktura, at daloy ng patunay
 docs/
   proof-map.md          Pangunahing resulta, daloy ng mga depensiya, at mga pagkakaiba
   verification.md       Tala ng beripikasyon
@@ -73,14 +74,20 @@ lake build
 lake env lean Audit.lean
 ```
 
-Itinatakda ng kasamang `lean-toolchain` ang **leanprover/lean4:v4.33.0**. Ida-download ng Elan ang bersiyong iyon kung kailangan. Walang depensiya sa Mathlib at walang hakbang para sa pag-download ng cache. Tingnan ang [mga tagubilin para sa Lean](lean/README.md) para sa mga napatunayang deklarasyon at sa pagkakaiba ng pagde-depina ng isang proposisyon at pagpapatunay nito.
+Itinatakda ng kasamang `lean-toolchain` ang **leanprover/lean4:v4.33.0**. Ida-download ng Elan ang bersiyong iyon kung kailangan. Walang depensiya sa Mathlib at walang hakbang para sa pag-download ng cache. Itinatatag ng build na ito ang
+
+```text
+LambdaFrenv.frenv_beta_sigma_confluent
+```
+
+na siyang katumbas sa Lean ng teorema sa Isabelle. Tingnan ang [mga tagubilin para sa Lean](lean/README.md) para sa estruktura ng mga module at sa daloy ng patunay.
 
 ## Mga resulta at saklaw
 
 | Pormalisasyon | Pangunahing nilalamang sinusuri | Confluence ng buong reduction ng FREnv |
 |---|---|---|
 | Isabelle/HOL | Confluence ng pantulong na calculus, translation, surjectivity, simulation, lifting, at ang panghuling teorema ng confluence | Naberipika sa naitalang session build na may aktibong pagsuri ng mga patunay |
-| Lean 4 | Syntax na may mga constant, beta/sigma reduction, parallel reduction, congruence ng closure, embedding, at simulation | Walang patunay nito sa kinopyang rebisyon |
+| Lean 4 | Abstract rewriting at lemma ni Newman, ang pantulong na calculus, termination at confluence ng sigma, mga sigma-normal form, diamond property ng parallel beta, composition compatibility, translation at lifting | Naberipika sa naitalang Lean build |
 
 Magkaiba rin ang mga wikang pormal na ginagamit: string ang mga pangalan sa Isabelle at wala itong primitive constant; ginagawang mga type parameter ng Lean ang mga variable at constant. Hindi inaangkin ng artifact na ito na napatunayan ang equivalence ng dalawang encoding. Ipinaliliwanag ang mga pagkakaibang ito sa [mapa ng patunay](docs/proof-map.md).
 

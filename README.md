@@ -4,9 +4,9 @@ English | [日本語](README-ja.md) | [Tagalog](README-tl.md) | [简体中文](R
 
 This repository collects the Isabelle/HOL development of full beta/sigma confluence of FREnv and the associated Lean 4 development. It is intended to accompany a paper submitted to WCTP 2026.
 
-**Verification:** both the Isabelle2025-2 build and the Lean 4.33.0 build/audit passed on clean GitHub Actions runners on 2026-09-13. See [the verification record](docs/verification.md) for the exact checked commit and logs.
+**Verification:** both the Isabelle2025-2 build and the Lean 4.33.0 build/audit passed on clean GitHub Actions runners on 2026-09-13, at commit `52881ab`, which is the revision that contains the Lean confluence proof. See [the verification record](docs/verification.md) for the exact checked commits and logs.
 
-**The two developments have different completion statuses.** Isabelle contains the full-confluence theorem and its dependencies. The imported Lean development contains syntax, reduction relations, and proved parallel-reduction infrastructure; it does **not** yet prove confluence. A successful Lean build verifies the declarations that are present, not the remaining confluence obligations.
+**Both developments now prove full confluence, by independent routes.** Isabelle contains the full-confluence theorem and its dependencies. The Lean development proves the same statement for its own encoding, as `LambdaFrenv.frenv_beta_sigma_confluent`, following the same mathematical route (auxiliary calculus, sigma normalization, beta over sigma, translation) but with its own definitions and proofs. The two encodings still differ — Lean has a primitive constants type — and this artifact does not claim a proved equivalence between them.
 
 ## Layout
 
@@ -23,10 +23,11 @@ lean/
   lakefile.toml         Lake project configuration
   lake-manifest.json     Dependency manifest (no external packages)
   LambdaFrenv.lean       Library entry point
-  LambdaFrenv/           Definitions and proved supporting lemmas
+  LambdaFrenv/           Definitions and proofs, including the confluence theorem
+  LambdaFrenv/EnvEps/    The auxiliary calculus and its confluence proof
   Audit.lean            Checks declarations and prints theorem axioms
-  docs/                 English specifications and remaining obligations
-  README.md             Lean build instructions and exact scope
+  docs/                 English specifications of the syntax and reductions
+  README.md             Lean build instructions, layout, and proof route
 docs/
   proof-map.md          Main results, dependency route, and differences
   verification.md       Verification record
@@ -73,14 +74,20 @@ lake build
 lake env lean Audit.lean
 ```
 
-The checked-in `lean-toolchain` selects **leanprover/lean4:v4.33.0**. Elan downloads that version if necessary. There is no Mathlib dependency or cache-download step. See [the Lean instructions](lean/README.md) for the proved declarations and the distinction between a proposition definition and a proof.
+The checked-in `lean-toolchain` selects **leanprover/lean4:v4.33.0**. Elan downloads that version if necessary. There is no Mathlib dependency or cache-download step. The build establishes
+
+```text
+LambdaFrenv.frenv_beta_sigma_confluent
+```
+
+the Lean counterpart of the Isabelle theorem. See [the Lean instructions](lean/README.md) for the module layout and the proof route.
 
 ## Results and scope
 
 | Development | Main checked content | Full FREnv confluence |
 |---|---|---|
 | Isabelle/HOL | Auxiliary-calculus confluence, translation, surjectivity, simulation, lifting, and the final confluence theorem | Verified by the recorded strict session build |
-| Lean 4 | Syntax with constants, beta/sigma reduction, parallel reduction, closure congruence, embedding, and simulation | Not supplied in the imported revision |
+| Lean 4 | Abstract rewriting and Newman's lemma, the auxiliary calculus, sigma termination and confluence, sigma-normal forms, the parallel-beta diamond property, composition compatibility, translation and lifting | Verified by the recorded Lean build |
 
 The languages also differ: Isabelle uses string names and has no primitive constants; Lean parameterizes variables and constants by types. This artifact does not claim a proved equivalence of the two encodings. The [proof map](docs/proof-map.md) explains these differences.
 

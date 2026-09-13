@@ -1,2 +1,13 @@
 import LambdaFrenv.Basic
 import LambdaFrenv.Par
+import LambdaFrenv.Rewriting
+import LambdaFrenv.ParNotStrong
+import LambdaFrenv.EnvEps.Syntax
+import LambdaFrenv.EnvEps.Length
+import LambdaFrenv.EnvEps.SigmaConfluence
+import LambdaFrenv.EnvEps.NormalForm
+import LambdaFrenv.EnvEps.PStep
+import LambdaFrenv.EnvEps.Compat
+import LambdaFrenv.EnvEps.BetaOverSigma
+import LambdaFrenv.Translation
+import LambdaFrenv.Confluence

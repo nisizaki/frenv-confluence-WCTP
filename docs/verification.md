@@ -2,7 +2,7 @@
 
 ## Source inspection
 
-The artifact was assembled from the two revisions recorded in [PROVENANCE.md](../PROVENANCE.md). Isabelle's final theorem is present with its transitive imports; Lean's confluence target is only a proposition definition. See [proof-map.md](proof-map.md).
+The artifact was assembled from the two revisions recorded in [PROVENANCE.md](../PROVENANCE.md). Isabelle's final theorem is present with its transitive imports. The Lean development has since been extended with its own confluence proof; see [proof-map.md](proof-map.md).
 
 ## Reproducible checks
 
@@ -21,7 +21,15 @@ The Lean job of [run 34745901197](https://github.com/nisizaki/frenv-confluence-W
 
 The Lean build and audit also succeeded in the final verification run linked above.
 
-All ten supporting theorems listed in `Audit.lean` reported no axiom dependencies. The printed `ParStronglyConfluent` declaration was a definition of a proposition, not a proof. This result therefore does not establish Lean confluence.
+All ten supporting theorems listed in the `Audit.lean` of that revision reported no axiom dependencies. The printed `ParStronglyConfluent` declaration was a definition of a proposition, not a proof. That run therefore did not establish Lean confluence.
+
+### Lean confluence proof (added after the run above)
+
+The Lean sources were subsequently extended with a full confluence proof. The extended development was checked locally with the pinned toolchain `leanprover/lean4:v4.33.0` on Ubuntu 26.04 aarch64 under WSL2, using exactly the documented commands `lake build` and `lake env lean Audit.lean`; both returned exit status 0. `Audit.lean` reports, for every listed theorem, only the standard Lean axioms `propext`, `Classical.choice` and `Quot.sound`; no output mentions `sorryAx`, and the sources contain no `sorry`. `Classical.choice` enters through the sigma-normal-form operator `snf`, which selects a normal form.
+
+The main declaration is `LambdaFrenv.frenv_beta_sigma_confluent`. `LambdaFrenv.not_parStronglyConfluent` additionally refutes the strong-confluence target that the earlier revision had left open.
+
+This extended development was then verified on clean runners as well. Both jobs of [run 34749588018](https://github.com/nisizaki/frenv-confluence-WCTP/actions/runs/34749588018) succeeded on 2026-09-13 at artifact commit `52881aba05bc997bfde438566e8a2b17ddd98e2e` (branch `lean4-confluence`), on `ubuntu-24.04` x86_64 runners: the Isabelle job in 2 m 52 s and the Lean job in 19 s. The Lean job log reports `Build completed successfully (16 jobs)` and prints, for `LambdaFrenv.frenv_beta_sigma_confluent`, the axioms `[propext, Classical.choice, Quot.sound]`; the job fails if any audited theorem depends on `sorryAx`, and it did not. The local build was on aarch64 and the CI build on x86_64, so the result is not architecture-specific.
 
 ## Isabelle result
 

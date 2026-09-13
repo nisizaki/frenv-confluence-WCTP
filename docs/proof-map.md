@@ -31,7 +31,9 @@ For a file-by-file view, see the [application theory index](theory-index.md), wh
 
 [Basic.lean](../lean/LambdaFrenv/Basic.lean) defines the term type, beta/sigma reduction, its reflexive-transitive closure, and generic confluence predicates. [Par.lean](../lean/LambdaFrenv/Par.lean) defines parallel reduction and proves its embedding and simulation properties as well as closure congruence.
 
-The final section of `Par.lean` defines `ParStronglyConfluent` and root-overlap obligations as propositions. None of these definitions asserts that the proposition is true. The supplied revision does not include a full-confluence proof, a strong-confluence proof for parallel reduction, or a translation-based EnvEps development.
+The Lean development now proves full confluence, `LambdaFrenv.frenv_beta_sigma_confluent`, along the same mathematical route as the Isabelle one: an auxiliary calculus `λ_EnvEps` with a primitive composition constructor ([EnvEps/Syntax.lean](../lean/LambdaFrenv/EnvEps/Syntax.lean)), sigma termination via a multiplicative length measure ([EnvEps/Length.lean](../lean/LambdaFrenv/EnvEps/Length.lean)), local confluence and Newman's lemma ([EnvEps/SigmaConfluence.lean](../lean/LambdaFrenv/EnvEps/SigmaConfluence.lean), [Rewriting.lean](../lean/LambdaFrenv/Rewriting.lean)), sigma-normal forms ([EnvEps/NormalForm.lean](../lean/LambdaFrenv/EnvEps/NormalForm.lean)), the parallel-beta diamond property ([EnvEps/PStep.lean](../lean/LambdaFrenv/EnvEps/PStep.lean)), composition compatibility ([EnvEps/Compat.lean](../lean/LambdaFrenv/EnvEps/Compat.lean)), beta over sigma ([EnvEps/BetaOverSigma.lean](../lean/LambdaFrenv/EnvEps/BetaOverSigma.lean)), and the translation with its lifting lemma ([Translation.lean](../lean/LambdaFrenv/Translation.lean)).
+
+The `ParStronglyConfluent` target stated at the end of `Par.lean` is **false**, and [ParNotStrong.lean](../lean/LambdaFrenv/ParNotStrong.lean) proves its negation: on the associativity pentagon the two `Assoc` reducts have disjoint sets of one-step parallel reducts. The `overlap...` declarations remain definitions of propositions and are not used. This is why the Lean proof, like the Isabelle one, must go through sigma normalization rather than a direct diamond property.
 
 ## Differences between the encodings
 
@@ -40,9 +42,9 @@ The final section of `Par.lean` defines `ParStronglyConfluent` and root-overlap 
 | Variable names | Strings | Parameter type `V` |
 | Primitive constants | None | Parameter type `C`, constructor `Trm.const`, and a constant reduction rule |
 | Bindings in raw syntax | Names are ordinary datatype arguments | Variable parameters are ordinary datatype arguments |
-| Auxiliary EnvEps calculus | Included | Not included |
-| Main route | Sigma normalization, parallel reduction on the auxiliary side, and transfer | Direct FREnv parallel-reduction infrastructure |
-| Final confluence result | Theorem supplied | Open target only |
+| Auxiliary EnvEps calculus | Included | Included (`LambdaFrenv/EnvEps/`) |
+| Main route | Sigma normalization, parallel reduction on the auxiliary side, and transfer | The same route, with parallel beta on all terms and the diamond property obtained from a complete development |
+| Final confluence result | Theorem supplied | Theorem supplied |
 
 There is no machine-checked equivalence theorem between these two encodings in this artifact. Even restricting Lean's constants type to an empty type does not by itself establish such an equivalence; the representations and relations would still need a proved correspondence.
 
