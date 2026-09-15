@@ -1,5 +1,11 @@
 :: The sigma reduction of lambda_EnvEps
 
+::  The eight computation rules are given once, as the relation SigmaRoot(V);
+::  the reduction itself is their compatible closure.  Everything else in this
+::  article -- the sixteen named rules, the inversion lemma, inversion by head
+::  constructor, the multi-step congruences -- follows from ENVCC, where the
+::  general theory of the compatible closure is developed.
+
 environ
 
  vocabularies NUMBERS, XBOOLE_0, SUBSET_1, TARSKI, ZFMISC_1, FINSEQ_1,
@@ -27,7 +33,7 @@ environ
       NAT_1, XXREAL_0, XREAL_1, ENVSYN, ENVLEN, ENVCC;
  schemes NAT_1, ENVSYN;
 
-begin :: The eight root rules
+begin :: The eight computation rules
 
 reserve V for non empty set;
 
@@ -37,68 +43,72 @@ definition
   :Def1:
   { z where z is Element of [:TS(EnvEpsGram(V)),TS(EnvEpsGram(V)):] :
       ex P,S being EnvEpsTerm of V st z = [P,S] &
-        ( ( ex M2,N2,L2 being EnvEpsTerm of V st P =
-        eComp(eComp(M2,N2),L2) & S = eComp(M2,eComp(N2,L2)) ) or
-        ( ex M2 being EnvEpsTerm of V st P = eComp(eId V,M2) & S = M2 ) or
-        ( ex M2 being EnvEpsTerm of V st P = eComp(M2,eId V) & S = M2 ) or
-        ( ex L2,M2,N2 being EnvEpsTerm of V, x2 being Element of V st P =
-        eComp(eExt(L2,x2,M2),N2) & S = eExt(eComp(L2,N2),x2,eComp(M2,N2))
-        ) or
-        ( ex M2,N2 being EnvEpsTerm of V, x2 being Element of V st P =
-        eComp(eVar x2, eExt(M2,x2,N2)) & S = M2 ) or
-        ( ex M2,N2 being EnvEpsTerm of V, x2,y2 being Element of V st x2
-        <> y2 & P = eComp(eVar x2, eExt(M2,y2,N2)) & S = eComp(eVar x2,
-        N2) ) or
-        ( ex M2,N2,L2 being EnvEpsTerm of V st P = eComp(eApp(M2,N2),L2) &
-        S = eApp(eComp(M2,L2),eComp(N2,L2)) ) or
-        ( ex M2,N2 being EnvEpsTerm of V st P = eComp(eEps M2,N2) & S =
-        eEps M2 ) ) };
+      (
+        ( ex A,B,C being EnvEpsTerm of V st
+            P = (A (o) B) (o) C & S = A (o) (B (o) C) ) or
+        ( ex A being EnvEpsTerm of V st
+            P = (eId V) (o) A & S = A ) or
+        ( ex A being EnvEpsTerm of V st
+            P = A (o) (eId V) & S = A ) or
+        ( ex C,A,B being EnvEpsTerm of V, x0 being Element of V st
+            P = eExt(C,x0,A) (o) B & S = eExt(C (o) B, x0, A (o) B) ) or
+        ( ex A,B being EnvEpsTerm of V, x0 being Element of V st
+            P = (eVar x0) (o) eExt(A,x0,B) & S = A ) or
+        ( ex A,B being EnvEpsTerm of V, x0,y0 being Element of V st
+            x0 <> y0 & P = (eVar x0) (o) eExt(A,y0,B) & S = (eVar x0) (o) B
+            ) or
+        ( ex A,B,C being EnvEpsTerm of V st
+            P = (A (@) B) (o) C & S = (A (o) C) (@) (B (o) C) ) or
+        ( ex A,B being EnvEpsTerm of V st
+            P = (eEps A) (o) B & S = eEps A ) ) };
   coherence
   proof
     set G = EnvEpsGram(V);
     set D = [:TS G, TS G:];
     set S0 = { z where z is Element of D :
       ex P,S being EnvEpsTerm of V st z = [P,S] &
-        ( ( ex M2,N2,L2 being EnvEpsTerm of V st P =
-        eComp(eComp(M2,N2),L2) & S = eComp(M2,eComp(N2,L2)) ) or
-        ( ex M2 being EnvEpsTerm of V st P = eComp(eId V,M2) & S = M2 ) or
-        ( ex M2 being EnvEpsTerm of V st P = eComp(M2,eId V) & S = M2 ) or
-        ( ex L2,M2,N2 being EnvEpsTerm of V, x2 being Element of V st P =
-        eComp(eExt(L2,x2,M2),N2) & S = eExt(eComp(L2,N2),x2,eComp(M2,N2))
-        ) or
-        ( ex M2,N2 being EnvEpsTerm of V, x2 being Element of V st P =
-        eComp(eVar x2, eExt(M2,x2,N2)) & S = M2 ) or
-        ( ex M2,N2 being EnvEpsTerm of V, x2,y2 being Element of V st x2
-        <> y2 & P = eComp(eVar x2, eExt(M2,y2,N2)) & S = eComp(eVar x2,
-        N2) ) or
-        ( ex M2,N2,L2 being EnvEpsTerm of V st P = eComp(eApp(M2,N2),L2) &
-        S = eApp(eComp(M2,L2),eComp(N2,L2)) ) or
-        ( ex M2,N2 being EnvEpsTerm of V st P = eComp(eEps M2,N2) & S =
-        eEps M2 ) ) };
+      (
+        ( ex A,B,C being EnvEpsTerm of V st
+            P = (A (o) B) (o) C & S = A (o) (B (o) C) ) or
+        ( ex A being EnvEpsTerm of V st
+            P = (eId V) (o) A & S = A ) or
+        ( ex A being EnvEpsTerm of V st
+            P = A (o) (eId V) & S = A ) or
+        ( ex C,A,B being EnvEpsTerm of V, x0 being Element of V st
+            P = eExt(C,x0,A) (o) B & S = eExt(C (o) B, x0, A (o) B) ) or
+        ( ex A,B being EnvEpsTerm of V, x0 being Element of V st
+            P = (eVar x0) (o) eExt(A,x0,B) & S = A ) or
+        ( ex A,B being EnvEpsTerm of V, x0,y0 being Element of V st
+            x0 <> y0 & P = (eVar x0) (o) eExt(A,y0,B) & S = (eVar x0) (o) B
+            ) or
+        ( ex A,B,C being EnvEpsTerm of V st
+            P = (A (@) B) (o) C & S = (A (o) C) (@) (B (o) C) ) or
+        ( ex A,B being EnvEpsTerm of V st
+            P = (eEps A) (o) B & S = eEps A ) ) };
     S0 c= D
     proof
       let u be object;
       assume u in S0;
       then ex z being Element of D st u = z &
         ex P,S being EnvEpsTerm of V st z = [P,S] &
-          ( ( ex M2,N2,L2 being EnvEpsTerm of V st P =
-          eComp(eComp(M2,N2),L2) & S = eComp(M2,eComp(N2,L2)) ) or
-          ( ex M2 being EnvEpsTerm of V st P = eComp(eId V,M2) & S = M2 )
-          or
-          ( ex M2 being EnvEpsTerm of V st P = eComp(M2,eId V) & S = M2 )
-          or
-          ( ex L2,M2,N2 being EnvEpsTerm of V, x2 being Element of V st P
-          = eComp(eExt(L2,x2,M2),N2) & S =
-          eExt(eComp(L2,N2),x2,eComp(M2,N2)) ) or
-          ( ex M2,N2 being EnvEpsTerm of V, x2 being Element of V st P =
-          eComp(eVar x2, eExt(M2,x2,N2)) & S = M2 ) or
-          ( ex M2,N2 being EnvEpsTerm of V, x2,y2 being Element of V st x2
-          <> y2 & P = eComp(eVar x2, eExt(M2,y2,N2)) & S = eComp(eVar x2,
-          N2) ) or
-          ( ex M2,N2,L2 being EnvEpsTerm of V st P = eComp(eApp(M2,N2),L2)
-          & S = eApp(eComp(M2,L2),eComp(N2,L2)) ) or
-          ( ex M2,N2 being EnvEpsTerm of V st P = eComp(eEps M2,N2) & S =
-          eEps M2 ) );
+        (
+          ( ex A,B,C being EnvEpsTerm of V st
+              P = (A (o) B) (o) C & S = A (o) (B (o) C) ) or
+          ( ex A being EnvEpsTerm of V st
+              P = (eId V) (o) A & S = A ) or
+          ( ex A being EnvEpsTerm of V st
+              P = A (o) (eId V) & S = A ) or
+          ( ex C,A,B being EnvEpsTerm of V, x0 being Element of V st
+              P = eExt(C,x0,A) (o) B & S = eExt(C (o) B, x0, A (o) B) ) or
+          ( ex A,B being EnvEpsTerm of V, x0 being Element of V st
+              P = (eVar x0) (o) eExt(A,x0,B) & S = A ) or
+          ( ex A,B being EnvEpsTerm of V, x0,y0 being Element of V st
+              x0 <> y0 & P = (eVar x0) (o) eExt(A,y0,B) & S = (eVar x0) (o)
+              B ) or
+          ( ex A,B,C being EnvEpsTerm of V st
+              P = (A (@) B) (o) C & S = (A (o) C) (@) (B (o) C) ) or
+          ( ex A,B being EnvEpsTerm of V st
+              P = (eEps A) (o) B & S = eEps A ) );
       hence thesis;
     end;
     hence thesis;
@@ -108,20 +118,22 @@ end;
 theorem Th1:
   for V being non empty set, P,S being EnvEpsTerm of V holds
   ( [P,S] in SigmaRoot(V) iff
-    ( ( ex M2,N2,L2 being EnvEpsTerm of V st P = eComp(eComp(M2,N2),L2) &
-    S = eComp(M2,eComp(N2,L2)) ) or
-    ( ex M2 being EnvEpsTerm of V st P = eComp(eId V,M2) & S = M2 ) or
-    ( ex M2 being EnvEpsTerm of V st P = eComp(M2,eId V) & S = M2 ) or
-    ( ex L2,M2,N2 being EnvEpsTerm of V, x2 being Element of V st P =
-    eComp(eExt(L2,x2,M2),N2) & S = eExt(eComp(L2,N2),x2,eComp(M2,N2)) ) or
-    ( ex M2,N2 being EnvEpsTerm of V, x2 being Element of V st P =
-    eComp(eVar x2, eExt(M2,x2,N2)) & S = M2 ) or
-    ( ex M2,N2 being EnvEpsTerm of V, x2,y2 being Element of V st x2 <> y2
-    & P = eComp(eVar x2, eExt(M2,y2,N2)) & S = eComp(eVar x2, N2) ) or
-    ( ex M2,N2,L2 being EnvEpsTerm of V st P = eComp(eApp(M2,N2),L2) & S =
-    eApp(eComp(M2,L2),eComp(N2,L2)) ) or
-    ( ex M2,N2 being EnvEpsTerm of V st P = eComp(eEps M2,N2) & S = eEps
-    M2 ) ) )
+    ( ex A,B,C being EnvEpsTerm of V st
+        P = (A (o) B) (o) C & S = A (o) (B (o) C) ) or
+    ( ex A being EnvEpsTerm of V st
+        P = (eId V) (o) A & S = A ) or
+    ( ex A being EnvEpsTerm of V st
+        P = A (o) (eId V) & S = A ) or
+    ( ex C,A,B being EnvEpsTerm of V, x0 being Element of V st
+        P = eExt(C,x0,A) (o) B & S = eExt(C (o) B, x0, A (o) B) ) or
+    ( ex A,B being EnvEpsTerm of V, x0 being Element of V st
+        P = (eVar x0) (o) eExt(A,x0,B) & S = A ) or
+    ( ex A,B being EnvEpsTerm of V, x0,y0 being Element of V st
+        x0 <> y0 & P = (eVar x0) (o) eExt(A,y0,B) & S = (eVar x0) (o) B ) or
+    ( ex A,B,C being EnvEpsTerm of V st
+        P = (A (@) B) (o) C & S = (A (o) C) (@) (B (o) C) ) or
+    ( ex A,B being EnvEpsTerm of V st
+        P = (eEps A) (o) B & S = eEps A ) )
 proof
   let V be non empty set, P,S be EnvEpsTerm of V;
   set G = EnvEpsGram(V);
@@ -131,150 +143,155 @@ proof
     assume [P,S] in SigmaRoot(V);
     then [P,S] in { z where z is Element of D :
       ex P2,S2 being EnvEpsTerm of V st z = [P2,S2] &
-        ( ( ex M2,N2,L2 being EnvEpsTerm of V st P2 =
-        eComp(eComp(M2,N2),L2) & S2 = eComp(M2,eComp(N2,L2)) ) or
-        ( ex M2 being EnvEpsTerm of V st P2 = eComp(eId V,M2) & S2 = M2 )
-        or
-        ( ex M2 being EnvEpsTerm of V st P2 = eComp(M2,eId V) & S2 = M2 )
-        or
-        ( ex L2,M2,N2 being EnvEpsTerm of V, x2 being Element of V st P2 =
-        eComp(eExt(L2,x2,M2),N2) & S2 = eExt(eComp(L2,N2),x2,eComp(M2,N2))
-        ) or
-        ( ex M2,N2 being EnvEpsTerm of V, x2 being Element of V st P2 =
-        eComp(eVar x2, eExt(M2,x2,N2)) & S2 = M2 ) or
-        ( ex M2,N2 being EnvEpsTerm of V, x2,y2 being Element of V st x2
-        <> y2 & P2 = eComp(eVar x2, eExt(M2,y2,N2)) & S2 = eComp(eVar x2,
-        N2) ) or
-        ( ex M2,N2,L2 being EnvEpsTerm of V st P2 = eComp(eApp(M2,N2),L2)
-        & S2 = eApp(eComp(M2,L2),eComp(N2,L2)) ) or
-        ( ex M2,N2 being EnvEpsTerm of V st P2 = eComp(eEps M2,N2) & S2 =
-        eEps M2 ) ) } by Def1;
+      (
+        ( ex A,B,C being EnvEpsTerm of V st
+            P2 = (A (o) B) (o) C & S2 = A (o) (B (o) C) ) or
+        ( ex A being EnvEpsTerm of V st
+            P2 = (eId V) (o) A & S2 = A ) or
+        ( ex A being EnvEpsTerm of V st
+            P2 = A (o) (eId V) & S2 = A ) or
+        ( ex C,A,B being EnvEpsTerm of V, x0 being Element of V st
+            P2 = eExt(C,x0,A) (o) B & S2 = eExt(C (o) B, x0, A (o) B) ) or
+        ( ex A,B being EnvEpsTerm of V, x0 being Element of V st
+            P2 = (eVar x0) (o) eExt(A,x0,B) & S2 = A ) or
+        ( ex A,B being EnvEpsTerm of V, x0,y0 being Element of V st
+            x0 <> y0 & P2 = (eVar x0) (o) eExt(A,y0,B) & S2 = (eVar x0) (o)
+            B ) or
+        ( ex A,B,C being EnvEpsTerm of V st
+            P2 = (A (@) B) (o) C & S2 = (A (o) C) (@) (B (o) C) ) or
+        ( ex A,B being EnvEpsTerm of V st
+            P2 = (eEps A) (o) B & S2 = eEps A ) ) } by Def1;
     then consider z being Element of D such that
     B1: [P,S] = z and
     B2:
       ex P2,S2 being EnvEpsTerm of V st z = [P2,S2] &
-        ( ( ex M2,N2,L2 being EnvEpsTerm of V st P2 =
-        eComp(eComp(M2,N2),L2) & S2 = eComp(M2,eComp(N2,L2)) ) or
-        ( ex M2 being EnvEpsTerm of V st P2 = eComp(eId V,M2) & S2 = M2 )
-        or
-        ( ex M2 being EnvEpsTerm of V st P2 = eComp(M2,eId V) & S2 = M2 )
-        or
-        ( ex L2,M2,N2 being EnvEpsTerm of V, x2 being Element of V st P2 =
-        eComp(eExt(L2,x2,M2),N2) & S2 = eExt(eComp(L2,N2),x2,eComp(M2,N2))
-        ) or
-        ( ex M2,N2 being EnvEpsTerm of V, x2 being Element of V st P2 =
-        eComp(eVar x2, eExt(M2,x2,N2)) & S2 = M2 ) or
-        ( ex M2,N2 being EnvEpsTerm of V, x2,y2 being Element of V st x2
-        <> y2 & P2 = eComp(eVar x2, eExt(M2,y2,N2)) & S2 = eComp(eVar x2,
-        N2) ) or
-        ( ex M2,N2,L2 being EnvEpsTerm of V st P2 = eComp(eApp(M2,N2),L2)
-        & S2 = eApp(eComp(M2,L2),eComp(N2,L2)) ) or
-        ( ex M2,N2 being EnvEpsTerm of V st P2 = eComp(eEps M2,N2) & S2 =
-        eEps M2 ) );
+      (
+        ( ex A,B,C being EnvEpsTerm of V st
+            P2 = (A (o) B) (o) C & S2 = A (o) (B (o) C) ) or
+        ( ex A being EnvEpsTerm of V st
+            P2 = (eId V) (o) A & S2 = A ) or
+        ( ex A being EnvEpsTerm of V st
+            P2 = A (o) (eId V) & S2 = A ) or
+        ( ex C,A,B being EnvEpsTerm of V, x0 being Element of V st
+            P2 = eExt(C,x0,A) (o) B & S2 = eExt(C (o) B, x0, A (o) B) ) or
+        ( ex A,B being EnvEpsTerm of V, x0 being Element of V st
+            P2 = (eVar x0) (o) eExt(A,x0,B) & S2 = A ) or
+        ( ex A,B being EnvEpsTerm of V, x0,y0 being Element of V st
+            x0 <> y0 & P2 = (eVar x0) (o) eExt(A,y0,B) & S2 = (eVar x0) (o)
+            B ) or
+        ( ex A,B,C being EnvEpsTerm of V st
+            P2 = (A (@) B) (o) C & S2 = (A (o) C) (@) (B (o) C) ) or
+        ( ex A,B being EnvEpsTerm of V st
+            P2 = (eEps A) (o) B & S2 = eEps A ) );
     consider P2,S2 being EnvEpsTerm of V such that
     B3: z = [P2,S2] &
-      ( ( ex M2,N2,L2 being EnvEpsTerm of V st P2 = eComp(eComp(M2,N2),L2)
-      & S2 = eComp(M2,eComp(N2,L2)) ) or
-      ( ex M2 being EnvEpsTerm of V st P2 = eComp(eId V,M2) & S2 = M2 ) or
-      ( ex M2 being EnvEpsTerm of V st P2 = eComp(M2,eId V) & S2 = M2 ) or
-      ( ex L2,M2,N2 being EnvEpsTerm of V, x2 being Element of V st P2 =
-      eComp(eExt(L2,x2,M2),N2) & S2 = eExt(eComp(L2,N2),x2,eComp(M2,N2)) )
-      or
-      ( ex M2,N2 being EnvEpsTerm of V, x2 being Element of V st P2 =
-      eComp(eVar x2, eExt(M2,x2,N2)) & S2 = M2 ) or
-      ( ex M2,N2 being EnvEpsTerm of V, x2,y2 being Element of V st x2 <>
-      y2 & P2 = eComp(eVar x2, eExt(M2,y2,N2)) & S2 = eComp(eVar x2, N2) )
-      or
-      ( ex M2,N2,L2 being EnvEpsTerm of V st P2 = eComp(eApp(M2,N2),L2) &
-      S2 = eApp(eComp(M2,L2),eComp(N2,L2)) ) or
-      ( ex M2,N2 being EnvEpsTerm of V st P2 = eComp(eEps M2,N2) & S2 =
-      eEps M2 ) ) by B2;
+    (
+      ( ex A,B,C being EnvEpsTerm of V st
+          P2 = (A (o) B) (o) C & S2 = A (o) (B (o) C) ) or
+      ( ex A being EnvEpsTerm of V st
+          P2 = (eId V) (o) A & S2 = A ) or
+      ( ex A being EnvEpsTerm of V st
+          P2 = A (o) (eId V) & S2 = A ) or
+      ( ex C,A,B being EnvEpsTerm of V, x0 being Element of V st
+          P2 = eExt(C,x0,A) (o) B & S2 = eExt(C (o) B, x0, A (o) B) ) or
+      ( ex A,B being EnvEpsTerm of V, x0 being Element of V st
+          P2 = (eVar x0) (o) eExt(A,x0,B) & S2 = A ) or
+      ( ex A,B being EnvEpsTerm of V, x0,y0 being Element of V st
+          x0 <> y0 & P2 = (eVar x0) (o) eExt(A,y0,B) & S2 = (eVar x0) (o) B
+          ) or
+      ( ex A,B,C being EnvEpsTerm of V st
+          P2 = (A (@) B) (o) C & S2 = (A (o) C) (@) (B (o) C) ) or
+      ( ex A,B being EnvEpsTerm of V st
+          P2 = (eEps A) (o) B & S2 = eEps A ) ) by B2;
     B4: P = P2 & S = S2 by B1,B3,XTUPLE_0:1;
     thus
-      ( ( ex M2,N2,L2 being EnvEpsTerm of V st P = eComp(eComp(M2,N2),L2)
-      & S = eComp(M2,eComp(N2,L2)) ) or
-      ( ex M2 being EnvEpsTerm of V st P = eComp(eId V,M2) & S = M2 ) or
-      ( ex M2 being EnvEpsTerm of V st P = eComp(M2,eId V) & S = M2 ) or
-      ( ex L2,M2,N2 being EnvEpsTerm of V, x2 being Element of V st P =
-      eComp(eExt(L2,x2,M2),N2) & S = eExt(eComp(L2,N2),x2,eComp(M2,N2)) )
-      or
-      ( ex M2,N2 being EnvEpsTerm of V, x2 being Element of V st P =
-      eComp(eVar x2, eExt(M2,x2,N2)) & S = M2 ) or
-      ( ex M2,N2 being EnvEpsTerm of V, x2,y2 being Element of V st x2 <>
-      y2 & P = eComp(eVar x2, eExt(M2,y2,N2)) & S = eComp(eVar x2, N2) )
-      or
-      ( ex M2,N2,L2 being EnvEpsTerm of V st P = eComp(eApp(M2,N2),L2) & S
-      = eApp(eComp(M2,L2),eComp(N2,L2)) ) or
-      ( ex M2,N2 being EnvEpsTerm of V st P = eComp(eEps M2,N2) & S = eEps
-      M2 ) ) by B3,B4;
+      ( ex A,B,C being EnvEpsTerm of V st
+          P = (A (o) B) (o) C & S = A (o) (B (o) C) ) or
+      ( ex A being EnvEpsTerm of V st
+          P = (eId V) (o) A & S = A ) or
+      ( ex A being EnvEpsTerm of V st
+          P = A (o) (eId V) & S = A ) or
+      ( ex C,A,B being EnvEpsTerm of V, x0 being Element of V st
+          P = eExt(C,x0,A) (o) B & S = eExt(C (o) B, x0, A (o) B) ) or
+      ( ex A,B being EnvEpsTerm of V, x0 being Element of V st
+          P = (eVar x0) (o) eExt(A,x0,B) & S = A ) or
+      ( ex A,B being EnvEpsTerm of V, x0,y0 being Element of V st
+          x0 <> y0 & P = (eVar x0) (o) eExt(A,y0,B) & S = (eVar x0) (o) B ) or
+      ( ex A,B,C being EnvEpsTerm of V st
+          P = (A (@) B) (o) C & S = (A (o) C) (@) (B (o) C) ) or
+      ( ex A,B being EnvEpsTerm of V st
+          P = (eEps A) (o) B & S = eEps A ) by B3,B4;
   end;
   assume C1:
-    ( ( ex M2,N2,L2 being EnvEpsTerm of V st P = eComp(eComp(M2,N2),L2) &
-    S = eComp(M2,eComp(N2,L2)) ) or
-    ( ex M2 being EnvEpsTerm of V st P = eComp(eId V,M2) & S = M2 ) or
-    ( ex M2 being EnvEpsTerm of V st P = eComp(M2,eId V) & S = M2 ) or
-    ( ex L2,M2,N2 being EnvEpsTerm of V, x2 being Element of V st P =
-    eComp(eExt(L2,x2,M2),N2) & S = eExt(eComp(L2,N2),x2,eComp(M2,N2)) ) or
-    ( ex M2,N2 being EnvEpsTerm of V, x2 being Element of V st P =
-    eComp(eVar x2, eExt(M2,x2,N2)) & S = M2 ) or
-    ( ex M2,N2 being EnvEpsTerm of V, x2,y2 being Element of V st x2 <> y2
-    & P = eComp(eVar x2, eExt(M2,y2,N2)) & S = eComp(eVar x2, N2) ) or
-    ( ex M2,N2,L2 being EnvEpsTerm of V st P = eComp(eApp(M2,N2),L2) & S =
-    eApp(eComp(M2,L2),eComp(N2,L2)) ) or
-    ( ex M2,N2 being EnvEpsTerm of V st P = eComp(eEps M2,N2) & S = eEps
-    M2 ) );
+    ( ex A,B,C being EnvEpsTerm of V st
+        P = (A (o) B) (o) C & S = A (o) (B (o) C) ) or
+    ( ex A being EnvEpsTerm of V st
+        P = (eId V) (o) A & S = A ) or
+    ( ex A being EnvEpsTerm of V st
+        P = A (o) (eId V) & S = A ) or
+    ( ex C,A,B being EnvEpsTerm of V, x0 being Element of V st
+        P = eExt(C,x0,A) (o) B & S = eExt(C (o) B, x0, A (o) B) ) or
+    ( ex A,B being EnvEpsTerm of V, x0 being Element of V st
+        P = (eVar x0) (o) eExt(A,x0,B) & S = A ) or
+    ( ex A,B being EnvEpsTerm of V, x0,y0 being Element of V st
+        x0 <> y0 & P = (eVar x0) (o) eExt(A,y0,B) & S = (eVar x0) (o) B ) or
+    ( ex A,B,C being EnvEpsTerm of V st
+        P = (A (@) B) (o) C & S = (A (o) C) (@) (B (o) C) ) or
+    ( ex A,B being EnvEpsTerm of V st
+        P = (eEps A) (o) B & S = eEps A );
   reconsider z = [P,S] as Element of D by A0;
   C2:
     ex P2,S2 being EnvEpsTerm of V st z = [P2,S2] &
-      ( ( ex M2,N2,L2 being EnvEpsTerm of V st P2 = eComp(eComp(M2,N2),L2)
-      & S2 = eComp(M2,eComp(N2,L2)) ) or
-      ( ex M2 being EnvEpsTerm of V st P2 = eComp(eId V,M2) & S2 = M2 ) or
-      ( ex M2 being EnvEpsTerm of V st P2 = eComp(M2,eId V) & S2 = M2 ) or
-      ( ex L2,M2,N2 being EnvEpsTerm of V, x2 being Element of V st P2 =
-      eComp(eExt(L2,x2,M2),N2) & S2 = eExt(eComp(L2,N2),x2,eComp(M2,N2)) )
-      or
-      ( ex M2,N2 being EnvEpsTerm of V, x2 being Element of V st P2 =
-      eComp(eVar x2, eExt(M2,x2,N2)) & S2 = M2 ) or
-      ( ex M2,N2 being EnvEpsTerm of V, x2,y2 being Element of V st x2 <>
-      y2 & P2 = eComp(eVar x2, eExt(M2,y2,N2)) & S2 = eComp(eVar x2, N2) )
-      or
-      ( ex M2,N2,L2 being EnvEpsTerm of V st P2 = eComp(eApp(M2,N2),L2) &
-      S2 = eApp(eComp(M2,L2),eComp(N2,L2)) ) or
-      ( ex M2,N2 being EnvEpsTerm of V st P2 = eComp(eEps M2,N2) & S2 =
-      eEps M2 ) ) by C1;
+    (
+      ( ex A,B,C being EnvEpsTerm of V st
+          P2 = (A (o) B) (o) C & S2 = A (o) (B (o) C) ) or
+      ( ex A being EnvEpsTerm of V st
+          P2 = (eId V) (o) A & S2 = A ) or
+      ( ex A being EnvEpsTerm of V st
+          P2 = A (o) (eId V) & S2 = A ) or
+      ( ex C,A,B being EnvEpsTerm of V, x0 being Element of V st
+          P2 = eExt(C,x0,A) (o) B & S2 = eExt(C (o) B, x0, A (o) B) ) or
+      ( ex A,B being EnvEpsTerm of V, x0 being Element of V st
+          P2 = (eVar x0) (o) eExt(A,x0,B) & S2 = A ) or
+      ( ex A,B being EnvEpsTerm of V, x0,y0 being Element of V st
+          x0 <> y0 & P2 = (eVar x0) (o) eExt(A,y0,B) & S2 = (eVar x0) (o) B
+          ) or
+      ( ex A,B,C being EnvEpsTerm of V st
+          P2 = (A (@) B) (o) C & S2 = (A (o) C) (@) (B (o) C) ) or
+      ( ex A,B being EnvEpsTerm of V st
+          P2 = (eEps A) (o) B & S2 = eEps A ) ) by C1;
   z in { z2 where z2 is Element of D :
       ex P2,S2 being EnvEpsTerm of V st z2 = [P2,S2] &
-        ( ( ex M2,N2,L2 being EnvEpsTerm of V st P2 =
-        eComp(eComp(M2,N2),L2) & S2 = eComp(M2,eComp(N2,L2)) ) or
-        ( ex M2 being EnvEpsTerm of V st P2 = eComp(eId V,M2) & S2 = M2 )
-        or
-        ( ex M2 being EnvEpsTerm of V st P2 = eComp(M2,eId V) & S2 = M2 )
-        or
-        ( ex L2,M2,N2 being EnvEpsTerm of V, x2 being Element of V st P2 =
-        eComp(eExt(L2,x2,M2),N2) & S2 = eExt(eComp(L2,N2),x2,eComp(M2,N2))
-        ) or
-        ( ex M2,N2 being EnvEpsTerm of V, x2 being Element of V st P2 =
-        eComp(eVar x2, eExt(M2,x2,N2)) & S2 = M2 ) or
-        ( ex M2,N2 being EnvEpsTerm of V, x2,y2 being Element of V st x2
-        <> y2 & P2 = eComp(eVar x2, eExt(M2,y2,N2)) & S2 = eComp(eVar x2,
-        N2) ) or
-        ( ex M2,N2,L2 being EnvEpsTerm of V st P2 = eComp(eApp(M2,N2),L2)
-        & S2 = eApp(eComp(M2,L2),eComp(N2,L2)) ) or
-        ( ex M2,N2 being EnvEpsTerm of V st P2 = eComp(eEps M2,N2) & S2 =
-        eEps M2 ) ) } by C2;
+      (
+        ( ex A,B,C being EnvEpsTerm of V st
+            P2 = (A (o) B) (o) C & S2 = A (o) (B (o) C) ) or
+        ( ex A being EnvEpsTerm of V st
+            P2 = (eId V) (o) A & S2 = A ) or
+        ( ex A being EnvEpsTerm of V st
+            P2 = A (o) (eId V) & S2 = A ) or
+        ( ex C,A,B being EnvEpsTerm of V, x0 being Element of V st
+            P2 = eExt(C,x0,A) (o) B & S2 = eExt(C (o) B, x0, A (o) B) ) or
+        ( ex A,B being EnvEpsTerm of V, x0 being Element of V st
+            P2 = (eVar x0) (o) eExt(A,x0,B) & S2 = A ) or
+        ( ex A,B being EnvEpsTerm of V, x0,y0 being Element of V st
+            x0 <> y0 & P2 = (eVar x0) (o) eExt(A,y0,B) & S2 = (eVar x0) (o)
+            B ) or
+        ( ex A,B,C being EnvEpsTerm of V st
+            P2 = (A (@) B) (o) C & S2 = (A (o) C) (@) (B (o) C) ) or
+        ( ex A,B being EnvEpsTerm of V st
+            P2 = (eEps A) (o) B & S2 = eEps A ) ) } by C2;
   hence thesis by Def1;
 end;
 
-begin :: The root rules, named
-
+:: assoc
 theorem Th2:
   for V being non empty set, M,N,L being EnvEpsTerm of V holds
-  [eComp(eComp(M,N),L), eComp(M,eComp(N,L))] in SigmaRoot(V)
+  [(M (o) N) (o) L, M (o) (N (o) L)] in SigmaRoot(V)
 proof
   let V be non empty set, M,N,L be EnvEpsTerm of V;
-  A1: ( ex M2,N2,L2 being EnvEpsTerm of V st eComp(eComp(M,N),L) =
-    eComp(eComp(M2,N2),L2) & eComp(M,eComp(N,L)) = eComp(M2,eComp(N2,L2))
-    )
+  A1: ( ex A,B,C being EnvEpsTerm of V st
+      (M (o) N) (o) L = (A (o) B) (o) C & M (o) (N (o) L) = A (o) (B (o) C)
+      )
   proof
     take M,N,L;
     thus thesis;
@@ -282,13 +299,14 @@ proof
   thus thesis by A1,Th1;
 end;
 
+:: idL
 theorem Th3:
   for V being non empty set, M being EnvEpsTerm of V holds
-  [eComp(eId V,M), M] in SigmaRoot(V)
+  [(eId V) (o) M, M] in SigmaRoot(V)
 proof
   let V be non empty set, M be EnvEpsTerm of V;
-  A1: ( ex M2 being EnvEpsTerm of V st eComp(eId V,M) = eComp(eId V,M2) &
-    M = M2 )
+  A1: ( ex A being EnvEpsTerm of V st
+      (eId V) (o) M = (eId V) (o) A & M = A )
   proof
     take M;
     thus thesis;
@@ -296,13 +314,14 @@ proof
   thus thesis by A1,Th1;
 end;
 
+:: idR
 theorem Th4:
   for V being non empty set, M being EnvEpsTerm of V holds
-  [eComp(M,eId V), M] in SigmaRoot(V)
+  [M (o) (eId V), M] in SigmaRoot(V)
 proof
   let V be non empty set, M be EnvEpsTerm of V;
-  A1: ( ex M2 being EnvEpsTerm of V st eComp(M,eId V) = eComp(M2,eId V) &
-    M = M2 )
+  A1: ( ex A being EnvEpsTerm of V st
+      M (o) (eId V) = A (o) (eId V) & M = A )
   proof
     take M;
     thus thesis;
@@ -310,15 +329,16 @@ proof
   thus thesis by A1,Th1;
 end;
 
+:: dExt
 theorem Th5:
-  for V being non empty set, L,M,N being EnvEpsTerm of V, x being Element
-    of V holds
-  [eComp(eExt(L,x,M),N), eExt(eComp(L,N),x,eComp(M,N))] in SigmaRoot(V)
+  for V being non empty set, L,M,N being EnvEpsTerm of V, x being Element of
+    V holds
+  [eExt(L,x,M) (o) N, eExt(L (o) N, x, M (o) N)] in SigmaRoot(V)
 proof
   let V be non empty set, L,M,N be EnvEpsTerm of V, x be Element of V;
-  A1: ( ex L2,M2,N2 being EnvEpsTerm of V, x2 being Element of V st
-    eComp(eExt(L,x,M),N) = eComp(eExt(L2,x2,M2),N2) &
-    eExt(eComp(L,N),x,eComp(M,N)) = eExt(eComp(L2,N2),x2,eComp(M2,N2)) )
+  A1: ( ex C,A,B being EnvEpsTerm of V, x0 being Element of V st
+      eExt(L,x,M) (o) N = eExt(C,x0,A) (o) B & eExt(L (o) N, x, M (o) N) =
+      eExt(C (o) B, x0, A (o) B) )
   proof
     take L,M,N,x;
     thus thesis;
@@ -326,14 +346,15 @@ proof
   thus thesis by A1,Th1;
 end;
 
+:: varRef
 theorem Th6:
-  for V being non empty set, M,N being EnvEpsTerm of V, x being Element of
-    V holds
-  [eComp(eVar x, eExt(M,x,N)), M] in SigmaRoot(V)
+  for V being non empty set, M,N being EnvEpsTerm of V, x being Element of V
+    holds
+  [(eVar x) (o) eExt(M,x,N), M] in SigmaRoot(V)
 proof
   let V be non empty set, M,N be EnvEpsTerm of V, x be Element of V;
-  A1: ( ex M2,N2 being EnvEpsTerm of V, x2 being Element of V st
-    eComp(eVar x, eExt(M,x,N)) = eComp(eVar x2, eExt(M2,x2,N2)) & M = M2 )
+  A1: ( ex A,B being EnvEpsTerm of V, x0 being Element of V st
+      (eVar x) (o) eExt(M,x,N) = (eVar x0) (o) eExt(A,x0,B) & M = A )
   proof
     take M,N,x;
     thus thesis;
@@ -341,16 +362,17 @@ proof
   thus thesis by A1,Th1;
 end;
 
+:: varSkip
 theorem Th7:
-  for V being non empty set, M,N being EnvEpsTerm of V, x,y being Element
-    of V st x <> y holds
-  [eComp(eVar x, eExt(M,y,N)), eComp(eVar x, N)] in SigmaRoot(V)
+  for V being non empty set, M,N being EnvEpsTerm of V, x,y being Element of
+    V st x <> y holds
+  [(eVar x) (o) eExt(M,y,N), (eVar x) (o) N] in SigmaRoot(V)
 proof
   let V be non empty set, M,N be EnvEpsTerm of V, x,y be Element of V;
   assume A0: x <> y;
-  A1: ( ex M2,N2 being EnvEpsTerm of V, x2,y2 being Element of V st x2 <>
-    y2 & eComp(eVar x, eExt(M,y,N)) = eComp(eVar x2, eExt(M2,y2,N2)) &
-    eComp(eVar x, N) = eComp(eVar x2, N2) )
+  A1: ( ex A,B being EnvEpsTerm of V, x0,y0 being Element of V st
+      x0 <> y0 & (eVar x) (o) eExt(M,y,N) = (eVar x0) (o) eExt(A,y0,B) &
+      (eVar x) (o) N = (eVar x0) (o) B )
   proof
     take M,N,x,y;
     thus thesis by A0;
@@ -358,14 +380,15 @@ proof
   thus thesis by A1,Th1;
 end;
 
+:: dApp
 theorem Th8:
   for V being non empty set, M,N,L being EnvEpsTerm of V holds
-  [eComp(eApp(M,N),L), eApp(eComp(M,L),eComp(N,L))] in SigmaRoot(V)
+  [(M (@) N) (o) L, (M (o) L) (@) (N (o) L)] in SigmaRoot(V)
 proof
   let V be non empty set, M,N,L be EnvEpsTerm of V;
-  A1: ( ex M2,N2,L2 being EnvEpsTerm of V st eComp(eApp(M,N),L) =
-    eComp(eApp(M2,N2),L2) & eApp(eComp(M,L),eComp(N,L)) =
-    eApp(eComp(M2,L2),eComp(N2,L2)) )
+  A1: ( ex A,B,C being EnvEpsTerm of V st
+      (M (@) N) (o) L = (A (@) B) (o) C & (M (o) L) (@) (N (o) L) = (A (o)
+      C) (@) (B (o) C) )
   proof
     take M,N,L;
     thus thesis;
@@ -373,19 +396,22 @@ proof
   thus thesis by A1,Th1;
 end;
 
+:: epsEps
 theorem Th9:
   for V being non empty set, M,N being EnvEpsTerm of V holds
-  [eComp(eEps M,N), eEps M] in SigmaRoot(V)
+  [(eEps M) (o) N, eEps M] in SigmaRoot(V)
 proof
   let V be non empty set, M,N be EnvEpsTerm of V;
-  A1: ( ex M2,N2 being EnvEpsTerm of V st eComp(eEps M,N) = eComp(eEps
-    M2,N2) & eEps M = eEps M2 )
+  A1: ( ex A,B being EnvEpsTerm of V st
+      (eEps M) (o) N = (eEps A) (o) B & eEps M = eEps A )
   proof
     take M,N;
     thus thesis;
   end;
   thus thesis by A1,Th1;
 end;
+
+begin :: The sigma reduction
 
 definition
   let V be non empty set;
@@ -395,91 +421,96 @@ definition
   coherence;
 end;
 
-begin :: The sixteen rules of the sigma reduction
+begin :: The sixteen rules
 
+:: assoc
 theorem Th10:
   for V being non empty set, M,N,L being EnvEpsTerm of V holds
-  [eComp(eComp(M,N),L), eComp(M,eComp(N,L))] in SigmaRed(V)
+  [(M (o) N) (o) L, M (o) (N (o) L)] in SigmaRed(V)
 proof
   let V be non empty set, M,N,L be EnvEpsTerm of V;
-  A1: [eComp(eComp(M,N),L), eComp(M,eComp(N,L))] in SigmaRoot(V) by Th2;
+  A1: [(M (o) N) (o) L, M (o) (N (o) L)] in SigmaRoot(V) by Th2;
   SigmaRoot(V) c= CC SigmaRoot(V) by ENVCC:4;
   hence thesis by A1,Def2;
 end;
 
+:: idL
 theorem Th11:
   for V being non empty set, M being EnvEpsTerm of V holds
-  [eComp(eId V,M), M] in SigmaRed(V)
+  [(eId V) (o) M, M] in SigmaRed(V)
 proof
   let V be non empty set, M be EnvEpsTerm of V;
-  A1: [eComp(eId V,M), M] in SigmaRoot(V) by Th3;
+  A1: [(eId V) (o) M, M] in SigmaRoot(V) by Th3;
   SigmaRoot(V) c= CC SigmaRoot(V) by ENVCC:4;
   hence thesis by A1,Def2;
 end;
 
+:: idR
 theorem Th12:
   for V being non empty set, M being EnvEpsTerm of V holds
-  [eComp(M,eId V), M] in SigmaRed(V)
+  [M (o) (eId V), M] in SigmaRed(V)
 proof
   let V be non empty set, M be EnvEpsTerm of V;
-  A1: [eComp(M,eId V), M] in SigmaRoot(V) by Th4;
+  A1: [M (o) (eId V), M] in SigmaRoot(V) by Th4;
   SigmaRoot(V) c= CC SigmaRoot(V) by ENVCC:4;
   hence thesis by A1,Def2;
 end;
 
+:: dExt
 theorem Th13:
-  for V being non empty set, L,M,N being EnvEpsTerm of V, x being Element
-    of V holds
-  [eComp(eExt(L,x,M),N), eExt(eComp(L,N),x,eComp(M,N))] in SigmaRed(V)
+  for V being non empty set, L,M,N being EnvEpsTerm of V, x being Element of
+    V holds
+  [eExt(L,x,M) (o) N, eExt(L (o) N, x, M (o) N)] in SigmaRed(V)
 proof
   let V be non empty set, L,M,N be EnvEpsTerm of V, x be Element of V;
-  A1: [eComp(eExt(L,x,M),N), eExt(eComp(L,N),x,eComp(M,N))] in
-    SigmaRoot(V) by Th5;
+  A1: [eExt(L,x,M) (o) N, eExt(L (o) N, x, M (o) N)] in SigmaRoot(V) by Th5;
   SigmaRoot(V) c= CC SigmaRoot(V) by ENVCC:4;
   hence thesis by A1,Def2;
 end;
 
+:: varRef
 theorem Th14:
-  for V being non empty set, M,N being EnvEpsTerm of V, x being Element of
-    V holds
-  [eComp(eVar x, eExt(M,x,N)), M] in SigmaRed(V)
+  for V being non empty set, M,N being EnvEpsTerm of V, x being Element of V
+    holds
+  [(eVar x) (o) eExt(M,x,N), M] in SigmaRed(V)
 proof
   let V be non empty set, M,N be EnvEpsTerm of V, x be Element of V;
-  A1: [eComp(eVar x, eExt(M,x,N)), M] in SigmaRoot(V) by Th6;
+  A1: [(eVar x) (o) eExt(M,x,N), M] in SigmaRoot(V) by Th6;
   SigmaRoot(V) c= CC SigmaRoot(V) by ENVCC:4;
   hence thesis by A1,Def2;
 end;
 
+:: varSkip
 theorem Th15:
-  for V being non empty set, M,N being EnvEpsTerm of V, x,y being Element
-    of V st x <> y holds
-  [eComp(eVar x, eExt(M,y,N)), eComp(eVar x, N)] in SigmaRed(V)
+  for V being non empty set, M,N being EnvEpsTerm of V, x,y being Element of
+    V st x <> y holds
+  [(eVar x) (o) eExt(M,y,N), (eVar x) (o) N] in SigmaRed(V)
 proof
   let V be non empty set, M,N be EnvEpsTerm of V, x,y be Element of V;
   assume A0: x <> y;
-  A1: [eComp(eVar x, eExt(M,y,N)), eComp(eVar x, N)] in SigmaRoot(V) by
-    A0,Th7;
+  A1: [(eVar x) (o) eExt(M,y,N), (eVar x) (o) N] in SigmaRoot(V) by A0,Th7;
   SigmaRoot(V) c= CC SigmaRoot(V) by ENVCC:4;
   hence thesis by A1,Def2;
 end;
 
+:: dApp
 theorem Th16:
   for V being non empty set, M,N,L being EnvEpsTerm of V holds
-  [eComp(eApp(M,N),L), eApp(eComp(M,L),eComp(N,L))] in SigmaRed(V)
+  [(M (@) N) (o) L, (M (o) L) (@) (N (o) L)] in SigmaRed(V)
 proof
   let V be non empty set, M,N,L be EnvEpsTerm of V;
-  A1: [eComp(eApp(M,N),L), eApp(eComp(M,L),eComp(N,L))] in SigmaRoot(V) by
-    Th8;
+  A1: [(M (@) N) (o) L, (M (o) L) (@) (N (o) L)] in SigmaRoot(V) by Th8;
   SigmaRoot(V) c= CC SigmaRoot(V) by ENVCC:4;
   hence thesis by A1,Def2;
 end;
 
+:: epsEps
 theorem Th17:
   for V being non empty set, M,N being EnvEpsTerm of V holds
-  [eComp(eEps M,N), eEps M] in SigmaRed(V)
+  [(eEps M) (o) N, eEps M] in SigmaRed(V)
 proof
   let V be non empty set, M,N be EnvEpsTerm of V;
-  A1: [eComp(eEps M,N), eEps M] in SigmaRoot(V) by Th9;
+  A1: [(eEps M) (o) N, eEps M] in SigmaRoot(V) by Th9;
   SigmaRoot(V) c= CC SigmaRoot(V) by ENVCC:4;
   hence thesis by A1,Def2;
 end;
@@ -487,30 +518,30 @@ end;
 theorem Th18:
   for V being non empty set, M,M1,N being EnvEpsTerm of V st [M,M1] in
     SigmaRed(V) holds
-  [eApp(M,N), eApp(M1,N)] in SigmaRed(V)
+  [M (@) N, M1 (@) N] in SigmaRed(V)
 proof
   let V be non empty set, M,M1,N be EnvEpsTerm of V;
   assume [M,M1] in SigmaRed(V);
   then [M,M1] in CC SigmaRoot(V) by Def2;
-  then [eApp(M,N), eApp(M1,N)] in CC SigmaRoot(V) by ENVCC:5;
+  then [M (@) N, M1 (@) N] in CC SigmaRoot(V) by ENVCC:5;
   hence thesis by Def2;
 end;
 
 theorem Th19:
   for V being non empty set, M,N,N1 being EnvEpsTerm of V st [N,N1] in
     SigmaRed(V) holds
-  [eApp(M,N), eApp(M,N1)] in SigmaRed(V)
+  [M (@) N, M (@) N1] in SigmaRed(V)
 proof
   let V be non empty set, M,N,N1 be EnvEpsTerm of V;
   assume [N,N1] in SigmaRed(V);
   then [N,N1] in CC SigmaRoot(V) by Def2;
-  then [eApp(M,N), eApp(M,N1)] in CC SigmaRoot(V) by ENVCC:6;
+  then [M (@) N, M (@) N1] in CC SigmaRoot(V) by ENVCC:6;
   hence thesis by Def2;
 end;
 
 theorem Th20:
-  for V being non empty set, M,M1 being EnvEpsTerm of V, x being Element
-    of V st [M,M1] in SigmaRed(V) holds
+  for V being non empty set, M,M1 being EnvEpsTerm of V, x being Element of
+    V st [M,M1] in SigmaRed(V) holds
   [eLam(x,M), eLam(x,M1)] in SigmaRed(V)
 proof
   let V be non empty set, M,M1 be EnvEpsTerm of V, x be Element of V;
@@ -547,24 +578,24 @@ end;
 theorem Th23:
   for V being non empty set, M,M1,N being EnvEpsTerm of V st [M,M1] in
     SigmaRed(V) holds
-  [eComp(M,N), eComp(M1,N)] in SigmaRed(V)
+  [M (o) N, M1 (o) N] in SigmaRed(V)
 proof
   let V be non empty set, M,M1,N be EnvEpsTerm of V;
   assume [M,M1] in SigmaRed(V);
   then [M,M1] in CC SigmaRoot(V) by Def2;
-  then [eComp(M,N), eComp(M1,N)] in CC SigmaRoot(V) by ENVCC:10;
+  then [M (o) N, M1 (o) N] in CC SigmaRoot(V) by ENVCC:10;
   hence thesis by Def2;
 end;
 
 theorem Th24:
   for V being non empty set, M,N,N1 being EnvEpsTerm of V st [N,N1] in
     SigmaRed(V) holds
-  [eComp(M,N), eComp(M,N1)] in SigmaRed(V)
+  [M (o) N, M (o) N1] in SigmaRed(V)
 proof
   let V be non empty set, M,N,N1 be EnvEpsTerm of V;
   assume [N,N1] in SigmaRed(V);
   then [N,N1] in CC SigmaRoot(V) by Def2;
-  then [eComp(M,N), eComp(M,N1)] in CC SigmaRoot(V) by ENVCC:11;
+  then [M (o) N, M (o) N1] in CC SigmaRoot(V) by ENVCC:11;
   hence thesis by Def2;
 end;
 
@@ -585,94 +616,172 @@ begin :: Inversion
 theorem Th26:
   for V being non empty set, P,S being EnvEpsTerm of V
   st [P,S] in SigmaRed(V) holds
-    ( ( ex M2,N2,L2 being EnvEpsTerm of V st P = eComp(eComp(M2,N2),L2) &
-    S = eComp(M2,eComp(N2,L2)) ) or
-    ( ex M2 being EnvEpsTerm of V st P = eComp(eId V,M2) & S = M2 ) or
-    ( ex M2 being EnvEpsTerm of V st P = eComp(M2,eId V) & S = M2 ) or
-    ( ex L2,M2,N2 being EnvEpsTerm of V, x2 being Element of V st P =
-    eComp(eExt(L2,x2,M2),N2) & S = eExt(eComp(L2,N2),x2,eComp(M2,N2)) ) or
-    ( ex M2,N2 being EnvEpsTerm of V, x2 being Element of V st P =
-    eComp(eVar x2, eExt(M2,x2,N2)) & S = M2 ) or
-    ( ex M2,N2 being EnvEpsTerm of V, x2,y2 being Element of V st x2 <> y2
-    & P = eComp(eVar x2, eExt(M2,y2,N2)) & S = eComp(eVar x2, N2) ) or
-    ( ex M2,N2,L2 being EnvEpsTerm of V st P = eComp(eApp(M2,N2),L2) & S =
-    eApp(eComp(M2,L2),eComp(N2,L2)) ) or
-    ( ex M2,N2 being EnvEpsTerm of V st P = eComp(eEps M2,N2) & S = eEps
-    M2 ) ) or
-  ( ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in SigmaRed(V) & P =
-    eApp(M2,N2) & S = eApp(M3,N2) ) or
-  ( ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in SigmaRed(V) & P =
-    eApp(M2,N2) & S = eApp(M2,N3) ) or
-  ( ex M2,M3 being EnvEpsTerm of V, x2 being Element of V st [M2,M3] in
-    SigmaRed(V) & P = eLam(x2,M2) & S = eLam(x2,M3) ) or
-  ( ex M2,M3,N2 being EnvEpsTerm of V, x2 being Element of V st [M2,M3] in
-    SigmaRed(V) & P = eExt(M2,x2,N2) & S = eExt(M3,x2,N2) ) or
-  ( ex M2,N2,N3 being EnvEpsTerm of V, x2 being Element of V st [N2,N3] in
-    SigmaRed(V) & P = eExt(M2,x2,N2) & S = eExt(M2,x2,N3) ) or
-  ( ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in SigmaRed(V) & P =
-    eComp(M2,N2) & S = eComp(M3,N2) ) or
-  ( ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in SigmaRed(V) & P =
-    eComp(M2,N2) & S = eComp(M2,N3) ) or
-  ( ex M2,M3 being EnvEpsTerm of V st [M2,M3] in SigmaRed(V) & P = eEps M2
-    & S = eEps M3 )
+    ( ex A,B,C being EnvEpsTerm of V st
+        P = (A (o) B) (o) C & S = A (o) (B (o) C) ) or
+    ( ex A being EnvEpsTerm of V st
+        P = (eId V) (o) A & S = A ) or
+    ( ex A being EnvEpsTerm of V st
+        P = A (o) (eId V) & S = A ) or
+    ( ex C,A,B being EnvEpsTerm of V, x0 being Element of V st
+        P = eExt(C,x0,A) (o) B & S = eExt(C (o) B, x0, A (o) B) ) or
+    ( ex A,B being EnvEpsTerm of V, x0 being Element of V st
+        P = (eVar x0) (o) eExt(A,x0,B) & S = A ) or
+    ( ex A,B being EnvEpsTerm of V, x0,y0 being Element of V st
+        x0 <> y0 & P = (eVar x0) (o) eExt(A,y0,B) & S = (eVar x0) (o) B ) or
+    ( ex A,B,C being EnvEpsTerm of V st
+        P = (A (@) B) (o) C & S = (A (o) C) (@) (B (o) C) ) or
+    ( ex A,B being EnvEpsTerm of V st
+        P = (eEps A) (o) B & S = eEps A ) or
+    ( ex A,A1,B being EnvEpsTerm of V st [A,A1] in SigmaRed(V) &
+        P = A (@) B & S = A1 (@) B ) or
+    ( ex A,B,B1 being EnvEpsTerm of V st [B,B1] in SigmaRed(V) &
+        P = A (@) B & S = A (@) B1 ) or
+    ( ex A,A1 being EnvEpsTerm of V, x0 being Element of V st [A,A1] in
+    SigmaRed(V) &
+        P = eLam(x0,A) & S = eLam(x0,A1) ) or
+    ( ex A,A1,B being EnvEpsTerm of V, x0 being Element of V st [A,A1] in
+    SigmaRed(V) &
+        P = eExt(A,x0,B) & S = eExt(A1,x0,B) ) or
+    ( ex A,B,B1 being EnvEpsTerm of V, x0 being Element of V st [B,B1] in
+    SigmaRed(V) &
+        P = eExt(A,x0,B) & S = eExt(A,x0,B1) ) or
+    ( ex A,A1,B being EnvEpsTerm of V st [A,A1] in SigmaRed(V) &
+        P = A (o) B & S = A1 (o) B ) or
+    ( ex A,B,B1 being EnvEpsTerm of V st [B,B1] in SigmaRed(V) &
+        P = A (o) B & S = A (o) B1 ) or
+    ( ex A,A1 being EnvEpsTerm of V st [A,A1] in SigmaRed(V) &
+        P = eEps A & S = eEps A1 )
 proof
   let V be non empty set, P,S be EnvEpsTerm of V;
   assume [P,S] in SigmaRed(V);
   then A1: [P,S] in CC SigmaRoot(V) by Def2;
   A2: [P,S] in SigmaRoot(V) or
-    ( ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in CC SigmaRoot(V) & P
-      = eApp(M2,N2) & S = eApp(M3,N2) ) or
-    ( ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in CC SigmaRoot(V) & P
-      = eApp(M2,N2) & S = eApp(M2,N3) ) or
-    ( ex M2,M3 being EnvEpsTerm of V, x2 being Element of V st [M2,M3] in
-      CC SigmaRoot(V) & P = eLam(x2,M2) & S = eLam(x2,M3) ) or
-    ( ex M2,M3,N2 being EnvEpsTerm of V, x2 being Element of V st [M2,M3]
-      in CC SigmaRoot(V) & P = eExt(M2,x2,N2) & S = eExt(M3,x2,N2) ) or
-    ( ex M2,N2,N3 being EnvEpsTerm of V, x2 being Element of V st [N2,N3]
-      in CC SigmaRoot(V) & P = eExt(M2,x2,N2) & S = eExt(M2,x2,N3) ) or
-    ( ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in CC SigmaRoot(V) & P
-      = eComp(M2,N2) & S = eComp(M3,N2) ) or
-    ( ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in CC SigmaRoot(V) & P
-      = eComp(M2,N2) & S = eComp(M2,N3) ) or
-    ( ex M2,M3 being EnvEpsTerm of V st [M2,M3] in CC SigmaRoot(V) & P =
-      eEps M2 & S = eEps M3 ) by A1,ENVCC:13;
+    ( ex A,A1,B being EnvEpsTerm of V st [A,A1] in CC SigmaRoot(V) & P = A
+      (@) B & S = A1 (@) B ) or
+    ( ex A,B,B1 being EnvEpsTerm of V st [B,B1] in CC SigmaRoot(V) & P = A
+      (@) B & S = A (@) B1 ) or
+    ( ex A,A1 being EnvEpsTerm of V, x0 being Element of V st [A,A1] in CC
+      SigmaRoot(V) & P = eLam(x0,A) & S = eLam(x0,A1) ) or
+    ( ex A,A1,B being EnvEpsTerm of V, x0 being Element of V st [A,A1] in CC
+      SigmaRoot(V) & P = eExt(A,x0,B) & S = eExt(A1,x0,B) ) or
+    ( ex A,B,B1 being EnvEpsTerm of V, x0 being Element of V st [B,B1] in CC
+      SigmaRoot(V) & P = eExt(A,x0,B) & S = eExt(A,x0,B1) ) or
+    ( ex A,A1,B being EnvEpsTerm of V st [A,A1] in CC SigmaRoot(V) & P = A
+      (o) B & S = A1 (o) B ) or
+    ( ex A,B,B1 being EnvEpsTerm of V st [B,B1] in CC SigmaRoot(V) & P = A
+      (o) B & S = A (o) B1 ) or
+    ( ex A,A1 being EnvEpsTerm of V st [A,A1] in CC SigmaRoot(V) & P = eEps
+      A & S = eEps A1 ) by A1,ENVCC:13;
   per cases by A2;
   suppose [P,S] in SigmaRoot(V);
     hence thesis by Th1;
   end;
-  suppose ( ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in CC
-    SigmaRoot(V) & P = eApp(M2,N2) & S = eApp(M3,N2) );
-    hence thesis by Def2;
+  suppose B1: ex A,A1,B being EnvEpsTerm of V st [A,A1] in CC SigmaRoot(V) &
+    P = A (@) B & S = A1 (@) B;
+    then consider A,A1,B being EnvEpsTerm of V such that
+    B2: [A,A1] in CC SigmaRoot(V) & P = A (@) B & S = A1 (@) B;
+    B3: [A,A1] in SigmaRed(V) by B2,Def2;
+    B4: ( ex A,A1,B being EnvEpsTerm of V st [A,A1] in SigmaRed(V) & P = A
+      (@) B & S = A1 (@) B )
+    proof
+      take A,A1,B;
+      thus thesis by B2,B3;
+    end;
+    thus thesis by B4;
   end;
-  suppose ( ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in CC
-    SigmaRoot(V) & P = eApp(M2,N2) & S = eApp(M2,N3) );
-    hence thesis by Def2;
+  suppose B1: ex A,B,B1 being EnvEpsTerm of V st [B,B1] in CC SigmaRoot(V) &
+    P = A (@) B & S = A (@) B1;
+    then consider A,B,B1 being EnvEpsTerm of V such that
+    B2: [B,B1] in CC SigmaRoot(V) & P = A (@) B & S = A (@) B1;
+    B3: [B,B1] in SigmaRed(V) by B2,Def2;
+    B4: ( ex A,B,B1 being EnvEpsTerm of V st [B,B1] in SigmaRed(V) & P = A
+      (@) B & S = A (@) B1 )
+    proof
+      take A,B,B1;
+      thus thesis by B2,B3;
+    end;
+    thus thesis by B4;
   end;
-  suppose ( ex M2,M3 being EnvEpsTerm of V, x2 being Element of V st
-    [M2,M3] in CC SigmaRoot(V) & P = eLam(x2,M2) & S = eLam(x2,M3) );
-    hence thesis by Def2;
+  suppose B1: ex A,A1 being EnvEpsTerm of V, x0 being Element of V st [A,A1]
+    in CC SigmaRoot(V) & P = eLam(x0,A) & S = eLam(x0,A1);
+    then consider A,A1 being EnvEpsTerm of V, x0 being Element of V such
+      that
+    B2: [A,A1] in CC SigmaRoot(V) & P = eLam(x0,A) & S = eLam(x0,A1);
+    B3: [A,A1] in SigmaRed(V) by B2,Def2;
+    B4: ( ex A,A1 being EnvEpsTerm of V, x0 being Element of V st [A,A1] in
+      SigmaRed(V) & P = eLam(x0,A) & S = eLam(x0,A1) )
+    proof
+      take A,A1,x0;
+      thus thesis by B2,B3;
+    end;
+    thus thesis by B4;
   end;
-  suppose ( ex M2,M3,N2 being EnvEpsTerm of V, x2 being Element of V st
-    [M2,M3] in CC SigmaRoot(V) & P = eExt(M2,x2,N2) & S = eExt(M3,x2,N2)
-    );
-    hence thesis by Def2;
+  suppose B1: ex A,A1,B being EnvEpsTerm of V, x0 being Element of V st
+    [A,A1] in CC SigmaRoot(V) & P = eExt(A,x0,B) & S = eExt(A1,x0,B);
+    then consider A,A1,B being EnvEpsTerm of V, x0 being Element of V such
+      that
+    B2: [A,A1] in CC SigmaRoot(V) & P = eExt(A,x0,B) & S = eExt(A1,x0,B);
+    B3: [A,A1] in SigmaRed(V) by B2,Def2;
+    B4: ( ex A,A1,B being EnvEpsTerm of V, x0 being Element of V st [A,A1]
+      in SigmaRed(V) & P = eExt(A,x0,B) & S = eExt(A1,x0,B) )
+    proof
+      take A,A1,B,x0;
+      thus thesis by B2,B3;
+    end;
+    thus thesis by B4;
   end;
-  suppose ( ex M2,N2,N3 being EnvEpsTerm of V, x2 being Element of V st
-    [N2,N3] in CC SigmaRoot(V) & P = eExt(M2,x2,N2) & S = eExt(M2,x2,N3)
-    );
-    hence thesis by Def2;
+  suppose B1: ex A,B,B1 being EnvEpsTerm of V, x0 being Element of V st
+    [B,B1] in CC SigmaRoot(V) & P = eExt(A,x0,B) & S = eExt(A,x0,B1);
+    then consider A,B,B1 being EnvEpsTerm of V, x0 being Element of V such
+      that
+    B2: [B,B1] in CC SigmaRoot(V) & P = eExt(A,x0,B) & S = eExt(A,x0,B1);
+    B3: [B,B1] in SigmaRed(V) by B2,Def2;
+    B4: ( ex A,B,B1 being EnvEpsTerm of V, x0 being Element of V st [B,B1]
+      in SigmaRed(V) & P = eExt(A,x0,B) & S = eExt(A,x0,B1) )
+    proof
+      take A,B,B1,x0;
+      thus thesis by B2,B3;
+    end;
+    thus thesis by B4;
   end;
-  suppose ( ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in CC
-    SigmaRoot(V) & P = eComp(M2,N2) & S = eComp(M3,N2) );
-    hence thesis by Def2;
+  suppose B1: ex A,A1,B being EnvEpsTerm of V st [A,A1] in CC SigmaRoot(V) &
+    P = A (o) B & S = A1 (o) B;
+    then consider A,A1,B being EnvEpsTerm of V such that
+    B2: [A,A1] in CC SigmaRoot(V) & P = A (o) B & S = A1 (o) B;
+    B3: [A,A1] in SigmaRed(V) by B2,Def2;
+    B4: ( ex A,A1,B being EnvEpsTerm of V st [A,A1] in SigmaRed(V) & P = A
+      (o) B & S = A1 (o) B )
+    proof
+      take A,A1,B;
+      thus thesis by B2,B3;
+    end;
+    thus thesis by B4;
   end;
-  suppose ( ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in CC
-    SigmaRoot(V) & P = eComp(M2,N2) & S = eComp(M2,N3) );
-    hence thesis by Def2;
+  suppose B1: ex A,B,B1 being EnvEpsTerm of V st [B,B1] in CC SigmaRoot(V) &
+    P = A (o) B & S = A (o) B1;
+    then consider A,B,B1 being EnvEpsTerm of V such that
+    B2: [B,B1] in CC SigmaRoot(V) & P = A (o) B & S = A (o) B1;
+    B3: [B,B1] in SigmaRed(V) by B2,Def2;
+    B4: ( ex A,B,B1 being EnvEpsTerm of V st [B,B1] in SigmaRed(V) & P = A
+      (o) B & S = A (o) B1 )
+    proof
+      take A,B,B1;
+      thus thesis by B2,B3;
+    end;
+    thus thesis by B4;
   end;
-  suppose ( ex M2,M3 being EnvEpsTerm of V st [M2,M3] in CC SigmaRoot(V) &
-    P = eEps M2 & S = eEps M3 );
-    hence thesis by Def2;
+  suppose B1: ex A,A1 being EnvEpsTerm of V st [A,A1] in CC SigmaRoot(V) & P
+    = eEps A & S = eEps A1;
+    then consider A,A1 being EnvEpsTerm of V such that
+    B2: [A,A1] in CC SigmaRoot(V) & P = eEps A & S = eEps A1;
+    B3: [A,A1] in SigmaRed(V) by B2,Def2;
+    B4: ( ex A,A1 being EnvEpsTerm of V st [A,A1] in SigmaRed(V) & P = eEps
+      A & S = eEps A1 )
+    proof
+      take A,A1;
+      thus thesis by B2,B3;
+    end;
+    thus thesis by B4;
   end;
 end;
 
@@ -681,365 +790,1290 @@ begin :: Inversion by the head constructor
 theorem Th27:
   for V being non empty set, x being Element of V, S being EnvEpsTerm of V
     holds
-  not [eVar x, S] in SigmaRed(V)
+  not [eVar x,S] in SigmaRed(V)
 proof
   let V be non empty set, x be Element of V, S be EnvEpsTerm of V;
-  assume [eVar x, S] in SigmaRed(V);
-  then A1: [eVar x, S] in CC SigmaRoot(V) by Def2;
-  A2: [eVar x, S] in SigmaRoot(V) or
-    contradiction by A1,ENVCC:16;
-  per cases by A2;
-  suppose A3: [eVar x, S] in SigmaRoot(V);
-    A4: ( ex M2,N2,L2 being EnvEpsTerm of V st eVar x =
-      eComp(eComp(M2,N2),L2) & S = eComp(M2,eComp(N2,L2)) ) or
-    ( ex M2 being EnvEpsTerm of V st eVar x = eComp(eId V,M2) & S = M2 )
-      or
-    ( ex M2 being EnvEpsTerm of V st eVar x = eComp(M2,eId V) & S = M2 )
-      or
-    ( ex L2,M2,N2 being EnvEpsTerm of V, x2 being Element of V st eVar x =
-      eComp(eExt(L2,x2,M2),N2) & S = eExt(eComp(L2,N2),x2,eComp(M2,N2)) )
-      or
-    ( ex M2,N2 being EnvEpsTerm of V, x2 being Element of V st eVar x =
-      eComp(eVar x2, eExt(M2,x2,N2)) & S = M2 ) or
-    ( ex M2,N2 being EnvEpsTerm of V, x2,y2 being Element of V st x2 <> y2
-      & eVar x = eComp(eVar x2, eExt(M2,y2,N2)) & S = eComp(eVar x2, N2) )
-      or
-    ( ex M2,N2,L2 being EnvEpsTerm of V st eVar x = eComp(eApp(M2,N2),L2)
-      & S = eApp(eComp(M2,L2),eComp(N2,L2)) ) or
-    ( ex M2,N2 being EnvEpsTerm of V st eVar x = eComp(eEps M2,N2) & S =
-      eEps M2 ) by A3,Th1;
-    thus thesis by A4,ENVSYN:20;
+  assume [eVar x,S] in SigmaRed(V);
+  then A1:
+    ( ex A,B,C being EnvEpsTerm of V st
+        eVar x = (A (o) B) (o) C & S = A (o) (B (o) C) ) or
+    ( ex A being EnvEpsTerm of V st
+        eVar x = (eId V) (o) A & S = A ) or
+    ( ex A being EnvEpsTerm of V st
+        eVar x = A (o) (eId V) & S = A ) or
+    ( ex C,A,B being EnvEpsTerm of V, x0 being Element of V st
+        eVar x = eExt(C,x0,A) (o) B & S = eExt(C (o) B, x0, A (o) B) ) or
+    ( ex A,B being EnvEpsTerm of V, x0 being Element of V st
+        eVar x = (eVar x0) (o) eExt(A,x0,B) & S = A ) or
+    ( ex A,B being EnvEpsTerm of V, x0,y0 being Element of V st
+        x0 <> y0 & eVar x = (eVar x0) (o) eExt(A,y0,B) & S = (eVar x0) (o) B
+        ) or
+    ( ex A,B,C being EnvEpsTerm of V st
+        eVar x = (A (@) B) (o) C & S = (A (o) C) (@) (B (o) C) ) or
+    ( ex A,B being EnvEpsTerm of V st
+        eVar x = (eEps A) (o) B & S = eEps A ) or
+    ( ex A,A1,B being EnvEpsTerm of V st [A,A1] in SigmaRed(V) &
+        eVar x = A (@) B & S = A1 (@) B ) or
+    ( ex A,B,B1 being EnvEpsTerm of V st [B,B1] in SigmaRed(V) &
+        eVar x = A (@) B & S = A (@) B1 ) or
+    ( ex A,A1 being EnvEpsTerm of V, x0 being Element of V st [A,A1] in
+    SigmaRed(V) &
+        eVar x = eLam(x0,A) & S = eLam(x0,A1) ) or
+    ( ex A,A1,B being EnvEpsTerm of V, x0 being Element of V st [A,A1] in
+    SigmaRed(V) &
+        eVar x = eExt(A,x0,B) & S = eExt(A1,x0,B) ) or
+    ( ex A,B,B1 being EnvEpsTerm of V, x0 being Element of V st [B,B1] in
+    SigmaRed(V) &
+        eVar x = eExt(A,x0,B) & S = eExt(A,x0,B1) ) or
+    ( ex A,A1,B being EnvEpsTerm of V st [A,A1] in SigmaRed(V) &
+        eVar x = A (o) B & S = A1 (o) B ) or
+    ( ex A,B,B1 being EnvEpsTerm of V st [B,B1] in SigmaRed(V) &
+        eVar x = A (o) B & S = A (o) B1 ) or
+    ( ex A,A1 being EnvEpsTerm of V st [A,A1] in SigmaRed(V) &
+        eVar x = eEps A & S = eEps A1 ) by Th26;
+  per cases by A1;
+  suppose
+    ( ex A,B,C being EnvEpsTerm of V st
+        eVar x = (A (o) B) (o) C & S = A (o) (B (o) C) )
+    ;
+    then consider A,B,C being EnvEpsTerm of V such that
+    E1: eVar x = (A (o) B) (o) C & S = A (o) (B (o) C);
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose
+    ( ex A being EnvEpsTerm of V st
+        eVar x = (eId V) (o) A & S = A )
+    ;
+    then consider A being EnvEpsTerm of V such that
+    E1: eVar x = (eId V) (o) A & S = A;
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose
+    ( ex A being EnvEpsTerm of V st
+        eVar x = A (o) (eId V) & S = A )
+    ;
+    then consider A being EnvEpsTerm of V such that
+    E1: eVar x = A (o) (eId V) & S = A;
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose
+    ( ex C,A,B being EnvEpsTerm of V, x0 being Element of V st
+        eVar x = eExt(C,x0,A) (o) B & S = eExt(C (o) B, x0, A (o) B) )
+    ;
+    then consider C,A,B being EnvEpsTerm of V, x0 being Element of V such
+      that
+    E1: eVar x = eExt(C,x0,A) (o) B & S = eExt(C (o) B, x0, A (o) B);
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose
+    ( ex A,B being EnvEpsTerm of V, x0 being Element of V st
+        eVar x = (eVar x0) (o) eExt(A,x0,B) & S = A )
+    ;
+    then consider A,B being EnvEpsTerm of V, x0 being Element of V such that
+    E1: eVar x = (eVar x0) (o) eExt(A,x0,B) & S = A;
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose
+    ( ex A,B being EnvEpsTerm of V, x0,y0 being Element of V st
+        x0 <> y0 & eVar x = (eVar x0) (o) eExt(A,y0,B) & S = (eVar x0) (o) B
+        )
+    ;
+    then consider A,B being EnvEpsTerm of V, x0,y0 being Element of V such
+      that
+    E1: x0 <> y0 & eVar x = (eVar x0) (o) eExt(A,y0,B) & S = (eVar x0) (o)
+      B;
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose
+    ( ex A,B,C being EnvEpsTerm of V st
+        eVar x = (A (@) B) (o) C & S = (A (o) C) (@) (B (o) C) )
+    ;
+    then consider A,B,C being EnvEpsTerm of V such that
+    E1: eVar x = (A (@) B) (o) C & S = (A (o) C) (@) (B (o) C);
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose
+    ( ex A,B being EnvEpsTerm of V st
+        eVar x = (eEps A) (o) B & S = eEps A )
+    ;
+    then consider A,B being EnvEpsTerm of V such that
+    E1: eVar x = (eEps A) (o) B & S = eEps A;
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose
+    ( ex A,A1,B being EnvEpsTerm of V st [A,A1] in SigmaRed(V) &
+        eVar x = A (@) B & S = A1 (@) B )
+    ;
+    then consider A,A1,B being EnvEpsTerm of V such that
+    E1: [A,A1] in SigmaRed(V) & eVar x = A (@) B & S = A1 (@) B;
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose
+    ( ex A,B,B1 being EnvEpsTerm of V st [B,B1] in SigmaRed(V) &
+        eVar x = A (@) B & S = A (@) B1 )
+    ;
+    then consider A,B,B1 being EnvEpsTerm of V such that
+    E1: [B,B1] in SigmaRed(V) & eVar x = A (@) B & S = A (@) B1;
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose
+    ( ex A,A1 being EnvEpsTerm of V, x0 being Element of V st [A,A1] in
+    SigmaRed(V) &
+        eVar x = eLam(x0,A) & S = eLam(x0,A1) )
+    ;
+    then consider A,A1 being EnvEpsTerm of V, x0 being Element of V such
+      that
+    E1: [A,A1] in SigmaRed(V) & eVar x = eLam(x0,A) & S = eLam(x0,A1);
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose
+    ( ex A,A1,B being EnvEpsTerm of V, x0 being Element of V st [A,A1] in
+    SigmaRed(V) &
+        eVar x = eExt(A,x0,B) & S = eExt(A1,x0,B) )
+    ;
+    then consider A,A1,B being EnvEpsTerm of V, x0 being Element of V such
+      that
+    E1: [A,A1] in SigmaRed(V) & eVar x = eExt(A,x0,B) & S = eExt(A1,x0,B);
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose
+    ( ex A,B,B1 being EnvEpsTerm of V, x0 being Element of V st [B,B1] in
+    SigmaRed(V) &
+        eVar x = eExt(A,x0,B) & S = eExt(A,x0,B1) )
+    ;
+    then consider A,B,B1 being EnvEpsTerm of V, x0 being Element of V such
+      that
+    E1: [B,B1] in SigmaRed(V) & eVar x = eExt(A,x0,B) & S = eExt(A,x0,B1);
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose
+    ( ex A,A1,B being EnvEpsTerm of V st [A,A1] in SigmaRed(V) &
+        eVar x = A (o) B & S = A1 (o) B )
+    ;
+    then consider A,A1,B being EnvEpsTerm of V such that
+    E1: [A,A1] in SigmaRed(V) & eVar x = A (o) B & S = A1 (o) B;
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose
+    ( ex A,B,B1 being EnvEpsTerm of V st [B,B1] in SigmaRed(V) &
+        eVar x = A (o) B & S = A (o) B1 )
+    ;
+    then consider A,B,B1 being EnvEpsTerm of V such that
+    E1: [B,B1] in SigmaRed(V) & eVar x = A (o) B & S = A (o) B1;
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose
+    ( ex A,A1 being EnvEpsTerm of V st [A,A1] in SigmaRed(V) &
+        eVar x = eEps A & S = eEps A1 )
+    ;
+    then consider A,A1 being EnvEpsTerm of V such that
+    E1: [A,A1] in SigmaRed(V) & eVar x = eEps A & S = eEps A1;
+    thus thesis by E1,ENVSYN:20;
   end;
 end;
 
 theorem Th28:
   for V being non empty set, S being EnvEpsTerm of V holds
-  not [eId V, S] in SigmaRed(V)
+  not [eId V,S] in SigmaRed(V)
 proof
   let V be non empty set, S be EnvEpsTerm of V;
-  assume [eId V, S] in SigmaRed(V);
-  then A1: [eId V, S] in CC SigmaRoot(V) by Def2;
-  A2: [eId V, S] in SigmaRoot(V) or
-    contradiction by A1,ENVCC:17;
-  per cases by A2;
-  suppose A3: [eId V, S] in SigmaRoot(V);
-    A4: ( ex M2,N2,L2 being EnvEpsTerm of V st eId V =
-      eComp(eComp(M2,N2),L2) & S = eComp(M2,eComp(N2,L2)) ) or
-    ( ex M2 being EnvEpsTerm of V st eId V = eComp(eId V,M2) & S = M2 ) or
-    ( ex M2 being EnvEpsTerm of V st eId V = eComp(M2,eId V) & S = M2 ) or
-    ( ex L2,M2,N2 being EnvEpsTerm of V, x2 being Element of V st eId V =
-      eComp(eExt(L2,x2,M2),N2) & S = eExt(eComp(L2,N2),x2,eComp(M2,N2)) )
-      or
-    ( ex M2,N2 being EnvEpsTerm of V, x2 being Element of V st eId V =
-      eComp(eVar x2, eExt(M2,x2,N2)) & S = M2 ) or
-    ( ex M2,N2 being EnvEpsTerm of V, x2,y2 being Element of V st x2 <> y2
-      & eId V = eComp(eVar x2, eExt(M2,y2,N2)) & S = eComp(eVar x2, N2) )
-      or
-    ( ex M2,N2,L2 being EnvEpsTerm of V st eId V = eComp(eApp(M2,N2),L2) &
-      S = eApp(eComp(M2,L2),eComp(N2,L2)) ) or
-    ( ex M2,N2 being EnvEpsTerm of V st eId V = eComp(eEps M2,N2) & S =
-      eEps M2 ) by A3,Th1;
-    thus thesis by A4,ENVSYN:20;
+  assume [eId V,S] in SigmaRed(V);
+  then A1:
+    ( ex A,B,C being EnvEpsTerm of V st
+        eId V = (A (o) B) (o) C & S = A (o) (B (o) C) ) or
+    ( ex A being EnvEpsTerm of V st
+        eId V = (eId V) (o) A & S = A ) or
+    ( ex A being EnvEpsTerm of V st
+        eId V = A (o) (eId V) & S = A ) or
+    ( ex C,A,B being EnvEpsTerm of V, x0 being Element of V st
+        eId V = eExt(C,x0,A) (o) B & S = eExt(C (o) B, x0, A (o) B) ) or
+    ( ex A,B being EnvEpsTerm of V, x0 being Element of V st
+        eId V = (eVar x0) (o) eExt(A,x0,B) & S = A ) or
+    ( ex A,B being EnvEpsTerm of V, x0,y0 being Element of V st
+        x0 <> y0 & eId V = (eVar x0) (o) eExt(A,y0,B) & S = (eVar x0) (o) B
+        ) or
+    ( ex A,B,C being EnvEpsTerm of V st
+        eId V = (A (@) B) (o) C & S = (A (o) C) (@) (B (o) C) ) or
+    ( ex A,B being EnvEpsTerm of V st
+        eId V = (eEps A) (o) B & S = eEps A ) or
+    ( ex A,A1,B being EnvEpsTerm of V st [A,A1] in SigmaRed(V) &
+        eId V = A (@) B & S = A1 (@) B ) or
+    ( ex A,B,B1 being EnvEpsTerm of V st [B,B1] in SigmaRed(V) &
+        eId V = A (@) B & S = A (@) B1 ) or
+    ( ex A,A1 being EnvEpsTerm of V, x0 being Element of V st [A,A1] in
+    SigmaRed(V) &
+        eId V = eLam(x0,A) & S = eLam(x0,A1) ) or
+    ( ex A,A1,B being EnvEpsTerm of V, x0 being Element of V st [A,A1] in
+    SigmaRed(V) &
+        eId V = eExt(A,x0,B) & S = eExt(A1,x0,B) ) or
+    ( ex A,B,B1 being EnvEpsTerm of V, x0 being Element of V st [B,B1] in
+    SigmaRed(V) &
+        eId V = eExt(A,x0,B) & S = eExt(A,x0,B1) ) or
+    ( ex A,A1,B being EnvEpsTerm of V st [A,A1] in SigmaRed(V) &
+        eId V = A (o) B & S = A1 (o) B ) or
+    ( ex A,B,B1 being EnvEpsTerm of V st [B,B1] in SigmaRed(V) &
+        eId V = A (o) B & S = A (o) B1 ) or
+    ( ex A,A1 being EnvEpsTerm of V st [A,A1] in SigmaRed(V) &
+        eId V = eEps A & S = eEps A1 ) by Th26;
+  per cases by A1;
+  suppose
+    ( ex A,B,C being EnvEpsTerm of V st
+        eId V = (A (o) B) (o) C & S = A (o) (B (o) C) )
+    ;
+    then consider A,B,C being EnvEpsTerm of V such that
+    E1: eId V = (A (o) B) (o) C & S = A (o) (B (o) C);
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose
+    ( ex A being EnvEpsTerm of V st
+        eId V = (eId V) (o) A & S = A )
+    ;
+    then consider A being EnvEpsTerm of V such that
+    E1: eId V = (eId V) (o) A & S = A;
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose
+    ( ex A being EnvEpsTerm of V st
+        eId V = A (o) (eId V) & S = A )
+    ;
+    then consider A being EnvEpsTerm of V such that
+    E1: eId V = A (o) (eId V) & S = A;
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose
+    ( ex C,A,B being EnvEpsTerm of V, x0 being Element of V st
+        eId V = eExt(C,x0,A) (o) B & S = eExt(C (o) B, x0, A (o) B) )
+    ;
+    then consider C,A,B being EnvEpsTerm of V, x0 being Element of V such
+      that
+    E1: eId V = eExt(C,x0,A) (o) B & S = eExt(C (o) B, x0, A (o) B);
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose
+    ( ex A,B being EnvEpsTerm of V, x0 being Element of V st
+        eId V = (eVar x0) (o) eExt(A,x0,B) & S = A )
+    ;
+    then consider A,B being EnvEpsTerm of V, x0 being Element of V such that
+    E1: eId V = (eVar x0) (o) eExt(A,x0,B) & S = A;
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose
+    ( ex A,B being EnvEpsTerm of V, x0,y0 being Element of V st
+        x0 <> y0 & eId V = (eVar x0) (o) eExt(A,y0,B) & S = (eVar x0) (o) B
+        )
+    ;
+    then consider A,B being EnvEpsTerm of V, x0,y0 being Element of V such
+      that
+    E1: x0 <> y0 & eId V = (eVar x0) (o) eExt(A,y0,B) & S = (eVar x0) (o) B;
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose
+    ( ex A,B,C being EnvEpsTerm of V st
+        eId V = (A (@) B) (o) C & S = (A (o) C) (@) (B (o) C) )
+    ;
+    then consider A,B,C being EnvEpsTerm of V such that
+    E1: eId V = (A (@) B) (o) C & S = (A (o) C) (@) (B (o) C);
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose
+    ( ex A,B being EnvEpsTerm of V st
+        eId V = (eEps A) (o) B & S = eEps A )
+    ;
+    then consider A,B being EnvEpsTerm of V such that
+    E1: eId V = (eEps A) (o) B & S = eEps A;
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose
+    ( ex A,A1,B being EnvEpsTerm of V st [A,A1] in SigmaRed(V) &
+        eId V = A (@) B & S = A1 (@) B )
+    ;
+    then consider A,A1,B being EnvEpsTerm of V such that
+    E1: [A,A1] in SigmaRed(V) & eId V = A (@) B & S = A1 (@) B;
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose
+    ( ex A,B,B1 being EnvEpsTerm of V st [B,B1] in SigmaRed(V) &
+        eId V = A (@) B & S = A (@) B1 )
+    ;
+    then consider A,B,B1 being EnvEpsTerm of V such that
+    E1: [B,B1] in SigmaRed(V) & eId V = A (@) B & S = A (@) B1;
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose
+    ( ex A,A1 being EnvEpsTerm of V, x0 being Element of V st [A,A1] in
+    SigmaRed(V) &
+        eId V = eLam(x0,A) & S = eLam(x0,A1) )
+    ;
+    then consider A,A1 being EnvEpsTerm of V, x0 being Element of V such
+      that
+    E1: [A,A1] in SigmaRed(V) & eId V = eLam(x0,A) & S = eLam(x0,A1);
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose
+    ( ex A,A1,B being EnvEpsTerm of V, x0 being Element of V st [A,A1] in
+    SigmaRed(V) &
+        eId V = eExt(A,x0,B) & S = eExt(A1,x0,B) )
+    ;
+    then consider A,A1,B being EnvEpsTerm of V, x0 being Element of V such
+      that
+    E1: [A,A1] in SigmaRed(V) & eId V = eExt(A,x0,B) & S = eExt(A1,x0,B);
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose
+    ( ex A,B,B1 being EnvEpsTerm of V, x0 being Element of V st [B,B1] in
+    SigmaRed(V) &
+        eId V = eExt(A,x0,B) & S = eExt(A,x0,B1) )
+    ;
+    then consider A,B,B1 being EnvEpsTerm of V, x0 being Element of V such
+      that
+    E1: [B,B1] in SigmaRed(V) & eId V = eExt(A,x0,B) & S = eExt(A,x0,B1);
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose
+    ( ex A,A1,B being EnvEpsTerm of V st [A,A1] in SigmaRed(V) &
+        eId V = A (o) B & S = A1 (o) B )
+    ;
+    then consider A,A1,B being EnvEpsTerm of V such that
+    E1: [A,A1] in SigmaRed(V) & eId V = A (o) B & S = A1 (o) B;
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose
+    ( ex A,B,B1 being EnvEpsTerm of V st [B,B1] in SigmaRed(V) &
+        eId V = A (o) B & S = A (o) B1 )
+    ;
+    then consider A,B,B1 being EnvEpsTerm of V such that
+    E1: [B,B1] in SigmaRed(V) & eId V = A (o) B & S = A (o) B1;
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose
+    ( ex A,A1 being EnvEpsTerm of V st [A,A1] in SigmaRed(V) &
+        eId V = eEps A & S = eEps A1 )
+    ;
+    then consider A,A1 being EnvEpsTerm of V such that
+    E1: [A,A1] in SigmaRed(V) & eId V = eEps A & S = eEps A1;
+    thus thesis by E1,ENVSYN:20;
   end;
 end;
 
 theorem Th29:
-  for V being non empty set, M being EnvEpsTerm of V, x being Element of
-    V, S being EnvEpsTerm of V st [eLam(x,M), S] in SigmaRed(V) holds
-  ( ex M2,M3 being EnvEpsTerm of V, x2 being Element of V st [M2,M3] in
-    SigmaRed(V) & eLam(x,M) = eLam(x2,M2) & S = eLam(x2,M3) )
+  for V being non empty set, M being EnvEpsTerm of V, x being Element of V,
+    S being EnvEpsTerm of V st [eLam(x,M),S] in SigmaRed(V) holds
+    ( ex A,A1 being EnvEpsTerm of V, x0 being Element of V st [A,A1] in
+    SigmaRed(V) &
+        eLam(x,M) = eLam(x0,A) & S = eLam(x0,A1) )
 proof
   let V be non empty set, M be EnvEpsTerm of V, x be Element of V, S be
     EnvEpsTerm of V;
-  assume [eLam(x,M), S] in SigmaRed(V);
-  then A1: [eLam(x,M), S] in CC SigmaRoot(V) by Def2;
-  A2: [eLam(x,M), S] in SigmaRoot(V) or
-    ( ex M1 being EnvEpsTerm of V st [M,M1] in CC SigmaRoot(V) & S =
-      eLam(x,M1) ) by A1,ENVCC:18;
-  per cases by A2;
-  suppose A3: [eLam(x,M), S] in SigmaRoot(V);
-    A4: ( ex M2,N2,L2 being EnvEpsTerm of V st eLam(x,M) =
-      eComp(eComp(M2,N2),L2) & S = eComp(M2,eComp(N2,L2)) ) or
-    ( ex M2 being EnvEpsTerm of V st eLam(x,M) = eComp(eId V,M2) & S = M2
-      ) or
-    ( ex M2 being EnvEpsTerm of V st eLam(x,M) = eComp(M2,eId V) & S = M2
-      ) or
-    ( ex L2,M2,N2 being EnvEpsTerm of V, x2 being Element of V st
-      eLam(x,M) = eComp(eExt(L2,x2,M2),N2) & S =
-      eExt(eComp(L2,N2),x2,eComp(M2,N2)) ) or
-    ( ex M2,N2 being EnvEpsTerm of V, x2 being Element of V st eLam(x,M) =
-      eComp(eVar x2, eExt(M2,x2,N2)) & S = M2 ) or
-    ( ex M2,N2 being EnvEpsTerm of V, x2,y2 being Element of V st x2 <> y2
-      & eLam(x,M) = eComp(eVar x2, eExt(M2,y2,N2)) & S = eComp(eVar x2,
-      N2) ) or
-    ( ex M2,N2,L2 being EnvEpsTerm of V st eLam(x,M) =
-      eComp(eApp(M2,N2),L2) & S = eApp(eComp(M2,L2),eComp(N2,L2)) ) or
-    ( ex M2,N2 being EnvEpsTerm of V st eLam(x,M) = eComp(eEps M2,N2) & S
-      = eEps M2 ) by A3,Th1;
-    thus thesis by A4,ENVSYN:20;
+  assume [eLam(x,M),S] in SigmaRed(V);
+  then A1:
+    ( ex A,B,C being EnvEpsTerm of V st
+        eLam(x,M) = (A (o) B) (o) C & S = A (o) (B (o) C) ) or
+    ( ex A being EnvEpsTerm of V st
+        eLam(x,M) = (eId V) (o) A & S = A ) or
+    ( ex A being EnvEpsTerm of V st
+        eLam(x,M) = A (o) (eId V) & S = A ) or
+    ( ex C,A,B being EnvEpsTerm of V, x0 being Element of V st
+        eLam(x,M) = eExt(C,x0,A) (o) B & S = eExt(C (o) B, x0, A (o) B) ) or
+    ( ex A,B being EnvEpsTerm of V, x0 being Element of V st
+        eLam(x,M) = (eVar x0) (o) eExt(A,x0,B) & S = A ) or
+    ( ex A,B being EnvEpsTerm of V, x0,y0 being Element of V st
+        x0 <> y0 & eLam(x,M) = (eVar x0) (o) eExt(A,y0,B) & S = (eVar x0)
+        (o) B ) or
+    ( ex A,B,C being EnvEpsTerm of V st
+        eLam(x,M) = (A (@) B) (o) C & S = (A (o) C) (@) (B (o) C) ) or
+    ( ex A,B being EnvEpsTerm of V st
+        eLam(x,M) = (eEps A) (o) B & S = eEps A ) or
+    ( ex A,A1,B being EnvEpsTerm of V st [A,A1] in SigmaRed(V) &
+        eLam(x,M) = A (@) B & S = A1 (@) B ) or
+    ( ex A,B,B1 being EnvEpsTerm of V st [B,B1] in SigmaRed(V) &
+        eLam(x,M) = A (@) B & S = A (@) B1 ) or
+    ( ex A,A1 being EnvEpsTerm of V, x0 being Element of V st [A,A1] in
+    SigmaRed(V) &
+        eLam(x,M) = eLam(x0,A) & S = eLam(x0,A1) ) or
+    ( ex A,A1,B being EnvEpsTerm of V, x0 being Element of V st [A,A1] in
+    SigmaRed(V) &
+        eLam(x,M) = eExt(A,x0,B) & S = eExt(A1,x0,B) ) or
+    ( ex A,B,B1 being EnvEpsTerm of V, x0 being Element of V st [B,B1] in
+    SigmaRed(V) &
+        eLam(x,M) = eExt(A,x0,B) & S = eExt(A,x0,B1) ) or
+    ( ex A,A1,B being EnvEpsTerm of V st [A,A1] in SigmaRed(V) &
+        eLam(x,M) = A (o) B & S = A1 (o) B ) or
+    ( ex A,B,B1 being EnvEpsTerm of V st [B,B1] in SigmaRed(V) &
+        eLam(x,M) = A (o) B & S = A (o) B1 ) or
+    ( ex A,A1 being EnvEpsTerm of V st [A,A1] in SigmaRed(V) &
+        eLam(x,M) = eEps A & S = eEps A1 ) by Th26;
+  per cases by A1;
+  suppose
+    ( ex A,B,C being EnvEpsTerm of V st
+        eLam(x,M) = (A (o) B) (o) C & S = A (o) (B (o) C) )
+    ;
+    then consider A,B,C being EnvEpsTerm of V such that
+    E1: eLam(x,M) = (A (o) B) (o) C & S = A (o) (B (o) C);
+    thus thesis by E1,ENVSYN:20;
   end;
-  suppose ex M1 being EnvEpsTerm of V st [M,M1] in CC SigmaRoot(V) & S =
-    eLam(x,M1);
-    then consider M1 being EnvEpsTerm of V such that
-    E1: [M,M1] in CC SigmaRoot(V) & S = eLam(x,M1);
-    E2: [M,M1] in SigmaRed(V) by E1,Def2;
-    E3: ( ex M2,M3 being EnvEpsTerm of V, x2 being Element of V st [M2,M3]
-      in SigmaRed(V) & eLam(x,M) = eLam(x2,M2) & S = eLam(x2,M3) )
-    proof
-      take M,M1,x;
-      thus thesis by E1,E2;
-    end;
-    thus thesis by E3;
+  suppose
+    ( ex A being EnvEpsTerm of V st
+        eLam(x,M) = (eId V) (o) A & S = A )
+    ;
+    then consider A being EnvEpsTerm of V such that
+    E1: eLam(x,M) = (eId V) (o) A & S = A;
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose
+    ( ex A being EnvEpsTerm of V st
+        eLam(x,M) = A (o) (eId V) & S = A )
+    ;
+    then consider A being EnvEpsTerm of V such that
+    E1: eLam(x,M) = A (o) (eId V) & S = A;
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose
+    ( ex C,A,B being EnvEpsTerm of V, x0 being Element of V st
+        eLam(x,M) = eExt(C,x0,A) (o) B & S = eExt(C (o) B, x0, A (o) B) )
+    ;
+    then consider C,A,B being EnvEpsTerm of V, x0 being Element of V such
+      that
+    E1: eLam(x,M) = eExt(C,x0,A) (o) B & S = eExt(C (o) B, x0, A (o) B);
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose
+    ( ex A,B being EnvEpsTerm of V, x0 being Element of V st
+        eLam(x,M) = (eVar x0) (o) eExt(A,x0,B) & S = A )
+    ;
+    then consider A,B being EnvEpsTerm of V, x0 being Element of V such that
+    E1: eLam(x,M) = (eVar x0) (o) eExt(A,x0,B) & S = A;
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose
+    ( ex A,B being EnvEpsTerm of V, x0,y0 being Element of V st
+        x0 <> y0 & eLam(x,M) = (eVar x0) (o) eExt(A,y0,B) & S = (eVar x0)
+        (o) B )
+    ;
+    then consider A,B being EnvEpsTerm of V, x0,y0 being Element of V such
+      that
+    E1: x0 <> y0 & eLam(x,M) = (eVar x0) (o) eExt(A,y0,B) & S = (eVar x0)
+      (o) B;
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose
+    ( ex A,B,C being EnvEpsTerm of V st
+        eLam(x,M) = (A (@) B) (o) C & S = (A (o) C) (@) (B (o) C) )
+    ;
+    then consider A,B,C being EnvEpsTerm of V such that
+    E1: eLam(x,M) = (A (@) B) (o) C & S = (A (o) C) (@) (B (o) C);
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose
+    ( ex A,B being EnvEpsTerm of V st
+        eLam(x,M) = (eEps A) (o) B & S = eEps A )
+    ;
+    then consider A,B being EnvEpsTerm of V such that
+    E1: eLam(x,M) = (eEps A) (o) B & S = eEps A;
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose
+    ( ex A,A1,B being EnvEpsTerm of V st [A,A1] in SigmaRed(V) &
+        eLam(x,M) = A (@) B & S = A1 (@) B )
+    ;
+    then consider A,A1,B being EnvEpsTerm of V such that
+    E1: [A,A1] in SigmaRed(V) & eLam(x,M) = A (@) B & S = A1 (@) B;
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose
+    ( ex A,B,B1 being EnvEpsTerm of V st [B,B1] in SigmaRed(V) &
+        eLam(x,M) = A (@) B & S = A (@) B1 )
+    ;
+    then consider A,B,B1 being EnvEpsTerm of V such that
+    E1: [B,B1] in SigmaRed(V) & eLam(x,M) = A (@) B & S = A (@) B1;
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose B1:
+    ( ex A,A1 being EnvEpsTerm of V, x0 being Element of V st [A,A1] in
+    SigmaRed(V) &
+        eLam(x,M) = eLam(x0,A) & S = eLam(x0,A1) )
+    ;
+    thus thesis by B1;
+  end;
+  suppose
+    ( ex A,A1,B being EnvEpsTerm of V, x0 being Element of V st [A,A1] in
+    SigmaRed(V) &
+        eLam(x,M) = eExt(A,x0,B) & S = eExt(A1,x0,B) )
+    ;
+    then consider A,A1,B being EnvEpsTerm of V, x0 being Element of V such
+      that
+    E1: [A,A1] in SigmaRed(V) & eLam(x,M) = eExt(A,x0,B) & S =
+      eExt(A1,x0,B);
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose
+    ( ex A,B,B1 being EnvEpsTerm of V, x0 being Element of V st [B,B1] in
+    SigmaRed(V) &
+        eLam(x,M) = eExt(A,x0,B) & S = eExt(A,x0,B1) )
+    ;
+    then consider A,B,B1 being EnvEpsTerm of V, x0 being Element of V such
+      that
+    E1: [B,B1] in SigmaRed(V) & eLam(x,M) = eExt(A,x0,B) & S =
+      eExt(A,x0,B1);
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose
+    ( ex A,A1,B being EnvEpsTerm of V st [A,A1] in SigmaRed(V) &
+        eLam(x,M) = A (o) B & S = A1 (o) B )
+    ;
+    then consider A,A1,B being EnvEpsTerm of V such that
+    E1: [A,A1] in SigmaRed(V) & eLam(x,M) = A (o) B & S = A1 (o) B;
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose
+    ( ex A,B,B1 being EnvEpsTerm of V st [B,B1] in SigmaRed(V) &
+        eLam(x,M) = A (o) B & S = A (o) B1 )
+    ;
+    then consider A,B,B1 being EnvEpsTerm of V such that
+    E1: [B,B1] in SigmaRed(V) & eLam(x,M) = A (o) B & S = A (o) B1;
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose
+    ( ex A,A1 being EnvEpsTerm of V st [A,A1] in SigmaRed(V) &
+        eLam(x,M) = eEps A & S = eEps A1 )
+    ;
+    then consider A,A1 being EnvEpsTerm of V such that
+    E1: [A,A1] in SigmaRed(V) & eLam(x,M) = eEps A & S = eEps A1;
+    thus thesis by E1,ENVSYN:20;
   end;
 end;
 
 theorem Th30:
-  for V being non empty set, M being EnvEpsTerm of V, S being EnvEpsTerm
-    of V st [eEps M, S] in SigmaRed(V) holds
-  ( ex M2,M3 being EnvEpsTerm of V st [M2,M3] in SigmaRed(V) & eEps M =
-    eEps M2 & S = eEps M3 )
+  for V being non empty set, M being EnvEpsTerm of V, S being EnvEpsTerm of
+    V st [eEps M,S] in SigmaRed(V) holds
+    ( ex A,A1 being EnvEpsTerm of V st [A,A1] in SigmaRed(V) &
+        eEps M = eEps A & S = eEps A1 )
 proof
   let V be non empty set, M be EnvEpsTerm of V, S be EnvEpsTerm of V;
-  assume [eEps M, S] in SigmaRed(V);
-  then A1: [eEps M, S] in CC SigmaRoot(V) by Def2;
-  A2: [eEps M, S] in SigmaRoot(V) or
-    ( ex M1 being EnvEpsTerm of V st [M,M1] in CC SigmaRoot(V) & S = eEps
-      M1 ) by A1,ENVCC:19;
-  per cases by A2;
-  suppose A3: [eEps M, S] in SigmaRoot(V);
-    A4: ( ex M2,N2,L2 being EnvEpsTerm of V st eEps M =
-      eComp(eComp(M2,N2),L2) & S = eComp(M2,eComp(N2,L2)) ) or
-    ( ex M2 being EnvEpsTerm of V st eEps M = eComp(eId V,M2) & S = M2 )
-      or
-    ( ex M2 being EnvEpsTerm of V st eEps M = eComp(M2,eId V) & S = M2 )
-      or
-    ( ex L2,M2,N2 being EnvEpsTerm of V, x2 being Element of V st eEps M =
-      eComp(eExt(L2,x2,M2),N2) & S = eExt(eComp(L2,N2),x2,eComp(M2,N2)) )
-      or
-    ( ex M2,N2 being EnvEpsTerm of V, x2 being Element of V st eEps M =
-      eComp(eVar x2, eExt(M2,x2,N2)) & S = M2 ) or
-    ( ex M2,N2 being EnvEpsTerm of V, x2,y2 being Element of V st x2 <> y2
-      & eEps M = eComp(eVar x2, eExt(M2,y2,N2)) & S = eComp(eVar x2, N2) )
-      or
-    ( ex M2,N2,L2 being EnvEpsTerm of V st eEps M = eComp(eApp(M2,N2),L2)
-      & S = eApp(eComp(M2,L2),eComp(N2,L2)) ) or
-    ( ex M2,N2 being EnvEpsTerm of V st eEps M = eComp(eEps M2,N2) & S =
-      eEps M2 ) by A3,Th1;
-    thus thesis by A4,ENVSYN:20;
+  assume [eEps M,S] in SigmaRed(V);
+  then A1:
+    ( ex A,B,C being EnvEpsTerm of V st
+        eEps M = (A (o) B) (o) C & S = A (o) (B (o) C) ) or
+    ( ex A being EnvEpsTerm of V st
+        eEps M = (eId V) (o) A & S = A ) or
+    ( ex A being EnvEpsTerm of V st
+        eEps M = A (o) (eId V) & S = A ) or
+    ( ex C,A,B being EnvEpsTerm of V, x0 being Element of V st
+        eEps M = eExt(C,x0,A) (o) B & S = eExt(C (o) B, x0, A (o) B) ) or
+    ( ex A,B being EnvEpsTerm of V, x0 being Element of V st
+        eEps M = (eVar x0) (o) eExt(A,x0,B) & S = A ) or
+    ( ex A,B being EnvEpsTerm of V, x0,y0 being Element of V st
+        x0 <> y0 & eEps M = (eVar x0) (o) eExt(A,y0,B) & S = (eVar x0) (o) B
+        ) or
+    ( ex A,B,C being EnvEpsTerm of V st
+        eEps M = (A (@) B) (o) C & S = (A (o) C) (@) (B (o) C) ) or
+    ( ex A,B being EnvEpsTerm of V st
+        eEps M = (eEps A) (o) B & S = eEps A ) or
+    ( ex A,A1,B being EnvEpsTerm of V st [A,A1] in SigmaRed(V) &
+        eEps M = A (@) B & S = A1 (@) B ) or
+    ( ex A,B,B1 being EnvEpsTerm of V st [B,B1] in SigmaRed(V) &
+        eEps M = A (@) B & S = A (@) B1 ) or
+    ( ex A,A1 being EnvEpsTerm of V, x0 being Element of V st [A,A1] in
+    SigmaRed(V) &
+        eEps M = eLam(x0,A) & S = eLam(x0,A1) ) or
+    ( ex A,A1,B being EnvEpsTerm of V, x0 being Element of V st [A,A1] in
+    SigmaRed(V) &
+        eEps M = eExt(A,x0,B) & S = eExt(A1,x0,B) ) or
+    ( ex A,B,B1 being EnvEpsTerm of V, x0 being Element of V st [B,B1] in
+    SigmaRed(V) &
+        eEps M = eExt(A,x0,B) & S = eExt(A,x0,B1) ) or
+    ( ex A,A1,B being EnvEpsTerm of V st [A,A1] in SigmaRed(V) &
+        eEps M = A (o) B & S = A1 (o) B ) or
+    ( ex A,B,B1 being EnvEpsTerm of V st [B,B1] in SigmaRed(V) &
+        eEps M = A (o) B & S = A (o) B1 ) or
+    ( ex A,A1 being EnvEpsTerm of V st [A,A1] in SigmaRed(V) &
+        eEps M = eEps A & S = eEps A1 ) by Th26;
+  per cases by A1;
+  suppose
+    ( ex A,B,C being EnvEpsTerm of V st
+        eEps M = (A (o) B) (o) C & S = A (o) (B (o) C) )
+    ;
+    then consider A,B,C being EnvEpsTerm of V such that
+    E1: eEps M = (A (o) B) (o) C & S = A (o) (B (o) C);
+    thus thesis by E1,ENVSYN:20;
   end;
-  suppose ex M1 being EnvEpsTerm of V st [M,M1] in CC SigmaRoot(V) & S =
-    eEps M1;
-    then consider M1 being EnvEpsTerm of V such that
-    E1: [M,M1] in CC SigmaRoot(V) & S = eEps M1;
-    E2: [M,M1] in SigmaRed(V) by E1,Def2;
-    E3: ( ex M2,M3 being EnvEpsTerm of V st [M2,M3] in SigmaRed(V) & eEps
-      M = eEps M2 & S = eEps M3 )
-    proof
-      take M,M1;
-      thus thesis by E1,E2;
-    end;
-    thus thesis by E3;
+  suppose
+    ( ex A being EnvEpsTerm of V st
+        eEps M = (eId V) (o) A & S = A )
+    ;
+    then consider A being EnvEpsTerm of V such that
+    E1: eEps M = (eId V) (o) A & S = A;
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose
+    ( ex A being EnvEpsTerm of V st
+        eEps M = A (o) (eId V) & S = A )
+    ;
+    then consider A being EnvEpsTerm of V such that
+    E1: eEps M = A (o) (eId V) & S = A;
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose
+    ( ex C,A,B being EnvEpsTerm of V, x0 being Element of V st
+        eEps M = eExt(C,x0,A) (o) B & S = eExt(C (o) B, x0, A (o) B) )
+    ;
+    then consider C,A,B being EnvEpsTerm of V, x0 being Element of V such
+      that
+    E1: eEps M = eExt(C,x0,A) (o) B & S = eExt(C (o) B, x0, A (o) B);
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose
+    ( ex A,B being EnvEpsTerm of V, x0 being Element of V st
+        eEps M = (eVar x0) (o) eExt(A,x0,B) & S = A )
+    ;
+    then consider A,B being EnvEpsTerm of V, x0 being Element of V such that
+    E1: eEps M = (eVar x0) (o) eExt(A,x0,B) & S = A;
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose
+    ( ex A,B being EnvEpsTerm of V, x0,y0 being Element of V st
+        x0 <> y0 & eEps M = (eVar x0) (o) eExt(A,y0,B) & S = (eVar x0) (o) B
+        )
+    ;
+    then consider A,B being EnvEpsTerm of V, x0,y0 being Element of V such
+      that
+    E1: x0 <> y0 & eEps M = (eVar x0) (o) eExt(A,y0,B) & S = (eVar x0) (o)
+      B;
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose
+    ( ex A,B,C being EnvEpsTerm of V st
+        eEps M = (A (@) B) (o) C & S = (A (o) C) (@) (B (o) C) )
+    ;
+    then consider A,B,C being EnvEpsTerm of V such that
+    E1: eEps M = (A (@) B) (o) C & S = (A (o) C) (@) (B (o) C);
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose
+    ( ex A,B being EnvEpsTerm of V st
+        eEps M = (eEps A) (o) B & S = eEps A )
+    ;
+    then consider A,B being EnvEpsTerm of V such that
+    E1: eEps M = (eEps A) (o) B & S = eEps A;
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose
+    ( ex A,A1,B being EnvEpsTerm of V st [A,A1] in SigmaRed(V) &
+        eEps M = A (@) B & S = A1 (@) B )
+    ;
+    then consider A,A1,B being EnvEpsTerm of V such that
+    E1: [A,A1] in SigmaRed(V) & eEps M = A (@) B & S = A1 (@) B;
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose
+    ( ex A,B,B1 being EnvEpsTerm of V st [B,B1] in SigmaRed(V) &
+        eEps M = A (@) B & S = A (@) B1 )
+    ;
+    then consider A,B,B1 being EnvEpsTerm of V such that
+    E1: [B,B1] in SigmaRed(V) & eEps M = A (@) B & S = A (@) B1;
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose
+    ( ex A,A1 being EnvEpsTerm of V, x0 being Element of V st [A,A1] in
+    SigmaRed(V) &
+        eEps M = eLam(x0,A) & S = eLam(x0,A1) )
+    ;
+    then consider A,A1 being EnvEpsTerm of V, x0 being Element of V such
+      that
+    E1: [A,A1] in SigmaRed(V) & eEps M = eLam(x0,A) & S = eLam(x0,A1);
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose
+    ( ex A,A1,B being EnvEpsTerm of V, x0 being Element of V st [A,A1] in
+    SigmaRed(V) &
+        eEps M = eExt(A,x0,B) & S = eExt(A1,x0,B) )
+    ;
+    then consider A,A1,B being EnvEpsTerm of V, x0 being Element of V such
+      that
+    E1: [A,A1] in SigmaRed(V) & eEps M = eExt(A,x0,B) & S = eExt(A1,x0,B);
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose
+    ( ex A,B,B1 being EnvEpsTerm of V, x0 being Element of V st [B,B1] in
+    SigmaRed(V) &
+        eEps M = eExt(A,x0,B) & S = eExt(A,x0,B1) )
+    ;
+    then consider A,B,B1 being EnvEpsTerm of V, x0 being Element of V such
+      that
+    E1: [B,B1] in SigmaRed(V) & eEps M = eExt(A,x0,B) & S = eExt(A,x0,B1);
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose
+    ( ex A,A1,B being EnvEpsTerm of V st [A,A1] in SigmaRed(V) &
+        eEps M = A (o) B & S = A1 (o) B )
+    ;
+    then consider A,A1,B being EnvEpsTerm of V such that
+    E1: [A,A1] in SigmaRed(V) & eEps M = A (o) B & S = A1 (o) B;
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose
+    ( ex A,B,B1 being EnvEpsTerm of V st [B,B1] in SigmaRed(V) &
+        eEps M = A (o) B & S = A (o) B1 )
+    ;
+    then consider A,B,B1 being EnvEpsTerm of V such that
+    E1: [B,B1] in SigmaRed(V) & eEps M = A (o) B & S = A (o) B1;
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose B1:
+    ( ex A,A1 being EnvEpsTerm of V st [A,A1] in SigmaRed(V) &
+        eEps M = eEps A & S = eEps A1 )
+    ;
+    thus thesis by B1;
   end;
 end;
 
 theorem Th31:
   for V being non empty set, M,N being EnvEpsTerm of V, S being EnvEpsTerm
-    of V st [eApp(M,N), S] in SigmaRed(V) holds
-  ( ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in SigmaRed(V) &
-    eApp(M,N) = eApp(M2,N2) & S = eApp(M3,N2) ) or
-  ( ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in SigmaRed(V) &
-    eApp(M,N) = eApp(M2,N2) & S = eApp(M2,N3) )
+    of V st [M (@) N,S] in SigmaRed(V) holds
+    ( ex A,A1,B being EnvEpsTerm of V st [A,A1] in SigmaRed(V) &
+        M (@) N = A (@) B & S = A1 (@) B ) or
+    ( ex A,B,B1 being EnvEpsTerm of V st [B,B1] in SigmaRed(V) &
+        M (@) N = A (@) B & S = A (@) B1 )
 proof
   let V be non empty set, M,N be EnvEpsTerm of V, S be EnvEpsTerm of V;
-  assume [eApp(M,N), S] in SigmaRed(V);
-  then A1: [eApp(M,N), S] in CC SigmaRoot(V) by Def2;
-  A2: [eApp(M,N), S] in SigmaRoot(V) or
-    ( ex M1 being EnvEpsTerm of V st [M,M1] in CC SigmaRoot(V) & S =
-      eApp(M1,N) ) or
-    ( ex N1 being EnvEpsTerm of V st [N,N1] in CC SigmaRoot(V) & S =
-      eApp(M,N1) ) by A1,ENVCC:20;
-  per cases by A2;
-  suppose A3: [eApp(M,N), S] in SigmaRoot(V);
-    A4: ( ex M2,N2,L2 being EnvEpsTerm of V st eApp(M,N) =
-      eComp(eComp(M2,N2),L2) & S = eComp(M2,eComp(N2,L2)) ) or
-    ( ex M2 being EnvEpsTerm of V st eApp(M,N) = eComp(eId V,M2) & S = M2
-      ) or
-    ( ex M2 being EnvEpsTerm of V st eApp(M,N) = eComp(M2,eId V) & S = M2
-      ) or
-    ( ex L2,M2,N2 being EnvEpsTerm of V, x2 being Element of V st
-      eApp(M,N) = eComp(eExt(L2,x2,M2),N2) & S =
-      eExt(eComp(L2,N2),x2,eComp(M2,N2)) ) or
-    ( ex M2,N2 being EnvEpsTerm of V, x2 being Element of V st eApp(M,N) =
-      eComp(eVar x2, eExt(M2,x2,N2)) & S = M2 ) or
-    ( ex M2,N2 being EnvEpsTerm of V, x2,y2 being Element of V st x2 <> y2
-      & eApp(M,N) = eComp(eVar x2, eExt(M2,y2,N2)) & S = eComp(eVar x2,
-      N2) ) or
-    ( ex M2,N2,L2 being EnvEpsTerm of V st eApp(M,N) =
-      eComp(eApp(M2,N2),L2) & S = eApp(eComp(M2,L2),eComp(N2,L2)) ) or
-    ( ex M2,N2 being EnvEpsTerm of V st eApp(M,N) = eComp(eEps M2,N2) & S
-      = eEps M2 ) by A3,Th1;
-    thus thesis by A4,ENVSYN:20;
+  assume [M (@) N,S] in SigmaRed(V);
+  then A1:
+    ( ex A,B,C being EnvEpsTerm of V st
+        M (@) N = (A (o) B) (o) C & S = A (o) (B (o) C) ) or
+    ( ex A being EnvEpsTerm of V st
+        M (@) N = (eId V) (o) A & S = A ) or
+    ( ex A being EnvEpsTerm of V st
+        M (@) N = A (o) (eId V) & S = A ) or
+    ( ex C,A,B being EnvEpsTerm of V, x0 being Element of V st
+        M (@) N = eExt(C,x0,A) (o) B & S = eExt(C (o) B, x0, A (o) B) ) or
+    ( ex A,B being EnvEpsTerm of V, x0 being Element of V st
+        M (@) N = (eVar x0) (o) eExt(A,x0,B) & S = A ) or
+    ( ex A,B being EnvEpsTerm of V, x0,y0 being Element of V st
+        x0 <> y0 & M (@) N = (eVar x0) (o) eExt(A,y0,B) & S = (eVar x0) (o)
+        B ) or
+    ( ex A,B,C being EnvEpsTerm of V st
+        M (@) N = (A (@) B) (o) C & S = (A (o) C) (@) (B (o) C) ) or
+    ( ex A,B being EnvEpsTerm of V st
+        M (@) N = (eEps A) (o) B & S = eEps A ) or
+    ( ex A,A1,B being EnvEpsTerm of V st [A,A1] in SigmaRed(V) &
+        M (@) N = A (@) B & S = A1 (@) B ) or
+    ( ex A,B,B1 being EnvEpsTerm of V st [B,B1] in SigmaRed(V) &
+        M (@) N = A (@) B & S = A (@) B1 ) or
+    ( ex A,A1 being EnvEpsTerm of V, x0 being Element of V st [A,A1] in
+    SigmaRed(V) &
+        M (@) N = eLam(x0,A) & S = eLam(x0,A1) ) or
+    ( ex A,A1,B being EnvEpsTerm of V, x0 being Element of V st [A,A1] in
+    SigmaRed(V) &
+        M (@) N = eExt(A,x0,B) & S = eExt(A1,x0,B) ) or
+    ( ex A,B,B1 being EnvEpsTerm of V, x0 being Element of V st [B,B1] in
+    SigmaRed(V) &
+        M (@) N = eExt(A,x0,B) & S = eExt(A,x0,B1) ) or
+    ( ex A,A1,B being EnvEpsTerm of V st [A,A1] in SigmaRed(V) &
+        M (@) N = A (o) B & S = A1 (o) B ) or
+    ( ex A,B,B1 being EnvEpsTerm of V st [B,B1] in SigmaRed(V) &
+        M (@) N = A (o) B & S = A (o) B1 ) or
+    ( ex A,A1 being EnvEpsTerm of V st [A,A1] in SigmaRed(V) &
+        M (@) N = eEps A & S = eEps A1 ) by Th26;
+  per cases by A1;
+  suppose
+    ( ex A,B,C being EnvEpsTerm of V st
+        M (@) N = (A (o) B) (o) C & S = A (o) (B (o) C) )
+    ;
+    then consider A,B,C being EnvEpsTerm of V such that
+    E1: M (@) N = (A (o) B) (o) C & S = A (o) (B (o) C);
+    thus thesis by E1,ENVSYN:20;
   end;
-  suppose ex M1 being EnvEpsTerm of V st [M,M1] in CC SigmaRoot(V) & S =
-    eApp(M1,N);
-    then consider M1 being EnvEpsTerm of V such that
-    E1: [M,M1] in CC SigmaRoot(V) & S = eApp(M1,N);
-    E2: [M,M1] in SigmaRed(V) by E1,Def2;
-    E3: ( ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in SigmaRed(V) &
-      eApp(M,N) = eApp(M2,N2) & S = eApp(M3,N2) )
-    proof
-      take M,M1,N;
-      thus thesis by E1,E2;
-    end;
-    thus thesis by E3;
+  suppose
+    ( ex A being EnvEpsTerm of V st
+        M (@) N = (eId V) (o) A & S = A )
+    ;
+    then consider A being EnvEpsTerm of V such that
+    E1: M (@) N = (eId V) (o) A & S = A;
+    thus thesis by E1,ENVSYN:20;
   end;
-  suppose ex N1 being EnvEpsTerm of V st [N,N1] in CC SigmaRoot(V) & S =
-    eApp(M,N1);
-    then consider N1 being EnvEpsTerm of V such that
-    E1: [N,N1] in CC SigmaRoot(V) & S = eApp(M,N1);
-    E2: [N,N1] in SigmaRed(V) by E1,Def2;
-    E3: ( ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in SigmaRed(V) &
-      eApp(M,N) = eApp(M2,N2) & S = eApp(M2,N3) )
-    proof
-      take M,N,N1;
-      thus thesis by E1,E2;
-    end;
-    thus thesis by E3;
+  suppose
+    ( ex A being EnvEpsTerm of V st
+        M (@) N = A (o) (eId V) & S = A )
+    ;
+    then consider A being EnvEpsTerm of V such that
+    E1: M (@) N = A (o) (eId V) & S = A;
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose
+    ( ex C,A,B being EnvEpsTerm of V, x0 being Element of V st
+        M (@) N = eExt(C,x0,A) (o) B & S = eExt(C (o) B, x0, A (o) B) )
+    ;
+    then consider C,A,B being EnvEpsTerm of V, x0 being Element of V such
+      that
+    E1: M (@) N = eExt(C,x0,A) (o) B & S = eExt(C (o) B, x0, A (o) B);
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose
+    ( ex A,B being EnvEpsTerm of V, x0 being Element of V st
+        M (@) N = (eVar x0) (o) eExt(A,x0,B) & S = A )
+    ;
+    then consider A,B being EnvEpsTerm of V, x0 being Element of V such that
+    E1: M (@) N = (eVar x0) (o) eExt(A,x0,B) & S = A;
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose
+    ( ex A,B being EnvEpsTerm of V, x0,y0 being Element of V st
+        x0 <> y0 & M (@) N = (eVar x0) (o) eExt(A,y0,B) & S = (eVar x0) (o)
+        B )
+    ;
+    then consider A,B being EnvEpsTerm of V, x0,y0 being Element of V such
+      that
+    E1: x0 <> y0 & M (@) N = (eVar x0) (o) eExt(A,y0,B) & S = (eVar x0) (o)
+      B;
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose
+    ( ex A,B,C being EnvEpsTerm of V st
+        M (@) N = (A (@) B) (o) C & S = (A (o) C) (@) (B (o) C) )
+    ;
+    then consider A,B,C being EnvEpsTerm of V such that
+    E1: M (@) N = (A (@) B) (o) C & S = (A (o) C) (@) (B (o) C);
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose
+    ( ex A,B being EnvEpsTerm of V st
+        M (@) N = (eEps A) (o) B & S = eEps A )
+    ;
+    then consider A,B being EnvEpsTerm of V such that
+    E1: M (@) N = (eEps A) (o) B & S = eEps A;
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose B1:
+    ( ex A,A1,B being EnvEpsTerm of V st [A,A1] in SigmaRed(V) &
+        M (@) N = A (@) B & S = A1 (@) B )
+    ;
+    thus thesis by B1;
+  end;
+  suppose B1:
+    ( ex A,B,B1 being EnvEpsTerm of V st [B,B1] in SigmaRed(V) &
+        M (@) N = A (@) B & S = A (@) B1 )
+    ;
+    thus thesis by B1;
+  end;
+  suppose
+    ( ex A,A1 being EnvEpsTerm of V, x0 being Element of V st [A,A1] in
+    SigmaRed(V) &
+        M (@) N = eLam(x0,A) & S = eLam(x0,A1) )
+    ;
+    then consider A,A1 being EnvEpsTerm of V, x0 being Element of V such
+      that
+    E1: [A,A1] in SigmaRed(V) & M (@) N = eLam(x0,A) & S = eLam(x0,A1);
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose
+    ( ex A,A1,B being EnvEpsTerm of V, x0 being Element of V st [A,A1] in
+    SigmaRed(V) &
+        M (@) N = eExt(A,x0,B) & S = eExt(A1,x0,B) )
+    ;
+    then consider A,A1,B being EnvEpsTerm of V, x0 being Element of V such
+      that
+    E1: [A,A1] in SigmaRed(V) & M (@) N = eExt(A,x0,B) & S = eExt(A1,x0,B);
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose
+    ( ex A,B,B1 being EnvEpsTerm of V, x0 being Element of V st [B,B1] in
+    SigmaRed(V) &
+        M (@) N = eExt(A,x0,B) & S = eExt(A,x0,B1) )
+    ;
+    then consider A,B,B1 being EnvEpsTerm of V, x0 being Element of V such
+      that
+    E1: [B,B1] in SigmaRed(V) & M (@) N = eExt(A,x0,B) & S = eExt(A,x0,B1);
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose
+    ( ex A,A1,B being EnvEpsTerm of V st [A,A1] in SigmaRed(V) &
+        M (@) N = A (o) B & S = A1 (o) B )
+    ;
+    then consider A,A1,B being EnvEpsTerm of V such that
+    E1: [A,A1] in SigmaRed(V) & M (@) N = A (o) B & S = A1 (o) B;
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose
+    ( ex A,B,B1 being EnvEpsTerm of V st [B,B1] in SigmaRed(V) &
+        M (@) N = A (o) B & S = A (o) B1 )
+    ;
+    then consider A,B,B1 being EnvEpsTerm of V such that
+    E1: [B,B1] in SigmaRed(V) & M (@) N = A (o) B & S = A (o) B1;
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose
+    ( ex A,A1 being EnvEpsTerm of V st [A,A1] in SigmaRed(V) &
+        M (@) N = eEps A & S = eEps A1 )
+    ;
+    then consider A,A1 being EnvEpsTerm of V such that
+    E1: [A,A1] in SigmaRed(V) & M (@) N = eEps A & S = eEps A1;
+    thus thesis by E1,ENVSYN:20;
   end;
 end;
 
 theorem Th32:
   for V being non empty set, M,N being EnvEpsTerm of V, S being EnvEpsTerm
-    of V st [eComp(M,N), S] in SigmaRed(V) holds
-    ( ( ex M2,N2,L2 being EnvEpsTerm of V st eComp(M,N) =
-    eComp(eComp(M2,N2),L2) & S = eComp(M2,eComp(N2,L2)) ) or
-    ( ex M2 being EnvEpsTerm of V st eComp(M,N) = eComp(eId V,M2) & S = M2
-    ) or
-    ( ex M2 being EnvEpsTerm of V st eComp(M,N) = eComp(M2,eId V) & S = M2
-    ) or
-    ( ex L2,M2,N2 being EnvEpsTerm of V, x2 being Element of V st
-    eComp(M,N) = eComp(eExt(L2,x2,M2),N2) & S =
-    eExt(eComp(L2,N2),x2,eComp(M2,N2)) ) or
-    ( ex M2,N2 being EnvEpsTerm of V, x2 being Element of V st eComp(M,N)
-    = eComp(eVar x2, eExt(M2,x2,N2)) & S = M2 ) or
-    ( ex M2,N2 being EnvEpsTerm of V, x2,y2 being Element of V st x2 <> y2
-    & eComp(M,N) = eComp(eVar x2, eExt(M2,y2,N2)) & S = eComp(eVar x2, N2)
-    ) or
-    ( ex M2,N2,L2 being EnvEpsTerm of V st eComp(M,N) =
-    eComp(eApp(M2,N2),L2) & S = eApp(eComp(M2,L2),eComp(N2,L2)) ) or
-    ( ex M2,N2 being EnvEpsTerm of V st eComp(M,N) = eComp(eEps M2,N2) & S
-    = eEps M2 ) ) or
-  ( ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in SigmaRed(V) &
-    eComp(M,N) = eComp(M2,N2) & S = eComp(M3,N2) ) or
-  ( ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in SigmaRed(V) &
-    eComp(M,N) = eComp(M2,N2) & S = eComp(M2,N3) )
+    of V st [M (o) N,S] in SigmaRed(V) holds
+    ( ex A,B,C being EnvEpsTerm of V st
+        M (o) N = (A (o) B) (o) C & S = A (o) (B (o) C) ) or
+    ( ex A being EnvEpsTerm of V st
+        M (o) N = (eId V) (o) A & S = A ) or
+    ( ex A being EnvEpsTerm of V st
+        M (o) N = A (o) (eId V) & S = A ) or
+    ( ex C,A,B being EnvEpsTerm of V, x0 being Element of V st
+        M (o) N = eExt(C,x0,A) (o) B & S = eExt(C (o) B, x0, A (o) B) ) or
+    ( ex A,B being EnvEpsTerm of V, x0 being Element of V st
+        M (o) N = (eVar x0) (o) eExt(A,x0,B) & S = A ) or
+    ( ex A,B being EnvEpsTerm of V, x0,y0 being Element of V st
+        x0 <> y0 & M (o) N = (eVar x0) (o) eExt(A,y0,B) & S = (eVar x0) (o)
+        B ) or
+    ( ex A,B,C being EnvEpsTerm of V st
+        M (o) N = (A (@) B) (o) C & S = (A (o) C) (@) (B (o) C) ) or
+    ( ex A,B being EnvEpsTerm of V st
+        M (o) N = (eEps A) (o) B & S = eEps A ) or
+    ( ex A,A1,B being EnvEpsTerm of V st [A,A1] in SigmaRed(V) &
+        M (o) N = A (o) B & S = A1 (o) B ) or
+    ( ex A,B,B1 being EnvEpsTerm of V st [B,B1] in SigmaRed(V) &
+        M (o) N = A (o) B & S = A (o) B1 )
 proof
   let V be non empty set, M,N be EnvEpsTerm of V, S be EnvEpsTerm of V;
-  assume [eComp(M,N), S] in SigmaRed(V);
-  then A1: [eComp(M,N), S] in CC SigmaRoot(V) by Def2;
-  A2: [eComp(M,N), S] in SigmaRoot(V) or
-    ( ex M1 being EnvEpsTerm of V st [M,M1] in CC SigmaRoot(V) & S =
-      eComp(M1,N) ) or
-    ( ex N1 being EnvEpsTerm of V st [N,N1] in CC SigmaRoot(V) & S =
-      eComp(M,N1) ) by A1,ENVCC:21;
-  per cases by A2;
-  suppose A3: [eComp(M,N), S] in SigmaRoot(V);
-    thus thesis by A3,Th1;
+  assume [M (o) N,S] in SigmaRed(V);
+  then A1:
+    ( ex A,B,C being EnvEpsTerm of V st
+        M (o) N = (A (o) B) (o) C & S = A (o) (B (o) C) ) or
+    ( ex A being EnvEpsTerm of V st
+        M (o) N = (eId V) (o) A & S = A ) or
+    ( ex A being EnvEpsTerm of V st
+        M (o) N = A (o) (eId V) & S = A ) or
+    ( ex C,A,B being EnvEpsTerm of V, x0 being Element of V st
+        M (o) N = eExt(C,x0,A) (o) B & S = eExt(C (o) B, x0, A (o) B) ) or
+    ( ex A,B being EnvEpsTerm of V, x0 being Element of V st
+        M (o) N = (eVar x0) (o) eExt(A,x0,B) & S = A ) or
+    ( ex A,B being EnvEpsTerm of V, x0,y0 being Element of V st
+        x0 <> y0 & M (o) N = (eVar x0) (o) eExt(A,y0,B) & S = (eVar x0) (o)
+        B ) or
+    ( ex A,B,C being EnvEpsTerm of V st
+        M (o) N = (A (@) B) (o) C & S = (A (o) C) (@) (B (o) C) ) or
+    ( ex A,B being EnvEpsTerm of V st
+        M (o) N = (eEps A) (o) B & S = eEps A ) or
+    ( ex A,A1,B being EnvEpsTerm of V st [A,A1] in SigmaRed(V) &
+        M (o) N = A (@) B & S = A1 (@) B ) or
+    ( ex A,B,B1 being EnvEpsTerm of V st [B,B1] in SigmaRed(V) &
+        M (o) N = A (@) B & S = A (@) B1 ) or
+    ( ex A,A1 being EnvEpsTerm of V, x0 being Element of V st [A,A1] in
+    SigmaRed(V) &
+        M (o) N = eLam(x0,A) & S = eLam(x0,A1) ) or
+    ( ex A,A1,B being EnvEpsTerm of V, x0 being Element of V st [A,A1] in
+    SigmaRed(V) &
+        M (o) N = eExt(A,x0,B) & S = eExt(A1,x0,B) ) or
+    ( ex A,B,B1 being EnvEpsTerm of V, x0 being Element of V st [B,B1] in
+    SigmaRed(V) &
+        M (o) N = eExt(A,x0,B) & S = eExt(A,x0,B1) ) or
+    ( ex A,A1,B being EnvEpsTerm of V st [A,A1] in SigmaRed(V) &
+        M (o) N = A (o) B & S = A1 (o) B ) or
+    ( ex A,B,B1 being EnvEpsTerm of V st [B,B1] in SigmaRed(V) &
+        M (o) N = A (o) B & S = A (o) B1 ) or
+    ( ex A,A1 being EnvEpsTerm of V st [A,A1] in SigmaRed(V) &
+        M (o) N = eEps A & S = eEps A1 ) by Th26;
+  per cases by A1;
+  suppose B1:
+    ( ex A,B,C being EnvEpsTerm of V st
+        M (o) N = (A (o) B) (o) C & S = A (o) (B (o) C) )
+    ;
+    thus thesis by B1;
   end;
-  suppose ex M1 being EnvEpsTerm of V st [M,M1] in CC SigmaRoot(V) & S =
-    eComp(M1,N);
-    then consider M1 being EnvEpsTerm of V such that
-    E1: [M,M1] in CC SigmaRoot(V) & S = eComp(M1,N);
-    E2: [M,M1] in SigmaRed(V) by E1,Def2;
-    E3: ( ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in SigmaRed(V) &
-      eComp(M,N) = eComp(M2,N2) & S = eComp(M3,N2) )
-    proof
-      take M,M1,N;
-      thus thesis by E1,E2;
-    end;
-    thus thesis by E3;
+  suppose B1:
+    ( ex A being EnvEpsTerm of V st
+        M (o) N = (eId V) (o) A & S = A )
+    ;
+    thus thesis by B1;
   end;
-  suppose ex N1 being EnvEpsTerm of V st [N,N1] in CC SigmaRoot(V) & S =
-    eComp(M,N1);
-    then consider N1 being EnvEpsTerm of V such that
-    E1: [N,N1] in CC SigmaRoot(V) & S = eComp(M,N1);
-    E2: [N,N1] in SigmaRed(V) by E1,Def2;
-    E3: ( ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in SigmaRed(V) &
-      eComp(M,N) = eComp(M2,N2) & S = eComp(M2,N3) )
-    proof
-      take M,N,N1;
-      thus thesis by E1,E2;
-    end;
-    thus thesis by E3;
+  suppose B1:
+    ( ex A being EnvEpsTerm of V st
+        M (o) N = A (o) (eId V) & S = A )
+    ;
+    thus thesis by B1;
+  end;
+  suppose B1:
+    ( ex C,A,B being EnvEpsTerm of V, x0 being Element of V st
+        M (o) N = eExt(C,x0,A) (o) B & S = eExt(C (o) B, x0, A (o) B) )
+    ;
+    thus thesis by B1;
+  end;
+  suppose B1:
+    ( ex A,B being EnvEpsTerm of V, x0 being Element of V st
+        M (o) N = (eVar x0) (o) eExt(A,x0,B) & S = A )
+    ;
+    thus thesis by B1;
+  end;
+  suppose B1:
+    ( ex A,B being EnvEpsTerm of V, x0,y0 being Element of V st
+        x0 <> y0 & M (o) N = (eVar x0) (o) eExt(A,y0,B) & S = (eVar x0) (o)
+        B )
+    ;
+    thus thesis by B1;
+  end;
+  suppose B1:
+    ( ex A,B,C being EnvEpsTerm of V st
+        M (o) N = (A (@) B) (o) C & S = (A (o) C) (@) (B (o) C) )
+    ;
+    thus thesis by B1;
+  end;
+  suppose B1:
+    ( ex A,B being EnvEpsTerm of V st
+        M (o) N = (eEps A) (o) B & S = eEps A )
+    ;
+    thus thesis by B1;
+  end;
+  suppose
+    ( ex A,A1,B being EnvEpsTerm of V st [A,A1] in SigmaRed(V) &
+        M (o) N = A (@) B & S = A1 (@) B )
+    ;
+    then consider A,A1,B being EnvEpsTerm of V such that
+    E1: [A,A1] in SigmaRed(V) & M (o) N = A (@) B & S = A1 (@) B;
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose
+    ( ex A,B,B1 being EnvEpsTerm of V st [B,B1] in SigmaRed(V) &
+        M (o) N = A (@) B & S = A (@) B1 )
+    ;
+    then consider A,B,B1 being EnvEpsTerm of V such that
+    E1: [B,B1] in SigmaRed(V) & M (o) N = A (@) B & S = A (@) B1;
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose
+    ( ex A,A1 being EnvEpsTerm of V, x0 being Element of V st [A,A1] in
+    SigmaRed(V) &
+        M (o) N = eLam(x0,A) & S = eLam(x0,A1) )
+    ;
+    then consider A,A1 being EnvEpsTerm of V, x0 being Element of V such
+      that
+    E1: [A,A1] in SigmaRed(V) & M (o) N = eLam(x0,A) & S = eLam(x0,A1);
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose
+    ( ex A,A1,B being EnvEpsTerm of V, x0 being Element of V st [A,A1] in
+    SigmaRed(V) &
+        M (o) N = eExt(A,x0,B) & S = eExt(A1,x0,B) )
+    ;
+    then consider A,A1,B being EnvEpsTerm of V, x0 being Element of V such
+      that
+    E1: [A,A1] in SigmaRed(V) & M (o) N = eExt(A,x0,B) & S = eExt(A1,x0,B);
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose
+    ( ex A,B,B1 being EnvEpsTerm of V, x0 being Element of V st [B,B1] in
+    SigmaRed(V) &
+        M (o) N = eExt(A,x0,B) & S = eExt(A,x0,B1) )
+    ;
+    then consider A,B,B1 being EnvEpsTerm of V, x0 being Element of V such
+      that
+    E1: [B,B1] in SigmaRed(V) & M (o) N = eExt(A,x0,B) & S = eExt(A,x0,B1);
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose B1:
+    ( ex A,A1,B being EnvEpsTerm of V st [A,A1] in SigmaRed(V) &
+        M (o) N = A (o) B & S = A1 (o) B )
+    ;
+    thus thesis by B1;
+  end;
+  suppose B1:
+    ( ex A,B,B1 being EnvEpsTerm of V st [B,B1] in SigmaRed(V) &
+        M (o) N = A (o) B & S = A (o) B1 )
+    ;
+    thus thesis by B1;
+  end;
+  suppose
+    ( ex A,A1 being EnvEpsTerm of V st [A,A1] in SigmaRed(V) &
+        M (o) N = eEps A & S = eEps A1 )
+    ;
+    then consider A,A1 being EnvEpsTerm of V such that
+    E1: [A,A1] in SigmaRed(V) & M (o) N = eEps A & S = eEps A1;
+    thus thesis by E1,ENVSYN:20;
   end;
 end;
 
 theorem Th33:
   for V being non empty set, M,N being EnvEpsTerm of V, x being Element of
-    V, S being EnvEpsTerm of V st [eExt(M,x,N), S] in SigmaRed(V) holds
-  ( ex M2,M3,N2 being EnvEpsTerm of V, x2 being Element of V st [M2,M3] in
-    SigmaRed(V) & eExt(M,x,N) = eExt(M2,x2,N2) & S = eExt(M3,x2,N2) ) or
-  ( ex M2,N2,N3 being EnvEpsTerm of V, x2 being Element of V st [N2,N3] in
-    SigmaRed(V) & eExt(M,x,N) = eExt(M2,x2,N2) & S = eExt(M2,x2,N3) )
+    V, S being EnvEpsTerm of V st [eExt(M,x,N),S] in SigmaRed(V) holds
+    ( ex A,A1,B being EnvEpsTerm of V, x0 being Element of V st [A,A1] in
+    SigmaRed(V) &
+        eExt(M,x,N) = eExt(A,x0,B) & S = eExt(A1,x0,B) ) or
+    ( ex A,B,B1 being EnvEpsTerm of V, x0 being Element of V st [B,B1] in
+    SigmaRed(V) &
+        eExt(M,x,N) = eExt(A,x0,B) & S = eExt(A,x0,B1) )
 proof
   let V be non empty set, M,N be EnvEpsTerm of V, x be Element of V, S be
     EnvEpsTerm of V;
-  assume [eExt(M,x,N), S] in SigmaRed(V);
-  then A1: [eExt(M,x,N), S] in CC SigmaRoot(V) by Def2;
-  A2: [eExt(M,x,N), S] in SigmaRoot(V) or
-    ( ex M1 being EnvEpsTerm of V st [M,M1] in CC SigmaRoot(V) & S =
-      eExt(M1,x,N) ) or
-    ( ex N1 being EnvEpsTerm of V st [N,N1] in CC SigmaRoot(V) & S =
-      eExt(M,x,N1) ) by A1,ENVCC:22;
-  per cases by A2;
-  suppose A3: [eExt(M,x,N), S] in SigmaRoot(V);
-    A4: ( ex M2,N2,L2 being EnvEpsTerm of V st eExt(M,x,N) =
-      eComp(eComp(M2,N2),L2) & S = eComp(M2,eComp(N2,L2)) ) or
-    ( ex M2 being EnvEpsTerm of V st eExt(M,x,N) = eComp(eId V,M2) & S =
-      M2 ) or
-    ( ex M2 being EnvEpsTerm of V st eExt(M,x,N) = eComp(M2,eId V) & S =
-      M2 ) or
-    ( ex L2,M2,N2 being EnvEpsTerm of V, x2 being Element of V st
-      eExt(M,x,N) = eComp(eExt(L2,x2,M2),N2) & S =
-      eExt(eComp(L2,N2),x2,eComp(M2,N2)) ) or
-    ( ex M2,N2 being EnvEpsTerm of V, x2 being Element of V st eExt(M,x,N)
-      = eComp(eVar x2, eExt(M2,x2,N2)) & S = M2 ) or
-    ( ex M2,N2 being EnvEpsTerm of V, x2,y2 being Element of V st x2 <> y2
-      & eExt(M,x,N) = eComp(eVar x2, eExt(M2,y2,N2)) & S = eComp(eVar x2,
-      N2) ) or
-    ( ex M2,N2,L2 being EnvEpsTerm of V st eExt(M,x,N) =
-      eComp(eApp(M2,N2),L2) & S = eApp(eComp(M2,L2),eComp(N2,L2)) ) or
-    ( ex M2,N2 being EnvEpsTerm of V st eExt(M,x,N) = eComp(eEps M2,N2) &
-      S = eEps M2 ) by A3,Th1;
-    thus thesis by A4,ENVSYN:20;
+  assume [eExt(M,x,N),S] in SigmaRed(V);
+  then A1:
+    ( ex A,B,C being EnvEpsTerm of V st
+        eExt(M,x,N) = (A (o) B) (o) C & S = A (o) (B (o) C) ) or
+    ( ex A being EnvEpsTerm of V st
+        eExt(M,x,N) = (eId V) (o) A & S = A ) or
+    ( ex A being EnvEpsTerm of V st
+        eExt(M,x,N) = A (o) (eId V) & S = A ) or
+    ( ex C,A,B being EnvEpsTerm of V, x0 being Element of V st
+        eExt(M,x,N) = eExt(C,x0,A) (o) B & S = eExt(C (o) B, x0, A (o) B) ) or
+    ( ex A,B being EnvEpsTerm of V, x0 being Element of V st
+        eExt(M,x,N) = (eVar x0) (o) eExt(A,x0,B) & S = A ) or
+    ( ex A,B being EnvEpsTerm of V, x0,y0 being Element of V st
+        x0 <> y0 & eExt(M,x,N) = (eVar x0) (o) eExt(A,y0,B) & S = (eVar x0)
+        (o) B ) or
+    ( ex A,B,C being EnvEpsTerm of V st
+        eExt(M,x,N) = (A (@) B) (o) C & S = (A (o) C) (@) (B (o) C) ) or
+    ( ex A,B being EnvEpsTerm of V st
+        eExt(M,x,N) = (eEps A) (o) B & S = eEps A ) or
+    ( ex A,A1,B being EnvEpsTerm of V st [A,A1] in SigmaRed(V) &
+        eExt(M,x,N) = A (@) B & S = A1 (@) B ) or
+    ( ex A,B,B1 being EnvEpsTerm of V st [B,B1] in SigmaRed(V) &
+        eExt(M,x,N) = A (@) B & S = A (@) B1 ) or
+    ( ex A,A1 being EnvEpsTerm of V, x0 being Element of V st [A,A1] in
+    SigmaRed(V) &
+        eExt(M,x,N) = eLam(x0,A) & S = eLam(x0,A1) ) or
+    ( ex A,A1,B being EnvEpsTerm of V, x0 being Element of V st [A,A1] in
+    SigmaRed(V) &
+        eExt(M,x,N) = eExt(A,x0,B) & S = eExt(A1,x0,B) ) or
+    ( ex A,B,B1 being EnvEpsTerm of V, x0 being Element of V st [B,B1] in
+    SigmaRed(V) &
+        eExt(M,x,N) = eExt(A,x0,B) & S = eExt(A,x0,B1) ) or
+    ( ex A,A1,B being EnvEpsTerm of V st [A,A1] in SigmaRed(V) &
+        eExt(M,x,N) = A (o) B & S = A1 (o) B ) or
+    ( ex A,B,B1 being EnvEpsTerm of V st [B,B1] in SigmaRed(V) &
+        eExt(M,x,N) = A (o) B & S = A (o) B1 ) or
+    ( ex A,A1 being EnvEpsTerm of V st [A,A1] in SigmaRed(V) &
+        eExt(M,x,N) = eEps A & S = eEps A1 ) by Th26;
+  per cases by A1;
+  suppose
+    ( ex A,B,C being EnvEpsTerm of V st
+        eExt(M,x,N) = (A (o) B) (o) C & S = A (o) (B (o) C) )
+    ;
+    then consider A,B,C being EnvEpsTerm of V such that
+    E1: eExt(M,x,N) = (A (o) B) (o) C & S = A (o) (B (o) C);
+    thus thesis by E1,ENVSYN:20;
   end;
-  suppose ex M1 being EnvEpsTerm of V st [M,M1] in CC SigmaRoot(V) & S =
-    eExt(M1,x,N);
-    then consider M1 being EnvEpsTerm of V such that
-    E1: [M,M1] in CC SigmaRoot(V) & S = eExt(M1,x,N);
-    E2: [M,M1] in SigmaRed(V) by E1,Def2;
-    E3: ( ex M2,M3,N2 being EnvEpsTerm of V, x2 being Element of V st
-      [M2,M3] in SigmaRed(V) & eExt(M,x,N) = eExt(M2,x2,N2) & S =
-      eExt(M3,x2,N2) )
-    proof
-      take M,M1,N,x;
-      thus thesis by E1,E2;
-    end;
-    thus thesis by E3;
+  suppose
+    ( ex A being EnvEpsTerm of V st
+        eExt(M,x,N) = (eId V) (o) A & S = A )
+    ;
+    then consider A being EnvEpsTerm of V such that
+    E1: eExt(M,x,N) = (eId V) (o) A & S = A;
+    thus thesis by E1,ENVSYN:20;
   end;
-  suppose ex N1 being EnvEpsTerm of V st [N,N1] in CC SigmaRoot(V) & S =
-    eExt(M,x,N1);
-    then consider N1 being EnvEpsTerm of V such that
-    E1: [N,N1] in CC SigmaRoot(V) & S = eExt(M,x,N1);
-    E2: [N,N1] in SigmaRed(V) by E1,Def2;
-    E3: ( ex M2,N2,N3 being EnvEpsTerm of V, x2 being Element of V st
-      [N2,N3] in SigmaRed(V) & eExt(M,x,N) = eExt(M2,x2,N2) & S =
-      eExt(M2,x2,N3) )
-    proof
-      take M,N,N1,x;
-      thus thesis by E1,E2;
-    end;
-    thus thesis by E3;
+  suppose
+    ( ex A being EnvEpsTerm of V st
+        eExt(M,x,N) = A (o) (eId V) & S = A )
+    ;
+    then consider A being EnvEpsTerm of V such that
+    E1: eExt(M,x,N) = A (o) (eId V) & S = A;
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose
+    ( ex C,A,B being EnvEpsTerm of V, x0 being Element of V st
+        eExt(M,x,N) = eExt(C,x0,A) (o) B & S = eExt(C (o) B, x0, A (o) B) )
+    ;
+    then consider C,A,B being EnvEpsTerm of V, x0 being Element of V such
+      that
+    E1: eExt(M,x,N) = eExt(C,x0,A) (o) B & S = eExt(C (o) B, x0, A (o) B);
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose
+    ( ex A,B being EnvEpsTerm of V, x0 being Element of V st
+        eExt(M,x,N) = (eVar x0) (o) eExt(A,x0,B) & S = A )
+    ;
+    then consider A,B being EnvEpsTerm of V, x0 being Element of V such that
+    E1: eExt(M,x,N) = (eVar x0) (o) eExt(A,x0,B) & S = A;
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose
+    ( ex A,B being EnvEpsTerm of V, x0,y0 being Element of V st
+        x0 <> y0 & eExt(M,x,N) = (eVar x0) (o) eExt(A,y0,B) & S = (eVar x0)
+        (o) B )
+    ;
+    then consider A,B being EnvEpsTerm of V, x0,y0 being Element of V such
+      that
+    E1: x0 <> y0 & eExt(M,x,N) = (eVar x0) (o) eExt(A,y0,B) & S = (eVar x0)
+      (o) B;
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose
+    ( ex A,B,C being EnvEpsTerm of V st
+        eExt(M,x,N) = (A (@) B) (o) C & S = (A (o) C) (@) (B (o) C) )
+    ;
+    then consider A,B,C being EnvEpsTerm of V such that
+    E1: eExt(M,x,N) = (A (@) B) (o) C & S = (A (o) C) (@) (B (o) C);
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose
+    ( ex A,B being EnvEpsTerm of V st
+        eExt(M,x,N) = (eEps A) (o) B & S = eEps A )
+    ;
+    then consider A,B being EnvEpsTerm of V such that
+    E1: eExt(M,x,N) = (eEps A) (o) B & S = eEps A;
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose
+    ( ex A,A1,B being EnvEpsTerm of V st [A,A1] in SigmaRed(V) &
+        eExt(M,x,N) = A (@) B & S = A1 (@) B )
+    ;
+    then consider A,A1,B being EnvEpsTerm of V such that
+    E1: [A,A1] in SigmaRed(V) & eExt(M,x,N) = A (@) B & S = A1 (@) B;
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose
+    ( ex A,B,B1 being EnvEpsTerm of V st [B,B1] in SigmaRed(V) &
+        eExt(M,x,N) = A (@) B & S = A (@) B1 )
+    ;
+    then consider A,B,B1 being EnvEpsTerm of V such that
+    E1: [B,B1] in SigmaRed(V) & eExt(M,x,N) = A (@) B & S = A (@) B1;
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose
+    ( ex A,A1 being EnvEpsTerm of V, x0 being Element of V st [A,A1] in
+    SigmaRed(V) &
+        eExt(M,x,N) = eLam(x0,A) & S = eLam(x0,A1) )
+    ;
+    then consider A,A1 being EnvEpsTerm of V, x0 being Element of V such
+      that
+    E1: [A,A1] in SigmaRed(V) & eExt(M,x,N) = eLam(x0,A) & S = eLam(x0,A1);
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose B1:
+    ( ex A,A1,B being EnvEpsTerm of V, x0 being Element of V st [A,A1] in
+    SigmaRed(V) &
+        eExt(M,x,N) = eExt(A,x0,B) & S = eExt(A1,x0,B) )
+    ;
+    thus thesis by B1;
+  end;
+  suppose B1:
+    ( ex A,B,B1 being EnvEpsTerm of V, x0 being Element of V st [B,B1] in
+    SigmaRed(V) &
+        eExt(M,x,N) = eExt(A,x0,B) & S = eExt(A,x0,B1) )
+    ;
+    thus thesis by B1;
+  end;
+  suppose
+    ( ex A,A1,B being EnvEpsTerm of V st [A,A1] in SigmaRed(V) &
+        eExt(M,x,N) = A (o) B & S = A1 (o) B )
+    ;
+    then consider A,A1,B being EnvEpsTerm of V such that
+    E1: [A,A1] in SigmaRed(V) & eExt(M,x,N) = A (o) B & S = A1 (o) B;
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose
+    ( ex A,B,B1 being EnvEpsTerm of V st [B,B1] in SigmaRed(V) &
+        eExt(M,x,N) = A (o) B & S = A (o) B1 )
+    ;
+    then consider A,B,B1 being EnvEpsTerm of V such that
+    E1: [B,B1] in SigmaRed(V) & eExt(M,x,N) = A (o) B & S = A (o) B1;
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose
+    ( ex A,A1 being EnvEpsTerm of V st [A,A1] in SigmaRed(V) &
+        eExt(M,x,N) = eEps A & S = eEps A1 )
+    ;
+    then consider A,A1 being EnvEpsTerm of V such that
+    E1: [A,A1] in SigmaRed(V) & eExt(M,x,N) = eEps A & S = eEps A1;
+    thus thesis by E1,ENVSYN:20;
   end;
 end;
 
@@ -1048,30 +2082,30 @@ begin :: Multi-step congruence
 theorem Th34:
   for V being non empty set, M,M1,N being EnvEpsTerm of V st SigmaRed(V)
     reduces M,M1 holds
-  SigmaRed(V) reduces eApp(M,N), eApp(M1,N)
+  SigmaRed(V) reduces M (@) N, M1 (@) N
 proof
   let V be non empty set, M,M1,N be EnvEpsTerm of V;
   assume SigmaRed(V) reduces M,M1;
   then CC SigmaRoot(V) reduces M,M1 by Def2;
-  then CC SigmaRoot(V) reduces eApp(M,N), eApp(M1,N) by ENVCC:23;
+  then CC SigmaRoot(V) reduces M (@) N, M1 (@) N by ENVCC:23;
   hence thesis by Def2;
 end;
 
 theorem Th35:
   for V being non empty set, M,N,N1 being EnvEpsTerm of V st SigmaRed(V)
     reduces N,N1 holds
-  SigmaRed(V) reduces eApp(M,N), eApp(M,N1)
+  SigmaRed(V) reduces M (@) N, M (@) N1
 proof
   let V be non empty set, M,N,N1 be EnvEpsTerm of V;
   assume SigmaRed(V) reduces N,N1;
   then CC SigmaRoot(V) reduces N,N1 by Def2;
-  then CC SigmaRoot(V) reduces eApp(M,N), eApp(M,N1) by ENVCC:24;
+  then CC SigmaRoot(V) reduces M (@) N, M (@) N1 by ENVCC:24;
   hence thesis by Def2;
 end;
 
 theorem Th36:
-  for V being non empty set, M,M1 being EnvEpsTerm of V, x being Element
-    of V st SigmaRed(V) reduces M,M1 holds
+  for V being non empty set, M,M1 being EnvEpsTerm of V, x being Element of
+    V st SigmaRed(V) reduces M,M1 holds
   SigmaRed(V) reduces eLam(x,M), eLam(x,M1)
 proof
   let V be non empty set, M,M1 be EnvEpsTerm of V, x be Element of V;
@@ -1108,24 +2142,24 @@ end;
 theorem Th39:
   for V being non empty set, M,M1,N being EnvEpsTerm of V st SigmaRed(V)
     reduces M,M1 holds
-  SigmaRed(V) reduces eComp(M,N), eComp(M1,N)
+  SigmaRed(V) reduces M (o) N, M1 (o) N
 proof
   let V be non empty set, M,M1,N be EnvEpsTerm of V;
   assume SigmaRed(V) reduces M,M1;
   then CC SigmaRoot(V) reduces M,M1 by Def2;
-  then CC SigmaRoot(V) reduces eComp(M,N), eComp(M1,N) by ENVCC:28;
+  then CC SigmaRoot(V) reduces M (o) N, M1 (o) N by ENVCC:28;
   hence thesis by Def2;
 end;
 
 theorem Th40:
   for V being non empty set, M,N,N1 being EnvEpsTerm of V st SigmaRed(V)
     reduces N,N1 holds
-  SigmaRed(V) reduces eComp(M,N), eComp(M,N1)
+  SigmaRed(V) reduces M (o) N, M (o) N1
 proof
   let V be non empty set, M,N,N1 be EnvEpsTerm of V;
   assume SigmaRed(V) reduces N,N1;
   then CC SigmaRoot(V) reduces N,N1 by Def2;
-  then CC SigmaRoot(V) reduces eComp(M,N), eComp(M,N1) by ENVCC:29;
+  then CC SigmaRoot(V) reduces M (o) N, M (o) N1 by ENVCC:29;
   hence thesis by Def2;
 end;
 
@@ -1142,74 +2176,74 @@ proof
 end;
 
 
-begin :: Each root rule strictly decreases the length
+begin :: Each computation rule strictly decreases the length
 
 theorem Th42:
   for V being non empty set, M,N,L being EnvEpsTerm of V holds
-  elen (eComp(M,eComp(N,L))) < elen (eComp(eComp(M,N),L))
+  elen (M (o) (N (o) L)) < elen ((M (o) N) (o) L)
 proof
   let V be non empty set, M,N,L be EnvEpsTerm of V;
-  D1: elen(eComp(eComp(M,N),L)) = elen(eComp(M,N))*(elen L+1) by ENVLEN:6
-    .= (elen M*(elen N+1))*(elen L+1) by ENVLEN:6;
-  D2: elen(eComp(M,eComp(N,L))) = elen M*(elen(eComp(N,L))+1) by ENVLEN:6
-    .= elen M*((elen N*(elen L+1))+1) by ENVLEN:6;
+  D1: elen ((M (o) N) (o) L) = elen (M (o) N) * (elen L + 1) by ENVLEN:6
+    .= (elen M * (elen N + 1)) * (elen L + 1) by ENVLEN:6;
+  D2: elen (M (o) (N (o) L)) = elen M * (elen (N (o) L) + 1) by ENVLEN:6
+    .= elen M * ((elen N * (elen L + 1)) + 1) by ENVLEN:6;
   D3: 0 < elen M & 0 < elen L by ENVLEN:7;
-  elen M*((elen N*(elen L+1))+1) < (elen M*(elen N+1))*(elen L+1)
-    by D3,ENVLEN:9;
+  elen M * ((elen N * (elen L + 1)) + 1) <
+    (elen M * (elen N + 1)) * (elen L + 1) by D3,ENVLEN:9;
   hence thesis by D1,D2;
 end;
 
 theorem Th43:
   for V being non empty set, M being EnvEpsTerm of V holds
-  elen M < elen (eComp(eId V,M))
+  elen M < elen ((eId V) (o) M)
 proof
   let V be non empty set, M be EnvEpsTerm of V;
-  D1: elen(eComp(eId V,M)) = elen(eId V)*(elen M+1) by ENVLEN:6
-    .= 1*(elen M+1) by ENVLEN:1;
+  D1: elen ((eId V) (o) M) = elen (eId V) * (elen M + 1) by ENVLEN:6
+    .= 1 * (elen M + 1) by ENVLEN:1;
   elen M < elen M + 1 by ENVLEN:12;
   hence thesis by D1;
 end;
 
 theorem Th44:
   for V being non empty set, M being EnvEpsTerm of V holds
-  elen M < elen (eComp(M,eId V))
+  elen M < elen (M (o) (eId V))
 proof
   let V be non empty set, M be EnvEpsTerm of V;
-  D1: elen(eComp(M,eId V)) = elen M*(elen(eId V)+1) by ENVLEN:6
-    .= elen M*(1+1) by ENVLEN:1;
+  D1: elen (M (o) (eId V)) = elen M * (elen (eId V) + 1) by ENVLEN:6
+    .= elen M * (1 + 1) by ENVLEN:1;
   D2: 0 < elen M by ENVLEN:7;
-  elen M < 2*elen M by D2,ENVLEN:13;
+  elen M < 2 * elen M by D2,ENVLEN:13;
   hence thesis by D1;
 end;
 
 theorem Th45:
   for V being non empty set, L,M,N being EnvEpsTerm of V,
       x being Element of V holds
-  elen (eExt(eComp(L,N),x,eComp(M,N))) < elen (eComp(eExt(L,x,M),N))
+  elen (eExt(L (o) N, x, M (o) N)) < elen (eExt(L,x,M) (o) N)
 proof
   let V be non empty set, L,M,N be EnvEpsTerm of V, x be Element of V;
-  D1: elen(eComp(eExt(L,x,M),N)) = elen(eExt(L,x,M))*(elen N+1) by ENVLEN:6
-    .= (elen L+elen M+1)*(elen N+1) by ENVLEN:5;
-  D2: elen(eExt(eComp(L,N),x,eComp(M,N)))
-    = elen(eComp(L,N)) + elen(eComp(M,N)) + 1 by ENVLEN:5
-    .= elen L*(elen N+1) + elen(eComp(M,N)) + 1 by ENVLEN:6
-    .= elen L*(elen N+1) + elen M*(elen N+1) + 1 by ENVLEN:6;
+  D1: elen (eExt(L,x,M) (o) N) = elen (eExt(L,x,M)) * (elen N + 1) by ENVLEN:6
+    .= (elen L + elen M + 1) * (elen N + 1) by ENVLEN:5;
+  D2: elen (eExt(L (o) N, x, M (o) N))
+    = elen (L (o) N) + elen (M (o) N) + 1 by ENVLEN:5
+    .= elen L * (elen N + 1) + elen (M (o) N) + 1 by ENVLEN:6
+    .= elen L * (elen N + 1) + elen M * (elen N + 1) + 1 by ENVLEN:6;
   D3: 0 < elen N by ENVLEN:7;
-  elen L*(elen N+1) + elen M*(elen N+1) + 1 < (elen L+elen M+1)*(elen N+1)
-    by D3,ENVLEN:10;
+  elen L * (elen N + 1) + elen M * (elen N + 1) + 1 <
+    (elen L + elen M + 1) * (elen N + 1) by D3,ENVLEN:10;
   hence thesis by D1,D2;
 end;
 
 theorem Th46:
   for V being non empty set, M,N being EnvEpsTerm of V,
       x being Element of V holds
-  elen M < elen (eComp(eVar x, eExt(M,x,N)))
+  elen M < elen ((eVar x) (o) eExt(M,x,N))
 proof
   let V be non empty set, M,N be EnvEpsTerm of V, x be Element of V;
-  D1: elen(eComp(eVar x, eExt(M,x,N)))
-    = elen(eVar x)*(elen(eExt(M,x,N))+1) by ENVLEN:6
-    .= 1*(elen(eExt(M,x,N))+1) by ENVLEN:1
-    .= 1*((elen M+elen N+1)+1) by ENVLEN:5;
+  D1: elen ((eVar x) (o) eExt(M,x,N))
+    = elen (eVar x) * (elen (eExt(M,x,N)) + 1) by ENVLEN:6
+    .= 1 * (elen (eExt(M,x,N)) + 1) by ENVLEN:1
+    .= 1 * ((elen M + elen N + 1) + 1) by ENVLEN:5;
   D2: 0 < elen N + 2;
   elen M < elen M + (elen N + 2) by D2,ENVLEN:12;
   hence thesis by D1;
@@ -1218,47 +2252,47 @@ end;
 theorem Th47:
   for V being non empty set, M,N being EnvEpsTerm of V,
       x,y being Element of V holds
-  elen (eComp(eVar x, N)) < elen (eComp(eVar x, eExt(M,y,N)))
+  elen ((eVar x) (o) N) < elen ((eVar x) (o) eExt(M,y,N))
 proof
   let V be non empty set, M,N be EnvEpsTerm of V, x,y be Element of V;
-  D1: elen(eComp(eVar x, eExt(M,y,N)))
-    = elen(eVar x)*(elen(eExt(M,y,N))+1) by ENVLEN:6
-    .= 1*(elen(eExt(M,y,N))+1) by ENVLEN:1
-    .= 1*((elen M+elen N+1)+1) by ENVLEN:5;
-  D2: elen(eComp(eVar x, N)) = elen(eVar x)*(elen N+1) by ENVLEN:6
-    .= 1*(elen N+1) by ENVLEN:1;
+  D1: elen ((eVar x) (o) eExt(M,y,N))
+    = elen (eVar x) * (elen (eExt(M,y,N)) + 1) by ENVLEN:6
+    .= 1 * (elen (eExt(M,y,N)) + 1) by ENVLEN:1
+    .= 1 * ((elen M + elen N + 1) + 1) by ENVLEN:5;
+  D2: elen ((eVar x) (o) N) = elen (eVar x) * (elen N + 1) by ENVLEN:6
+    .= 1 * (elen N + 1) by ENVLEN:1;
   D3: 0 < elen M + 1;
-  1*(elen N+1) < 1*(elen N+1) + (elen M + 1) by D3,ENVLEN:12;
+  1 * (elen N + 1) < 1 * (elen N + 1) + (elen M + 1) by D3,ENVLEN:12;
   hence thesis by D1,D2;
 end;
 
 theorem Th48:
   for V being non empty set, M,N,L being EnvEpsTerm of V holds
-  elen (eApp(eComp(M,L),eComp(N,L))) < elen (eComp(eApp(M,N),L))
+  elen ((M (o) L) (@) (N (o) L)) < elen ((M (@) N) (o) L)
 proof
   let V be non empty set, M,N,L be EnvEpsTerm of V;
-  D1: elen(eComp(eApp(M,N),L)) = elen(eApp(M,N))*(elen L+1) by ENVLEN:6
-    .= (elen M+elen N+1)*(elen L+1) by ENVLEN:4;
-  D2: elen(eApp(eComp(M,L),eComp(N,L)))
-    = elen(eComp(M,L)) + elen(eComp(N,L)) + 1 by ENVLEN:4
-    .= elen M*(elen L+1) + elen(eComp(N,L)) + 1 by ENVLEN:6
-    .= elen M*(elen L+1) + elen N*(elen L+1) + 1 by ENVLEN:6;
+  D1: elen ((M (@) N) (o) L) = elen (M (@) N) * (elen L + 1) by ENVLEN:6
+    .= (elen M + elen N + 1) * (elen L + 1) by ENVLEN:4;
+  D2: elen ((M (o) L) (@) (N (o) L))
+    = elen (M (o) L) + elen (N (o) L) + 1 by ENVLEN:4
+    .= elen M * (elen L + 1) + elen (N (o) L) + 1 by ENVLEN:6
+    .= elen M * (elen L + 1) + elen N * (elen L + 1) + 1 by ENVLEN:6;
   D3: 0 < elen L by ENVLEN:7;
-  elen M*(elen L+1) + elen N*(elen L+1) + 1 < (elen M+elen N+1)*(elen L+1)
-    by D3,ENVLEN:10;
+  elen M * (elen L + 1) + elen N * (elen L + 1) + 1 <
+    (elen M + elen N + 1) * (elen L + 1) by D3,ENVLEN:10;
   hence thesis by D1,D2;
 end;
 
 theorem Th49:
   for V being non empty set, M,N being EnvEpsTerm of V holds
-  elen (eEps M) < elen (eComp(eEps M,N))
+  elen (eEps M) < elen ((eEps M) (o) N)
 proof
   let V be non empty set, M,N be EnvEpsTerm of V;
-  D1: elen(eComp(eEps M,N)) = elen(eEps M)*(elen N+1) by ENVLEN:6
-    .= (2*elen M)*(elen N+1) by ENVLEN:3;
-  D2: elen(eEps M) = 2*elen M by ENVLEN:3;
+  D1: elen ((eEps M) (o) N) = elen (eEps M) * (elen N + 1) by ENVLEN:6
+    .= (2 * elen M) * (elen N + 1) by ENVLEN:3;
+  D2: elen (eEps M) = 2 * elen M by ENVLEN:3;
   D3: 0 < elen M & 0 < elen N by ENVLEN:7;
-  2*elen M < (2*elen M)*(elen N+1) by D3,ENVLEN:11;
+  2 * elen M < (2 * elen M) * (elen N + 1) by D3,ENVLEN:11;
   hence thesis by D1,D2;
 end;
 
@@ -1317,61 +2351,57 @@ proof
         E3: elen S < elen P
         proof
           per cases by E2,Th1;
-          suppose ex M2,N2,L2 being EnvEpsTerm of V st
-              P = eComp(eComp(M2,N2),L2) & S = eComp(M2,eComp(N2,L2));
-            then consider M2,N2,L2 being EnvEpsTerm of V such that
-            F1: P = eComp(eComp(M2,N2),L2) & S = eComp(M2,eComp(N2,L2));
+          suppose ex A,B,C being EnvEpsTerm of V st
+              P = (A (o) B) (o) C & S = A (o) (B (o) C);
+            then consider A,B,C being EnvEpsTerm of V such that
+            F1: P = (A (o) B) (o) C & S = A (o) (B (o) C);
             thus thesis by F1,Th42;
           end;
-          suppose ex M2 being EnvEpsTerm of V st
-              P = eComp(eId V,M2) & S = M2;
-            then consider M2 being EnvEpsTerm of V such that
-            F1: P = eComp(eId V,M2) & S = M2;
+          suppose ex A being EnvEpsTerm of V st
+              P = (eId V) (o) A & S = A;
+            then consider A being EnvEpsTerm of V such that
+            F1: P = (eId V) (o) A & S = A;
             thus thesis by F1,Th43;
           end;
-          suppose ex M2 being EnvEpsTerm of V st
-              P = eComp(M2,eId V) & S = M2;
-            then consider M2 being EnvEpsTerm of V such that
-            F1: P = eComp(M2,eId V) & S = M2;
+          suppose ex A being EnvEpsTerm of V st
+              P = A (o) (eId V) & S = A;
+            then consider A being EnvEpsTerm of V such that
+            F1: P = A (o) (eId V) & S = A;
             thus thesis by F1,Th44;
           end;
-          suppose ex L2,M2,N2 being EnvEpsTerm of V, x2 being Element of V st
-              P = eComp(eExt(L2,x2,M2),N2) &
-              S = eExt(eComp(L2,N2),x2,eComp(M2,N2));
-            then consider L2,M2,N2 being EnvEpsTerm of V,
-            x2 being Element of V such that
-            F1: P = eComp(eExt(L2,x2,M2),N2) &
-              S = eExt(eComp(L2,N2),x2,eComp(M2,N2));
+          suppose ex C,A,B being EnvEpsTerm of V, x0 being Element of V st
+              P = eExt(C,x0,A) (o) B & S = eExt(C (o) B, x0, A (o) B);
+            then consider C,A,B being EnvEpsTerm of V,
+            x0 being Element of V such that
+            F1: P = eExt(C,x0,A) (o) B & S = eExt(C (o) B, x0, A (o) B);
             thus thesis by F1,Th45;
           end;
-          suppose ex M2,N2 being EnvEpsTerm of V, x2 being Element of V st
-              P = eComp(eVar x2, eExt(M2,x2,N2)) & S = M2;
-            then consider M2,N2 being EnvEpsTerm of V, x2 being Element of V
+          suppose ex A,B being EnvEpsTerm of V, x0 being Element of V st
+              P = (eVar x0) (o) eExt(A,x0,B) & S = A;
+            then consider A,B being EnvEpsTerm of V, x0 being Element of V
             such that
-            F1: P = eComp(eVar x2, eExt(M2,x2,N2)) & S = M2;
+            F1: P = (eVar x0) (o) eExt(A,x0,B) & S = A;
             thus thesis by F1,Th46;
           end;
-          suppose ex M2,N2 being EnvEpsTerm of V, x2,y2 being Element of V st
-              x2 <> y2 & P = eComp(eVar x2, eExt(M2,y2,N2)) &
-              S = eComp(eVar x2, N2);
-            then consider M2,N2 being EnvEpsTerm of V,
-            x2,y2 being Element of V such that
-            F1: x2 <> y2 & P = eComp(eVar x2, eExt(M2,y2,N2)) &
-              S = eComp(eVar x2, N2);
+          suppose ex A,B being EnvEpsTerm of V, x0,y0 being Element of V st
+              x0 <> y0 & P = (eVar x0) (o) eExt(A,y0,B) &
+              S = (eVar x0) (o) B;
+            then consider A,B being EnvEpsTerm of V,
+            x0,y0 being Element of V such that
+            F1: x0 <> y0 & P = (eVar x0) (o) eExt(A,y0,B) &
+              S = (eVar x0) (o) B;
             thus thesis by F1,Th47;
           end;
-          suppose ex M2,N2,L2 being EnvEpsTerm of V st
-              P = eComp(eApp(M2,N2),L2) &
-              S = eApp(eComp(M2,L2),eComp(N2,L2));
-            then consider M2,N2,L2 being EnvEpsTerm of V such that
-            F1: P = eComp(eApp(M2,N2),L2) &
-              S = eApp(eComp(M2,L2),eComp(N2,L2));
+          suppose ex A,B,C being EnvEpsTerm of V st
+              P = (A (@) B) (o) C & S = (A (o) C) (@) (B (o) C);
+            then consider A,B,C being EnvEpsTerm of V such that
+            F1: P = (A (@) B) (o) C & S = (A (o) C) (@) (B (o) C);
             thus thesis by F1,Th48;
           end;
-          suppose ex M2,N2 being EnvEpsTerm of V st
-              P = eComp(eEps M2,N2) & S = eEps M2;
-            then consider M2,N2 being EnvEpsTerm of V such that
-            F1: P = eComp(eEps M2,N2) & S = eEps M2;
+          suppose ex A,B being EnvEpsTerm of V st
+              P = (eEps A) (o) B & S = eEps A;
+            then consider A,B being EnvEpsTerm of V such that
+            F1: P = (eEps A) (o) B & S = eEps A;
             thus thesis by F1,Th49;
           end;
         end;
@@ -1381,25 +2411,25 @@ proof
       hence thesis by TARSKI:def 3;
     end;
     thus for M,M1,N being EnvEpsTerm of V st [M,M1] in DR1 holds
-      [eApp(M,N), eApp(M1,N)] in DR1
+      [M (@) N, M1 (@) N] in DR1
     proof
       let M,M1,N be EnvEpsTerm of V;
       assume [M,M1] in DR1;
       then D0: elen M1 < elen M by A2;
-      D1: elen(eApp(M,N)) = elen M+elen N+1 by ENVLEN:4;
-      D2: elen(eApp(M1,N)) = elen M1+elen N+1 by ENVLEN:4;
-      elen M1+(elen N+1) < elen M+(elen N+1) by D0,XREAL_1:8;
+      D1: elen (M (@) N) = elen M + elen N + 1 by ENVLEN:4;
+      D2: elen (M1 (@) N) = elen M1 + elen N + 1 by ENVLEN:4;
+      elen M1 + (elen N + 1) < elen M + (elen N + 1) by D0,XREAL_1:8;
       hence thesis by A2,D1,D2;
     end;
     thus for M,N,N1 being EnvEpsTerm of V st [N,N1] in DR1 holds
-      [eApp(M,N), eApp(M,N1)] in DR1
+      [M (@) N, M (@) N1] in DR1
     proof
       let M,N,N1 be EnvEpsTerm of V;
       assume [N,N1] in DR1;
       then D0: elen N1 < elen N by A2;
-      D1: elen(eApp(M,N)) = elen M+elen N+1 by ENVLEN:4;
-      D2: elen(eApp(M,N1)) = elen M+elen N1+1 by ENVLEN:4;
-      elen N1+(elen M+1) < elen N+(elen M+1) by D0,XREAL_1:8;
+      D1: elen (M (@) N) = elen M + elen N + 1 by ENVLEN:4;
+      D2: elen (M (@) N1) = elen M + elen N1 + 1 by ENVLEN:4;
+      elen N1 + (elen M + 1) < elen N + (elen M + 1) by D0,XREAL_1:8;
       hence thesis by A2,D1,D2;
     end;
     thus for M,M1 being EnvEpsTerm of V, x being Element of V
@@ -1408,9 +2438,9 @@ proof
       let M,M1 be EnvEpsTerm of V, x be Element of V;
       assume [M,M1] in DR1;
       then D0: elen M1 < elen M by A2;
-      D1: elen(eLam(x,M)) = 2*elen M by ENVLEN:2;
-      D2: elen(eLam(x,M1)) = 2*elen M1 by ENVLEN:2;
-      2*elen M1 < 2*elen M by D0,ENVLEN:14;
+      D1: elen (eLam(x,M)) = 2 * elen M by ENVLEN:2;
+      D2: elen (eLam(x,M1)) = 2 * elen M1 by ENVLEN:2;
+      2 * elen M1 < 2 * elen M by D0,ENVLEN:14;
       hence thesis by A2,D1,D2;
     end;
     thus for M,M1,N being EnvEpsTerm of V, x being Element of V
@@ -1419,9 +2449,9 @@ proof
       let M,M1,N be EnvEpsTerm of V, x be Element of V;
       assume [M,M1] in DR1;
       then D0: elen M1 < elen M by A2;
-      D1: elen(eExt(M,x,N)) = elen M+elen N+1 by ENVLEN:5;
-      D2: elen(eExt(M1,x,N)) = elen M1+elen N+1 by ENVLEN:5;
-      elen M1+(elen N+1) < elen M+(elen N+1) by D0,XREAL_1:8;
+      D1: elen (eExt(M,x,N)) = elen M + elen N + 1 by ENVLEN:5;
+      D2: elen (eExt(M1,x,N)) = elen M1 + elen N + 1 by ENVLEN:5;
+      elen M1 + (elen N + 1) < elen M + (elen N + 1) by D0,XREAL_1:8;
       hence thesis by A2,D1,D2;
     end;
     thus for M,N,N1 being EnvEpsTerm of V, x being Element of V
@@ -1430,34 +2460,34 @@ proof
       let M,N,N1 be EnvEpsTerm of V, x be Element of V;
       assume [N,N1] in DR1;
       then D0: elen N1 < elen N by A2;
-      D1: elen(eExt(M,x,N)) = elen M+elen N+1 by ENVLEN:5;
-      D2: elen(eExt(M,x,N1)) = elen M+elen N1+1 by ENVLEN:5;
-      elen N1+(elen M+1) < elen N+(elen M+1) by D0,XREAL_1:8;
+      D1: elen (eExt(M,x,N)) = elen M + elen N + 1 by ENVLEN:5;
+      D2: elen (eExt(M,x,N1)) = elen M + elen N1 + 1 by ENVLEN:5;
+      elen N1 + (elen M + 1) < elen N + (elen M + 1) by D0,XREAL_1:8;
       hence thesis by A2,D1,D2;
     end;
     thus for M,M1,N being EnvEpsTerm of V st [M,M1] in DR1 holds
-      [eComp(M,N), eComp(M1,N)] in DR1
+      [M (o) N, M1 (o) N] in DR1
     proof
       let M,M1,N be EnvEpsTerm of V;
       assume [M,M1] in DR1;
       then D0: elen M1 < elen M by A2;
-      D1: elen(eComp(M,N)) = elen M*(elen N+1) by ENVLEN:6;
-      D2: elen(eComp(M1,N)) = elen M1*(elen N+1) by ENVLEN:6;
+      D1: elen (M (o) N) = elen M * (elen N + 1) by ENVLEN:6;
+      D2: elen (M1 (o) N) = elen M1 * (elen N + 1) by ENVLEN:6;
       D3: 0 < elen N + 1;
-      elen M1*(elen N+1) < elen M*(elen N+1) by D0,D3,XREAL_1:68;
+      elen M1 * (elen N + 1) < elen M * (elen N + 1) by D0,D3,XREAL_1:68;
       hence thesis by A2,D1,D2;
     end;
     thus for M,N,N1 being EnvEpsTerm of V st [N,N1] in DR1 holds
-      [eComp(M,N), eComp(M,N1)] in DR1
+      [M (o) N, M (o) N1] in DR1
     proof
       let M,N,N1 be EnvEpsTerm of V;
       assume [N,N1] in DR1;
       then D0: elen N1 < elen N by A2;
-      D1: elen(eComp(M,N)) = elen M*(elen N+1) by ENVLEN:6;
-      D2: elen(eComp(M,N1)) = elen M*(elen N1+1) by ENVLEN:6;
+      D1: elen (M (o) N) = elen M * (elen N + 1) by ENVLEN:6;
+      D2: elen (M (o) N1) = elen M * (elen N1 + 1) by ENVLEN:6;
       D3: 0 < elen M by ENVLEN:7;
-      D4: elen N1+1 < elen N+1 by D0,XREAL_1:8;
-      elen M*(elen N1+1) < elen M*(elen N+1) by D3,D4,ENVLEN:15;
+      D4: elen N1 + 1 < elen N + 1 by D0,XREAL_1:8;
+      elen M * (elen N1 + 1) < elen M * (elen N + 1) by D3,D4,ENVLEN:15;
       hence thesis by A2,D1,D2;
     end;
     thus for M,M1 being EnvEpsTerm of V st [M,M1] in DR1 holds
@@ -1466,9 +2496,9 @@ proof
       let M,M1 be EnvEpsTerm of V;
       assume [M,M1] in DR1;
       then D0: elen M1 < elen M by A2;
-      D1: elen(eEps M) = 2*elen M by ENVLEN:3;
-      D2: elen(eEps M1) = 2*elen M1 by ENVLEN:3;
-      2*elen M1 < 2*elen M by D0,ENVLEN:14;
+      D1: elen (eEps M) = 2 * elen M by ENVLEN:3;
+      D2: elen (eEps M1) = 2 * elen M1 by ENVLEN:3;
+      2 * elen M1 < 2 * elen M by D0,ENVLEN:14;
       hence thesis by A2,D1,D2;
     end;
   end;
@@ -1525,7 +2555,7 @@ end;
 theorem Th51:
   for V being non empty set holds SigmaRed(V) is strongly-normalizing;
 
-begin :: Convenience lemmas about sigma reduction sequences
+begin :: Convergence
 
 theorem Th52:
   for V being non empty set, M,N,L being EnvEpsTerm of V

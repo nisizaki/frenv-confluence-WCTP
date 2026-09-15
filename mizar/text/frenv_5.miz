@@ -99,29 +99,29 @@ begin :: Preimages of an environment application
 theorem Th3:
   for M being EnvEpsTerm of V, X,Y being FrEnvTerm of V
   st tr M = fApp(fEps X, Y)
-  ex A,B being EnvEpsTerm of V st BetaSigmaRed(V) reduces M, eComp(A,B) &
+  ex A,B being EnvEpsTerm of V st BetaSigmaRed(V) reduces M, A (o) B &
     tr A = X & tr B = Y
 proof
   let M be EnvEpsTerm of V, X,Y be FrEnvTerm of V;
   assume A0: tr M = fApp(fEps X, Y);
   per cases by A0,FRENV_3:20;
-  suppose ex A,B being EnvEpsTerm of V st M = eApp(A,B) & tr A = fEps X &
+  suppose ex A,B being EnvEpsTerm of V st M = A (@) B & tr A = fEps X &
       tr B = Y;
     then consider A,B being EnvEpsTerm of V such that
-    B1: M = eApp(A,B) & tr A = fEps X & tr B = Y;
+    B1: M = A (@) B & tr A = fEps X & tr B = Y;
     consider A1 being EnvEpsTerm of V such that
     B2: A = eEps A1 & tr A1 = X by B1,FRENV_3:18;
     take A1, B;
-    [eApp(eEps A1,B), eComp(A1,B)] in BetaSigmaRed(V) by ENVBETA:37;
-    hence BetaSigmaRed(V) reduces M, eComp(A1,B) by B1,B2,REWRITE1:15;
+    [(eEps A1) (@) B, A1 (o) B] in BetaSigmaRed(V) by ENVBETA:37;
+    hence BetaSigmaRed(V) reduces M, A1 (o) B by B1,B2,REWRITE1:15;
     thus tr A1 = X & tr B = Y by B1,B2;
   end;
-  suppose ex A,B being EnvEpsTerm of V st M = eComp(A,B) &
+  suppose ex A,B being EnvEpsTerm of V st M = A (o) B &
       fEps (tr A) = fEps X & tr B = Y;
     then consider A,B being EnvEpsTerm of V such that
-    B1: M = eComp(A,B) & fEps (tr A) = fEps X & tr B = Y;
+    B1: M = A (o) B & fEps (tr A) = fEps X & tr B = Y;
     take A, B;
-    thus BetaSigmaRed(V) reduces M, eComp(A,B) by B1,REWRITE1:12;
+    thus BetaSigmaRed(V) reduces M, A (o) B by B1,REWRITE1:12;
     thus tr A = X & tr B = Y by B1,FRENV_1:12;
   end;
 end;
@@ -180,27 +180,27 @@ proof
         let M be EnvEpsTerm of V;
         assume D0: tr M = fApp(fLam(x,A),B);
         per cases by D0,FRENV_3:20;
-        suppose ex A0,B0 being EnvEpsTerm of V st M = eApp(A0,B0) &
+        suppose ex A0,B0 being EnvEpsTerm of V st M = A0 (@) B0 &
             tr A0 = fLam(x,A) & tr B0 = B;
           then consider A0,B0 being EnvEpsTerm of V such that
-          E1: M = eApp(A0,B0) & tr A0 = fLam(x,A) & tr B0 = B;
+          E1: M = A0 (@) B0 & tr A0 = fLam(x,A) & tr B0 = B;
           consider C being EnvEpsTerm of V such that
           E2: A0 = eLam(x,C) & tr C = A by E1,FRENV_3:17;
-          take eComp(C, eExt(B0,x,eId V)), eComp(C, eExt(B0,x,eId V));
-          thus tr (eComp(C, eExt(B0,x,eId V)))
+          take C (o) eExt(B0,x,eId V), C (o) eExt(B0,x,eId V);
+          thus tr (C (o) eExt(B0,x,eId V))
               = fApp(fEps (tr C), tr (eExt(B0,x,eId V))) by FRENV_3:13
             .= fApp(fEps A, fExt(tr B0, x, tr (eId V))) by E2,FRENV_3:12
             .= fApp(fEps A, fExt(B, x, fId V)) by E1,FRENV_4:1;
-          thus BetaSigmaRed(V) reduces eComp(C, eExt(B0,x,eId V)),
-            eComp(C, eExt(B0,x,eId V)) by REWRITE1:12;
-          [eApp(eLam(x,C),B0), eComp(C,eExt(B0,x,eId V))]
+          thus BetaSigmaRed(V) reduces C (o) eExt(B0,x,eId V),
+            C (o) eExt(B0,x,eId V) by REWRITE1:12;
+          [eLam(x,C) (@) B0, C (o) eExt(B0,x,eId V)]
             in BetaSigmaRed(V) by ENVBETA:35;
           hence thesis by E1,E2,REWRITE1:15;
         end;
-        suppose ex A0,B0 being EnvEpsTerm of V st M = eComp(A0,B0) &
+        suppose ex A0,B0 being EnvEpsTerm of V st M = A0 (o) B0 &
             fEps (tr A0) = fLam(x,A) & tr B0 = B;
           then consider A0,B0 being EnvEpsTerm of V such that
-          E1: M = eComp(A0,B0) & fEps (tr A0) = fLam(x,A) & tr B0 = B;
+          E1: M = A0 (o) B0 & fEps (tr A0) = fLam(x,A) & tr B0 = B;
           thus thesis by E1,FRENV_1:17;
         end;
       end;
@@ -215,34 +215,34 @@ proof
         let M be EnvEpsTerm of V;
         assume D0: tr M = fApp(fApp(fEps (fLam(x,A)),L),B);
         per cases by D0,FRENV_3:20;
-        suppose ex A0,B0 being EnvEpsTerm of V st M = eApp(A0,B0) &
+        suppose ex A0,B0 being EnvEpsTerm of V st M = A0 (@) B0 &
             tr A0 = fApp(fEps (fLam(x,A)),L) & tr B0 = B;
           then consider A0,B0 being EnvEpsTerm of V such that
-          E1: M = eApp(A0,B0) & tr A0 = fApp(fEps (fLam(x,A)),L) & tr B0 = B;
+          E1: M = A0 (@) B0 & tr A0 = fApp(fEps (fLam(x,A)),L) & tr B0 = B;
           consider D,E being EnvEpsTerm of V such that
-          E2: BetaSigmaRed(V) reduces A0, eComp(D,E) & tr D = fLam(x,A) &
+          E2: BetaSigmaRed(V) reduces A0, D (o) E & tr D = fLam(x,A) &
             tr E = L by E1,Th3;
           consider C being EnvEpsTerm of V such that
           E3: D = eLam(x,C) & tr C = A by E2,FRENV_3:17;
-          take eComp(C, eExt(B0,x,E)), eComp(C, eExt(B0,x,E));
-          thus tr (eComp(C, eExt(B0,x,E)))
+          take C (o) eExt(B0,x,E), C (o) eExt(B0,x,E);
+          thus tr (C (o) eExt(B0,x,E))
               = fApp(fEps (tr C), tr (eExt(B0,x,E))) by FRENV_3:13
             .= fApp(fEps A, fExt(tr B0, x, tr E)) by E3,FRENV_3:12
             .= fApp(fEps A, fExt(B, x, L)) by E1,E2;
-          thus BetaSigmaRed(V) reduces eComp(C, eExt(B0,x,E)),
-            eComp(C, eExt(B0,x,E)) by REWRITE1:12;
-          E4: BetaSigmaRed(V) reduces eApp(A0,B0),
-            eApp(eComp(eLam(x,C),E),B0) by E2,E3,ENVBETA:54;
-          [eApp(eComp(eLam(x,C),E),B0), eComp(C,eExt(B0,x,E))]
+          thus BetaSigmaRed(V) reduces C (o) eExt(B0,x,E),
+            C (o) eExt(B0,x,E) by REWRITE1:12;
+          E4: BetaSigmaRed(V) reduces A0 (@) B0,
+            (eLam(x,C) (o) E) (@) B0 by E2,E3,ENVBETA:54;
+          [(eLam(x,C) (o) E) (@) B0, C (o) eExt(B0,x,E)]
             in BetaSigmaRed(V) by ENVBETA:36;
-          then BetaSigmaRed(V) reduces eApp(eComp(eLam(x,C),E),B0),
-            eComp(C,eExt(B0,x,E)) by REWRITE1:15;
+          then BetaSigmaRed(V) reduces (eLam(x,C) (o) E) (@) B0,
+            C (o) eExt(B0,x,E) by REWRITE1:15;
           hence thesis by E1,E4,REWRITE1:16;
         end;
-        suppose ex A0,B0 being EnvEpsTerm of V st M = eComp(A0,B0) &
+        suppose ex A0,B0 being EnvEpsTerm of V st M = A0 (o) B0 &
             fEps (tr A0) = fApp(fEps (fLam(x,A)),L) & tr B0 = B;
           then consider A0,B0 being EnvEpsTerm of V such that
-          E1: M = eComp(A0,B0) &
+          E1: M = A0 (o) B0 &
             fEps (tr A0) = fApp(fEps (fLam(x,A)),L) & tr B0 = B;
           thus thesis by E1,FRENV_1:17;
         end;
@@ -258,15 +258,15 @@ proof
         let M be EnvEpsTerm of V;
         assume D0: tr M = fApp(fEps (fEps A),B);
         consider D,E being EnvEpsTerm of V such that
-        E1: BetaSigmaRed(V) reduces M, eComp(D,E) & tr D = fEps A &
+        E1: BetaSigmaRed(V) reduces M, D (o) E & tr D = fEps A &
           tr E = B by D0,Th3;
         consider C being EnvEpsTerm of V such that
         E2: D = eEps C & tr C = A by E1,FRENV_3:18;
         take eEps C, eEps C;
         thus tr (eEps C) = fEps A by E2,FRENV_3:10;
         thus BetaSigmaRed(V) reduces eEps C, eEps C by REWRITE1:12;
-        [eComp(eEps C,E), eEps C] in BetaSigmaRed(V) by ENVBETA:45;
-        then BetaSigmaRed(V) reduces eComp(eEps C,E), eEps C by REWRITE1:15;
+        [(eEps C) (o) E, eEps C] in BetaSigmaRed(V) by ENVBETA:45;
+        then BetaSigmaRed(V) reduces (eEps C) (o) E, eEps C by REWRITE1:15;
         hence thesis by E1,E2,REWRITE1:16;
       end;
       thus thesis by A2,C0;
@@ -280,25 +280,25 @@ proof
         let M be EnvEpsTerm of V;
         assume D0: tr M = fApp(fEps (fApp(fEps L,A)),B);
         consider D,E being EnvEpsTerm of V such that
-        E1: BetaSigmaRed(V) reduces M, eComp(D,E) & tr D = fApp(fEps L,A) &
+        E1: BetaSigmaRed(V) reduces M, D (o) E & tr D = fApp(fEps L,A) &
           tr E = B by D0,Th3;
         consider C,C2 being EnvEpsTerm of V such that
-        E2: BetaSigmaRed(V) reduces D, eComp(C,C2) & tr C = L & tr C2 = A
+        E2: BetaSigmaRed(V) reduces D, C (o) C2 & tr C = L & tr C2 = A
           by E1,Th3;
-        take eComp(C, eComp(C2,E)), eComp(C, eComp(C2,E));
-        thus tr (eComp(C, eComp(C2,E)))
-            = fApp(fEps (tr C), tr (eComp(C2,E))) by FRENV_3:13
+        take C (o) (C2 (o) E), C (o) (C2 (o) E);
+        thus tr (C (o) (C2 (o) E))
+            = fApp(fEps (tr C), tr (C2 (o) E)) by FRENV_3:13
           .= fApp(fEps L, fApp(fEps (tr C2), tr E)) by E2,FRENV_3:13
           .= fApp(fEps L, fApp(fEps A, B)) by E1,E2;
-        thus BetaSigmaRed(V) reduces eComp(C, eComp(C2,E)),
-          eComp(C, eComp(C2,E)) by REWRITE1:12;
-        E3: BetaSigmaRed(V) reduces eComp(D,E), eComp(eComp(C,C2),E)
+        thus BetaSigmaRed(V) reduces C (o) (C2 (o) E),
+          C (o) (C2 (o) E) by REWRITE1:12;
+        E3: BetaSigmaRed(V) reduces D (o) E, (C (o) C2) (o) E
           by E2,ENVBETA:59;
-        [eComp(eComp(C,C2),E), eComp(C,eComp(C2,E))] in BetaSigmaRed(V)
+        [(C (o) C2) (o) E, C (o) (C2 (o) E)] in BetaSigmaRed(V)
           by ENVBETA:38;
-        then BetaSigmaRed(V) reduces eComp(eComp(C,C2),E),
-          eComp(C,eComp(C2,E)) by REWRITE1:15;
-        then BetaSigmaRed(V) reduces eComp(D,E), eComp(C,eComp(C2,E))
+        then BetaSigmaRed(V) reduces (C (o) C2) (o) E,
+          C (o) (C2 (o) E) by REWRITE1:15;
+        then BetaSigmaRed(V) reduces D (o) E, C (o) (C2 (o) E)
           by E3,REWRITE1:16;
         hence thesis by E1,REWRITE1:16;
       end;
@@ -312,14 +312,14 @@ proof
         let M be EnvEpsTerm of V;
         assume D0: tr M = fApp(fEps (fId V),A);
         consider D,E being EnvEpsTerm of V such that
-        E1: BetaSigmaRed(V) reduces M, eComp(D,E) & tr D = fId V & tr E = A
+        E1: BetaSigmaRed(V) reduces M, D (o) E & tr D = fId V & tr E = A
           by D0,Th3;
         E2: D = eId V by E1,FRENV_3:16;
         take E, E;
         thus tr E = A by E1;
         thus BetaSigmaRed(V) reduces E, E by REWRITE1:12;
-        [eComp(eId V,E), E] in BetaSigmaRed(V) by ENVBETA:39;
-        then BetaSigmaRed(V) reduces eComp(D,E), E by E2,REWRITE1:15;
+        [(eId V) (o) E, E] in BetaSigmaRed(V) by ENVBETA:39;
+        then BetaSigmaRed(V) reduces D (o) E, E by E2,REWRITE1:15;
         hence thesis by E1,REWRITE1:16;
       end;
       thus thesis by A2,C0;
@@ -332,14 +332,14 @@ proof
         let M be EnvEpsTerm of V;
         assume D0: tr M = fApp(fEps A, fId V);
         consider D,E being EnvEpsTerm of V such that
-        E1: BetaSigmaRed(V) reduces M, eComp(D,E) & tr D = A &
+        E1: BetaSigmaRed(V) reduces M, D (o) E & tr D = A &
           tr E = fId V by D0,Th3;
         E2: E = eId V by E1,FRENV_3:16;
         take D, D;
         thus tr D = A by E1;
         thus BetaSigmaRed(V) reduces D, D by REWRITE1:12;
-        [eComp(D,eId V), D] in BetaSigmaRed(V) by ENVBETA:40;
-        then BetaSigmaRed(V) reduces eComp(D,E), D by E2,REWRITE1:15;
+        [D (o) (eId V), D] in BetaSigmaRed(V) by ENVBETA:40;
+        then BetaSigmaRed(V) reduces D (o) E, D by E2,REWRITE1:15;
         hence thesis by E1,REWRITE1:16;
       end;
       thus thesis by A2,C0;
@@ -355,24 +355,24 @@ proof
         let M be EnvEpsTerm of V;
         assume D0: tr M = fApp(fEps (fExt(L,x,A)),B);
         consider D,E being EnvEpsTerm of V such that
-        E1: BetaSigmaRed(V) reduces M, eComp(D,E) & tr D = fExt(L,x,A) &
+        E1: BetaSigmaRed(V) reduces M, D (o) E & tr D = fExt(L,x,A) &
           tr E = B by D0,Th3;
         consider C,C2 being EnvEpsTerm of V such that
         E2: D = eExt(C,x,C2) & tr C = L & tr C2 = A by E1,FRENV_3:19;
-        take eExt(eComp(C,E),x,eComp(C2,E)), eExt(eComp(C,E),x,eComp(C2,E));
-        thus tr (eExt(eComp(C,E),x,eComp(C2,E)))
-            = fExt(tr (eComp(C,E)), x, tr (eComp(C2,E))) by FRENV_3:12
-          .= fExt(fApp(fEps (tr C), tr E), x, tr (eComp(C2,E)))
+        take eExt(C (o) E,x,C2 (o) E), eExt(C (o) E,x,C2 (o) E);
+        thus tr (eExt(C (o) E,x,C2 (o) E))
+            = fExt(tr (C (o) E), x, tr (C2 (o) E)) by FRENV_3:12
+          .= fExt(fApp(fEps (tr C), tr E), x, tr (C2 (o) E))
              by FRENV_3:13
           .= fExt(fApp(fEps L, B), x, fApp(fEps (tr C2), tr E))
              by E1,E2,FRENV_3:13
           .= fExt(fApp(fEps L, B), x, fApp(fEps A, B)) by E1,E2;
-        thus BetaSigmaRed(V) reduces eExt(eComp(C,E),x,eComp(C2,E)),
-          eExt(eComp(C,E),x,eComp(C2,E)) by REWRITE1:12;
-        [eComp(eExt(C,x,C2),E), eExt(eComp(C,E),x,eComp(C2,E))]
+        thus BetaSigmaRed(V) reduces eExt(C (o) E,x,C2 (o) E),
+          eExt(C (o) E,x,C2 (o) E) by REWRITE1:12;
+        [eExt(C,x,C2) (o) E, eExt(C (o) E,x,C2 (o) E)]
           in BetaSigmaRed(V) by ENVBETA:41;
-        then BetaSigmaRed(V) reduces eComp(D,E),
-          eExt(eComp(C,E),x,eComp(C2,E)) by E2,REWRITE1:15;
+        then BetaSigmaRed(V) reduces D (o) E,
+          eExt(C (o) E,x,C2 (o) E) by E2,REWRITE1:15;
         hence thesis by E1,REWRITE1:16;
       end;
       thus thesis by A2,C0;
@@ -386,7 +386,7 @@ proof
         let M be EnvEpsTerm of V;
         assume D0: tr M = fApp(fEps (fVar x), fExt(A,x,B));
         consider D,E being EnvEpsTerm of V such that
-        E1: BetaSigmaRed(V) reduces M, eComp(D,E) & tr D = fVar x &
+        E1: BetaSigmaRed(V) reduces M, D (o) E & tr D = fVar x &
           tr E = fExt(A,x,B) by D0,Th3;
         E2: D = eVar x by E1,FRENV_3:15;
         consider C,C2 being EnvEpsTerm of V such that
@@ -394,8 +394,8 @@ proof
         take C, C;
         thus tr C = A by E3;
         thus BetaSigmaRed(V) reduces C, C by REWRITE1:12;
-        [eComp(eVar x, eExt(C,x,C2)), C] in BetaSigmaRed(V) by ENVBETA:42;
-        then BetaSigmaRed(V) reduces eComp(D,E), C by E2,E3,REWRITE1:15;
+        [(eVar x) (o) eExt(C,x,C2), C] in BetaSigmaRed(V) by ENVBETA:42;
+        then BetaSigmaRed(V) reduces D (o) E, C by E2,E3,REWRITE1:15;
         hence thesis by E1,REWRITE1:16;
       end;
       thus thesis by A2,C0;
@@ -410,21 +410,21 @@ proof
         let M be EnvEpsTerm of V;
         assume D0: tr M = fApp(fEps (fVar y), fExt(A,x,B));
         consider D,E being EnvEpsTerm of V such that
-        E1: BetaSigmaRed(V) reduces M, eComp(D,E) & tr D = fVar y &
+        E1: BetaSigmaRed(V) reduces M, D (o) E & tr D = fVar y &
           tr E = fExt(A,x,B) by D0,Th3;
         E2: D = eVar y by E1,FRENV_3:15;
         consider C,C2 being EnvEpsTerm of V such that
         E3: E = eExt(C,x,C2) & tr C = A & tr C2 = B by E1,FRENV_3:19;
-        take eComp(eVar y, C2), eComp(eVar y, C2);
-        thus tr (eComp(eVar y, C2))
+        take (eVar y) (o) C2, (eVar y) (o) C2;
+        thus tr ((eVar y) (o) C2)
             = fApp(fEps (tr (eVar y)), tr C2) by FRENV_3:13
           .= fApp(fEps (fVar y), tr C2) by FRENV_3:8
           .= fApp(fEps (fVar y), B) by E3;
-        thus BetaSigmaRed(V) reduces eComp(eVar y, C2), eComp(eVar y, C2)
+        thus BetaSigmaRed(V) reduces (eVar y) (o) C2, (eVar y) (o) C2
           by REWRITE1:12;
-        [eComp(eVar y, eExt(C,x,C2)), eComp(eVar y, C2)] in BetaSigmaRed(V)
+        [(eVar y) (o) eExt(C,x,C2), (eVar y) (o) C2] in BetaSigmaRed(V)
           by CX,ENVBETA:43;
-        then BetaSigmaRed(V) reduces eComp(D,E), eComp(eVar y, C2)
+        then BetaSigmaRed(V) reduces D (o) E, (eVar y) (o) C2
           by E2,E3,REWRITE1:15;
         hence thesis by E1,REWRITE1:16;
       end;
@@ -440,56 +440,56 @@ proof
         let M be EnvEpsTerm of V;
         assume D0: tr M = fApp(fEps (fApp(A,B)),L);
         consider D,E being EnvEpsTerm of V such that
-        E1: BetaSigmaRed(V) reduces M, eComp(D,E) & tr D = fApp(A,B) &
+        E1: BetaSigmaRed(V) reduces M, D (o) E & tr D = fApp(A,B) &
           tr E = L by D0,Th3;
         per cases by E1,FRENV_3:20;
-        suppose ex C,C2 being EnvEpsTerm of V st D = eApp(C,C2) &
+        suppose ex C,C2 being EnvEpsTerm of V st D = C (@) C2 &
             tr C = A & tr C2 = B;
           then consider C,C2 being EnvEpsTerm of V such that
-          F1: D = eApp(C,C2) & tr C = A & tr C2 = B;
-          take eApp(eComp(C,E),eComp(C2,E)), eApp(eComp(C,E),eComp(C2,E));
-          thus tr (eApp(eComp(C,E),eComp(C2,E)))
-              = fApp(tr (eComp(C,E)), tr (eComp(C2,E))) by FRENV_3:11
-            .= fApp(fApp(fEps (tr C), tr E), tr (eComp(C2,E))) by FRENV_3:13
+          F1: D = C (@) C2 & tr C = A & tr C2 = B;
+          take (C (o) E) (@) (C2 (o) E), (C (o) E) (@) (C2 (o) E);
+          thus tr ((C (o) E) (@) (C2 (o) E))
+              = fApp(tr (C (o) E), tr (C2 (o) E)) by FRENV_3:11
+            .= fApp(fApp(fEps (tr C), tr E), tr (C2 (o) E)) by FRENV_3:13
             .= fApp(fApp(fEps A, L), fApp(fEps (tr C2), tr E))
                by E1,F1,FRENV_3:13
             .= fApp(fApp(fEps A, L), fApp(fEps B, L)) by E1,F1;
-          thus BetaSigmaRed(V) reduces eApp(eComp(C,E),eComp(C2,E)),
-            eApp(eComp(C,E),eComp(C2,E)) by REWRITE1:12;
-          [eComp(eApp(C,C2),E), eApp(eComp(C,E),eComp(C2,E))]
+          thus BetaSigmaRed(V) reduces (C (o) E) (@) (C2 (o) E),
+            (C (o) E) (@) (C2 (o) E) by REWRITE1:12;
+          [(C (@) C2) (o) E, (C (o) E) (@) (C2 (o) E)]
             in BetaSigmaRed(V) by ENVBETA:44;
-          then BetaSigmaRed(V) reduces eComp(D,E),
-            eApp(eComp(C,E),eComp(C2,E)) by F1,REWRITE1:15;
+          then BetaSigmaRed(V) reduces D (o) E,
+            (C (o) E) (@) (C2 (o) E) by F1,REWRITE1:15;
           hence thesis by E1,REWRITE1:16;
         end;
-        suppose ex C,C2 being EnvEpsTerm of V st D = eComp(C,C2) &
+        suppose ex C,C2 being EnvEpsTerm of V st D = C (o) C2 &
             fEps (tr C) = A & tr C2 = B;
           then consider C,C2 being EnvEpsTerm of V such that
-          F1: D = eComp(C,C2) & fEps (tr C) = A & tr C2 = B;
-          take eApp(eComp(eEps C,E),eComp(C2,E)), eComp(C,eComp(C2,E));
-          thus tr (eApp(eComp(eEps C,E),eComp(C2,E)))
-              = fApp(tr (eComp(eEps C,E)), tr (eComp(C2,E))) by FRENV_3:11
-            .= fApp(fApp(fEps (tr (eEps C)), tr E), tr (eComp(C2,E)))
+          F1: D = C (o) C2 & fEps (tr C) = A & tr C2 = B;
+          take ((eEps C) (o) E) (@) (C2 (o) E), C (o) (C2 (o) E);
+          thus tr (((eEps C) (o) E) (@) (C2 (o) E))
+              = fApp(tr ((eEps C) (o) E), tr (C2 (o) E)) by FRENV_3:11
+            .= fApp(fApp(fEps (tr (eEps C)), tr E), tr (C2 (o) E))
                by FRENV_3:13
-            .= fApp(fApp(fEps (fEps (tr C)), tr E), tr (eComp(C2,E)))
+            .= fApp(fApp(fEps (fEps (tr C)), tr E), tr (C2 (o) E))
                by FRENV_3:10
             .= fApp(fApp(fEps A, L), fApp(fEps (tr C2), tr E))
                by E1,F1,FRENV_3:13
             .= fApp(fApp(fEps A, L), fApp(fEps B, L)) by E1,F1;
-          [eComp(eEps C,E), eEps C] in BetaSigmaRed(V) by ENVBETA:45;
-          then BetaSigmaRed(V) reduces eComp(eEps C,E), eEps C
+          [(eEps C) (o) E, eEps C] in BetaSigmaRed(V) by ENVBETA:45;
+          then BetaSigmaRed(V) reduces (eEps C) (o) E, eEps C
             by REWRITE1:15;
-          then F2: BetaSigmaRed(V) reduces eApp(eComp(eEps C,E),eComp(C2,E)),
-            eApp(eEps C, eComp(C2,E)) by ENVBETA:54;
-          [eApp(eEps C, eComp(C2,E)), eComp(C, eComp(C2,E))]
+          then F2: BetaSigmaRed(V) reduces ((eEps C) (o) E) (@) (C2 (o) E),
+            (eEps C) (@) (C2 (o) E) by ENVBETA:54;
+          [(eEps C) (@) (C2 (o) E), C (o) (C2 (o) E)]
             in BetaSigmaRed(V) by ENVBETA:37;
-          then BetaSigmaRed(V) reduces eApp(eEps C, eComp(C2,E)),
-            eComp(C, eComp(C2,E)) by REWRITE1:15;
-          hence BetaSigmaRed(V) reduces eApp(eComp(eEps C,E),eComp(C2,E)),
-            eComp(C, eComp(C2,E)) by F2,REWRITE1:16;
-          [eComp(eComp(C,C2),E), eComp(C,eComp(C2,E))] in BetaSigmaRed(V)
+          then BetaSigmaRed(V) reduces (eEps C) (@) (C2 (o) E),
+            C (o) (C2 (o) E) by REWRITE1:15;
+          hence BetaSigmaRed(V) reduces ((eEps C) (o) E) (@) (C2 (o) E),
+            C (o) (C2 (o) E) by F2,REWRITE1:16;
+          [(C (o) C2) (o) E, C (o) (C2 (o) E)] in BetaSigmaRed(V)
             by ENVBETA:38;
-          then BetaSigmaRed(V) reduces eComp(D,E), eComp(C,eComp(C2,E))
+          then BetaSigmaRed(V) reduces D (o) E, C (o) (C2 (o) E)
             by F1,REWRITE1:15;
           hence thesis by E1,REWRITE1:16;
         end;
@@ -507,40 +507,40 @@ proof
         let M be EnvEpsTerm of V;
         assume D0: tr M = fApp(A,B);
         per cases by D0,FRENV_3:20;
-        suppose ex C,C2 being EnvEpsTerm of V st M = eApp(C,C2) &
+        suppose ex C,C2 being EnvEpsTerm of V st M = C (@) C2 &
             tr C = A & tr C2 = B;
           then consider C,C2 being EnvEpsTerm of V such that
-          F1: M = eApp(C,C2) & tr C = A & tr C2 = B;
+          F1: M = C (@) C2 & tr C = A & tr C2 = B;
           consider N0,L0 being EnvEpsTerm of V such that
           F2: tr N0 = A1 & BetaSigmaRed(V) reduces N0,L0 &
             BetaSigmaRed(V) reduces C,L0 by CI,F1;
-          take eApp(N0,C2), eApp(L0,C2);
-          thus tr (eApp(N0,C2)) = fApp(tr N0, tr C2) by FRENV_3:11
+          take N0 (@) C2, L0 (@) C2;
+          thus tr (N0 (@) C2) = fApp(tr N0, tr C2) by FRENV_3:11
             .= fApp(A1,B) by F1,F2;
-          thus BetaSigmaRed(V) reduces eApp(N0,C2), eApp(L0,C2)
+          thus BetaSigmaRed(V) reduces N0 (@) C2, L0 (@) C2
             by F2,ENVBETA:54;
           thus thesis by F1,F2,ENVBETA:54;
         end;
-        suppose ex C,C2 being EnvEpsTerm of V st M = eComp(C,C2) &
+        suppose ex C,C2 being EnvEpsTerm of V st M = C (o) C2 &
             fEps (tr C) = A & tr C2 = B;
           then consider C,C2 being EnvEpsTerm of V such that
-          F1: M = eComp(C,C2) & fEps (tr C) = A & tr C2 = B;
+          F1: M = C (o) C2 & fEps (tr C) = A & tr C2 = B;
           F2: tr (eEps C) = A by F1,FRENV_3:10;
           consider N0,L0 being EnvEpsTerm of V such that
           F3: tr N0 = A1 & BetaSigmaRed(V) reduces N0,L0 &
             BetaSigmaRed(V) reduces eEps C, L0 by CI,F2;
           consider C3 being EnvEpsTerm of V such that
           F4: L0 = eEps C3 & BetaSigmaRed(V) reduces C, C3 by F3,Th2;
-          take eApp(N0,C2), eComp(C3,C2);
-          thus tr (eApp(N0,C2)) = fApp(tr N0, tr C2) by FRENV_3:11
+          take N0 (@) C2, C3 (o) C2;
+          thus tr (N0 (@) C2) = fApp(tr N0, tr C2) by FRENV_3:11
             .= fApp(A1,B) by F1,F3;
-          F5: BetaSigmaRed(V) reduces eApp(N0,C2), eApp(eEps C3, C2)
+          F5: BetaSigmaRed(V) reduces N0 (@) C2, (eEps C3) (@) C2
             by F3,F4,ENVBETA:54;
-          [eApp(eEps C3,C2), eComp(C3,C2)] in BetaSigmaRed(V)
+          [(eEps C3) (@) C2, C3 (o) C2] in BetaSigmaRed(V)
             by ENVBETA:37;
-          then BetaSigmaRed(V) reduces eApp(eEps C3,C2), eComp(C3,C2)
+          then BetaSigmaRed(V) reduces (eEps C3) (@) C2, C3 (o) C2
             by REWRITE1:15;
-          hence BetaSigmaRed(V) reduces eApp(N0,C2), eComp(C3,C2)
+          hence BetaSigmaRed(V) reduces N0 (@) C2, C3 (o) C2
             by F5,REWRITE1:16;
           thus thesis by F1,F4,ENVBETA:59;
         end;
@@ -558,31 +558,31 @@ proof
         let M be EnvEpsTerm of V;
         assume D0: tr M = fApp(A,B);
         per cases by D0,FRENV_3:20;
-        suppose ex C,C2 being EnvEpsTerm of V st M = eApp(C,C2) &
+        suppose ex C,C2 being EnvEpsTerm of V st M = C (@) C2 &
             tr C = A & tr C2 = B;
           then consider C,C2 being EnvEpsTerm of V such that
-          F1: M = eApp(C,C2) & tr C = A & tr C2 = B;
+          F1: M = C (@) C2 & tr C = A & tr C2 = B;
           consider N0,L0 being EnvEpsTerm of V such that
           F2: tr N0 = B1 & BetaSigmaRed(V) reduces N0,L0 &
             BetaSigmaRed(V) reduces C2,L0 by CI,F1;
-          take eApp(C,N0), eApp(C,L0);
-          thus tr (eApp(C,N0)) = fApp(tr C, tr N0) by FRENV_3:11
+          take C (@) N0, C (@) L0;
+          thus tr (C (@) N0) = fApp(tr C, tr N0) by FRENV_3:11
             .= fApp(A,B1) by F1,F2;
-          thus BetaSigmaRed(V) reduces eApp(C,N0), eApp(C,L0)
+          thus BetaSigmaRed(V) reduces C (@) N0, C (@) L0
             by F2,ENVBETA:55;
           thus thesis by F1,F2,ENVBETA:55;
         end;
-        suppose ex C,C2 being EnvEpsTerm of V st M = eComp(C,C2) &
+        suppose ex C,C2 being EnvEpsTerm of V st M = C (o) C2 &
             fEps (tr C) = A & tr C2 = B;
           then consider C,C2 being EnvEpsTerm of V such that
-          F1: M = eComp(C,C2) & fEps (tr C) = A & tr C2 = B;
+          F1: M = C (o) C2 & fEps (tr C) = A & tr C2 = B;
           consider N0,L0 being EnvEpsTerm of V such that
           F2: tr N0 = B1 & BetaSigmaRed(V) reduces N0,L0 &
             BetaSigmaRed(V) reduces C2,L0 by CI,F1;
-          take eComp(C,N0), eComp(C,L0);
-          thus tr (eComp(C,N0)) = fApp(fEps (tr C), tr N0) by FRENV_3:13
+          take C (o) N0, C (o) L0;
+          thus tr (C (o) N0) = fApp(fEps (tr C), tr N0) by FRENV_3:13
             .= fApp(A,B1) by F1,F2;
-          thus BetaSigmaRed(V) reduces eComp(C,N0), eComp(C,L0)
+          thus BetaSigmaRed(V) reduces C (o) N0, C (o) L0
             by F2,ENVBETA:60;
           thus thesis by F1,F2,ENVBETA:60;
         end;

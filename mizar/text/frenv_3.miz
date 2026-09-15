@@ -384,7 +384,7 @@ proof
 end;
 
 theorem Th11:
-  for M,N being EnvEpsTerm of V holds tr (eApp(M,N)) = fApp(tr M, tr N)
+  for M,N being EnvEpsTerm of V holds tr (M (@) N) = fApp(tr M, tr N)
 proof
   let M,N be EnvEpsTerm of V;
   set G = EnvEpsGram(V);
@@ -397,7 +397,7 @@ proof
   set a2 = fseq(V,f*ts,2);
   A2: a1 = tr M & a2 = tr N by Th6;
   A3: x`1 = 3;
-  thus tr (eApp(M,N)) = f.(eApp(M,N)) by Def5
+  thus tr (M (@) N) = f.(M (@) N) by Def5
     .= f.(x-tree <*M,N*>) by ENVSYN:def 7
     .= fsel(V, IFEQ(x`1,2,fLam(vsel(V,x`2),a1),
          IFEQ(x`1,5,fEps a1,IFEQ(x`1,3,fApp(a1,a2),
@@ -435,7 +435,7 @@ end;
 
 theorem Th13:
   for M,N being EnvEpsTerm of V holds
-  tr (eComp(M,N)) = fApp(fEps (tr M), tr N)
+  tr (M (o) N) = fApp(fEps (tr M), tr N)
 proof
   let M,N be EnvEpsTerm of V;
   set G = EnvEpsGram(V);
@@ -448,7 +448,7 @@ proof
   set a2 = fseq(V,f*ts,2);
   A2: a1 = tr M & a2 = tr N by Th6;
   A3: x`1 = 6;
-  thus tr (eComp(M,N)) = f.(eComp(M,N)) by Def5
+  thus tr (M (o) N) = f.(M (o) N) by Def5
     .= f.(x-tree <*M,N*>) by ENVSYN:def 8
     .= fsel(V, IFEQ(x`1,2,fLam(vsel(V,x`2),a1),
          IFEQ(x`1,5,fEps a1,IFEQ(x`1,3,fApp(a1,a2),
@@ -496,7 +496,7 @@ proof
     let A,B be FrEnvTerm of V;
     given M being EnvEpsTerm of V such that B1: tr M = A;
     given N being EnvEpsTerm of V such that B2: tr N = B;
-    tr (eApp(M,N)) = fApp(A,B) by B1,B2,Th11;
+    tr (M (@) N) = fApp(A,B) by B1,B2,Th11;
     hence thesis;
   end;
   A6: for A,B being FrEnvTerm of V, v being Element of V st P[A] & P[B]
@@ -542,13 +542,13 @@ proof
     tr M = fEps (tr A) by B1,Th10;
     hence thesis by A0,FRENV_1:17;
   end;
-  suppose ex A,B being EnvEpsTerm of V st M = eApp(A,B);
-    then consider A,B being EnvEpsTerm of V such that B1: M = eApp(A,B);
+  suppose ex A,B being EnvEpsTerm of V st M = A (@) B;
+    then consider A,B being EnvEpsTerm of V such that B1: M = A (@) B;
     tr M = fApp(tr A, tr B) by B1,Th11;
     hence thesis by A0,FRENV_1:17;
   end;
-  suppose ex A,B being EnvEpsTerm of V st M = eComp(A,B);
-    then consider A,B being EnvEpsTerm of V such that B1: M = eComp(A,B);
+  suppose ex A,B being EnvEpsTerm of V st M = A (o) B;
+    then consider A,B being EnvEpsTerm of V such that B1: M = A (o) B;
     tr M = fApp(fEps (tr A), tr B) by B1,Th13;
     hence thesis by A0,FRENV_1:17;
   end;
@@ -586,13 +586,13 @@ proof
     tr M = fEps (tr A) by B1,Th10;
     hence thesis by A0,FRENV_1:17;
   end;
-  suppose ex A,B being EnvEpsTerm of V st M = eApp(A,B);
-    then consider A,B being EnvEpsTerm of V such that B1: M = eApp(A,B);
+  suppose ex A,B being EnvEpsTerm of V st M = A (@) B;
+    then consider A,B being EnvEpsTerm of V such that B1: M = A (@) B;
     tr M = fApp(tr A, tr B) by B1,Th11;
     hence thesis by A0,FRENV_1:17;
   end;
-  suppose ex A,B being EnvEpsTerm of V st M = eComp(A,B);
-    then consider A,B being EnvEpsTerm of V such that B1: M = eComp(A,B);
+  suppose ex A,B being EnvEpsTerm of V st M = A (o) B;
+    then consider A,B being EnvEpsTerm of V such that B1: M = A (o) B;
     tr M = fApp(fEps (tr A), tr B) by B1,Th13;
     hence thesis by A0,FRENV_1:17;
   end;
@@ -634,13 +634,13 @@ proof
     tr M = fEps (tr A) by B1,Th10;
     hence thesis by A0,FRENV_1:17;
   end;
-  suppose ex A,B being EnvEpsTerm of V st M = eApp(A,B);
-    then consider A,B being EnvEpsTerm of V such that B1: M = eApp(A,B);
+  suppose ex A,B being EnvEpsTerm of V st M = A (@) B;
+    then consider A,B being EnvEpsTerm of V such that B1: M = A (@) B;
     tr M = fApp(tr A, tr B) by B1,Th11;
     hence thesis by A0,FRENV_1:17;
   end;
-  suppose ex A,B being EnvEpsTerm of V st M = eComp(A,B);
-    then consider A,B being EnvEpsTerm of V such that B1: M = eComp(A,B);
+  suppose ex A,B being EnvEpsTerm of V st M = A (o) B;
+    then consider A,B being EnvEpsTerm of V such that B1: M = A (o) B;
     tr M = fApp(fEps (tr A), tr B) by B1,Th13;
     hence thesis by A0,FRENV_1:17;
   end;
@@ -681,13 +681,13 @@ proof
     then tr A = a by A0,FRENV_1:12;
     hence thesis by B1;
   end;
-  suppose ex A,B being EnvEpsTerm of V st M = eApp(A,B);
-    then consider A,B being EnvEpsTerm of V such that B1: M = eApp(A,B);
+  suppose ex A,B being EnvEpsTerm of V st M = A (@) B;
+    then consider A,B being EnvEpsTerm of V such that B1: M = A (@) B;
     tr M = fApp(tr A, tr B) by B1,Th11;
     hence thesis by A0,FRENV_1:17;
   end;
-  suppose ex A,B being EnvEpsTerm of V st M = eComp(A,B);
-    then consider A,B being EnvEpsTerm of V such that B1: M = eComp(A,B);
+  suppose ex A,B being EnvEpsTerm of V st M = A (o) B;
+    then consider A,B being EnvEpsTerm of V such that B1: M = A (o) B;
     tr M = fApp(fEps (tr A), tr B) by B1,Th13;
     hence thesis by A0,FRENV_1:17;
   end;
@@ -728,13 +728,13 @@ proof
     tr M = fEps (tr A) by B1,Th10;
     hence thesis by A0,FRENV_1:17;
   end;
-  suppose ex A,B being EnvEpsTerm of V st M = eApp(A,B);
-    then consider A,B being EnvEpsTerm of V such that B1: M = eApp(A,B);
+  suppose ex A,B being EnvEpsTerm of V st M = A (@) B;
+    then consider A,B being EnvEpsTerm of V such that B1: M = A (@) B;
     tr M = fApp(tr A, tr B) by B1,Th11;
     hence thesis by A0,FRENV_1:17;
   end;
-  suppose ex A,B being EnvEpsTerm of V st M = eComp(A,B);
-    then consider A,B being EnvEpsTerm of V such that B1: M = eComp(A,B);
+  suppose ex A,B being EnvEpsTerm of V st M = A (o) B;
+    then consider A,B being EnvEpsTerm of V such that B1: M = A (o) B;
     tr M = fApp(fEps (tr A), tr B) by B1,Th13;
     hence thesis by A0,FRENV_1:17;
   end;
@@ -751,8 +751,8 @@ end;
 theorem Th20:
   for M being EnvEpsTerm of V, a,b being FrEnvTerm of V st tr M = fApp(a,b)
   holds
-  ( ex A,B being EnvEpsTerm of V st M = eApp(A,B) & tr A = a & tr B = b ) or
-  ( ex A,B being EnvEpsTerm of V st M = eComp(A,B) & fEps (tr A) = a &
+  ( ex A,B being EnvEpsTerm of V st M = A (@) B & tr A = a & tr B = b ) or
+  ( ex A,B being EnvEpsTerm of V st M = A (o) B & fEps (tr A) = a &
     tr B = b )
 proof
   let M be EnvEpsTerm of V, a,b be FrEnvTerm of V;
@@ -778,14 +778,14 @@ proof
     tr M = fEps (tr A) by B1,Th10;
     hence thesis by A0,FRENV_1:17;
   end;
-  suppose ex A,B being EnvEpsTerm of V st M = eApp(A,B);
-    then consider A,B being EnvEpsTerm of V such that B1: M = eApp(A,B);
+  suppose ex A,B being EnvEpsTerm of V st M = A (@) B;
+    then consider A,B being EnvEpsTerm of V such that B1: M = A (@) B;
     tr M = fApp(tr A, tr B) by B1,Th11;
     then tr A = a & tr B = b by A0,FRENV_1:13;
     hence thesis by B1;
   end;
-  suppose ex A,B being EnvEpsTerm of V st M = eComp(A,B);
-    then consider A,B being EnvEpsTerm of V such that B1: M = eComp(A,B);
+  suppose ex A,B being EnvEpsTerm of V st M = A (o) B;
+    then consider A,B being EnvEpsTerm of V such that B1: M = A (o) B;
     tr M = fApp(fEps (tr A), tr B) by B1,Th13;
     then fEps (tr A) = a & tr B = b by A0,FRENV_1:13;
     hence thesis by B1;

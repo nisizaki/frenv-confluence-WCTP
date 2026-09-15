@@ -176,7 +176,23 @@ closures. Each calculus then only names its own root rules:
 and `BetaSigmaRed(V) = BetaRed(V) \/ SigmaRed(V)` is a theorem (`ENVBETA:32`),
 not a definition: it follows from `CC (Q1 \/ Q2) = CC Q1 \/ CC Q2`.
 
+Composition and application are written infix, `M (o) N` and `M (@) N`, so the
+deeply nested terms of the sigma rules read the way the paper writes them:
+
+```text
+  ( ex A,B,C being EnvEpsTerm of V st
+      P = (A (o) B) (o) C & S = A (o) (B (o) C) ) or
+```
+
+Reductions themselves are written as membership in a relation,
+`[M,N] in SigmaRed(V)`. An infix arrow for them was tried and dropped: a
+defined predicate does not unfold inside the large disjunctions of the
+inversion lemmas, nor against the normal-form and convergence definitions of
+`REWRITE1`, so it would have forced an explicit bridging step at every
+interface with the MML.
+
 Symbols are pairs, tagged by their first component:
+
 
 | Symbol | Meaning | Arity |
 |---|---|---|

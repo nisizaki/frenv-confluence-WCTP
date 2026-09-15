@@ -1253,6 +1253,6 @@ begin :: Infix notation for the constructors
 
 notation
   let V be non empty set, M,N be EnvEpsTerm of V;
-  synonym M (#) N for eComp(M,N);
+  synonym M (o) N for eComp(M,N);
   synonym M (@) N for eApp(M,N);
 end;

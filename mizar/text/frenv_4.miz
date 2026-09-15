@@ -95,14 +95,14 @@ proof
     hence thesis by A2;
   end;
   AC: for A,B being EnvEpsTerm of V holds
-    tr (eComp(A,B)) = fApp(fEps (tr A), tr B) by FRENV_3:13;
+    tr (A (o) B) = fApp(fEps (tr A), tr B) by FRENV_3:13;
   D1: for A,B being EnvEpsTerm of V, x being Element of V holds
-      [eApp(eLam(x,A),B), eComp(A,eExt(B,x,eId V))] in Q1
+      [eLam(x,A) (@) B, A (o) eExt(B,x,eId V)] in Q1
     proof
       let A,B be EnvEpsTerm of V, x be Element of V;
-      B1: tr (eApp(eLam(x,A),B)) = fApp(tr (eLam(x,A)), tr B) by FRENV_3:11
+      B1: tr (eLam(x,A) (@) B) = fApp(tr (eLam(x,A)), tr B) by FRENV_3:11
         .= fApp(fLam(x, tr A), tr B) by FRENV_3:9;
-      B2: tr (eComp(A,eExt(B,x,eId V)))
+      B2: tr (A (o) eExt(B,x,eId V))
           = fApp(fEps (tr A), tr (eExt(B,x,eId V))) by AC
         .= fApp(fEps (tr A), fExt(tr B, x, tr (eId V))) by FRENV_3:12
         .= fApp(fEps (tr A), fExt(tr B, x, fId V)) by Th1;
@@ -111,14 +111,14 @@ proof
       hence thesis by AL,B1,B2;
     end;
   D2: for A,B,L being EnvEpsTerm of V, x being Element of V holds
-      [eApp(eComp(eLam(x,A),L),B), eComp(A,eExt(B,x,L))] in Q1
+      [(eLam(x,A) (o) L) (@) B, A (o) eExt(B,x,L)] in Q1
     proof
       let A,B,L be EnvEpsTerm of V, x be Element of V;
-      B1: tr (eApp(eComp(eLam(x,A),L),B))
-          = fApp(tr (eComp(eLam(x,A),L)), tr B) by FRENV_3:11
+      B1: tr ((eLam(x,A) (o) L) (@) B)
+          = fApp(tr (eLam(x,A) (o) L), tr B) by FRENV_3:11
         .= fApp(fApp(fEps (tr (eLam(x,A))), tr L), tr B) by AC
         .= fApp(fApp(fEps (fLam(x, tr A)), tr L), tr B) by FRENV_3:9;
-      B2: tr (eComp(A,eExt(B,x,L))) = fApp(fEps (tr A), tr (eExt(B,x,L)))
+      B2: tr (A (o) eExt(B,x,L)) = fApp(fEps (tr A), tr (eExt(B,x,L)))
           by AC
         .= fApp(fEps (tr A), fExt(tr B, x, tr L)) by FRENV_3:12;
       [fApp(fApp(fEps (fLam(x, tr A)), tr L), tr B),
@@ -126,55 +126,55 @@ proof
       hence thesis by AL,B1,B2;
     end;
   D3: for A,B being EnvEpsTerm of V holds
-      [eApp(eEps A,B), eComp(A,B)] in Q1
+      [(eEps A) (@) B, A (o) B] in Q1
     proof
       let A,B be EnvEpsTerm of V;
-      B1: tr (eApp(eEps A,B)) = fApp(tr (eEps A), tr B) by FRENV_3:11
+      B1: tr ((eEps A) (@) B) = fApp(tr (eEps A), tr B) by FRENV_3:11
         .= fApp(fEps (tr A), tr B) by FRENV_3:10;
-      B2: tr (eComp(A,B)) = fApp(fEps (tr A), tr B) by AC;
-      FrRed(V) reduces tr (eApp(eEps A,B)), tr (eComp(A,B)) by B1,B2,
+      B2: tr (A (o) B) = fApp(fEps (tr A), tr B) by AC;
+      FrRed(V) reduces tr ((eEps A) (@) B), tr (A (o) B) by B1,B2,
         REWRITE1:12;
       hence thesis by A2;
     end;
   D4: for A,B,L being EnvEpsTerm of V holds
-      [eComp(eComp(A,B),L), eComp(A,eComp(B,L))] in Q1
+      [(A (o) B) (o) L, A (o) (B (o) L)] in Q1
     proof
       let A,B,L be EnvEpsTerm of V;
-      B1: tr (eComp(eComp(A,B),L))
-          = fApp(fEps (tr (eComp(A,B))), tr L) by AC
+      B1: tr ((A (o) B) (o) L)
+          = fApp(fEps (tr (A (o) B)), tr L) by AC
         .= fApp(fEps (fApp(fEps (tr A), tr B)), tr L) by AC;
-      B2: tr (eComp(A,eComp(B,L))) = fApp(fEps (tr A), tr (eComp(B,L))) by AC
+      B2: tr (A (o) (B (o) L)) = fApp(fEps (tr A), tr (B (o) L)) by AC
         .= fApp(fEps (tr A), fApp(fEps (tr B), tr L)) by AC;
       [fApp(fEps (fApp(fEps (tr A), tr B)), tr L),
         fApp(fEps (tr A), fApp(fEps (tr B), tr L))] in FrRed(V) by FRENV_2:7;
       hence thesis by AL,B1,B2;
     end;
-  D5: for A being EnvEpsTerm of V holds [eComp(eId V,A), A] in Q1
+  D5: for A being EnvEpsTerm of V holds [(eId V) (o) A, A] in Q1
     proof
       let A be EnvEpsTerm of V;
-      B1: tr (eComp(eId V,A)) = fApp(fEps (tr (eId V)), tr A) by AC
+      B1: tr ((eId V) (o) A) = fApp(fEps (tr (eId V)), tr A) by AC
         .= fApp(fEps (fId V), tr A) by Th1;
       [fApp(fEps (fId V), tr A), tr A] in FrRed(V) by FRENV_2:8;
       hence thesis by AL,B1;
     end;
-  D6: for A being EnvEpsTerm of V holds [eComp(A,eId V), A] in Q1
+  D6: for A being EnvEpsTerm of V holds [A (o) (eId V), A] in Q1
     proof
       let A be EnvEpsTerm of V;
-      B1: tr (eComp(A,eId V)) = fApp(fEps (tr A), tr (eId V)) by AC
+      B1: tr (A (o) (eId V)) = fApp(fEps (tr A), tr (eId V)) by AC
         .= fApp(fEps (tr A), fId V) by Th1;
       [fApp(fEps (tr A), fId V), tr A] in FrRed(V) by FRENV_2:9;
       hence thesis by AL,B1;
     end;
   D7: for L,A,B being EnvEpsTerm of V, x being Element of V holds
-      [eComp(eExt(L,x,A),B), eExt(eComp(L,B),x,eComp(A,B))] in Q1
+      [eExt(L,x,A) (o) B, eExt(L (o) B,x,A (o) B)] in Q1
     proof
       let L,A,B be EnvEpsTerm of V, x be Element of V;
-      B1: tr (eComp(eExt(L,x,A),B))
+      B1: tr (eExt(L,x,A) (o) B)
           = fApp(fEps (tr (eExt(L,x,A))), tr B) by AC
         .= fApp(fEps (fExt(tr L, x, tr A)), tr B) by FRENV_3:12;
-      B2: tr (eExt(eComp(L,B),x,eComp(A,B)))
-          = fExt(tr (eComp(L,B)), x, tr (eComp(A,B))) by FRENV_3:12
-        .= fExt(fApp(fEps (tr L), tr B), x, tr (eComp(A,B))) by AC
+      B2: tr (eExt(L (o) B,x,A (o) B))
+          = fExt(tr (L (o) B), x, tr (A (o) B)) by FRENV_3:12
+        .= fExt(fApp(fEps (tr L), tr B), x, tr (A (o) B)) by AC
         .= fExt(fApp(fEps (tr L), tr B), x, fApp(fEps (tr A), tr B)) by AC;
       [fApp(fEps (fExt(tr L, x, tr A)), tr B),
         fExt(fApp(fEps (tr L), tr B), x, fApp(fEps (tr A), tr B))]
@@ -182,10 +182,10 @@ proof
       hence thesis by AL,B1,B2;
     end;
   D8: for A,B being EnvEpsTerm of V, x being Element of V holds
-      [eComp(eVar x, eExt(A,x,B)), A] in Q1
+      [(eVar x) (o) eExt(A,x,B), A] in Q1
     proof
       let A,B be EnvEpsTerm of V, x be Element of V;
-      B1: tr (eComp(eVar x, eExt(A,x,B)))
+      B1: tr ((eVar x) (o) eExt(A,x,B))
           = fApp(fEps (tr (eVar x)), tr (eExt(A,x,B))) by AC
         .= fApp(fEps (fVar x), tr (eExt(A,x,B))) by FRENV_3:8
         .= fApp(fEps (fVar x), fExt(tr A, x, tr B)) by FRENV_3:12;
@@ -194,39 +194,39 @@ proof
       hence thesis by AL,B1;
     end;
   D9: for A,B being EnvEpsTerm of V, x,y being Element of V st x <> y
-      holds [eComp(eVar x, eExt(A,y,B)), eComp(eVar x, B)] in Q1
+      holds [(eVar x) (o) eExt(A,y,B), (eVar x) (o) B] in Q1
     proof
       let A,B be EnvEpsTerm of V, x,y be Element of V;
       assume B0: x <> y;
-      B1: tr (eComp(eVar x, eExt(A,y,B)))
+      B1: tr ((eVar x) (o) eExt(A,y,B))
           = fApp(fEps (tr (eVar x)), tr (eExt(A,y,B))) by AC
         .= fApp(fEps (fVar x), tr (eExt(A,y,B))) by FRENV_3:8
         .= fApp(fEps (fVar x), fExt(tr A, y, tr B)) by FRENV_3:12;
-      B2: tr (eComp(eVar x, B)) = fApp(fEps (tr (eVar x)), tr B) by AC
+      B2: tr ((eVar x) (o) B) = fApp(fEps (tr (eVar x)), tr B) by AC
         .= fApp(fEps (fVar x), tr B) by FRENV_3:8;
       [fApp(fEps (fVar x), fExt(tr A, y, tr B)),
         fApp(fEps (fVar x), tr B)] in FrRed(V) by B0,FRENV_2:12;
       hence thesis by AL,B1,B2;
     end;
   D10: for A,B,L being EnvEpsTerm of V holds
-      [eComp(eApp(A,B),L), eApp(eComp(A,L),eComp(B,L))] in Q1
+      [(A (@) B) (o) L, (A (o) L) (@) (B (o) L)] in Q1
     proof
       let A,B,L be EnvEpsTerm of V;
-      B1: tr (eComp(eApp(A,B),L)) = fApp(fEps (tr (eApp(A,B))), tr L) by AC
+      B1: tr ((A (@) B) (o) L) = fApp(fEps (tr (A (@) B)), tr L) by AC
         .= fApp(fEps (fApp(tr A, tr B)), tr L) by FRENV_3:11;
-      B2: tr (eApp(eComp(A,L),eComp(B,L)))
-          = fApp(tr (eComp(A,L)), tr (eComp(B,L))) by FRENV_3:11
-        .= fApp(fApp(fEps (tr A), tr L), tr (eComp(B,L))) by AC
+      B2: tr ((A (o) L) (@) (B (o) L))
+          = fApp(tr (A (o) L), tr (B (o) L)) by FRENV_3:11
+        .= fApp(fApp(fEps (tr A), tr L), tr (B (o) L)) by AC
         .= fApp(fApp(fEps (tr A), tr L), fApp(fEps (tr B), tr L)) by AC;
       [fApp(fEps (fApp(tr A, tr B)), tr L),
         fApp(fApp(fEps (tr A), tr L), fApp(fEps (tr B), tr L))]
         in FrRed(V) by FRENV_2:13;
       hence thesis by AL,B1,B2;
     end;
-  D11: for A,B being EnvEpsTerm of V holds [eComp(eEps A,B), eEps A] in Q1
+  D11: for A,B being EnvEpsTerm of V holds [(eEps A) (o) B, eEps A] in Q1
     proof
       let A,B be EnvEpsTerm of V;
-      B1: tr (eComp(eEps A,B)) = fApp(fEps (tr (eEps A)), tr B) by AC
+      B1: tr ((eEps A) (o) B) = fApp(fEps (tr (eEps A)), tr B) by AC
         .= fApp(fEps (fEps (tr A)), tr B) by FRENV_3:10;
       B2: tr (eEps A) = fEps (tr A) by FRENV_3:10;
       [fApp(fEps (fEps (tr A)), tr B), fEps (tr A)] in FrRed(V)
@@ -253,74 +253,73 @@ proof
         proof
           per cases by B3,ENVBETA:1,ENVSIG:1;
           suppose ex A,B being EnvEpsTerm of V, x being Element of V st P =
-            eApp(eLam(x,A),B) & S = eComp(A,eExt(B,x,eId V));
+            eLam(x,A) (@) B & S = A (o) eExt(B,x,eId V);
             then consider A,B being EnvEpsTerm of V, x being Element of V
               such that
-            C1: P = eApp(eLam(x,A),B) & S = eComp(A,eExt(B,x,eId V));
+            C1: P = eLam(x,A) (@) B & S = A (o) eExt(B,x,eId V);
             thus thesis by C1,D1;
           end;
           suppose ex A,B,L being EnvEpsTerm of V, x being Element of V st P
-            = eApp(eComp(eLam(x,A),L),B) & S = eComp(A,eExt(B,x,L));
+            = (eLam(x,A) (o) L) (@) B & S = A (o) eExt(B,x,L);
             then consider A,B,L being EnvEpsTerm of V, x being Element of V
               such that
-            C1: P = eApp(eComp(eLam(x,A),L),B) & S = eComp(A,eExt(B,x,L));
+            C1: P = (eLam(x,A) (o) L) (@) B & S = A (o) eExt(B,x,L);
             thus thesis by C1,D2;
           end;
-          suppose ex A,B being EnvEpsTerm of V st P = eApp(eEps A,B) & S =
-            eComp(A,B);
+          suppose ex A,B being EnvEpsTerm of V st P = (eEps A) (@) B & S =
+            A (o) B;
             then consider A,B being EnvEpsTerm of V such that
-            C1: P = eApp(eEps A,B) & S = eComp(A,B);
+            C1: P = (eEps A) (@) B & S = A (o) B;
             thus thesis by C1,D3;
           end;
-          suppose ex A,B,L being EnvEpsTerm of V st P = eComp(eComp(A,B),L)
-            & S = eComp(A,eComp(B,L));
+          suppose ex A,B,L being EnvEpsTerm of V st P = (A (o) B) (o) L
+            & S = A (o) (B (o) L);
             then consider A,B,L being EnvEpsTerm of V such that
-            C1: P = eComp(eComp(A,B),L) & S = eComp(A,eComp(B,L));
+            C1: P = (A (o) B) (o) L & S = A (o) (B (o) L);
             thus thesis by C1,D4;
           end;
-          suppose ex A being EnvEpsTerm of V st P = eComp(eId V,A) & S = A;
+          suppose ex A being EnvEpsTerm of V st P = (eId V) (o) A & S = A;
             then consider A being EnvEpsTerm of V such that
-            C1: P = eComp(eId V,A) & S = A;
+            C1: P = (eId V) (o) A & S = A;
             thus thesis by C1,D5;
           end;
-          suppose ex A being EnvEpsTerm of V st P = eComp(A,eId V) & S = A;
+          suppose ex A being EnvEpsTerm of V st P = A (o) (eId V) & S = A;
             then consider A being EnvEpsTerm of V such that
-            C1: P = eComp(A,eId V) & S = A;
+            C1: P = A (o) (eId V) & S = A;
             thus thesis by C1,D6;
           end;
           suppose ex L,A,B being EnvEpsTerm of V, x being Element of V st P
-            = eComp(eExt(L,x,A),B) & S = eExt(eComp(L,B),x,eComp(A,B));
+            = eExt(L,x,A) (o) B & S = eExt(L (o) B,x,A (o) B);
             then consider L,A,B being EnvEpsTerm of V, x being Element of V
               such that
-            C1: P = eComp(eExt(L,x,A),B) & S =
-              eExt(eComp(L,B),x,eComp(A,B));
+            C1: P = eExt(L,x,A) (o) B & S =
+              eExt(L (o) B,x,A (o) B);
             thus thesis by C1,D7;
           end;
           suppose ex A,B being EnvEpsTerm of V, x being Element of V st P =
-            eComp(eVar x, eExt(A,x,B)) & S = A;
+            (eVar x) (o) eExt(A,x,B) & S = A;
             then consider A,B being EnvEpsTerm of V, x being Element of V
               such that
-            C1: P = eComp(eVar x, eExt(A,x,B)) & S = A;
+            C1: P = (eVar x) (o) eExt(A,x,B) & S = A;
             thus thesis by C1,D8;
           end;
           suppose ex A,B being EnvEpsTerm of V, x,y being Element of V st x
-            <> y & P = eComp(eVar x, eExt(A,y,B)) & S = eComp(eVar x, B);
+            <> y & P = (eVar x) (o) eExt(A,y,B) & S = (eVar x) (o) B;
             then consider A,B being EnvEpsTerm of V, x,y being Element of V
               such that
-            C1: x <> y & P = eComp(eVar x, eExt(A,y,B)) & S = eComp(eVar x,
-              B);
+            C1: x <> y & P = (eVar x) (o) eExt(A,y,B) & S = (eVar x) (o) B;
             thus thesis by C1,D9;
           end;
-          suppose ex A,B,L being EnvEpsTerm of V st P = eComp(eApp(A,B),L) &
-            S = eApp(eComp(A,L),eComp(B,L));
+          suppose ex A,B,L being EnvEpsTerm of V st P = (A (@) B) (o) L &
+            S = (A (o) L) (@) (B (o) L);
             then consider A,B,L being EnvEpsTerm of V such that
-            C1: P = eComp(eApp(A,B),L) & S = eApp(eComp(A,L),eComp(B,L));
+            C1: P = (A (@) B) (o) L & S = (A (o) L) (@) (B (o) L);
             thus thesis by C1,D10;
           end;
-          suppose ex A,B being EnvEpsTerm of V st P = eComp(eEps A,B) & S =
+          suppose ex A,B being EnvEpsTerm of V st P = (eEps A) (o) B & S =
             eEps A;
             then consider A,B being EnvEpsTerm of V such that
-            C1: P = eComp(eEps A,B) & S = eEps A;
+            C1: P = (eEps A) (o) B & S = eEps A;
             thus thesis by C1,D11;
           end;
         end;
@@ -329,24 +328,24 @@ proof
       hence thesis by TARSKI:def 3;
     end;
     thus for A,A1,B being EnvEpsTerm of V st [A,A1] in Q1 holds
-      [eApp(A,B), eApp(A1,B)] in Q1
+      [A (@) B, A1 (@) B] in Q1
     proof
       let A,A1,B be EnvEpsTerm of V;
       assume [A,A1] in Q1;
       then C0: FrRed(V) reduces tr A, tr A1 by A2;
-      C1: tr (eApp(A,B)) = fApp(tr A, tr B) by FRENV_3:11;
-      C2: tr (eApp(A1,B)) = fApp(tr A1, tr B) by FRENV_3:11;
+      C1: tr (A (@) B) = fApp(tr A, tr B) by FRENV_3:11;
+      C2: tr (A1 (@) B) = fApp(tr A1, tr B) by FRENV_3:11;
       FrRed(V) reduces fApp(tr A, tr B), fApp(tr A1, tr B) by C0,FRENV_2:20;
       hence thesis by A2,C1,C2;
     end;
     thus for A,B,B1 being EnvEpsTerm of V st [B,B1] in Q1 holds
-      [eApp(A,B), eApp(A,B1)] in Q1
+      [A (@) B, A (@) B1] in Q1
     proof
       let A,B,B1 be EnvEpsTerm of V;
       assume [B,B1] in Q1;
       then C0: FrRed(V) reduces tr B, tr B1 by A2;
-      C1: tr (eApp(A,B)) = fApp(tr A, tr B) by FRENV_3:11;
-      C2: tr (eApp(A,B1)) = fApp(tr A, tr B1) by FRENV_3:11;
+      C1: tr (A (@) B) = fApp(tr A, tr B) by FRENV_3:11;
+      C2: tr (A (@) B1) = fApp(tr A, tr B1) by FRENV_3:11;
       FrRed(V) reduces fApp(tr A, tr B), fApp(tr A, tr B1) by C0,FRENV_2:21;
       hence thesis by A2,C1,C2;
     end;
@@ -386,26 +385,26 @@ proof
       hence thesis by A2,C1,C2;
     end;
     thus for A,A1,B being EnvEpsTerm of V st [A,A1] in Q1 holds
-      [eComp(A,B), eComp(A1,B)] in Q1
+      [A (o) B, A1 (o) B] in Q1
     proof
       let A,A1,B be EnvEpsTerm of V;
       assume [A,A1] in Q1;
       then C0: FrRed(V) reduces tr A, tr A1 by A2;
-      C1: tr (eComp(A,B)) = fApp(fEps (tr A), tr B) by AC;
-      C2: tr (eComp(A1,B)) = fApp(fEps (tr A1), tr B) by AC;
+      C1: tr (A (o) B) = fApp(fEps (tr A), tr B) by AC;
+      C2: tr (A1 (o) B) = fApp(fEps (tr A1), tr B) by AC;
       FrRed(V) reduces fEps (tr A), fEps (tr A1) by C0,FRENV_2:25;
       then FrRed(V) reduces fApp(fEps (tr A), tr B), fApp(fEps (tr A1), tr B)
         by FRENV_2:20;
       hence thesis by A2,C1,C2;
     end;
     thus for A,B,B1 being EnvEpsTerm of V st [B,B1] in Q1 holds
-      [eComp(A,B), eComp(A,B1)] in Q1
+      [A (o) B, A (o) B1] in Q1
     proof
       let A,B,B1 be EnvEpsTerm of V;
       assume [B,B1] in Q1;
       then C0: FrRed(V) reduces tr B, tr B1 by A2;
-      C1: tr (eComp(A,B)) = fApp(fEps (tr A), tr B) by AC;
-      C2: tr (eComp(A,B1)) = fApp(fEps (tr A), tr B1) by AC;
+      C1: tr (A (o) B) = fApp(fEps (tr A), tr B) by AC;
+      C2: tr (A (o) B1) = fApp(fEps (tr A), tr B1) by AC;
       FrRed(V) reduces fApp(fEps (tr A), tr B), fApp(fEps (tr A), tr B1)
         by C0,FRENV_2:21;
       hence thesis by A2,C1,C2;
