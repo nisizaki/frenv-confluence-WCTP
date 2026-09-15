@@ -1,0 +1,388 @@
+:: The length measure of lambda_EnvEps terms
+
+environ
+
+ vocabularies NUMBERS, XBOOLE_0, SUBSET_1, TARSKI, ZFMISC_1, FINSEQ_1,
+      RELAT_1, FUNCT_1, ORDINAL1, CARD_1, ARYTM_3, XXREAL_0, NAT_1, TREES_1,
+      TREES_2, TREES_3, TREES_4, LANG1, STRUCT_0, DTCONSTR, MCART_1, XTUPLE_0,
+      FINSET_1, TDGROUP, FUNCOP_1, ARYTM_1, FUNCT_7, XREAL_0, XCMPLX_0,
+      REWRITE1, PBOOLE, ENVSYN, ENVLEN;
+ notations TARSKI, XBOOLE_0, ZFMISC_1, SUBSET_1, ORDINAL1, NUMBERS, XCMPLX_0,
+      XXREAL_0, NAT_1, RELAT_1, RELSET_1, FUNCT_1, FUNCT_2, FINSEQ_1, FINSEQ_2,
+      MCART_1, XTUPLE_0, DOMAIN_1, STRUCT_0, LANG1, TREES_1, TREES_2, TREES_3,
+      TREES_4, DTCONSTR, FUNCOP_1, XREAL_0, PBOOLE, REWRITE1, ENVSYN;
+ constructors NUMBERS, XCMPLX_0, XXREAL_0, NAT_1, RELSET_1, FUNCT_2, FINSEQ_1,
+      FINSEQ_2, MCART_1, XTUPLE_0, DOMAIN_1, STRUCT_0, LANG1, TREES_1, TREES_2,
+      TREES_3, TREES_4, DTCONSTR, PARTFUN1, BINOP_1, SETWISEO, XREAL_0,
+      FUNCOP_1, SUBSET_1, CARD_3, FINSEQOP, FINSEQ_4, FINSOP_1, PRE_POLY,
+      FUNCT_1, RELAT_1, PBOOLE, REWRITE1, ENVSYN;
+ registrations XBOOLE_0, SUBSET_1, RELAT_1, FUNCT_1, ORDINAL1, XREAL_0, NAT_1,
+      FINSEQ_1, FINSEQ_2, FINSET_1, CARD_1, STRUCT_0, LANG1, TREES_1, TREES_2,
+      TREES_3, TREES_4, DTCONSTR, XTUPLE_0, VALUED_0, FUNCOP_1, XCMPLX_0,
+      XXREAL_0, NUMBERS, MEMBERED, PBOOLE, REWRITE1, ENVSYN;
+ requirements NUMERALS, REAL, BOOLE, SUBSET, ARITHM;
+ definitions TARSKI, XBOOLE_0, SUBSET_1, ENVSYN;
+ theorems TARSKI, XBOOLE_0, SUBSET_1, FUNCT_2, XREAL_1, ENVSYN;
+ schemes ENVSYN;
+
+begin :: The measure
+
+reserve V for non empty set;
+
+definition
+  let V be non empty set;
+  func EnvEpsLen(V) -> Function of TS(EnvEpsGram(V)), NAT means
+  :Def1:
+  (for v being Element of V holds it.(eVar v) = In(1,NAT)) &
+  it.(eId V) = In(1,NAT) &
+  (for v being Element of V, M being EnvEpsTerm of V holds
+     it.(eLam(v,M)) = In(2*(it.M), NAT)) &
+  (for M being EnvEpsTerm of V holds it.(eEps M) = In(2*(it.M), NAT)) &
+  (for M,N being EnvEpsTerm of V holds
+     it.(eApp(M,N)) = In((it.M)+(it.N)+1, NAT)) &
+  (for M,N being EnvEpsTerm of V holds
+     it.(eComp(M,N)) = In((it.M)*((it.N)+1), NAT)) &
+  (for M,N being EnvEpsTerm of V, v being Element of V holds
+     it.(eExt(M,v,N)) = In((it.M)+(it.N)+1, NAT));
+  existence
+  proof
+    deffunc FV(Element of V) = In(1,NAT);
+    deffunc FI() = In(1,NAT);
+    deffunc FL(Element of V, Element of NAT) = In(2*$2, NAT);
+    deffunc FE(Element of NAT) = In(2*$1, NAT);
+    deffunc FA(Element of NAT, Element of NAT) = In($1+$2+1, NAT);
+    deffunc FC(Element of NAT, Element of NAT) = In($1*($2+1), NAT);
+    deffunc FX(Element of NAT, Element of V, Element of NAT) =
+      In($1+$3+1, NAT);
+    thus ex f being Function of TS(EnvEpsGram(V)), NAT st
+      (for v being Element of V holds f.(eVar v) = FV(v)) &
+      f.(eId V) = FI() &
+      (for v being Element of V, M being EnvEpsTerm of V holds
+         f.(eLam(v,M)) = FL(v, f.M)) &
+      (for M being EnvEpsTerm of V holds f.(eEps M) = FE(f.M)) &
+      (for M,N being EnvEpsTerm of V holds f.(eApp(M,N)) = FA(f.M, f.N)) &
+      (for M,N being EnvEpsTerm of V holds f.(eComp(M,N)) = FC(f.M, f.N)) &
+      (for M,N being EnvEpsTerm of V, v being Element of V holds
+         f.(eExt(M,v,N)) = FX(f.M, v, f.N)) from ENVSYN:sch 2;
+  end;
+  uniqueness
+  proof
+    let f1,f2 be Function of TS(EnvEpsGram(V)), NAT;
+    assume that
+    A1: (for v being Element of V holds f1.(eVar v) = In(1,NAT)) &
+      f1.(eId V) = In(1,NAT) &
+      (for v being Element of V, M being EnvEpsTerm of V holds
+         f1.(eLam(v,M)) = In(2*(f1.M), NAT)) &
+      (for M being EnvEpsTerm of V holds f1.(eEps M) = In(2*(f1.M), NAT)) &
+      (for M,N being EnvEpsTerm of V holds
+         f1.(eApp(M,N)) = In((f1.M)+(f1.N)+1, NAT)) &
+      (for M,N being EnvEpsTerm of V holds
+         f1.(eComp(M,N)) = In((f1.M)*((f1.N)+1), NAT)) &
+      (for M,N being EnvEpsTerm of V, v being Element of V holds
+         f1.(eExt(M,v,N)) = In((f1.M)+(f1.N)+1, NAT)) and
+    A2: (for v being Element of V holds f2.(eVar v) = In(1,NAT)) &
+      f2.(eId V) = In(1,NAT) &
+      (for v being Element of V, M being EnvEpsTerm of V holds
+         f2.(eLam(v,M)) = In(2*(f2.M), NAT)) &
+      (for M being EnvEpsTerm of V holds f2.(eEps M) = In(2*(f2.M), NAT)) &
+      (for M,N being EnvEpsTerm of V holds
+         f2.(eApp(M,N)) = In((f2.M)+(f2.N)+1, NAT)) &
+      (for M,N being EnvEpsTerm of V holds
+         f2.(eComp(M,N)) = In((f2.M)*((f2.N)+1), NAT)) &
+      (for M,N being EnvEpsTerm of V, v being Element of V holds
+         f2.(eExt(M,v,N)) = In((f2.M)+(f2.N)+1, NAT));
+    defpred P[set] means ex A being EnvEpsTerm of V st A = $1 & f1.A = f2.A;
+    B1: for v being Element of V holds P[eVar v]
+    proof
+      let v be Element of V;
+      f1.(eVar v) = In(1,NAT) & f2.(eVar v) = In(1,NAT) by A1,A2;
+      hence thesis;
+    end;
+    B2: P[eId V] by A1,A2;
+    B3: for v being Element of V, A being EnvEpsTerm of V st P[A]
+      holds P[eLam(v,A)]
+    proof
+      let v be Element of V, A be EnvEpsTerm of V;
+      given B being EnvEpsTerm of V such that C1: B = A & f1.B = f2.B;
+      f1.(eLam(v,A)) = In(2*(f2.A), NAT) by A1,C1
+        .= f2.(eLam(v,A)) by A2;
+      hence thesis;
+    end;
+    B4: for A being EnvEpsTerm of V st P[A] holds P[eEps A]
+    proof
+      let A be EnvEpsTerm of V;
+      given B being EnvEpsTerm of V such that C1: B = A & f1.B = f2.B;
+      f1.(eEps A) = In(2*(f2.A), NAT) by A1,C1
+        .= f2.(eEps A) by A2;
+      hence thesis;
+    end;
+    B5: for A,B being EnvEpsTerm of V st P[A] & P[B] holds P[eApp(A,B)]
+    proof
+      let A,B be EnvEpsTerm of V;
+      given C being EnvEpsTerm of V such that C1: C = A & f1.C = f2.C;
+      given D being EnvEpsTerm of V such that C2: D = B & f1.D = f2.D;
+      f1.(eApp(A,B)) = In((f2.A)+(f2.B)+1, NAT) by A1,C1,C2
+        .= f2.(eApp(A,B)) by A2;
+      hence thesis;
+    end;
+    B6: for A,B being EnvEpsTerm of V st P[A] & P[B] holds P[eComp(A,B)]
+    proof
+      let A,B be EnvEpsTerm of V;
+      given C being EnvEpsTerm of V such that C1: C = A & f1.C = f2.C;
+      given D being EnvEpsTerm of V such that C2: D = B & f1.D = f2.D;
+      f1.(eComp(A,B)) = In((f2.A)*((f2.B)+1), NAT) by A1,C1,C2
+        .= f2.(eComp(A,B)) by A2;
+      hence thesis;
+    end;
+    B7: for A,B being EnvEpsTerm of V, v being Element of V st P[A] & P[B]
+      holds P[eExt(A,v,B)]
+    proof
+      let A,B be EnvEpsTerm of V, v be Element of V;
+      given C being EnvEpsTerm of V such that C1: C = A & f1.C = f2.C;
+      given D being EnvEpsTerm of V such that C2: D = B & f1.D = f2.D;
+      f1.(eExt(A,v,B)) = In((f2.A)+(f2.B)+1, NAT) by A1,C1,C2
+        .= f2.(eExt(A,v,B)) by A2;
+      hence thesis;
+    end;
+    C0: for A being EnvEpsTerm of V holds P[A]
+      from ENVSYN:sch 1(B1,B2,B3,B4,B5,B6,B7);
+    now
+      let x be Element of TS(EnvEpsGram(V));
+      P[x] by C0;
+      then consider A being EnvEpsTerm of V such that
+      D1: A = x & f1.A = f2.A;
+      thus f1.x = f2.x by D1;
+    end;
+    hence thesis by FUNCT_2:63;
+  end;
+end;
+
+definition
+  let V be non empty set, M be EnvEpsTerm of V;
+  func elen M -> Element of NAT equals
+  :Def2:
+  (EnvEpsLen(V)).M;
+  coherence;
+end;
+
+begin :: The seven recursion equations
+
+theorem Th1:
+  for v being Element of V holds elen (eVar v) = 1 & elen (eId V) = 1
+proof
+  let v be Element of V;
+  thus elen (eVar v) = (EnvEpsLen(V)).(eVar v) by Def2
+    .= In(1,NAT) by Def1
+    .= 1;
+  thus elen (eId V) = (EnvEpsLen(V)).(eId V) by Def2
+    .= In(1,NAT) by Def1
+    .= 1;
+end;
+
+theorem Th2:
+  for v being Element of V, M being EnvEpsTerm of V holds
+  elen (eLam(v,M)) = 2 * elen M
+proof
+  let v be Element of V, M be EnvEpsTerm of V;
+  thus elen (eLam(v,M)) = (EnvEpsLen(V)).(eLam(v,M)) by Def2
+    .= In(2*((EnvEpsLen(V)).M), NAT) by Def1
+    .= In(2*(elen M), NAT) by Def2
+    .= 2 * elen M;
+end;
+
+theorem Th3:
+  for M being EnvEpsTerm of V holds elen (eEps M) = 2 * elen M
+proof
+  let M be EnvEpsTerm of V;
+  thus elen (eEps M) = (EnvEpsLen(V)).(eEps M) by Def2
+    .= In(2*((EnvEpsLen(V)).M), NAT) by Def1
+    .= In(2*(elen M), NAT) by Def2
+    .= 2 * elen M;
+end;
+
+theorem Th4:
+  for M,N being EnvEpsTerm of V holds
+  elen (eApp(M,N)) = elen M + elen N + 1
+proof
+  let M,N be EnvEpsTerm of V;
+  thus elen (eApp(M,N)) = (EnvEpsLen(V)).(eApp(M,N)) by Def2
+    .= In(((EnvEpsLen(V)).M)+((EnvEpsLen(V)).N)+1, NAT) by Def1
+    .= In((elen M)+((EnvEpsLen(V)).N)+1, NAT) by Def2
+    .= In((elen M)+(elen N)+1, NAT) by Def2
+    .= elen M + elen N + 1;
+end;
+
+theorem Th5:
+  for M,N being EnvEpsTerm of V, v being Element of V holds
+  elen (eExt(M,v,N)) = elen M + elen N + 1
+proof
+  let M,N be EnvEpsTerm of V, v be Element of V;
+  thus elen (eExt(M,v,N)) = (EnvEpsLen(V)).(eExt(M,v,N)) by Def2
+    .= In(((EnvEpsLen(V)).M)+((EnvEpsLen(V)).N)+1, NAT) by Def1
+    .= In((elen M)+((EnvEpsLen(V)).N)+1, NAT) by Def2
+    .= In((elen M)+(elen N)+1, NAT) by Def2
+    .= elen M + elen N + 1;
+end;
+
+theorem Th6:
+  for M,N being EnvEpsTerm of V holds
+  elen (eComp(M,N)) = elen M * (elen N + 1)
+proof
+  let M,N be EnvEpsTerm of V;
+  thus elen (eComp(M,N)) = (EnvEpsLen(V)).(eComp(M,N)) by Def2
+    .= In(((EnvEpsLen(V)).M)*(((EnvEpsLen(V)).N)+1), NAT) by Def1
+    .= In((elen M)*(((EnvEpsLen(V)).N)+1), NAT) by Def2
+    .= In((elen M)*((elen N)+1), NAT) by Def2
+    .= elen M * (elen N + 1);
+end;
+
+begin :: The measure is positive
+
+theorem Th7:
+  for M being EnvEpsTerm of V holds elen M > 0
+proof
+  let M be EnvEpsTerm of V;
+  defpred P[set] means ex A being EnvEpsTerm of V st A = $1 & elen A > 0;
+  A1: for v being Element of V holds P[eVar v]
+  proof
+    let v be Element of V;
+    elen (eVar v) = 1 by Th1;
+    hence thesis;
+  end;
+  A2: P[eId V]
+  proof
+    set v = the Element of V;
+    elen (eId V) = 1 by Th1;
+    hence thesis;
+  end;
+  A3: for v being Element of V, A being EnvEpsTerm of V st P[A]
+    holds P[eLam(v,A)]
+  proof
+    let v be Element of V, A be EnvEpsTerm of V;
+    given B being EnvEpsTerm of V such that B1: B = A & elen B > 0;
+    B2: elen (eLam(v,A)) = 2 * elen A by Th2;
+    0 < 2 * elen A by B1,XREAL_1:129;
+    hence thesis by B2;
+  end;
+  A4: for A being EnvEpsTerm of V st P[A] holds P[eEps A]
+  proof
+    let A be EnvEpsTerm of V;
+    given B being EnvEpsTerm of V such that B1: B = A & elen B > 0;
+    B2: elen (eEps A) = 2 * elen A by Th3;
+    0 < 2 * elen A by B1,XREAL_1:129;
+    hence thesis by B2;
+  end;
+  A5: for A,B being EnvEpsTerm of V st P[A] & P[B] holds P[eApp(A,B)]
+  proof
+    let A,B be EnvEpsTerm of V;
+    assume P[A] & P[B];
+    elen (eApp(A,B)) = elen A + elen B + 1 by Th4;
+    hence thesis;
+  end;
+  A6: for A,B being EnvEpsTerm of V st P[A] & P[B] holds P[eComp(A,B)]
+  proof
+    let A,B be EnvEpsTerm of V;
+    given C being EnvEpsTerm of V such that B1: C = A & elen C > 0;
+    assume P[B];
+    B2: elen (eComp(A,B)) = elen A * (elen B + 1) by Th6;
+    0 < elen B + 1;
+    then 0 < elen A * (elen B + 1) by B1,XREAL_1:129;
+    hence thesis by B2;
+  end;
+  A7: for A,B being EnvEpsTerm of V, v being Element of V st P[A] & P[B]
+    holds P[eExt(A,v,B)]
+  proof
+    let A,B be EnvEpsTerm of V, v be Element of V;
+    assume P[A] & P[B];
+    elen (eExt(A,v,B)) = elen A + elen B + 1 by Th5;
+    hence thesis;
+  end;
+  for A being EnvEpsTerm of V holds P[A]
+    from ENVSYN:sch 1(A1,A2,A3,A4,A5,A6,A7);
+  then P[M];
+  hence thesis;
+end;
+
+begin :: Arithmetic facts used for the length decrease
+
+theorem Th8:
+  for l being Nat st 0 < l holds 1 < l+1
+proof
+  let l be Nat;
+  assume 0 < l;
+  then 0+1 < l+1 by XREAL_1:8;
+  hence thesis;
+end;
+
+theorem Th9:
+  for m,n,l being Nat st 0 < m & 0 < l holds
+  m*((n*(l+1))+1) < (m*(n+1))*(l+1)
+proof
+  let m,n,l be Nat;
+  assume A1: 0 < m & 0 < l;
+  A2: (n+1)*(l+1) = n*(l+1) + (l+1);
+  B0: 1 < l+1 by A1,Th8;
+  1 + n*(l+1) < (l+1) + n*(l+1) by B0,XREAL_1:8;
+  then B2: n*(l+1) + 1 < (n+1)*(l+1) by A2;
+  (n*(l+1)+1)*m < ((n+1)*(l+1))*m by A1,B2,XREAL_1:68;
+  hence thesis;
+end;
+
+theorem Th10:
+  for m1,m2,n being Nat st 0 < n holds
+  m1*(n+1) + m2*(n+1) + 1 < (m1+m2+1)*(n+1)
+proof
+  let m1,m2,n be Nat;
+  assume A1: 0 < n;
+  A2: (m1+m2+1)*(n+1) = m1*(n+1) + m2*(n+1) + (n+1);
+  B1: 1 < n+1 by A1,Th8;
+  1 + (m1*(n+1)+m2*(n+1)) < (n+1) + (m1*(n+1)+m2*(n+1)) by B1,XREAL_1:8;
+  hence thesis by A2;
+end;
+
+theorem Th11:
+  for m,n being Nat st 0 < m & 0 < n holds 2*m < (2*m)*(n+1)
+proof
+  let m,n be Nat;
+  assume A1: 0 < m & 0 < n;
+  then A2: 0 < 2*m by XREAL_1:129;
+  B1: 1 < n+1 by A1,Th8;
+  1*(2*m) < (n+1)*(2*m) by A2,B1,XREAL_1:68;
+  hence thesis;
+end;
+
+theorem Th12:
+  for m,k being Nat st 0 < k holds m < m+k
+proof
+  let m,k be Nat;
+  assume 0 < k;
+  then 0+m < k+m by XREAL_1:8;
+  hence thesis;
+end;
+
+theorem Th13:
+  for m being Nat st 0 < m holds m < 2*m
+proof
+  let m be Nat;
+  assume 0 < m;
+  then 0+m < m+m by XREAL_1:8;
+  hence thesis;
+end;
+
+theorem Th14:
+  for a,b being Nat st a < b holds 2*a < 2*b
+proof
+  let a,b be Nat;
+  assume A1: a < b;
+  a*2 < b*2 by A1,XREAL_1:68;
+  hence thesis;
+end;
+
+theorem Th15:
+  for a,b,c being Nat st a < b & 0 < c holds c*a < c*b
+proof
+  let a,b,c be Nat;
+  assume A1: a < b & 0 < c;
+  a*c < b*c by A1,XREAL_1:68;
+  hence thesis;
+end;

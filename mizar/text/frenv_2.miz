@@ -6,26 +6,28 @@ environ
       RELAT_1, FUNCT_1, ORDINAL1, CARD_1, ARYTM_3, XXREAL_0, NAT_1, TREES_1,
       TREES_2, TREES_3, TREES_4, LANG1, STRUCT_0, DTCONSTR, MCART_1, XTUPLE_0,
       FINSET_1, TDGROUP, FUNCOP_1, ARYTM_1, FUNCT_7, XREAL_0, XCMPLX_0,
-      REWRITE1, PBOOLE, FRENV_1, FRENV_2;
+      REWRITE1, PBOOLE, FRENV_1, FRENV_2, ENVSYN, ENVCC, ENVLEN, ENVSIG,
+      ENVBETA;
  notations TARSKI, XBOOLE_0, ZFMISC_1, SUBSET_1, ORDINAL1, NUMBERS, XCMPLX_0,
-      XXREAL_0, NAT_1, RELAT_1, RELSET_1, FUNCT_1, FUNCT_2, FINSEQ_1, FINSEQ_2,
-      MCART_1, XTUPLE_0, DOMAIN_1, STRUCT_0, LANG1, TREES_1, TREES_2, TREES_3,
-      TREES_4, DTCONSTR, FUNCOP_1, XREAL_0, PBOOLE, REWRITE1, FRENV_1;
+      XXREAL_0, NAT_1, RELAT_1, RELSET_1, FUNCT_1, FUNCT_2, FINSEQ_1,
+      FINSEQ_2, MCART_1, XTUPLE_0, DOMAIN_1, STRUCT_0, LANG1, TREES_1,
+      TREES_2, TREES_3, TREES_4, DTCONSTR, FUNCOP_1, XREAL_0, PBOOLE,
+      REWRITE1, FRENV_1, ENVSYN, ENVCC, ENVLEN, ENVSIG, ENVBETA;
  constructors NUMBERS, XCMPLX_0, XXREAL_0, NAT_1, RELSET_1, FUNCT_2, FINSEQ_1,
-      FINSEQ_2, MCART_1, XTUPLE_0, DOMAIN_1, STRUCT_0, LANG1, TREES_1, TREES_2,
-      TREES_3, TREES_4, DTCONSTR, PARTFUN1, BINOP_1, SETWISEO, XREAL_0,
-      FUNCOP_1, SUBSET_1, CARD_3, FINSEQOP, FINSEQ_4, FINSOP_1, PRE_POLY,
-      FUNCT_1, RELAT_1, PBOOLE, REWRITE1, FRENV_1;
+      FINSEQ_2, MCART_1, XTUPLE_0, DOMAIN_1, STRUCT_0, LANG1, TREES_1,
+      TREES_2, TREES_3, TREES_4, DTCONSTR, PARTFUN1, BINOP_1, SETWISEO,
+      XREAL_0, FUNCOP_1, SUBSET_1, CARD_3, FINSEQOP, FINSEQ_4, FINSOP_1,
+      PRE_POLY, FUNCT_1, RELAT_1, PBOOLE, REWRITE1, FRENV_1, ENVSYN, ENVCC,
+      ENVLEN, ENVSIG, ENVBETA;
  registrations XBOOLE_0, SUBSET_1, RELAT_1, FUNCT_1, ORDINAL1, XREAL_0, NAT_1,
       FINSEQ_1, FINSEQ_2, FINSET_1, CARD_1, STRUCT_0, LANG1, TREES_1, TREES_2,
       TREES_3, TREES_4, DTCONSTR, XTUPLE_0, VALUED_0, FUNCOP_1, XCMPLX_0,
-      XXREAL_0, NUMBERS, MEMBERED, PBOOLE, REWRITE1, FRENV_1;
+      XXREAL_0, NUMBERS, MEMBERED, PBOOLE, REWRITE1, FRENV_1, ENVSYN, ENVSIG;
  requirements NUMERALS, REAL, BOOLE, SUBSET, ARITHM;
  definitions TARSKI, XBOOLE_0, DTCONSTR, TREES_3, TREES_4, RELAT_1, FUNCT_1,
       FINSEQ_1, FUNCOP_1, SUBSET_1, REWRITE1, FRENV_1;
  theorems TARSKI, XBOOLE_0, ZFMISC_1, XTUPLE_0, REWRITE1, FRENV_1;
- schemes ENVEPS_2;
-
+ schemes ENVCC;
 begin :: The beta-sigma reduction relation
 
 definition
@@ -945,7 +947,7 @@ proof
     hence thesis by B2;
   end;
   A2: for u,v being object st R reduces u,v holds R reduces F(u),F(v)
-    from ENVEPS_2:sch 1(A1);
+    from ENVCC:sch 1(A1);
   assume A3: R reduces M,M1;
   A4: In(M,TS G) = M & In(M1,TS G) = M1;
   thus thesis by A2,A3,A4;
@@ -974,7 +976,7 @@ proof
     hence thesis by B2;
   end;
   A2: for u,v being object st R reduces u,v holds R reduces F(u),F(v)
-    from ENVEPS_2:sch 1(A1);
+    from ENVCC:sch 1(A1);
   assume A3: R reduces N,N1;
   A4: In(N,TS G) = N & In(N1,TS G) = N1;
   thus thesis by A2,A3,A4;
@@ -1003,7 +1005,7 @@ proof
     hence thesis by B2;
   end;
   A2: for u,v being object st R reduces u,v holds R reduces F(u),F(v)
-    from ENVEPS_2:sch 1(A1);
+    from ENVCC:sch 1(A1);
   assume A3: R reduces M,M1;
   A4: In(M,TS G) = M & In(M1,TS G) = M1;
   thus thesis by A2,A3,A4;
@@ -1032,7 +1034,7 @@ proof
     hence thesis by B2;
   end;
   A2: for u,v being object st R reduces u,v holds R reduces F(u),F(v)
-    from ENVEPS_2:sch 1(A1);
+    from ENVCC:sch 1(A1);
   assume A3: R reduces M,M1;
   A4: In(M,TS G) = M & In(M1,TS G) = M1;
   thus thesis by A2,A3,A4;
@@ -1061,7 +1063,7 @@ proof
     hence thesis by B2;
   end;
   A2: for u,v being object st R reduces u,v holds R reduces F(u),F(v)
-    from ENVEPS_2:sch 1(A1);
+    from ENVCC:sch 1(A1);
   assume A3: R reduces N,N1;
   A4: In(N,TS G) = N & In(N1,TS G) = N1;
   thus thesis by A2,A3,A4;
@@ -1090,7 +1092,7 @@ proof
     hence thesis by B2;
   end;
   A2: for u,v being object st R reduces u,v holds R reduces F(u),F(v)
-    from ENVEPS_2:sch 1(A1);
+    from ENVCC:sch 1(A1);
   assume A3: R reduces M,M1;
   A4: In(M,TS G) = M & In(M1,TS G) = M1;
   thus thesis by A2,A3,A4;

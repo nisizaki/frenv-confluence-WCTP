@@ -6,30 +6,30 @@ environ
       RELAT_1, FUNCT_1, ORDINAL1, CARD_1, ARYTM_3, XXREAL_0, NAT_1, TREES_1,
       TREES_2, TREES_3, TREES_4, LANG1, STRUCT_0, DTCONSTR, MCART_1, XTUPLE_0,
       FINSET_1, TDGROUP, FUNCOP_1, ARYTM_1, FUNCT_7, XREAL_0, XCMPLX_0,
-      REWRITE1, PBOOLE, ENVEPS_1, ENVEPS_5, ENVEPS_6, ENVEPS_7, ENVEPS_9;
+      REWRITE1, PBOOLE, ENVSYN, ENVLEN, ENVNF, ENVBETA, ENVPAR, ENVCONF,
+      ENVCC, ENVSIG;
  notations TARSKI, XBOOLE_0, ZFMISC_1, SUBSET_1, ORDINAL1, NUMBERS, XCMPLX_0,
-      XXREAL_0, NAT_1, RELAT_1, RELSET_1, FUNCT_1, FUNCT_2, FINSEQ_1, FINSEQ_2,
-      MCART_1, XTUPLE_0, DOMAIN_1, STRUCT_0, LANG1, TREES_1, TREES_2, TREES_3,
-      TREES_4, DTCONSTR, FUNCOP_1, XREAL_0, PBOOLE, REWRITE1, ENVEPS_1,
-      ENVEPS_5, ENVEPS_6, ENVEPS_7;
+      XXREAL_0, NAT_1, RELAT_1, RELSET_1, FUNCT_1, FUNCT_2, FINSEQ_1,
+      FINSEQ_2, MCART_1, XTUPLE_0, DOMAIN_1, STRUCT_0, LANG1, TREES_1,
+      TREES_2, TREES_3, TREES_4, DTCONSTR, FUNCOP_1, XREAL_0, PBOOLE,
+      REWRITE1, ENVSYN, ENVLEN, ENVNF, ENVBETA, ENVPAR, ENVCC, ENVSIG;
  constructors NUMBERS, XCMPLX_0, XXREAL_0, NAT_1, RELSET_1, FUNCT_2, FINSEQ_1,
-      FINSEQ_2, MCART_1, XTUPLE_0, DOMAIN_1, STRUCT_0, LANG1, TREES_1, TREES_2,
-      TREES_3, TREES_4, DTCONSTR, PARTFUN1, BINOP_1, SETWISEO, XREAL_0,
-      FUNCOP_1, SUBSET_1, CARD_3, FINSEQOP, FINSEQ_4, FINSOP_1, PRE_POLY,
-      FUNCT_1, RELAT_1, PBOOLE, REWRITE1, ENVEPS_1, ENVEPS_5, ENVEPS_6,
-      ENVEPS_7;
+      FINSEQ_2, MCART_1, XTUPLE_0, DOMAIN_1, STRUCT_0, LANG1, TREES_1,
+      TREES_2, TREES_3, TREES_4, DTCONSTR, PARTFUN1, BINOP_1, SETWISEO,
+      XREAL_0, FUNCOP_1, SUBSET_1, CARD_3, FINSEQOP, FINSEQ_4, FINSOP_1,
+      PRE_POLY, FUNCT_1, RELAT_1, PBOOLE, REWRITE1, ENVSYN, ENVLEN, ENVNF,
+      ENVBETA, ENVPAR, ENVCC, ENVSIG;
  registrations XBOOLE_0, SUBSET_1, RELAT_1, FUNCT_1, ORDINAL1, XREAL_0, NAT_1,
       FINSEQ_1, FINSEQ_2, FINSET_1, CARD_1, STRUCT_0, LANG1, TREES_1, TREES_2,
       TREES_3, TREES_4, DTCONSTR, XTUPLE_0, VALUED_0, FUNCOP_1, XCMPLX_0,
-      XXREAL_0, NUMBERS, MEMBERED, PBOOLE, REWRITE1, ENVEPS_1, ENVEPS_4;
+      XXREAL_0, NUMBERS, MEMBERED, PBOOLE, REWRITE1, ENVSYN, ENVPEAK, ENVSIG;
  requirements NUMERALS, REAL, BOOLE, SUBSET, ARITHM;
  definitions TARSKI, XBOOLE_0, DTCONSTR, TREES_3, TREES_4, RELAT_1, FUNCT_1,
-      FINSEQ_1, FUNCOP_1, SUBSET_1, REWRITE1, ENVEPS_1;
+      FINSEQ_1, FUNCOP_1, SUBSET_1, REWRITE1, ENVSYN, ENVLEN;
  theorems TARSKI, XBOOLE_0, ZFMISC_1, XTUPLE_0, RELAT_1, REWRITE1, NAT_1,
-      XXREAL_0, FINSEQ_1, FUNCT_1, ENVEPS_1, ENVEPS_5, ENVEPS_6, ENVEPS_7,
-      ENVEPS_8;
- schemes NAT_1, ENVEPS_7, ENVEPS_8;
-
+      XXREAL_0, FINSEQ_1, FUNCT_1, ENVSYN, ENVLEN, ENVNF, ENVBETA,
+      ENVPAR, ENVKEY;
+ schemes NAT_1, ENVPAR, ENVKEY;
 begin :: Parallel reduction on sigma normal forms
 
 reserve V for non empty set;
@@ -112,8 +112,8 @@ theorem Th2:
 proof
   let A be EnvEpsTerm of V;
   assume A1: A is_a_normal_form_wrt SigmaRed(V);
-  A2: [A,A] in ParRed(V) by ENVEPS_7:4;
-  A = snf A by A1,ENVEPS_5:5;
+  A2: [A,A] in ParRed(V) by ENVPAR:4;
+  A = snf A by A1,ENVNF:5;
   hence thesis by A1,A2,Th1;
 end;
 
@@ -135,13 +135,13 @@ registration
     consider S2 being EnvEpsTerm of V such that
     A4: [a1,S2] in ParRed(V) & c1 = snf S2 by A2,Th1;
     consider W being EnvEpsTerm of V such that
-    A5: [S1,W] in ParRed(V) & [S2,W] in ParRed(V) by A3,A4,ENVEPS_7:31;
+    A5: [S1,W] in ParRed(V) & [S2,W] in ParRed(V) by A3,A4,ENVPAR:31;
     consider T1 being EnvEpsTerm of V such that
-    A6: [snf S1, T1] in ParRed(V) & snf T1 = snf W by A5,ENVEPS_8:30;
+    A6: [snf S1, T1] in ParRed(V) & snf T1 = snf W by A5,ENVKEY:30;
     consider T2 being EnvEpsTerm of V such that
-    A7: [snf S2, T2] in ParRed(V) & snf T2 = snf W by A5,ENVEPS_8:30;
+    A7: [snf S2, T2] in ParRed(V) & snf T2 = snf W by A5,ENVKEY:30;
     A8: b1 is_a_normal_form_wrt SigmaRed(V) &
-      c1 is_a_normal_form_wrt SigmaRed(V) by A3,A4,ENVEPS_5:3;
+      c1 is_a_normal_form_wrt SigmaRed(V) by A3,A4,ENVNF:3;
     A9: [b1, snf W] in SnfPar V by A3,A6,A8,Th1;
     A10: [c1, snf W] in SnfPar V by A4,A7,A8,Th1;
     take snf W;
@@ -170,11 +170,11 @@ proof
     then a in TS G & b in TS G by ZFMISC_1:87;
     then reconsider a1 = a, b1 = b as EnvEpsTerm of V;
     [a1,b1] in SigmaRed(V) by B1;
-    then [a1,b1] in BetaSigmaRed(V) by ENVEPS_6:30;
+    then [a1,b1] in BetaSigmaRed(V) by ENVBETA:33;
     hence thesis by REWRITE1:15;
   end;
   for a,b being object st SigmaRed(V) reduces a,b
-    holds BetaSigmaRed(V) reduces a,b from ENVEPS_7:sch 1(A1);
+    holds BetaSigmaRed(V) reduces a,b from ENVPAR:sch 1(A1);
   hence thesis;
 end;
 
@@ -194,11 +194,11 @@ proof
     then a in TS G & b in TS G by ZFMISC_1:87;
     then reconsider a1 = a, b1 = b as EnvEpsTerm of V;
     [a1,b1] in BetaRed(V) by B1;
-    then [a1,b1] in BetaSigmaRed(V) by ENVEPS_6:30;
+    then [a1,b1] in BetaSigmaRed(V) by ENVBETA:33;
     hence thesis by REWRITE1:15;
   end;
   for a,b being object st BetaRed(V) reduces a,b
-    holds BetaSigmaRed(V) reduces a,b from ENVEPS_7:sch 1(A1);
+    holds BetaSigmaRed(V) reduces a,b from ENVPAR:sch 1(A1);
   hence thesis;
 end;
 
@@ -206,7 +206,7 @@ theorem Th6:
   for M being EnvEpsTerm of V holds BetaSigmaRed(V) reduces M, snf M
 proof
   let M be EnvEpsTerm of V;
-  SigmaRed(V) reduces M, snf M by ENVEPS_5:3;
+  SigmaRed(V) reduces M, snf M by ENVNF:3;
   hence thesis by Th4;
 end;
 
@@ -218,7 +218,7 @@ proof
   assume [A,B] in SnfPar V;
   then consider S being EnvEpsTerm of V such that
   A1: [A,S] in ParRed(V) & B = snf S by Th1;
-  BetaRed(V) reduces A,S by A1,ENVEPS_7:21;
+  BetaRed(V) reduces A,S by A1,ENVPAR:21;
   then A2: BetaSigmaRed(V) reduces A,S by Th5;
   BetaSigmaRed(V) reduces S, snf S by Th6;
   hence thesis by A1,A2,REWRITE1:16;
@@ -243,7 +243,7 @@ proof
     hence thesis by Th7;
   end;
   for a,b being object st SnfPar V reduces a,b
-    holds BetaSigmaRed(V) reduces a,b from ENVEPS_7:sch 1(A1);
+    holds BetaSigmaRed(V) reduces a,b from ENVPAR:sch 1(A1);
   hence thesis;
 end;
 
@@ -255,17 +255,17 @@ theorem Th9:
 proof
   let M,N be EnvEpsTerm of V;
   assume A1: [M,N] in BetaSigmaRed(V);
-  A2: snf M is_a_normal_form_wrt SigmaRed(V) by ENVEPS_5:3;
-  per cases by A1,ENVEPS_6:30;
+  A2: snf M is_a_normal_form_wrt SigmaRed(V) by ENVNF:3;
+  per cases by A1,ENVBETA:33;
   suppose B1: [M,N] in BetaRed(V);
-    BetaRed(V) c= ParRed(V) by ENVEPS_7:20;
+    BetaRed(V) c= ParRed(V) by ENVPAR:20;
     then [M,N] in ParRed(V) by B1,TARSKI:def 3;
     then consider S being EnvEpsTerm of V such that
-    B2: [snf M, S] in ParRed(V) & snf S = snf N by ENVEPS_8:30;
+    B2: [snf M, S] in ParRed(V) & snf S = snf N by ENVKEY:30;
     thus thesis by A2,B2,Th1;
   end;
   suppose B1: [M,N] in SigmaRed(V);
-    then snf M = snf N by ENVEPS_5:7;
+    then snf M = snf N by ENVNF:7;
     hence thesis by A2,Th2;
   end;
 end;
@@ -295,7 +295,7 @@ proof
     hence thesis;
   end;
   A2: for a,b being object st BetaSigmaRed(V) reduces a,b & P[a] holds P[b]
-    from ENVEPS_8:sch 1(A1);
+    from ENVKEY:sch 1(A1);
   assume A3: BetaSigmaRed(V) reduces M,N;
   SnfPar V reduces snf M, snf M by REWRITE1:12;
   then P[M];

@@ -1,6 +1,7 @@
 OEnvEpsSym
 OEnvEpsGram
 MEnvEpsTerm
+MEnvEpsRel
 OeVar
 OeId
 OeLam
@@ -8,8 +9,7 @@ OeApp
 OeExt
 OeEps
 OeComp
-Oelen
-OEnvEpsLen
-Onatsel
-Vsigma-closed
-OSigmaRed
+Odsel
+Odseq
+O(#) 64
+O(@) 64

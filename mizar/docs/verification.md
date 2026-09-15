@@ -66,15 +66,16 @@ revision.
 Expected output:
 
 ```text
-enveps_1   ok
-enveps_2   ok
-enveps_3   ok
-enveps_4   ok
-enveps_5   ok
-enveps_6   ok
-enveps_7   ok
-enveps_8   ok
-enveps_9   ok
+envsyn     ok
+envlen     ok
+envcc      ok
+envsig     ok
+envbeta    ok
+envpeak    ok
+envnf      ok
+envpar     ok
+envkey     ok
+envconf    ok
 frenv_1    ok
 frenv_2    ok
 frenv_3    ok
@@ -82,7 +83,7 @@ frenv_4    ok
 frenv_5    ok
 audit      ok
 
-All 14 articles verified with no errors, and the audit article
+All 15 articles verified with no errors, and the audit article
 re-derives each main result from its citation alone.
 Main theorem: FRENV_5:8  (FrRed(V) is confluent)
 ```
@@ -150,7 +151,7 @@ described next, is the check against that.
 After the articles it depends on have been exported to `prel/`:
 
 ```sh
-./check.sh enveps_8
+./check.sh envkey
 ```
 
 This runs `mizf` on that article alone and prints its error file. Use it when
@@ -178,16 +179,16 @@ results, and `verify.sh` checks it. Its body is
 
 ```text
 theorem
-  SigmaRed(V) is strongly-normalizing by ENVEPS_1:43;
+  SigmaRed(V) is strongly-normalizing by ENVSIG:51;
 
 theorem
-  SigmaRed(V) is confluent by ENVEPS_4:12;
+  SigmaRed(V) is confluent by ENVPEAK:12;
 
 theorem
-  BetaRed(V) is confluent by ENVEPS_7:34;
+  BetaRed(V) is confluent by ENVPAR:34;
 
 theorem
-  BetaSigmaRed(V) is confluent by ENVEPS_9:13;
+  BetaSigmaRed(V) is confluent by ENVCONF:13;
 
 theorem
   FrRed(V) is confluent by FRENV_5:8;
@@ -221,11 +222,11 @@ any of the results actually say.
 
 | | |
 |---|---|
-| Date | 2026-09-15 |
+| Date | 2026-09-15 (re-verified after the readability refactoring) |
 | System | Mizar Ver. 8.1.15 (Linux/FPC), MML 5.99 |
 | Platform | Ubuntu on WSL 2 |
 | Command | `./verify.sh` from a clean checkout |
-| Result | 14 articles plus the audit article, every `.err` file empty, `FRENV_5:8` established |
+| Result | 15 articles plus the audit article, every `.err` file empty, `FRENV_5:8` established |
 | Wall clock | about 91 seconds |
 
 Unlike the Isabelle and Lean developments in this artifact, the Mizar

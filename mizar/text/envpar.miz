@@ -6,28 +6,29 @@ environ
       RELAT_1, FUNCT_1, ORDINAL1, CARD_1, ARYTM_3, XXREAL_0, NAT_1, TREES_1,
       TREES_2, TREES_3, TREES_4, LANG1, STRUCT_0, DTCONSTR, MCART_1, XTUPLE_0,
       FINSET_1, TDGROUP, FUNCOP_1, ARYTM_1, FUNCT_7, XREAL_0, XCMPLX_0,
-      REWRITE1, PBOOLE, ENVEPS_1, ENVEPS_5, ENVEPS_6, ENVEPS_7;
+      REWRITE1, PBOOLE, ENVSYN, ENVLEN, ENVNF, ENVBETA, ENVPAR, ENVCC,
+      ENVSIG;
  notations TARSKI, XBOOLE_0, ZFMISC_1, SUBSET_1, ORDINAL1, NUMBERS, XCMPLX_0,
-      XXREAL_0, NAT_1, RELAT_1, RELSET_1, FUNCT_1, FUNCT_2, FINSEQ_1, FINSEQ_2,
-      MCART_1, XTUPLE_0, DOMAIN_1, STRUCT_0, LANG1, TREES_1, TREES_2, TREES_3,
-      TREES_4, DTCONSTR, FUNCOP_1, XREAL_0, PBOOLE, REWRITE1, ENVEPS_1,
-      ENVEPS_6;
+      XXREAL_0, NAT_1, RELAT_1, RELSET_1, FUNCT_1, FUNCT_2, FINSEQ_1,
+      FINSEQ_2, MCART_1, XTUPLE_0, DOMAIN_1, STRUCT_0, LANG1, TREES_1,
+      TREES_2, TREES_3, TREES_4, DTCONSTR, FUNCOP_1, XREAL_0, PBOOLE,
+      REWRITE1, ENVSYN, ENVLEN, ENVBETA, ENVCC, ENVSIG;
  constructors NUMBERS, XCMPLX_0, XXREAL_0, NAT_1, RELSET_1, FUNCT_2, FINSEQ_1,
-      FINSEQ_2, MCART_1, XTUPLE_0, DOMAIN_1, STRUCT_0, LANG1, TREES_1, TREES_2,
-      TREES_3, TREES_4, DTCONSTR, PARTFUN1, BINOP_1, SETWISEO, XREAL_0,
-      FUNCOP_1, SUBSET_1, CARD_3, FINSEQOP, FINSEQ_4, FINSOP_1, PRE_POLY,
-      FUNCT_1, RELAT_1, PBOOLE, REWRITE1, ENVEPS_1, ENVEPS_6;
+      FINSEQ_2, MCART_1, XTUPLE_0, DOMAIN_1, STRUCT_0, LANG1, TREES_1,
+      TREES_2, TREES_3, TREES_4, DTCONSTR, PARTFUN1, BINOP_1, SETWISEO,
+      XREAL_0, FUNCOP_1, SUBSET_1, CARD_3, FINSEQOP, FINSEQ_4, FINSOP_1,
+      PRE_POLY, FUNCT_1, RELAT_1, PBOOLE, REWRITE1, ENVSYN, ENVLEN, ENVBETA,
+      ENVCC, ENVSIG;
  registrations XBOOLE_0, SUBSET_1, RELAT_1, FUNCT_1, ORDINAL1, XREAL_0, NAT_1,
       FINSEQ_1, FINSEQ_2, FINSET_1, CARD_1, STRUCT_0, LANG1, TREES_1, TREES_2,
       TREES_3, TREES_4, DTCONSTR, XTUPLE_0, VALUED_0, FUNCOP_1, XCMPLX_0,
-      XXREAL_0, NUMBERS, MEMBERED, PBOOLE, REWRITE1, ENVEPS_1, ENVEPS_4;
+      XXREAL_0, NUMBERS, MEMBERED, PBOOLE, REWRITE1, ENVSYN, ENVPEAK, ENVSIG;
  requirements NUMERALS, REAL, BOOLE, SUBSET, ARITHM;
  definitions TARSKI, XBOOLE_0, DTCONSTR, TREES_3, TREES_4, RELAT_1, FUNCT_1,
-      FINSEQ_1, FUNCOP_1, SUBSET_1, REWRITE1, ENVEPS_1, ENVEPS_6;
+      FINSEQ_1, FUNCOP_1, SUBSET_1, REWRITE1, ENVSYN, ENVLEN, ENVBETA, ENVCC;
  theorems TARSKI, ZFMISC_1, XTUPLE_0, REWRITE1, NAT_1, FINSEQ_1, FUNCT_1,
-      XXREAL_0, ENVEPS_1, ENVEPS_6;
- schemes DTCONSTR, NAT_1, ENVEPS_1, ENVEPS_2;
-
+      XXREAL_0, ENVSYN, ENVLEN, ENVBETA, ENVCC;
+ schemes DTCONSTR, NAT_1, ENVSYN, ENVCC;
 begin :: Parallel beta reduction
 
 definition
@@ -681,20 +682,20 @@ proof
       ParRed(V) & eVar x = eLam(x2,M2) & Q = eLam(x2,M3);
     then consider M2,M3 being EnvEpsTerm of V, x2 being Element of V such that
     E1: [M2,M3] in ParRed(V) & eVar x = eLam(x2,M2) & Q = eLam(x2,M3);
-    thus thesis by E1,ENVEPS_1:44;
+    thus thesis by E1,ENVSYN:20;
   end;
   suppose ex M2,M3 being EnvEpsTerm of V st [M2,M3] in ParRed(V) & eVar x =
       eEps M2 & Q = eEps M3;
     then consider M2,M3 being EnvEpsTerm of V such that
     E1: [M2,M3] in ParRed(V) & eVar x = eEps M2 & Q = eEps M3;
-    thus thesis by E1,ENVEPS_1:44;
+    thus thesis by E1,ENVSYN:20;
   end;
   suppose ex M2,M3,N2,N3 being EnvEpsTerm of V st [M2,M3] in ParRed(V) &
       [N2,N3] in ParRed(V) & eVar x = eApp(M2,N2) & Q = eApp(M3,N3);
     then consider M2,M3,N2,N3 being EnvEpsTerm of V such that
     E1: [M2,M3] in ParRed(V) & [N2,N3] in ParRed(V) & eVar x = eApp(M2,N2) & Q
       = eApp(M3,N3);
-    thus thesis by E1,ENVEPS_1:44;
+    thus thesis by E1,ENVSYN:20;
   end;
   suppose ex M2,M3,N2,N3 being EnvEpsTerm of V, x2 being Element of V st
       [M2,M3] in ParRed(V) & [N2,N3] in ParRed(V) & eVar x = eExt(M2,x2,N2) &
@@ -703,14 +704,14 @@ proof
       such that
     E1: [M2,M3] in ParRed(V) & [N2,N3] in ParRed(V) & eVar x = eExt(M2,x2,N2)
       & Q = eExt(M3,x2,N3);
-    thus thesis by E1,ENVEPS_1:44;
+    thus thesis by E1,ENVSYN:20;
   end;
   suppose ex M2,M3,N2,N3 being EnvEpsTerm of V st [M2,M3] in ParRed(V) &
       [N2,N3] in ParRed(V) & eVar x = eComp(M2,N2) & Q = eComp(M3,N3);
     then consider M2,M3,N2,N3 being EnvEpsTerm of V such that
     E1: [M2,M3] in ParRed(V) & [N2,N3] in ParRed(V) & eVar x = eComp(M2,N2) &
       Q = eComp(M3,N3);
-    thus thesis by E1,ENVEPS_1:44;
+    thus thesis by E1,ENVSYN:20;
   end;
   suppose ex M2,M3,N2,N3 being EnvEpsTerm of V, x2 being Element of V st
       [M2,M3] in ParRed(V) & [N2,N3] in ParRed(V) & eVar x =
@@ -719,7 +720,7 @@ proof
       such that
     E1: [M2,M3] in ParRed(V) & [N2,N3] in ParRed(V) & eVar x =
       eApp(eLam(x2,M2),N2) & Q = eComp(M3,eExt(N3,x2,eId V));
-    thus thesis by E1,ENVEPS_1:44;
+    thus thesis by E1,ENVSYN:20;
   end;
   suppose ex M2,M3,N2,N3,L2,L3 being EnvEpsTerm of V, x2 being Element of V st
       [M2,M3] in ParRed(V) & [N2,N3] in ParRed(V) & [L2,L3] in ParRed(V) &
@@ -728,14 +729,14 @@ proof
       V such that
     E1: [M2,M3] in ParRed(V) & [N2,N3] in ParRed(V) & [L2,L3] in ParRed(V) &
       eVar x = eApp(eComp(eLam(x2,M2),L2),N2) & Q = eComp(M3,eExt(N3,x2,L3));
-    thus thesis by E1,ENVEPS_1:44;
+    thus thesis by E1,ENVSYN:20;
   end;
   suppose ex M2,M3,N2,N3 being EnvEpsTerm of V st [M2,M3] in ParRed(V) &
       [N2,N3] in ParRed(V) & eVar x = eApp(eEps M2,N2) & Q = eComp(M3,N3);
     then consider M2,M3,N2,N3 being EnvEpsTerm of V such that
     E1: [M2,M3] in ParRed(V) & [N2,N3] in ParRed(V) & eVar x = eApp(eEps
       M2,N2) & Q = eComp(M3,N3);
-    thus thesis by E1,ENVEPS_1:44;
+    thus thesis by E1,ENVSYN:20;
   end;
 end;
 
@@ -776,20 +777,20 @@ proof
       ParRed(V) & eId V = eLam(x2,M2) & Q = eLam(x2,M3);
     then consider M2,M3 being EnvEpsTerm of V, x2 being Element of V such that
     E1: [M2,M3] in ParRed(V) & eId V = eLam(x2,M2) & Q = eLam(x2,M3);
-    thus thesis by E1,ENVEPS_1:44;
+    thus thesis by E1,ENVSYN:20;
   end;
   suppose ex M2,M3 being EnvEpsTerm of V st [M2,M3] in ParRed(V) & eId V =
       eEps M2 & Q = eEps M3;
     then consider M2,M3 being EnvEpsTerm of V such that
     E1: [M2,M3] in ParRed(V) & eId V = eEps M2 & Q = eEps M3;
-    thus thesis by E1,ENVEPS_1:44;
+    thus thesis by E1,ENVSYN:20;
   end;
   suppose ex M2,M3,N2,N3 being EnvEpsTerm of V st [M2,M3] in ParRed(V) &
       [N2,N3] in ParRed(V) & eId V = eApp(M2,N2) & Q = eApp(M3,N3);
     then consider M2,M3,N2,N3 being EnvEpsTerm of V such that
     E1: [M2,M3] in ParRed(V) & [N2,N3] in ParRed(V) & eId V = eApp(M2,N2) & Q
       = eApp(M3,N3);
-    thus thesis by E1,ENVEPS_1:44;
+    thus thesis by E1,ENVSYN:20;
   end;
   suppose ex M2,M3,N2,N3 being EnvEpsTerm of V, x2 being Element of V st
       [M2,M3] in ParRed(V) & [N2,N3] in ParRed(V) & eId V = eExt(M2,x2,N2) & Q
@@ -798,14 +799,14 @@ proof
       such that
     E1: [M2,M3] in ParRed(V) & [N2,N3] in ParRed(V) & eId V = eExt(M2,x2,N2) &
       Q = eExt(M3,x2,N3);
-    thus thesis by E1,ENVEPS_1:44;
+    thus thesis by E1,ENVSYN:20;
   end;
   suppose ex M2,M3,N2,N3 being EnvEpsTerm of V st [M2,M3] in ParRed(V) &
       [N2,N3] in ParRed(V) & eId V = eComp(M2,N2) & Q = eComp(M3,N3);
     then consider M2,M3,N2,N3 being EnvEpsTerm of V such that
     E1: [M2,M3] in ParRed(V) & [N2,N3] in ParRed(V) & eId V = eComp(M2,N2) & Q
       = eComp(M3,N3);
-    thus thesis by E1,ENVEPS_1:44;
+    thus thesis by E1,ENVSYN:20;
   end;
   suppose ex M2,M3,N2,N3 being EnvEpsTerm of V, x2 being Element of V st
       [M2,M3] in ParRed(V) & [N2,N3] in ParRed(V) & eId V =
@@ -814,7 +815,7 @@ proof
       such that
     E1: [M2,M3] in ParRed(V) & [N2,N3] in ParRed(V) & eId V =
       eApp(eLam(x2,M2),N2) & Q = eComp(M3,eExt(N3,x2,eId V));
-    thus thesis by E1,ENVEPS_1:44;
+    thus thesis by E1,ENVSYN:20;
   end;
   suppose ex M2,M3,N2,N3,L2,L3 being EnvEpsTerm of V, x2 being Element of V st
       [M2,M3] in ParRed(V) & [N2,N3] in ParRed(V) & [L2,L3] in ParRed(V) & eId
@@ -823,14 +824,14 @@ proof
       V such that
     E1: [M2,M3] in ParRed(V) & [N2,N3] in ParRed(V) & [L2,L3] in ParRed(V) &
       eId V = eApp(eComp(eLam(x2,M2),L2),N2) & Q = eComp(M3,eExt(N3,x2,L3));
-    thus thesis by E1,ENVEPS_1:44;
+    thus thesis by E1,ENVSYN:20;
   end;
   suppose ex M2,M3,N2,N3 being EnvEpsTerm of V st [M2,M3] in ParRed(V) &
       [N2,N3] in ParRed(V) & eId V = eApp(eEps M2,N2) & Q = eComp(M3,N3);
     then consider M2,M3,N2,N3 being EnvEpsTerm of V such that
     E1: [M2,M3] in ParRed(V) & [N2,N3] in ParRed(V) & eId V = eApp(eEps M2,N2)
       & Q = eComp(M3,N3);
-    thus thesis by E1,ENVEPS_1:44;
+    thus thesis by E1,ENVSYN:20;
   end;
 end;
 
@@ -880,14 +881,14 @@ proof
       eEps M2 & Q = eEps M3;
     then consider M2,M3 being EnvEpsTerm of V such that
     E1: [M2,M3] in ParRed(V) & eLam(x,M) = eEps M2 & Q = eEps M3;
-    thus thesis by E1,ENVEPS_1:44;
+    thus thesis by E1,ENVSYN:20;
   end;
   suppose ex M2,M3,N2,N3 being EnvEpsTerm of V st [M2,M3] in ParRed(V) &
       [N2,N3] in ParRed(V) & eLam(x,M) = eApp(M2,N2) & Q = eApp(M3,N3);
     then consider M2,M3,N2,N3 being EnvEpsTerm of V such that
     E1: [M2,M3] in ParRed(V) & [N2,N3] in ParRed(V) & eLam(x,M) = eApp(M2,N2)
       & Q = eApp(M3,N3);
-    thus thesis by E1,ENVEPS_1:44;
+    thus thesis by E1,ENVSYN:20;
   end;
   suppose ex M2,M3,N2,N3 being EnvEpsTerm of V, x2 being Element of V st
       [M2,M3] in ParRed(V) & [N2,N3] in ParRed(V) & eLam(x,M) = eExt(M2,x2,N2)
@@ -896,14 +897,14 @@ proof
       such that
     E1: [M2,M3] in ParRed(V) & [N2,N3] in ParRed(V) & eLam(x,M) =
       eExt(M2,x2,N2) & Q = eExt(M3,x2,N3);
-    thus thesis by E1,ENVEPS_1:44;
+    thus thesis by E1,ENVSYN:20;
   end;
   suppose ex M2,M3,N2,N3 being EnvEpsTerm of V st [M2,M3] in ParRed(V) &
       [N2,N3] in ParRed(V) & eLam(x,M) = eComp(M2,N2) & Q = eComp(M3,N3);
     then consider M2,M3,N2,N3 being EnvEpsTerm of V such that
     E1: [M2,M3] in ParRed(V) & [N2,N3] in ParRed(V) & eLam(x,M) = eComp(M2,N2)
       & Q = eComp(M3,N3);
-    thus thesis by E1,ENVEPS_1:44;
+    thus thesis by E1,ENVSYN:20;
   end;
   suppose ex M2,M3,N2,N3 being EnvEpsTerm of V, x2 being Element of V st
       [M2,M3] in ParRed(V) & [N2,N3] in ParRed(V) & eLam(x,M) =
@@ -912,7 +913,7 @@ proof
       such that
     E1: [M2,M3] in ParRed(V) & [N2,N3] in ParRed(V) & eLam(x,M) =
       eApp(eLam(x2,M2),N2) & Q = eComp(M3,eExt(N3,x2,eId V));
-    thus thesis by E1,ENVEPS_1:44;
+    thus thesis by E1,ENVSYN:20;
   end;
   suppose ex M2,M3,N2,N3,L2,L3 being EnvEpsTerm of V, x2 being Element of V st
       [M2,M3] in ParRed(V) & [N2,N3] in ParRed(V) & [L2,L3] in ParRed(V) &
@@ -923,14 +924,14 @@ proof
     E1: [M2,M3] in ParRed(V) & [N2,N3] in ParRed(V) & [L2,L3] in ParRed(V) &
       eLam(x,M) = eApp(eComp(eLam(x2,M2),L2),N2) & Q =
       eComp(M3,eExt(N3,x2,L3));
-    thus thesis by E1,ENVEPS_1:44;
+    thus thesis by E1,ENVSYN:20;
   end;
   suppose ex M2,M3,N2,N3 being EnvEpsTerm of V st [M2,M3] in ParRed(V) &
       [N2,N3] in ParRed(V) & eLam(x,M) = eApp(eEps M2,N2) & Q = eComp(M3,N3);
     then consider M2,M3,N2,N3 being EnvEpsTerm of V such that
     E1: [M2,M3] in ParRed(V) & [N2,N3] in ParRed(V) & eLam(x,M) = eApp(eEps
       M2,N2) & Q = eComp(M3,N3);
-    thus thesis by E1,ENVEPS_1:44;
+    thus thesis by E1,ENVSYN:20;
   end;
 end;
 
@@ -974,7 +975,7 @@ proof
       ParRed(V) & eEps M = eLam(x2,M2) & Q = eLam(x2,M3);
     then consider M2,M3 being EnvEpsTerm of V, x2 being Element of V such that
     E1: [M2,M3] in ParRed(V) & eEps M = eLam(x2,M2) & Q = eLam(x2,M3);
-    thus thesis by E1,ENVEPS_1:44;
+    thus thesis by E1,ENVSYN:20;
   end;
   suppose ex M2,M3 being EnvEpsTerm of V st [M2,M3] in ParRed(V) & eEps M =
       eEps M2 & Q = eEps M3;
@@ -985,7 +986,7 @@ proof
     then consider M2,M3,N2,N3 being EnvEpsTerm of V such that
     E1: [M2,M3] in ParRed(V) & [N2,N3] in ParRed(V) & eEps M = eApp(M2,N2) & Q
       = eApp(M3,N3);
-    thus thesis by E1,ENVEPS_1:44;
+    thus thesis by E1,ENVSYN:20;
   end;
   suppose ex M2,M3,N2,N3 being EnvEpsTerm of V, x2 being Element of V st
       [M2,M3] in ParRed(V) & [N2,N3] in ParRed(V) & eEps M = eExt(M2,x2,N2) &
@@ -994,14 +995,14 @@ proof
       such that
     E1: [M2,M3] in ParRed(V) & [N2,N3] in ParRed(V) & eEps M = eExt(M2,x2,N2)
       & Q = eExt(M3,x2,N3);
-    thus thesis by E1,ENVEPS_1:44;
+    thus thesis by E1,ENVSYN:20;
   end;
   suppose ex M2,M3,N2,N3 being EnvEpsTerm of V st [M2,M3] in ParRed(V) &
       [N2,N3] in ParRed(V) & eEps M = eComp(M2,N2) & Q = eComp(M3,N3);
     then consider M2,M3,N2,N3 being EnvEpsTerm of V such that
     E1: [M2,M3] in ParRed(V) & [N2,N3] in ParRed(V) & eEps M = eComp(M2,N2) &
       Q = eComp(M3,N3);
-    thus thesis by E1,ENVEPS_1:44;
+    thus thesis by E1,ENVSYN:20;
   end;
   suppose ex M2,M3,N2,N3 being EnvEpsTerm of V, x2 being Element of V st
       [M2,M3] in ParRed(V) & [N2,N3] in ParRed(V) & eEps M =
@@ -1010,7 +1011,7 @@ proof
       such that
     E1: [M2,M3] in ParRed(V) & [N2,N3] in ParRed(V) & eEps M =
       eApp(eLam(x2,M2),N2) & Q = eComp(M3,eExt(N3,x2,eId V));
-    thus thesis by E1,ENVEPS_1:44;
+    thus thesis by E1,ENVSYN:20;
   end;
   suppose ex M2,M3,N2,N3,L2,L3 being EnvEpsTerm of V, x2 being Element of V st
       [M2,M3] in ParRed(V) & [N2,N3] in ParRed(V) & [L2,L3] in ParRed(V) &
@@ -1019,14 +1020,14 @@ proof
       V such that
     E1: [M2,M3] in ParRed(V) & [N2,N3] in ParRed(V) & [L2,L3] in ParRed(V) &
       eEps M = eApp(eComp(eLam(x2,M2),L2),N2) & Q = eComp(M3,eExt(N3,x2,L3));
-    thus thesis by E1,ENVEPS_1:44;
+    thus thesis by E1,ENVSYN:20;
   end;
   suppose ex M2,M3,N2,N3 being EnvEpsTerm of V st [M2,M3] in ParRed(V) &
       [N2,N3] in ParRed(V) & eEps M = eApp(eEps M2,N2) & Q = eComp(M3,N3);
     then consider M2,M3,N2,N3 being EnvEpsTerm of V such that
     E1: [M2,M3] in ParRed(V) & [N2,N3] in ParRed(V) & eEps M = eApp(eEps
       M2,N2) & Q = eComp(M3,N3);
-    thus thesis by E1,ENVEPS_1:44;
+    thus thesis by E1,ENVSYN:20;
   end;
 end;
 
@@ -1080,13 +1081,13 @@ proof
       ParRed(V) & eApp(M,N) = eLam(x2,M2) & Q = eLam(x2,M3);
     then consider M2,M3 being EnvEpsTerm of V, x2 being Element of V such that
     E1: [M2,M3] in ParRed(V) & eApp(M,N) = eLam(x2,M2) & Q = eLam(x2,M3);
-    thus thesis by E1,ENVEPS_1:44;
+    thus thesis by E1,ENVSYN:20;
   end;
   suppose ex M2,M3 being EnvEpsTerm of V st [M2,M3] in ParRed(V) & eApp(M,N) =
       eEps M2 & Q = eEps M3;
     then consider M2,M3 being EnvEpsTerm of V such that
     E1: [M2,M3] in ParRed(V) & eApp(M,N) = eEps M2 & Q = eEps M3;
-    thus thesis by E1,ENVEPS_1:44;
+    thus thesis by E1,ENVSYN:20;
   end;
   suppose ex M2,M3,N2,N3 being EnvEpsTerm of V st [M2,M3] in ParRed(V) &
       [N2,N3] in ParRed(V) & eApp(M,N) = eApp(M2,N2) & Q = eApp(M3,N3);
@@ -1099,14 +1100,14 @@ proof
       such that
     E1: [M2,M3] in ParRed(V) & [N2,N3] in ParRed(V) & eApp(M,N) =
       eExt(M2,x2,N2) & Q = eExt(M3,x2,N3);
-    thus thesis by E1,ENVEPS_1:44;
+    thus thesis by E1,ENVSYN:20;
   end;
   suppose ex M2,M3,N2,N3 being EnvEpsTerm of V st [M2,M3] in ParRed(V) &
       [N2,N3] in ParRed(V) & eApp(M,N) = eComp(M2,N2) & Q = eComp(M3,N3);
     then consider M2,M3,N2,N3 being EnvEpsTerm of V such that
     E1: [M2,M3] in ParRed(V) & [N2,N3] in ParRed(V) & eApp(M,N) = eComp(M2,N2)
       & Q = eComp(M3,N3);
-    thus thesis by E1,ENVEPS_1:44;
+    thus thesis by E1,ENVSYN:20;
   end;
   suppose ex M2,M3,N2,N3 being EnvEpsTerm of V, x2 being Element of V st
       [M2,M3] in ParRed(V) & [N2,N3] in ParRed(V) & eApp(M,N) =
@@ -1168,20 +1169,20 @@ proof
       ParRed(V) & eExt(M,x,N) = eLam(x2,M2) & Q = eLam(x2,M3);
     then consider M2,M3 being EnvEpsTerm of V, x2 being Element of V such that
     E1: [M2,M3] in ParRed(V) & eExt(M,x,N) = eLam(x2,M2) & Q = eLam(x2,M3);
-    thus thesis by E1,ENVEPS_1:44;
+    thus thesis by E1,ENVSYN:20;
   end;
   suppose ex M2,M3 being EnvEpsTerm of V st [M2,M3] in ParRed(V) & eExt(M,x,N)
       = eEps M2 & Q = eEps M3;
     then consider M2,M3 being EnvEpsTerm of V such that
     E1: [M2,M3] in ParRed(V) & eExt(M,x,N) = eEps M2 & Q = eEps M3;
-    thus thesis by E1,ENVEPS_1:44;
+    thus thesis by E1,ENVSYN:20;
   end;
   suppose ex M2,M3,N2,N3 being EnvEpsTerm of V st [M2,M3] in ParRed(V) &
       [N2,N3] in ParRed(V) & eExt(M,x,N) = eApp(M2,N2) & Q = eApp(M3,N3);
     then consider M2,M3,N2,N3 being EnvEpsTerm of V such that
     E1: [M2,M3] in ParRed(V) & [N2,N3] in ParRed(V) & eExt(M,x,N) =
       eApp(M2,N2) & Q = eApp(M3,N3);
-    thus thesis by E1,ENVEPS_1:44;
+    thus thesis by E1,ENVSYN:20;
   end;
   suppose ex M2,M3,N2,N3 being EnvEpsTerm of V, x2 being Element of V st
       [M2,M3] in ParRed(V) & [N2,N3] in ParRed(V) & eExt(M,x,N) =
@@ -1193,7 +1194,7 @@ proof
     then consider M2,M3,N2,N3 being EnvEpsTerm of V such that
     E1: [M2,M3] in ParRed(V) & [N2,N3] in ParRed(V) & eExt(M,x,N) =
       eComp(M2,N2) & Q = eComp(M3,N3);
-    thus thesis by E1,ENVEPS_1:44;
+    thus thesis by E1,ENVSYN:20;
   end;
   suppose ex M2,M3,N2,N3 being EnvEpsTerm of V, x2 being Element of V st
       [M2,M3] in ParRed(V) & [N2,N3] in ParRed(V) & eExt(M,x,N) =
@@ -1202,7 +1203,7 @@ proof
       such that
     E1: [M2,M3] in ParRed(V) & [N2,N3] in ParRed(V) & eExt(M,x,N) =
       eApp(eLam(x2,M2),N2) & Q = eComp(M3,eExt(N3,x2,eId V));
-    thus thesis by E1,ENVEPS_1:44;
+    thus thesis by E1,ENVSYN:20;
   end;
   suppose ex M2,M3,N2,N3,L2,L3 being EnvEpsTerm of V, x2 being Element of V st
       [M2,M3] in ParRed(V) & [N2,N3] in ParRed(V) & [L2,L3] in ParRed(V) &
@@ -1213,7 +1214,7 @@ proof
     E1: [M2,M3] in ParRed(V) & [N2,N3] in ParRed(V) & [L2,L3] in ParRed(V) &
       eExt(M,x,N) = eApp(eComp(eLam(x2,M2),L2),N2) & Q =
       eComp(M3,eExt(N3,x2,L3));
-    thus thesis by E1,ENVEPS_1:44;
+    thus thesis by E1,ENVSYN:20;
   end;
   suppose ex M2,M3,N2,N3 being EnvEpsTerm of V st [M2,M3] in ParRed(V) &
       [N2,N3] in ParRed(V) & eExt(M,x,N) = eApp(eEps M2,N2) & Q =
@@ -1221,7 +1222,7 @@ proof
     then consider M2,M3,N2,N3 being EnvEpsTerm of V such that
     E1: [M2,M3] in ParRed(V) & [N2,N3] in ParRed(V) & eExt(M,x,N) = eApp(eEps
       M2,N2) & Q = eComp(M3,N3);
-    thus thesis by E1,ENVEPS_1:44;
+    thus thesis by E1,ENVSYN:20;
   end;
 end;
 
@@ -1266,20 +1267,20 @@ proof
       ParRed(V) & eComp(M,N) = eLam(x2,M2) & Q = eLam(x2,M3);
     then consider M2,M3 being EnvEpsTerm of V, x2 being Element of V such that
     E1: [M2,M3] in ParRed(V) & eComp(M,N) = eLam(x2,M2) & Q = eLam(x2,M3);
-    thus thesis by E1,ENVEPS_1:44;
+    thus thesis by E1,ENVSYN:20;
   end;
   suppose ex M2,M3 being EnvEpsTerm of V st [M2,M3] in ParRed(V) & eComp(M,N)
       = eEps M2 & Q = eEps M3;
     then consider M2,M3 being EnvEpsTerm of V such that
     E1: [M2,M3] in ParRed(V) & eComp(M,N) = eEps M2 & Q = eEps M3;
-    thus thesis by E1,ENVEPS_1:44;
+    thus thesis by E1,ENVSYN:20;
   end;
   suppose ex M2,M3,N2,N3 being EnvEpsTerm of V st [M2,M3] in ParRed(V) &
       [N2,N3] in ParRed(V) & eComp(M,N) = eApp(M2,N2) & Q = eApp(M3,N3);
     then consider M2,M3,N2,N3 being EnvEpsTerm of V such that
     E1: [M2,M3] in ParRed(V) & [N2,N3] in ParRed(V) & eComp(M,N) = eApp(M2,N2)
       & Q = eApp(M3,N3);
-    thus thesis by E1,ENVEPS_1:44;
+    thus thesis by E1,ENVSYN:20;
   end;
   suppose ex M2,M3,N2,N3 being EnvEpsTerm of V, x2 being Element of V st
       [M2,M3] in ParRed(V) & [N2,N3] in ParRed(V) & eComp(M,N) =
@@ -1288,7 +1289,7 @@ proof
       such that
     E1: [M2,M3] in ParRed(V) & [N2,N3] in ParRed(V) & eComp(M,N) =
       eExt(M2,x2,N2) & Q = eExt(M3,x2,N3);
-    thus thesis by E1,ENVEPS_1:44;
+    thus thesis by E1,ENVSYN:20;
   end;
   suppose ex M2,M3,N2,N3 being EnvEpsTerm of V st [M2,M3] in ParRed(V) &
       [N2,N3] in ParRed(V) & eComp(M,N) = eComp(M2,N2) & Q = eComp(M3,N3);
@@ -1301,7 +1302,7 @@ proof
       such that
     E1: [M2,M3] in ParRed(V) & [N2,N3] in ParRed(V) & eComp(M,N) =
       eApp(eLam(x2,M2),N2) & Q = eComp(M3,eExt(N3,x2,eId V));
-    thus thesis by E1,ENVEPS_1:44;
+    thus thesis by E1,ENVSYN:20;
   end;
   suppose ex M2,M3,N2,N3,L2,L3 being EnvEpsTerm of V, x2 being Element of V st
       [M2,M3] in ParRed(V) & [N2,N3] in ParRed(V) & [L2,L3] in ParRed(V) &
@@ -1312,14 +1313,14 @@ proof
     E1: [M2,M3] in ParRed(V) & [N2,N3] in ParRed(V) & [L2,L3] in ParRed(V) &
       eComp(M,N) = eApp(eComp(eLam(x2,M2),L2),N2) & Q =
       eComp(M3,eExt(N3,x2,L3));
-    thus thesis by E1,ENVEPS_1:44;
+    thus thesis by E1,ENVSYN:20;
   end;
   suppose ex M2,M3,N2,N3 being EnvEpsTerm of V st [M2,M3] in ParRed(V) &
       [N2,N3] in ParRed(V) & eComp(M,N) = eApp(eEps M2,N2) & Q = eComp(M3,N3);
     then consider M2,M3,N2,N3 being EnvEpsTerm of V such that
     E1: [M2,M3] in ParRed(V) & [N2,N3] in ParRed(V) & eComp(M,N) = eApp(eEps
       M2,N2) & Q = eComp(M3,N3);
-    thus thesis by E1,ENVEPS_1:44;
+    thus thesis by E1,ENVSYN:20;
   end;
 end;
 
@@ -1329,28 +1330,53 @@ theorem Th20:
   for V being non empty set holds BetaRed(V) c= ParRed(V)
 proof
   let V be non empty set;
-  ParRed(V) is beta-closed
+  set G = EnvEpsGram(V);
+  ParRed(V) is_cc_over BetaRoot(V)
   proof
-    thus for M,N being EnvEpsTerm of V, x being Element of V holds
-      [eApp(eLam(x,M),N), eComp(M,eExt(N,x,eId V))] in ParRed(V)
+    thus BetaRoot(V) c= ParRed(V)
     proof
-      let M,N be EnvEpsTerm of V, x be Element of V;
-      [M,M] in ParRed(V) & [N,N] in ParRed(V) by Th4;
-      hence thesis by Th10;
-    end;
-    thus for M,N,L being EnvEpsTerm of V, x being Element of V holds
-      [eApp(eComp(eLam(x,M),L),N), eComp(M,eExt(N,x,L))] in ParRed(V)
-    proof
-      let M,N,L be EnvEpsTerm of V, x be Element of V;
-      [M,M] in ParRed(V) & [N,N] in ParRed(V) & [L,L] in ParRed(V) by Th4;
-      hence thesis by Th11;
-    end;
-    thus for M,N being EnvEpsTerm of V holds
-      [eApp(eEps M,N), eComp(M,N)] in ParRed(V)
-    proof
-      let M,N be EnvEpsTerm of V;
-      [M,M] in ParRed(V) & [N,N] in ParRed(V) by Th4;
-      hence thesis by Th12;
+      now
+        let u be object;
+        assume B0: u in BetaRoot(V);
+        BetaRoot(V) c= [:TS G, TS G:];
+        then u in [:TS G, TS G:] by B0;
+        then consider a,b being object such that
+        B1: a in TS G & b in TS G & u = [a,b] by ZFMISC_1:84;
+        reconsider P = a, S = b as EnvEpsTerm of V by B1;
+        B2: [P,S] in BetaRoot(V) by B0,B1;
+        B3: [P,S] in ParRed(V)
+        proof
+          per cases by B2,ENVBETA:1;
+          suppose ex M2,N2 being EnvEpsTerm of V, x2 being Element of V st
+              P = eApp(eLam(x2,M2),N2) & S = eComp(M2,eExt(N2,x2,eId V));
+            then consider M2,N2 being EnvEpsTerm of V, x2 being Element of V
+            such that
+            C1: P = eApp(eLam(x2,M2),N2) & S = eComp(M2,eExt(N2,x2,eId V));
+            [M2,M2] in ParRed(V) & [N2,N2] in ParRed(V) by Th4;
+            hence thesis by C1,Th10;
+          end;
+          suppose ex M2,N2,L2 being EnvEpsTerm of V, x2 being Element of V st
+              P = eApp(eComp(eLam(x2,M2),L2),N2) &
+              S = eComp(M2,eExt(N2,x2,L2));
+            then consider M2,N2,L2 being EnvEpsTerm of V,
+            x2 being Element of V such that
+            C1: P = eApp(eComp(eLam(x2,M2),L2),N2) &
+              S = eComp(M2,eExt(N2,x2,L2));
+            [M2,M2] in ParRed(V) & [N2,N2] in ParRed(V) &
+              [L2,L2] in ParRed(V) by Th4;
+            hence thesis by C1,Th11;
+          end;
+          suppose ex M2,N2 being EnvEpsTerm of V st
+              P = eApp(eEps M2,N2) & S = eComp(M2,N2);
+            then consider M2,N2 being EnvEpsTerm of V such that
+            C1: P = eApp(eEps M2,N2) & S = eComp(M2,N2);
+            [M2,M2] in ParRed(V) & [N2,N2] in ParRed(V) by Th4;
+            hence thesis by C1,Th12;
+          end;
+        end;
+        thus u in ParRed(V) by B1,B3;
+      end;
+      hence thesis by TARSKI:def 3;
     end;
     thus for M,M1,N being EnvEpsTerm of V st [M,M1] in ParRed(V) holds
       [eApp(M,N), eApp(M1,N)] in ParRed(V)
@@ -1405,7 +1431,8 @@ proof
     thus for M,M1 being EnvEpsTerm of V st [M,M1] in ParRed(V) holds
       [eEps M, eEps M1] in ParRed(V) by Th6;
   end;
-  hence thesis by ENVEPS_6:2;
+  then CC BetaRoot(V) c= ParRed(V) by ENVCC:2;
+  hence thesis by ENVBETA:def 2;
 end;
 
 theorem Th21:
@@ -1459,7 +1486,7 @@ proof
       let M,M1 be EnvEpsTerm of V, x be Element of V;
       assume [M,M1] in S1;
       then BetaRed(V) reduces M,M1 by A2;
-      then BetaRed(V) reduces eLam(x,M), eLam(x,M1) by ENVEPS_6:17;
+      then BetaRed(V) reduces eLam(x,M), eLam(x,M1) by ENVBETA:26;
       hence thesis by A2;
     end;
     thus for M,M1 being EnvEpsTerm of V st [M,M1] in S1 holds
@@ -1468,7 +1495,7 @@ proof
       let M,M1 be EnvEpsTerm of V;
       assume [M,M1] in S1;
       then BetaRed(V) reduces M,M1 by A2;
-      then BetaRed(V) reduces eEps M, eEps M1 by ENVEPS_6:22;
+      then BetaRed(V) reduces eEps M, eEps M1 by ENVBETA:31;
       hence thesis by A2;
     end;
     thus for M,M1,N,N1 being EnvEpsTerm of V
@@ -1477,8 +1504,8 @@ proof
       let M,M1,N,N1 be EnvEpsTerm of V;
       assume [M,M1] in S1 & [N,N1] in S1;
       then B1: BetaRed(V) reduces M,M1 & BetaRed(V) reduces N,N1 by A2;
-      then B2: BetaRed(V) reduces eApp(M,N), eApp(M1,N) by ENVEPS_6:15;
-      BetaRed(V) reduces eApp(M1,N), eApp(M1,N1) by B1,ENVEPS_6:16;
+      then B2: BetaRed(V) reduces eApp(M,N), eApp(M1,N) by ENVBETA:24;
+      BetaRed(V) reduces eApp(M1,N), eApp(M1,N1) by B1,ENVBETA:25;
       then BetaRed(V) reduces eApp(M,N), eApp(M1,N1) by B2,REWRITE1:16;
       hence thesis by A2;
     end;
@@ -1489,8 +1516,8 @@ proof
       let M,M1,N,N1 be EnvEpsTerm of V, x be Element of V;
       assume [M,M1] in S1 & [N,N1] in S1;
       then B1: BetaRed(V) reduces M,M1 & BetaRed(V) reduces N,N1 by A2;
-      then B2: BetaRed(V) reduces eExt(M,x,N), eExt(M1,x,N) by ENVEPS_6:18;
-      BetaRed(V) reduces eExt(M1,x,N), eExt(M1,x,N1) by B1,ENVEPS_6:19;
+      then B2: BetaRed(V) reduces eExt(M,x,N), eExt(M1,x,N) by ENVBETA:27;
+      BetaRed(V) reduces eExt(M1,x,N), eExt(M1,x,N1) by B1,ENVBETA:28;
       then BetaRed(V) reduces eExt(M,x,N), eExt(M1,x,N1) by B2,REWRITE1:16;
       hence thesis by A2;
     end;
@@ -1500,8 +1527,8 @@ proof
       let M,M1,N,N1 be EnvEpsTerm of V;
       assume [M,M1] in S1 & [N,N1] in S1;
       then B1: BetaRed(V) reduces M,M1 & BetaRed(V) reduces N,N1 by A2;
-      then B2: BetaRed(V) reduces eComp(M,N), eComp(M1,N) by ENVEPS_6:20;
-      BetaRed(V) reduces eComp(M1,N), eComp(M1,N1) by B1,ENVEPS_6:21;
+      then B2: BetaRed(V) reduces eComp(M,N), eComp(M1,N) by ENVBETA:29;
+      BetaRed(V) reduces eComp(M1,N), eComp(M1,N1) by B1,ENVBETA:30;
       then BetaRed(V) reduces eComp(M,N), eComp(M1,N1) by B2,REWRITE1:16;
       hence thesis by A2;
     end;
@@ -1512,15 +1539,15 @@ proof
       let M,M1,N,N1 be EnvEpsTerm of V, x be Element of V;
       assume [M,M1] in S1 & [N,N1] in S1;
       then B1: BetaRed(V) reduces M,M1 & BetaRed(V) reduces N,N1 by A2;
-      then BetaRed(V) reduces eLam(x,M), eLam(x,M1) by ENVEPS_6:17;
+      then BetaRed(V) reduces eLam(x,M), eLam(x,M1) by ENVBETA:26;
       then B2: BetaRed(V) reduces eApp(eLam(x,M),N), eApp(eLam(x,M1),N)
-        by ENVEPS_6:15;
+        by ENVBETA:24;
       BetaRed(V) reduces eApp(eLam(x,M1),N), eApp(eLam(x,M1),N1)
-        by B1,ENVEPS_6:16;
+        by B1,ENVBETA:25;
       then B3: BetaRed(V) reduces eApp(eLam(x,M),N), eApp(eLam(x,M1),N1)
         by B2,REWRITE1:16;
       [eApp(eLam(x,M1),N1), eComp(M1,eExt(N1,x,eId V))] in BetaRed(V)
-        by ENVEPS_6:4;
+        by ENVBETA:5;
       then BetaRed(V) reduces eApp(eLam(x,M1),N1),
         eComp(M1,eExt(N1,x,eId V)) by REWRITE1:15;
       then BetaRed(V) reduces eApp(eLam(x,M),N), eComp(M1,eExt(N1,x,eId V))
@@ -1535,21 +1562,21 @@ proof
       assume [M,M1] in S1 & [N,N1] in S1 & [L,L1] in S1;
       then B1: BetaRed(V) reduces M,M1 & BetaRed(V) reduces N,N1 &
         BetaRed(V) reduces L,L1 by A2;
-      then BetaRed(V) reduces eLam(x,M), eLam(x,M1) by ENVEPS_6:17;
+      then BetaRed(V) reduces eLam(x,M), eLam(x,M1) by ENVBETA:26;
       then B2: BetaRed(V) reduces eComp(eLam(x,M),L), eComp(eLam(x,M1),L)
-        by ENVEPS_6:20;
+        by ENVBETA:29;
       BetaRed(V) reduces eComp(eLam(x,M1),L), eComp(eLam(x,M1),L1)
-        by B1,ENVEPS_6:21;
+        by B1,ENVBETA:30;
       then B3: BetaRed(V) reduces eComp(eLam(x,M),L), eComp(eLam(x,M1),L1)
         by B2,REWRITE1:16;
       then B4: BetaRed(V) reduces eApp(eComp(eLam(x,M),L),N),
-        eApp(eComp(eLam(x,M1),L1),N) by ENVEPS_6:15;
+        eApp(eComp(eLam(x,M1),L1),N) by ENVBETA:24;
       BetaRed(V) reduces eApp(eComp(eLam(x,M1),L1),N),
-        eApp(eComp(eLam(x,M1),L1),N1) by B1,ENVEPS_6:16;
+        eApp(eComp(eLam(x,M1),L1),N1) by B1,ENVBETA:25;
       then B5: BetaRed(V) reduces eApp(eComp(eLam(x,M),L),N),
         eApp(eComp(eLam(x,M1),L1),N1) by B4,REWRITE1:16;
       [eApp(eComp(eLam(x,M1),L1),N1), eComp(M1,eExt(N1,x,L1))] in BetaRed(V)
-        by ENVEPS_6:5;
+        by ENVBETA:6;
       then BetaRed(V) reduces eApp(eComp(eLam(x,M1),L1),N1),
         eComp(M1,eExt(N1,x,L1)) by REWRITE1:15;
       then BetaRed(V) reduces eApp(eComp(eLam(x,M),L),N),
@@ -1563,14 +1590,14 @@ proof
       let M,M1,N,N1 be EnvEpsTerm of V;
       assume [M,M1] in S1 & [N,N1] in S1;
       then B1: BetaRed(V) reduces M,M1 & BetaRed(V) reduces N,N1 by A2;
-      then BetaRed(V) reduces eEps M, eEps M1 by ENVEPS_6:22;
+      then BetaRed(V) reduces eEps M, eEps M1 by ENVBETA:31;
       then B2: BetaRed(V) reduces eApp(eEps M,N), eApp(eEps M1,N)
-        by ENVEPS_6:15;
+        by ENVBETA:24;
       BetaRed(V) reduces eApp(eEps M1,N), eApp(eEps M1,N1)
-        by B1,ENVEPS_6:16;
+        by B1,ENVBETA:25;
       then B3: BetaRed(V) reduces eApp(eEps M,N), eApp(eEps M1,N1)
         by B2,REWRITE1:16;
-      [eApp(eEps M1,N1), eComp(M1,N1)] in BetaRed(V) by ENVEPS_6:6;
+      [eApp(eEps M1,N1), eComp(M1,N1)] in BetaRed(V) by ENVBETA:7;
       then BetaRed(V) reduces eApp(eEps M1,N1), eComp(M1,N1) by REWRITE1:15;
       then BetaRed(V) reduces eApp(eEps M,N), eComp(M1,N1)
         by B3,REWRITE1:16;
@@ -1629,7 +1656,7 @@ proof
       then consider M2,M3 being EnvEpsTerm of V, x2 being Element of V
       such that
       B1: [M2,M3] in ParRed(V) & eLam(y,P) = eLam(x2,M2) & As = eLam(x2,M3);
-      y = x2 by B1,ENVEPS_1:11;
+      y = x2 by B1,ENVSYN:11;
       hence thesis by B1;
     end;
   end;
@@ -1647,7 +1674,7 @@ proof
   per cases by C2;
   suppose ex M2 being EnvEpsTerm of V st eLam(y,Q) = M2 & As = M2;
     then eLam(y,Q) = eLam(y,Ps) by A4;
-    then Q = Ps by ENVEPS_1:11;
+    then Q = Ps by ENVSYN:11;
     hence thesis by Th4;
   end;
   suppose ex M2,M3 being EnvEpsTerm of V, x2 being Element of V st
@@ -1655,8 +1682,8 @@ proof
     then consider M2,M3 being EnvEpsTerm of V, x2 being Element of V
     such that
     D1: [M2,M3] in ParRed(V) & eLam(y,Q) = eLam(x2,M2) & As = eLam(x2,M3);
-    D2: y = x2 & Q = M2 by D1,ENVEPS_1:11;
-    Ps = M3 by A4,D1,ENVEPS_1:11;
+    D2: y = x2 & Q = M2 by D1,ENVSYN:11;
+    Ps = M3 by A4,D1,ENVSYN:11;
     hence thesis by D1,D2;
   end;
 end;
@@ -1697,15 +1724,15 @@ proof
   per cases by C2;
   suppose ex M2 being EnvEpsTerm of V st eEps Q = M2 & As = M2;
     then eEps Q = eEps Ps by A4;
-    then Q = Ps by ENVEPS_1:12;
+    then Q = Ps by ENVSYN:12;
     hence thesis by Th4;
   end;
   suppose ex M2,M3 being EnvEpsTerm of V st
       [M2,M3] in ParRed(V) & eEps Q = eEps M2 & As = eEps M3;
     then consider M2,M3 being EnvEpsTerm of V such that
     D1: [M2,M3] in ParRed(V) & eEps Q = eEps M2 & As = eEps M3;
-    D2: Q = M2 by D1,ENVEPS_1:12;
-    Ps = M3 by A4,D1,ENVEPS_1:12;
+    D2: Q = M2 by D1,ENVSYN:12;
+    Ps = M3 by A4,D1,ENVSYN:12;
     hence thesis by D1,D2;
   end;
 end;
@@ -1752,7 +1779,7 @@ proof
     per cases by E2;
     suppose ex M2 being EnvEpsTerm of V st eComp(Q,D) = M2 & As = M2;
       then eComp(Q,D) = eComp(Cs,Ds) by A4;
-      then Q = Cs by ENVEPS_1:14;
+      then Q = Cs by ENVSYN:14;
       hence [Q,Cs] in ParRed(V) by Th4;
     end;
     suppose ex M2,M3,N2,N3 being EnvEpsTerm of V st
@@ -1761,8 +1788,8 @@ proof
       then consider M2,M3,N2,N3 being EnvEpsTerm of V such that
       F1: [M2,M3] in ParRed(V) & [N2,N3] in ParRed(V) &
         eComp(Q,D) = eComp(M2,N2) & As = eComp(M3,N3);
-      F2: Q = M2 by F1,ENVEPS_1:14;
-      Cs = M3 by A4,F1,ENVEPS_1:14;
+      F2: Q = M2 by F1,ENVSYN:14;
+      Cs = M3 by A4,F1,ENVSYN:14;
       hence [Q,Cs] in ParRed(V) by F1,F2;
     end;
   end;
@@ -1778,7 +1805,7 @@ proof
   per cases by E2;
   suppose ex M2 being EnvEpsTerm of V st eComp(C,Q) = M2 & As = M2;
     then eComp(C,Q) = eComp(Cs,Ds) by A4;
-    then Q = Ds by ENVEPS_1:14;
+    then Q = Ds by ENVSYN:14;
     hence thesis by Th4;
   end;
   suppose ex M2,M3,N2,N3 being EnvEpsTerm of V st
@@ -1787,8 +1814,8 @@ proof
     then consider M2,M3,N2,N3 being EnvEpsTerm of V such that
     F1: [M2,M3] in ParRed(V) & [N2,N3] in ParRed(V) &
       eComp(C,Q) = eComp(M2,N2) & As = eComp(M3,N3);
-    F2: Q = N2 by F1,ENVEPS_1:14;
-    Ds = N3 by A4,F1,ENVEPS_1:14;
+    F2: Q = N2 by F1,ENVSYN:14;
+    Ds = N3 by A4,F1,ENVSYN:14;
     hence thesis by F1,F2;
   end;
 end;
@@ -1841,7 +1868,7 @@ proof
     then consider M2,M3,N2,N3 being EnvEpsTerm of V such that
     B1: [M2,M3] in ParRed(V) & [N2,N3] in ParRed(V) &
       eApp(A,B) = eApp(M2,N2) & N = eApp(M3,N3);
-    B2: A = M2 & B = N2 by B1,ENVEPS_1:13;
+    B2: A = M2 & B = N2 by B1,ENVSYN:13;
     then B3: [M3,As] in ParRed(V) by A1,B1,Def3;
     [N3,Bs] in ParRed(V) by A2,B1,B2,Def3;
     hence thesis by B1,B3,Th7;
@@ -1853,7 +1880,7 @@ proof
     such that
     B1: [M2,M3] in ParRed(V) & [N2,N3] in ParRed(V) &
       eApp(A,B) = eApp(eLam(x2,M2),N2) & N = eComp(M3,eExt(N3,x2,eId V));
-    A = eLam(x2,M2) by B1,ENVEPS_1:13;
+    A = eLam(x2,M2) by B1,ENVSYN:13;
     hence thesis by A3;
   end;
   suppose ex M2,M3,N2,N3,L2,L3 being EnvEpsTerm of V,
@@ -1867,7 +1894,7 @@ proof
       [L2,L3] in ParRed(V) &
       eApp(A,B) = eApp(eComp(eLam(x2,M2),L2),N2) &
       N = eComp(M3,eExt(N3,x2,L3));
-    A = eComp(eLam(x2,M2),L2) by B1,ENVEPS_1:13;
+    A = eComp(eLam(x2,M2),L2) by B1,ENVSYN:13;
     hence thesis by A5;
   end;
   suppose ex M2,M3,N2,N3 being EnvEpsTerm of V st
@@ -1876,7 +1903,7 @@ proof
     then consider M2,M3,N2,N3 being EnvEpsTerm of V such that
     B1: [M2,M3] in ParRed(V) & [N2,N3] in ParRed(V) &
       eApp(A,B) = eApp(eEps M2,N2) & N = eComp(M3,N3);
-    A = eEps M2 by B1,ENVEPS_1:13;
+    A = eEps M2 by B1,ENVSYN:13;
     hence thesis by A4;
   end;
 end;
@@ -1921,7 +1948,7 @@ proof
     then consider M2,M3,N2,N3 being EnvEpsTerm of V such that
     B1: [M2,M3] in ParRed(V) & [N2,N3] in ParRed(V) &
       eApp(A,B) = eApp(M2,N2) & N = eApp(M3,N3);
-    B2: A = M2 & B = N2 by B1,ENVEPS_1:13;
+    B2: A = M2 & B = N2 by B1,ENVSYN:13;
     B3: [N3,Bs] in ParRed(V) by A2,B1,B2,Def3;
     B4: ( ex M4 being EnvEpsTerm of V st eLam(w,P) = M4 & M3 = M4 ) or
         ( ex M4,M5 being EnvEpsTerm of V, x2 being Element of V st
@@ -1939,7 +1966,7 @@ proof
       such that
       C1: [M4,M5] in ParRed(V) & eLam(w,P) = eLam(x2,M4) &
         M3 = eLam(x2,M5);
-      C2: w = x2 & P = M4 by C1,ENVEPS_1:11;
+      C2: w = x2 & P = M4 by C1,ENVSYN:11;
       then [M5,Ps] in ParRed(V) by A1,C1,Def3;
       hence thesis by B1,B3,C1,C2,Th10;
     end;
@@ -1951,8 +1978,8 @@ proof
     such that
     B1: [M2,M3] in ParRed(V) & [N2,N3] in ParRed(V) &
       eApp(A,B) = eApp(eLam(x2,M2),N2) & N = eComp(M3,eExt(N3,x2,eId V));
-    B2: eLam(w,P) = eLam(x2,M2) & B = N2 by B1,ENVEPS_1:13;
-    then B3: w = x2 & P = M2 by ENVEPS_1:11;
+    B2: eLam(w,P) = eLam(x2,M2) & B = N2 by B1,ENVSYN:13;
+    then B3: w = x2 & P = M2 by ENVSYN:11;
     then B4: [M3,Ps] in ParRed(V) by A1,B1,Def3;
     B5: [N3,Bs] in ParRed(V) by A2,B1,B2,Def3;
     [eId V, eId V] in ParRed(V) by Th4;
@@ -1970,8 +1997,8 @@ proof
       [L2,L3] in ParRed(V) &
       eApp(A,B) = eApp(eComp(eLam(x2,M2),L2),N2) &
       N = eComp(M3,eExt(N3,x2,L3));
-    eLam(w,P) = eComp(eLam(x2,M2),L2) by B1,ENVEPS_1:13;
-    hence thesis by ENVEPS_1:44;
+    eLam(w,P) = eComp(eLam(x2,M2),L2) by B1,ENVSYN:13;
+    hence thesis by ENVSYN:20;
   end;
   suppose ex M2,M3,N2,N3 being EnvEpsTerm of V st
       [M2,M3] in ParRed(V) & [N2,N3] in ParRed(V) &
@@ -1979,8 +2006,8 @@ proof
     then consider M2,M3,N2,N3 being EnvEpsTerm of V such that
     B1: [M2,M3] in ParRed(V) & [N2,N3] in ParRed(V) &
       eApp(A,B) = eApp(eEps M2,N2) & N = eComp(M3,N3);
-    eLam(w,P) = eEps M2 by B1,ENVEPS_1:13;
-    hence thesis by ENVEPS_1:44;
+    eLam(w,P) = eEps M2 by B1,ENVSYN:13;
+    hence thesis by ENVSYN:20;
   end;
 end;
 
@@ -2023,7 +2050,7 @@ proof
     then consider M2,M3,N2,N3 being EnvEpsTerm of V such that
     B1: [M2,M3] in ParRed(V) & [N2,N3] in ParRed(V) &
       eApp(A,B) = eApp(M2,N2) & N = eApp(M3,N3);
-    B2: A = M2 & B = N2 by B1,ENVEPS_1:13;
+    B2: A = M2 & B = N2 by B1,ENVSYN:13;
     B3: [N3,Bs] in ParRed(V) by A2,B1,B2,Def3;
     B4: ( ex M4 being EnvEpsTerm of V st eEps P = M4 & M3 = M4 ) or
         ( ex M4,M5 being EnvEpsTerm of V st
@@ -2039,7 +2066,7 @@ proof
         [M4,M5] in ParRed(V) & eEps P = eEps M4 & M3 = eEps M5;
       then consider M4,M5 being EnvEpsTerm of V such that
       C1: [M4,M5] in ParRed(V) & eEps P = eEps M4 & M3 = eEps M5;
-      C2: P = M4 by C1,ENVEPS_1:12;
+      C2: P = M4 by C1,ENVSYN:12;
       then [M5,Ps] in ParRed(V) by A1,C1,Def3;
       hence thesis by B1,B3,C1,Th12;
     end;
@@ -2051,8 +2078,8 @@ proof
     such that
     B1: [M2,M3] in ParRed(V) & [N2,N3] in ParRed(V) &
       eApp(A,B) = eApp(eLam(x2,M2),N2) & N = eComp(M3,eExt(N3,x2,eId V));
-    eEps P = eLam(x2,M2) by B1,ENVEPS_1:13;
-    hence thesis by ENVEPS_1:44;
+    eEps P = eLam(x2,M2) by B1,ENVSYN:13;
+    hence thesis by ENVSYN:20;
   end;
   suppose ex M2,M3,N2,N3,L2,L3 being EnvEpsTerm of V,
       x2 being Element of V st
@@ -2065,8 +2092,8 @@ proof
       [L2,L3] in ParRed(V) &
       eApp(A,B) = eApp(eComp(eLam(x2,M2),L2),N2) &
       N = eComp(M3,eExt(N3,x2,L3));
-    eEps P = eComp(eLam(x2,M2),L2) by B1,ENVEPS_1:13;
-    hence thesis by ENVEPS_1:44;
+    eEps P = eComp(eLam(x2,M2),L2) by B1,ENVSYN:13;
+    hence thesis by ENVSYN:20;
   end;
   suppose ex M2,M3,N2,N3 being EnvEpsTerm of V st
       [M2,M3] in ParRed(V) & [N2,N3] in ParRed(V) &
@@ -2074,8 +2101,8 @@ proof
     then consider M2,M3,N2,N3 being EnvEpsTerm of V such that
     B1: [M2,M3] in ParRed(V) & [N2,N3] in ParRed(V) &
       eApp(A,B) = eApp(eEps M2,N2) & N = eComp(M3,N3);
-    B2: eEps P = eEps M2 & B = N2 by B1,ENVEPS_1:13;
-    then B3: P = M2 by ENVEPS_1:12;
+    B2: eEps P = eEps M2 & B = N2 by B1,ENVSYN:13;
+    then B3: P = M2 by ENVSYN:12;
     then B4: [M3,Ps] in ParRed(V) by A1,B1,Def3;
     [N3,Bs] in ParRed(V) by A2,B1,B2,Def3;
     hence thesis by B1,B4,Th9;
@@ -2125,7 +2152,7 @@ proof
     then consider M2,M3,N2,N3 being EnvEpsTerm of V such that
     B1: [M2,M3] in ParRed(V) & [N2,N3] in ParRed(V) &
       eApp(A,B) = eApp(M2,N2) & N = eApp(M3,N3);
-    B2: A = M2 & B = N2 by B1,ENVEPS_1:13;
+    B2: A = M2 & B = N2 by B1,ENVSYN:13;
     B3: [N3,Bs] in ParRed(V) by A2,B1,B2,Def3;
     B4: ( ex M4 being EnvEpsTerm of V st A = M4 & M3 = M4 ) or
         ( ex M4,M5,N4,N5 being EnvEpsTerm of V st
@@ -2143,7 +2170,7 @@ proof
       then consider M4,M5,N4,N5 being EnvEpsTerm of V such that
       C1: [M4,M5] in ParRed(V) & [N4,N5] in ParRed(V) &
         A = eComp(M4,N4) & M3 = eComp(M5,N5);
-      C2: eLam(w,P) = M4 & D = N4 by C1,ENVEPS_1:14;
+      C2: eLam(w,P) = M4 & D = N4 by C1,ENVSYN:14;
       then C3: [N5,Ds] in ParRed(V) by A0,C1,Def3;
       C4: ( ex M6 being EnvEpsTerm of V st eLam(w,P) = M6 & M5 = M6 ) or
           ( ex M6,M7 being EnvEpsTerm of V, x2 being Element of V st
@@ -2161,7 +2188,7 @@ proof
         such that
         D1: [M6,M7] in ParRed(V) & eLam(w,P) = eLam(x2,M6) &
           M5 = eLam(x2,M7);
-        D2: w = x2 & P = M6 by D1,ENVEPS_1:11;
+        D2: w = x2 & P = M6 by D1,ENVSYN:11;
         then [M7,Ps] in ParRed(V) by A1,D1,Def3;
         hence thesis by B1,B3,C1,C3,D1,D2,Th11;
       end;
@@ -2174,8 +2201,8 @@ proof
     such that
     B1: [M2,M3] in ParRed(V) & [N2,N3] in ParRed(V) &
       eApp(A,B) = eApp(eLam(x2,M2),N2) & N = eComp(M3,eExt(N3,x2,eId V));
-    A = eLam(x2,M2) by B1,ENVEPS_1:13;
-    hence thesis by ENVEPS_1:44;
+    A = eLam(x2,M2) by B1,ENVSYN:13;
+    hence thesis by ENVSYN:20;
   end;
   suppose ex M2,M3,N2,N3,L2,L3 being EnvEpsTerm of V,
       x2 being Element of V st
@@ -2188,9 +2215,9 @@ proof
       [L2,L3] in ParRed(V) &
       eApp(A,B) = eApp(eComp(eLam(x2,M2),L2),N2) &
       N = eComp(M3,eExt(N3,x2,L3));
-    B2: A = eComp(eLam(x2,M2),L2) & B = N2 by B1,ENVEPS_1:13;
-    then B3: eLam(w,P) = eLam(x2,M2) & D = L2 by ENVEPS_1:14;
-    then B4: w = x2 & P = M2 by ENVEPS_1:11;
+    B2: A = eComp(eLam(x2,M2),L2) & B = N2 by B1,ENVSYN:13;
+    then B3: eLam(w,P) = eLam(x2,M2) & D = L2 by ENVSYN:14;
+    then B4: w = x2 & P = M2 by ENVSYN:11;
     then B5: [M3,Ps] in ParRed(V) by A1,B1,Def3;
     B6: [N3,Bs] in ParRed(V) by A2,B1,B2,Def3;
     [L3,Ds] in ParRed(V) by A0,B1,B3,Def3;
@@ -2203,8 +2230,8 @@ proof
     then consider M2,M3,N2,N3 being EnvEpsTerm of V such that
     B1: [M2,M3] in ParRed(V) & [N2,N3] in ParRed(V) &
       eApp(A,B) = eApp(eEps M2,N2) & N = eComp(M3,N3);
-    A = eEps M2 by B1,ENVEPS_1:13;
-    hence thesis by ENVEPS_1:44;
+    A = eEps M2 by B1,ENVSYN:13;
+    hence thesis by ENVSYN:20;
   end;
 end;
 
@@ -2265,7 +2292,7 @@ proof
       then consider M2,M3 being EnvEpsTerm of V, x2 being Element of V
       such that
       C1: [M2,M3] in ParRed(V) & eLam(v,A) = eLam(x2,M2) & N = eLam(x2,M3);
-      C2: v = x2 & A = M2 by C1,ENVEPS_1:11;
+      C2: v = x2 & A = M2 by C1,ENVSYN:11;
       then [M3,As] in ParRed(V) by B1,C1,Def3;
       hence thesis by C1,C2,Th5;
     end;
@@ -2295,7 +2322,7 @@ proof
         [M2,M3] in ParRed(V) & eEps A = eEps M2 & N = eEps M3;
       then consider M2,M3 being EnvEpsTerm of V such that
       C1: [M2,M3] in ParRed(V) & eEps A = eEps M2 & N = eEps M3;
-      C2: A = M2 by C1,ENVEPS_1:12;
+      C2: A = M2 by C1,ENVSYN:12;
       then [M3,As] in ParRed(V) by B1,C1,Def3;
       hence thesis by C1,Th6;
     end;
@@ -2331,7 +2358,7 @@ proof
       then consider M2,M3,N2,N3 being EnvEpsTerm of V such that
       C1: [M2,M3] in ParRed(V) & [N2,N3] in ParRed(V) &
         eComp(A,B) = eComp(M2,N2) & N = eComp(M3,N3);
-      C2: A = M2 & B = N2 by C1,ENVEPS_1:14;
+      C2: A = M2 & B = N2 by C1,ENVSYN:14;
       then C3: [M3,As] in ParRed(V) by B1,C1,Def3;
       [N3,Bs] in ParRed(V) by B3,C1,C2,Def3;
       hence thesis by C1,C3,Th9;
@@ -2370,7 +2397,7 @@ proof
       x2 being Element of V such that
       C1: [M2,M3] in ParRed(V) & [N2,N3] in ParRed(V) &
         eExt(A,v,B) = eExt(M2,x2,N2) & N = eExt(M3,x2,N3);
-      C2: v = x2 & A = M2 & B = N2 by C1,ENVEPS_1:15;
+      C2: v = x2 & A = M2 & B = N2 by C1,ENVSYN:15;
       then C3: [M3,As] in ParRed(V) by B1,C1,Def3;
       [N3,Bs] in ParRed(V) by B3,C1,C2,Def3;
       hence thesis by C1,C2,C3,Th8;
@@ -2387,26 +2414,26 @@ proof
     then consider B0a,Bs being EnvEpsTerm of V such that
     B2: B0a = B & Bs is_par_top_of B0a;
     B3: Bs is_par_top_of B by B2;
-    per cases by ENVEPS_1:17;
+    per cases by ENVSYN:17;
     suppose ex v being Element of V st A = eVar v;
       then consider v being Element of V such that C1: A = eVar v;
       C2: for w being Element of V, Pp being EnvEpsTerm of V
-        holds A <> eLam(w,Pp) by C1,ENVEPS_1:44;
+        holds A <> eLam(w,Pp) by C1,ENVSYN:20;
       C3: for Pp being EnvEpsTerm of V holds A <> eEps Pp
-        by C1,ENVEPS_1:44;
+        by C1,ENVSYN:20;
       C4: for w being Element of V, Pp,D being EnvEpsTerm of V
-        holds A <> eComp(eLam(w,Pp),D) by C1,ENVEPS_1:44;
+        holds A <> eComp(eLam(w,Pp),D) by C1,ENVSYN:20;
       take eApp(A,B), eApp(As,Bs);
       thus eApp(A,B) = eApp(A,B);
       thus thesis by B1,B3,C2,C3,C4,Th26;
     end;
     suppose C1: A = eId V;
       C2: for w being Element of V, Pp being EnvEpsTerm of V
-        holds A <> eLam(w,Pp) by C1,ENVEPS_1:44;
+        holds A <> eLam(w,Pp) by C1,ENVSYN:20;
       C3: for Pp being EnvEpsTerm of V holds A <> eEps Pp
-        by C1,ENVEPS_1:44;
+        by C1,ENVSYN:20;
       C4: for w being Element of V, Pp,D being EnvEpsTerm of V
-        holds A <> eComp(eLam(w,Pp),D) by C1,ENVEPS_1:44;
+        holds A <> eComp(eLam(w,Pp),D) by C1,ENVSYN:20;
       take eApp(A,B), eApp(As,Bs);
       thus eApp(A,B) = eApp(A,B);
       thus thesis by B1,B3,C2,C3,C4,Th26;
@@ -2434,11 +2461,11 @@ proof
     suppose ex C,D being EnvEpsTerm of V st A = eApp(C,D);
       then consider C,D being EnvEpsTerm of V such that C1: A = eApp(C,D);
       C2: for w being Element of V, Pp being EnvEpsTerm of V
-        holds A <> eLam(w,Pp) by C1,ENVEPS_1:44;
+        holds A <> eLam(w,Pp) by C1,ENVSYN:20;
       C3: for Pp being EnvEpsTerm of V holds A <> eEps Pp
-        by C1,ENVEPS_1:44;
+        by C1,ENVSYN:20;
       C4: for w being Element of V, Pp,D2 being EnvEpsTerm of V
-        holds A <> eComp(eLam(w,Pp),D2) by C1,ENVEPS_1:44;
+        holds A <> eComp(eLam(w,Pp),D2) by C1,ENVSYN:20;
       take eApp(A,B), eApp(As,Bs);
       thus eApp(A,B) = eApp(A,B);
       thus thesis by B1,B3,C2,C3,C4,Th26;
@@ -2464,15 +2491,15 @@ proof
       suppose D1: not ex w being Element of V, Pp being EnvEpsTerm of V st
           C = eLam(w,Pp);
         D2: for w being Element of V, Pp being EnvEpsTerm of V
-          holds A <> eLam(w,Pp) by C1,ENVEPS_1:44;
+          holds A <> eLam(w,Pp) by C1,ENVSYN:20;
         D3: for Pp being EnvEpsTerm of V holds A <> eEps Pp
-          by C1,ENVEPS_1:44;
+          by C1,ENVSYN:20;
         D4: for w being Element of V, Pp,D2 being EnvEpsTerm of V
           holds A <> eComp(eLam(w,Pp),D2)
         proof
           let w be Element of V, Pp,D2 be EnvEpsTerm of V;
           assume A = eComp(eLam(w,Pp),D2);
-          then C = eLam(w,Pp) by C1,ENVEPS_1:14;
+          then C = eLam(w,Pp) by C1,ENVSYN:14;
           hence contradiction by D1;
         end;
         take eApp(A,B), eApp(As,Bs);
@@ -2485,18 +2512,18 @@ proof
       then consider C,D being EnvEpsTerm of V, v being Element of V
       such that C1: A = eExt(C,v,D);
       C2: for w being Element of V, Pp being EnvEpsTerm of V
-        holds A <> eLam(w,Pp) by C1,ENVEPS_1:44;
+        holds A <> eLam(w,Pp) by C1,ENVSYN:20;
       C3: for Pp being EnvEpsTerm of V holds A <> eEps Pp
-        by C1,ENVEPS_1:44;
+        by C1,ENVSYN:20;
       C4: for w being Element of V, Pp,D2 being EnvEpsTerm of V
-        holds A <> eComp(eLam(w,Pp),D2) by C1,ENVEPS_1:44;
+        holds A <> eComp(eLam(w,Pp),D2) by C1,ENVSYN:20;
       take eApp(A,B), eApp(As,Bs);
       thus eApp(A,B) = eApp(A,B);
       thus thesis by B1,B3,C2,C3,C4,Th26;
     end;
   end;
   A8: for M being EnvEpsTerm of V holds PT[M]
-    from ENVEPS_1:sch 1(A1,A2,A3,A4,A5,A6,A7);
+    from ENVSYN:sch 1(A1,A2,A3,A4,A5,A6,A7);
   let M be EnvEpsTerm of V;
   PT[M] by A8;
   then consider A0,Ms being EnvEpsTerm of V such that

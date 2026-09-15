@@ -14,8 +14,8 @@ cd "$(dirname "$0")"
 : "${MIZFILES:=/usr/local/share/mizar}"
 export MIZFILES
 
-ARTICLES="enveps_1 enveps_2 enveps_3 enveps_4 enveps_5 enveps_6 enveps_7 \
-enveps_8 enveps_9 frenv_1 frenv_2 frenv_3 frenv_4 frenv_5"
+ARTICLES="envsyn envlen envcc envsig envbeta envpeak envnf envpar envkey \
+envconf frenv_1 frenv_2 frenv_3 frenv_4 frenv_5"
 
 if [ "$1" = "clean" ]; then
   rm -rf prel
@@ -62,6 +62,6 @@ if [ -s text/audit.err ]; then fail audit; fi
 echo "ok"
 
 echo
-echo "All 14 articles verified with no errors, and the audit article"
+echo "All 15 articles verified with no errors, and the audit article"
 echo "re-derives each main result from its citation alone."
 echo "Main theorem: FRENV_5:8  (FrRed(V) is confluent)"

@@ -29,7 +29,7 @@ lean/
   docs/                 English specifications of the syntax and reductions
   README.md             Lean build instructions, layout, and proof route
 mizar/
-  text/                 The fourteen articles, plus the audit article
+  text/                 The fifteen articles, plus the audit article
   dict/                 Private vocabularies for the symbols introduced here
   verify.sh             Verifies every article in dependency order
   check.sh              Verifies one article
@@ -101,7 +101,7 @@ export MIZFILES=/usr/local/share/mizar   # if not already set by the installer
 ./verify.sh
 ```
 
-This verifies the fourteen articles in dependency order, exporting each to a
+This verifies the fifteen articles in dependency order, exporting each to a
 local `prel/` database so the next one can import it, and finally checks an
 audit article that restates each main result and justifies it by its citation
 alone. Nothing outside the standard MML is used and nothing is downloaded. The

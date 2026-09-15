@@ -5,24 +5,27 @@
 > articles live in `text/` and the vocabularies in `dict/` — the same layout as
 > `mizar/` here. It is reproduced unchanged except for the links, so a few file
 > names it mentions belong to that repository: its `build.sh` corresponds to
-> `verify.sh` here, and its smoke-test article `text/tst1.miz` is not part of
-> this artifact. The document is in Japanese.
+> `verify.sh` here. The document is in Japanese.
 
 Mizar による λ_FREnv 合流性の形式化について、開始から完了までの時間的推移。
 時刻はすべて JST、2026-09-15 の同日中。
-所要時間の根拠は `worklog.md` の作業表と、本リポジトリの git コミット時刻。
+所要時間の根拠は `WORKLOG.md` の作業表と、本リポジトリの git コミット時刻。
 
 ## 全体
 
 | 項目 | 値 |
 |---|---|
 | 開始 | 02:14（Mizar 環境の動作確認） |
-| 完了 | 12:43（λ_FREnv の合流性 `FRENV_5:8` を push） |
-| 経過時間（wall clock） | 10 時間 29 分 |
+| 合流性の証明完了 | 12:43（λ_FREnv の合流性 `FRENV_5:8` を push） |
+| 可読性のための改訂完了 | 18:20 |
+| 経過時間（wall clock） | 16 時間 6 分 |
 | 中断 | 03:22–09:30（6 時間 8 分） |
-| **実作業時間** | **約 4 時間 21 分** |
-| 成果物 | Mizar article 14 本、17,729 行、319 定理 |
-| コミット数 | 49 |
+| **実作業時間** | **約 6 時間 43 分** |
+| 成果物 | Mizar article 15 本、17,659 行、369 定理 |
+| コミット数 | 56 |
+
+最後の段階 16 は、いったん完成した開発を可読性のために作り直したもの。
+詳細は [worklog.md](worklog.md) の該当節と README の「Design notes」を参照。
 
 実作業時間あたりの産出は約 68 行/分。ただし後述のとおり、定型部分の多い
 article は生成スクリプトで書き出しているので、行数は労力に比例しない。
@@ -45,6 +48,9 @@ article は生成スクリプトで書き出しているので、行数は労力
 | 11 | 12:12–12:24 | 12 | `frenv_1` `frenv_2` | λ_FREnv の構文と βσ 簡約 |
 | 12 | 12:24–12:42 | 18 | `frenv_3` `frenv_4` `frenv_5` | 翻訳・simulation・lifting、**λ_FREnv の完全合流性** |
 | 13 | 12:42–12:43 | 1 | 文書 | README 更新 |
+| 14 | 12:43–13:05 | 22 | 文書 | TIMELINE.md と INVENTORY.md（三つの証明支援系の規模比較） |
+| 15 | 13:05–13:40 | 35 | 成果物整備 | `frenv-confluence-WCTP` の `mizar/` に配置、検証手順と監査記事 |
+| 16 | 16:55–18:20 | 85 | 全面改訂 | 可読性のための改訂: 構造再帰スキーム、合同閉包、σ/β/βσ の書き換え、下流の付け替え |
 
 ## Article ごとの規模と所要時間
 

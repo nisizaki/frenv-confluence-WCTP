@@ -1,0 +1,1217 @@
+:: The beta and beta/sigma reductions of lambda_EnvEps
+
+environ
+
+ vocabularies NUMBERS, XBOOLE_0, SUBSET_1, TARSKI, ZFMISC_1, FINSEQ_1,
+      RELAT_1, FUNCT_1, ORDINAL1, CARD_1, ARYTM_3, XXREAL_0, NAT_1, TREES_1,
+      TREES_2, TREES_3, TREES_4, LANG1, STRUCT_0, DTCONSTR, MCART_1, XTUPLE_0,
+      FINSET_1, TDGROUP, FUNCOP_1, ARYTM_1, FUNCT_7, XREAL_0, XCMPLX_0,
+      REWRITE1, PBOOLE, ENVSYN, ENVCC, ENVSIG, ENVBETA;
+ notations TARSKI, XBOOLE_0, ZFMISC_1, SUBSET_1, ORDINAL1, NUMBERS, XCMPLX_0,
+      XXREAL_0, NAT_1, RELAT_1, RELSET_1, FUNCT_1, FUNCT_2, FINSEQ_1, FINSEQ_2,
+      MCART_1, XTUPLE_0, DOMAIN_1, STRUCT_0, LANG1, TREES_1, TREES_2, TREES_3,
+      TREES_4, DTCONSTR, FUNCOP_1, XREAL_0, PBOOLE, REWRITE1, ENVSYN, ENVCC,
+      ENVSIG;
+ constructors NUMBERS, XCMPLX_0, XXREAL_0, NAT_1, RELSET_1, FUNCT_2, FINSEQ_1,
+      FINSEQ_2, MCART_1, XTUPLE_0, DOMAIN_1, STRUCT_0, LANG1, TREES_1, TREES_2,
+      TREES_3, TREES_4, DTCONSTR, PARTFUN1, BINOP_1, SETWISEO, XREAL_0,
+      FUNCOP_1, SUBSET_1, CARD_3, FINSEQOP, FINSEQ_4, FINSOP_1, PRE_POLY,
+      FUNCT_1, RELAT_1, PBOOLE, REWRITE1, ENVSYN, ENVCC, ENVSIG;
+ registrations XBOOLE_0, SUBSET_1, RELAT_1, FUNCT_1, ORDINAL1, XREAL_0, NAT_1,
+      FINSEQ_1, FINSEQ_2, FINSET_1, CARD_1, STRUCT_0, LANG1, TREES_1, TREES_2,
+      TREES_3, TREES_4, DTCONSTR, XTUPLE_0, VALUED_0, FUNCOP_1, XCMPLX_0,
+      XXREAL_0, NUMBERS, MEMBERED, PBOOLE, REWRITE1, ENVSYN;
+ requirements NUMERALS, REAL, BOOLE, SUBSET, ARITHM;
+ definitions TARSKI, XBOOLE_0, RELAT_1, SUBSET_1, REWRITE1, ENVSYN, ENVCC;
+ theorems TARSKI, XBOOLE_0, XBOOLE_1, ZFMISC_1, XTUPLE_0, RELAT_1, REWRITE1,
+      ENVSYN, ENVCC, ENVSIG;
+ schemes NAT_1;
+
+begin :: The three root rules of the beta reduction
+
+reserve V for non empty set;
+
+definition
+  let V be non empty set;
+  func BetaRoot(V) -> EnvEpsRel of V equals
+  :Def1:
+  { z where z is Element of [:TS(EnvEpsGram(V)),TS(EnvEpsGram(V)):] :
+      ex P,S being EnvEpsTerm of V st z = [P,S] &
+        ( ( ex M2,N2 being EnvEpsTerm of V, x2 being Element of V st P =
+        eApp(eLam(x2,M2),N2) & S = eComp(M2,eExt(N2,x2,eId V)) ) or
+        ( ex M2,N2,L2 being EnvEpsTerm of V, x2 being Element of V st P =
+        eApp(eComp(eLam(x2,M2),L2),N2) & S = eComp(M2,eExt(N2,x2,L2)) ) or
+        ( ex M2,N2 being EnvEpsTerm of V st P = eApp(eEps M2,N2) & S =
+        eComp(M2,N2) ) ) };
+  coherence
+  proof
+    set G = EnvEpsGram(V);
+    set D = [:TS G, TS G:];
+    set S0 = { z where z is Element of D :
+      ex P,S being EnvEpsTerm of V st z = [P,S] &
+        ( ( ex M2,N2 being EnvEpsTerm of V, x2 being Element of V st P =
+        eApp(eLam(x2,M2),N2) & S = eComp(M2,eExt(N2,x2,eId V)) ) or
+        ( ex M2,N2,L2 being EnvEpsTerm of V, x2 being Element of V st P =
+        eApp(eComp(eLam(x2,M2),L2),N2) & S = eComp(M2,eExt(N2,x2,L2)) ) or
+        ( ex M2,N2 being EnvEpsTerm of V st P = eApp(eEps M2,N2) & S =
+        eComp(M2,N2) ) ) };
+    S0 c= D
+    proof
+      let u be object;
+      assume u in S0;
+      then ex z being Element of D st u = z &
+        ex P,S being EnvEpsTerm of V st z = [P,S] &
+          ( ( ex M2,N2 being EnvEpsTerm of V, x2 being Element of V st P =
+          eApp(eLam(x2,M2),N2) & S = eComp(M2,eExt(N2,x2,eId V)) ) or
+          ( ex M2,N2,L2 being EnvEpsTerm of V, x2 being Element of V st P
+          = eApp(eComp(eLam(x2,M2),L2),N2) & S = eComp(M2,eExt(N2,x2,L2))
+          ) or
+          ( ex M2,N2 being EnvEpsTerm of V st P = eApp(eEps M2,N2) & S =
+          eComp(M2,N2) ) );
+      hence thesis;
+    end;
+    hence thesis;
+  end;
+end;
+
+theorem Th1:
+  for V being non empty set, P,S being EnvEpsTerm of V holds
+  ( [P,S] in BetaRoot(V) iff
+    ( ( ex M2,N2 being EnvEpsTerm of V, x2 being Element of V st P =
+    eApp(eLam(x2,M2),N2) & S = eComp(M2,eExt(N2,x2,eId V)) ) or
+    ( ex M2,N2,L2 being EnvEpsTerm of V, x2 being Element of V st P =
+    eApp(eComp(eLam(x2,M2),L2),N2) & S = eComp(M2,eExt(N2,x2,L2)) ) or
+    ( ex M2,N2 being EnvEpsTerm of V st P = eApp(eEps M2,N2) & S =
+    eComp(M2,N2) ) ) )
+proof
+  let V be non empty set, P,S be EnvEpsTerm of V;
+  set G = EnvEpsGram(V);
+  set D = [:TS G, TS G:];
+  A0: [P,S] in D by ZFMISC_1:87;
+  hereby
+    assume [P,S] in BetaRoot(V);
+    then [P,S] in { z where z is Element of D :
+      ex P2,S2 being EnvEpsTerm of V st z = [P2,S2] &
+        ( ( ex M2,N2 being EnvEpsTerm of V, x2 being Element of V st P2 =
+        eApp(eLam(x2,M2),N2) & S2 = eComp(M2,eExt(N2,x2,eId V)) ) or
+        ( ex M2,N2,L2 being EnvEpsTerm of V, x2 being Element of V st P2 =
+        eApp(eComp(eLam(x2,M2),L2),N2) & S2 = eComp(M2,eExt(N2,x2,L2)) )
+        or
+        ( ex M2,N2 being EnvEpsTerm of V st P2 = eApp(eEps M2,N2) & S2 =
+        eComp(M2,N2) ) ) } by Def1;
+    then consider z being Element of D such that
+    B1: [P,S] = z and
+    B2:
+      ex P2,S2 being EnvEpsTerm of V st z = [P2,S2] &
+        ( ( ex M2,N2 being EnvEpsTerm of V, x2 being Element of V st P2 =
+        eApp(eLam(x2,M2),N2) & S2 = eComp(M2,eExt(N2,x2,eId V)) ) or
+        ( ex M2,N2,L2 being EnvEpsTerm of V, x2 being Element of V st P2 =
+        eApp(eComp(eLam(x2,M2),L2),N2) & S2 = eComp(M2,eExt(N2,x2,L2)) )
+        or
+        ( ex M2,N2 being EnvEpsTerm of V st P2 = eApp(eEps M2,N2) & S2 =
+        eComp(M2,N2) ) );
+    consider P2,S2 being EnvEpsTerm of V such that
+    B3: z = [P2,S2] &
+      ( ( ex M2,N2 being EnvEpsTerm of V, x2 being Element of V st P2 =
+      eApp(eLam(x2,M2),N2) & S2 = eComp(M2,eExt(N2,x2,eId V)) ) or
+      ( ex M2,N2,L2 being EnvEpsTerm of V, x2 being Element of V st P2 =
+      eApp(eComp(eLam(x2,M2),L2),N2) & S2 = eComp(M2,eExt(N2,x2,L2)) ) or
+      ( ex M2,N2 being EnvEpsTerm of V st P2 = eApp(eEps M2,N2) & S2 =
+      eComp(M2,N2) ) ) by B2;
+    B4: P = P2 & S = S2 by B1,B3,XTUPLE_0:1;
+    thus
+      ( ( ex M2,N2 being EnvEpsTerm of V, x2 being Element of V st P =
+      eApp(eLam(x2,M2),N2) & S = eComp(M2,eExt(N2,x2,eId V)) ) or
+      ( ex M2,N2,L2 being EnvEpsTerm of V, x2 being Element of V st P =
+      eApp(eComp(eLam(x2,M2),L2),N2) & S = eComp(M2,eExt(N2,x2,L2)) ) or
+      ( ex M2,N2 being EnvEpsTerm of V st P = eApp(eEps M2,N2) & S =
+      eComp(M2,N2) ) ) by B3,B4;
+  end;
+  assume C1:
+    ( ( ex M2,N2 being EnvEpsTerm of V, x2 being Element of V st P =
+    eApp(eLam(x2,M2),N2) & S = eComp(M2,eExt(N2,x2,eId V)) ) or
+    ( ex M2,N2,L2 being EnvEpsTerm of V, x2 being Element of V st P =
+    eApp(eComp(eLam(x2,M2),L2),N2) & S = eComp(M2,eExt(N2,x2,L2)) ) or
+    ( ex M2,N2 being EnvEpsTerm of V st P = eApp(eEps M2,N2) & S =
+    eComp(M2,N2) ) );
+  reconsider z = [P,S] as Element of D by A0;
+  C2:
+    ex P2,S2 being EnvEpsTerm of V st z = [P2,S2] &
+      ( ( ex M2,N2 being EnvEpsTerm of V, x2 being Element of V st P2 =
+      eApp(eLam(x2,M2),N2) & S2 = eComp(M2,eExt(N2,x2,eId V)) ) or
+      ( ex M2,N2,L2 being EnvEpsTerm of V, x2 being Element of V st P2 =
+      eApp(eComp(eLam(x2,M2),L2),N2) & S2 = eComp(M2,eExt(N2,x2,L2)) ) or
+      ( ex M2,N2 being EnvEpsTerm of V st P2 = eApp(eEps M2,N2) & S2 =
+      eComp(M2,N2) ) ) by C1;
+  z in { z2 where z2 is Element of D :
+      ex P2,S2 being EnvEpsTerm of V st z2 = [P2,S2] &
+        ( ( ex M2,N2 being EnvEpsTerm of V, x2 being Element of V st P2 =
+        eApp(eLam(x2,M2),N2) & S2 = eComp(M2,eExt(N2,x2,eId V)) ) or
+        ( ex M2,N2,L2 being EnvEpsTerm of V, x2 being Element of V st P2 =
+        eApp(eComp(eLam(x2,M2),L2),N2) & S2 = eComp(M2,eExt(N2,x2,L2)) )
+        or
+        ( ex M2,N2 being EnvEpsTerm of V st P2 = eApp(eEps M2,N2) & S2 =
+        eComp(M2,N2) ) ) } by C2;
+  hence thesis by Def1;
+end;
+
+theorem Th2:
+  for V being non empty set, M,N being EnvEpsTerm of V, x being Element of
+    V holds
+  [eApp(eLam(x,M),N), eComp(M,eExt(N,x,eId V))] in BetaRoot(V)
+proof
+  let V be non empty set, M,N be EnvEpsTerm of V, x be Element of V;
+  A1: ( ex M2,N2 being EnvEpsTerm of V, x2 being Element of V st
+    eApp(eLam(x,M),N) = eApp(eLam(x2,M2),N2) & eComp(M,eExt(N,x,eId V)) =
+    eComp(M2,eExt(N2,x2,eId V)) )
+  proof
+    take M,N,x;
+    thus thesis;
+  end;
+  thus thesis by A1,Th1;
+end;
+
+theorem Th3:
+  for V being non empty set, M,N,L being EnvEpsTerm of V, x being Element
+    of V holds
+  [eApp(eComp(eLam(x,M),L),N), eComp(M,eExt(N,x,L))] in BetaRoot(V)
+proof
+  let V be non empty set, M,N,L be EnvEpsTerm of V, x be Element of V;
+  A1: ( ex M2,N2,L2 being EnvEpsTerm of V, x2 being Element of V st
+    eApp(eComp(eLam(x,M),L),N) = eApp(eComp(eLam(x2,M2),L2),N2) &
+    eComp(M,eExt(N,x,L)) = eComp(M2,eExt(N2,x2,L2)) )
+  proof
+    take M,N,L,x;
+    thus thesis;
+  end;
+  thus thesis by A1,Th1;
+end;
+
+theorem Th4:
+  for V being non empty set, M,N being EnvEpsTerm of V holds
+  [eApp(eEps M,N), eComp(M,N)] in BetaRoot(V)
+proof
+  let V be non empty set, M,N be EnvEpsTerm of V;
+  A1: ( ex M2,N2 being EnvEpsTerm of V st eApp(eEps M,N) = eApp(eEps
+    M2,N2) & eComp(M,N) = eComp(M2,N2) )
+  proof
+    take M,N;
+    thus thesis;
+  end;
+  thus thesis by A1,Th1;
+end;
+
+definition
+  let V be non empty set;
+  func BetaRed(V) -> EnvEpsRel of V equals
+  :Def2:
+  CC BetaRoot(V);
+  coherence;
+end;
+
+begin :: The eleven rules of the beta reduction
+
+theorem Th5:
+  for V being non empty set, M,N being EnvEpsTerm of V, x being Element of
+    V holds
+  [eApp(eLam(x,M),N), eComp(M,eExt(N,x,eId V))] in BetaRed(V)
+proof
+  let V be non empty set, M,N be EnvEpsTerm of V, x be Element of V;
+  A1: [eApp(eLam(x,M),N), eComp(M,eExt(N,x,eId V))] in BetaRoot(V) by Th2;
+  BetaRoot(V) c= CC BetaRoot(V) by ENVCC:4;
+  hence thesis by A1,Def2;
+end;
+
+theorem Th6:
+  for V being non empty set, M,N,L being EnvEpsTerm of V, x being Element
+    of V holds
+  [eApp(eComp(eLam(x,M),L),N), eComp(M,eExt(N,x,L))] in BetaRed(V)
+proof
+  let V be non empty set, M,N,L be EnvEpsTerm of V, x be Element of V;
+  A1: [eApp(eComp(eLam(x,M),L),N), eComp(M,eExt(N,x,L))] in BetaRoot(V) by
+    Th3;
+  BetaRoot(V) c= CC BetaRoot(V) by ENVCC:4;
+  hence thesis by A1,Def2;
+end;
+
+theorem Th7:
+  for V being non empty set, M,N being EnvEpsTerm of V holds
+  [eApp(eEps M,N), eComp(M,N)] in BetaRed(V)
+proof
+  let V be non empty set, M,N be EnvEpsTerm of V;
+  A1: [eApp(eEps M,N), eComp(M,N)] in BetaRoot(V) by Th4;
+  BetaRoot(V) c= CC BetaRoot(V) by ENVCC:4;
+  hence thesis by A1,Def2;
+end;
+
+theorem Th8:
+  for V being non empty set, M,M1,N being EnvEpsTerm of V st [M,M1] in
+    BetaRed(V) holds
+  [eApp(M,N), eApp(M1,N)] in BetaRed(V)
+proof
+  let V be non empty set, M,M1,N be EnvEpsTerm of V;
+  assume [M,M1] in BetaRed(V);
+  then [M,M1] in CC BetaRoot(V) by Def2;
+  then [eApp(M,N), eApp(M1,N)] in CC BetaRoot(V) by ENVCC:5;
+  hence thesis by Def2;
+end;
+
+theorem Th9:
+  for V being non empty set, M,N,N1 being EnvEpsTerm of V st [N,N1] in
+    BetaRed(V) holds
+  [eApp(M,N), eApp(M,N1)] in BetaRed(V)
+proof
+  let V be non empty set, M,N,N1 be EnvEpsTerm of V;
+  assume [N,N1] in BetaRed(V);
+  then [N,N1] in CC BetaRoot(V) by Def2;
+  then [eApp(M,N), eApp(M,N1)] in CC BetaRoot(V) by ENVCC:6;
+  hence thesis by Def2;
+end;
+
+theorem Th10:
+  for V being non empty set, M,M1 being EnvEpsTerm of V, x being Element
+    of V st [M,M1] in BetaRed(V) holds
+  [eLam(x,M), eLam(x,M1)] in BetaRed(V)
+proof
+  let V be non empty set, M,M1 be EnvEpsTerm of V, x be Element of V;
+  assume [M,M1] in BetaRed(V);
+  then [M,M1] in CC BetaRoot(V) by Def2;
+  then [eLam(x,M), eLam(x,M1)] in CC BetaRoot(V) by ENVCC:7;
+  hence thesis by Def2;
+end;
+
+theorem Th11:
+  for V being non empty set, M,M1,N being EnvEpsTerm of V, x being Element
+    of V st [M,M1] in BetaRed(V) holds
+  [eExt(M,x,N), eExt(M1,x,N)] in BetaRed(V)
+proof
+  let V be non empty set, M,M1,N be EnvEpsTerm of V, x be Element of V;
+  assume [M,M1] in BetaRed(V);
+  then [M,M1] in CC BetaRoot(V) by Def2;
+  then [eExt(M,x,N), eExt(M1,x,N)] in CC BetaRoot(V) by ENVCC:8;
+  hence thesis by Def2;
+end;
+
+theorem Th12:
+  for V being non empty set, M,N,N1 being EnvEpsTerm of V, x being Element
+    of V st [N,N1] in BetaRed(V) holds
+  [eExt(M,x,N), eExt(M,x,N1)] in BetaRed(V)
+proof
+  let V be non empty set, M,N,N1 be EnvEpsTerm of V, x be Element of V;
+  assume [N,N1] in BetaRed(V);
+  then [N,N1] in CC BetaRoot(V) by Def2;
+  then [eExt(M,x,N), eExt(M,x,N1)] in CC BetaRoot(V) by ENVCC:9;
+  hence thesis by Def2;
+end;
+
+theorem Th13:
+  for V being non empty set, M,M1,N being EnvEpsTerm of V st [M,M1] in
+    BetaRed(V) holds
+  [eComp(M,N), eComp(M1,N)] in BetaRed(V)
+proof
+  let V be non empty set, M,M1,N be EnvEpsTerm of V;
+  assume [M,M1] in BetaRed(V);
+  then [M,M1] in CC BetaRoot(V) by Def2;
+  then [eComp(M,N), eComp(M1,N)] in CC BetaRoot(V) by ENVCC:10;
+  hence thesis by Def2;
+end;
+
+theorem Th14:
+  for V being non empty set, M,N,N1 being EnvEpsTerm of V st [N,N1] in
+    BetaRed(V) holds
+  [eComp(M,N), eComp(M,N1)] in BetaRed(V)
+proof
+  let V be non empty set, M,N,N1 be EnvEpsTerm of V;
+  assume [N,N1] in BetaRed(V);
+  then [N,N1] in CC BetaRoot(V) by Def2;
+  then [eComp(M,N), eComp(M,N1)] in CC BetaRoot(V) by ENVCC:11;
+  hence thesis by Def2;
+end;
+
+theorem Th15:
+  for V being non empty set, M,M1 being EnvEpsTerm of V st [M,M1] in
+    BetaRed(V) holds
+  [eEps M, eEps M1] in BetaRed(V)
+proof
+  let V be non empty set, M,M1 be EnvEpsTerm of V;
+  assume [M,M1] in BetaRed(V);
+  then [M,M1] in CC BetaRoot(V) by Def2;
+  then [eEps M, eEps M1] in CC BetaRoot(V) by ENVCC:12;
+  hence thesis by Def2;
+end;
+
+begin :: Inversion
+
+theorem Th16:
+  for V being non empty set, P,S being EnvEpsTerm of V
+  st [P,S] in BetaRed(V) holds
+    ( ( ex M2,N2 being EnvEpsTerm of V, x2 being Element of V st P =
+    eApp(eLam(x2,M2),N2) & S = eComp(M2,eExt(N2,x2,eId V)) ) or
+    ( ex M2,N2,L2 being EnvEpsTerm of V, x2 being Element of V st P =
+    eApp(eComp(eLam(x2,M2),L2),N2) & S = eComp(M2,eExt(N2,x2,L2)) ) or
+    ( ex M2,N2 being EnvEpsTerm of V st P = eApp(eEps M2,N2) & S =
+    eComp(M2,N2) ) ) or
+  ( ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in BetaRed(V) & P =
+    eApp(M2,N2) & S = eApp(M3,N2) ) or
+  ( ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in BetaRed(V) & P =
+    eApp(M2,N2) & S = eApp(M2,N3) ) or
+  ( ex M2,M3 being EnvEpsTerm of V, x2 being Element of V st [M2,M3] in
+    BetaRed(V) & P = eLam(x2,M2) & S = eLam(x2,M3) ) or
+  ( ex M2,M3,N2 being EnvEpsTerm of V, x2 being Element of V st [M2,M3] in
+    BetaRed(V) & P = eExt(M2,x2,N2) & S = eExt(M3,x2,N2) ) or
+  ( ex M2,N2,N3 being EnvEpsTerm of V, x2 being Element of V st [N2,N3] in
+    BetaRed(V) & P = eExt(M2,x2,N2) & S = eExt(M2,x2,N3) ) or
+  ( ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in BetaRed(V) & P =
+    eComp(M2,N2) & S = eComp(M3,N2) ) or
+  ( ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in BetaRed(V) & P =
+    eComp(M2,N2) & S = eComp(M2,N3) ) or
+  ( ex M2,M3 being EnvEpsTerm of V st [M2,M3] in BetaRed(V) & P = eEps M2
+    & S = eEps M3 )
+proof
+  let V be non empty set, P,S be EnvEpsTerm of V;
+  assume [P,S] in BetaRed(V);
+  then A1: [P,S] in CC BetaRoot(V) by Def2;
+  A2: [P,S] in BetaRoot(V) or
+    ( ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in CC BetaRoot(V) & P =
+      eApp(M2,N2) & S = eApp(M3,N2) ) or
+    ( ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in CC BetaRoot(V) & P =
+      eApp(M2,N2) & S = eApp(M2,N3) ) or
+    ( ex M2,M3 being EnvEpsTerm of V, x2 being Element of V st [M2,M3] in
+      CC BetaRoot(V) & P = eLam(x2,M2) & S = eLam(x2,M3) ) or
+    ( ex M2,M3,N2 being EnvEpsTerm of V, x2 being Element of V st [M2,M3]
+      in CC BetaRoot(V) & P = eExt(M2,x2,N2) & S = eExt(M3,x2,N2) ) or
+    ( ex M2,N2,N3 being EnvEpsTerm of V, x2 being Element of V st [N2,N3]
+      in CC BetaRoot(V) & P = eExt(M2,x2,N2) & S = eExt(M2,x2,N3) ) or
+    ( ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in CC BetaRoot(V) & P =
+      eComp(M2,N2) & S = eComp(M3,N2) ) or
+    ( ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in CC BetaRoot(V) & P =
+      eComp(M2,N2) & S = eComp(M2,N3) ) or
+    ( ex M2,M3 being EnvEpsTerm of V st [M2,M3] in CC BetaRoot(V) & P =
+      eEps M2 & S = eEps M3 ) by A1,ENVCC:13;
+  per cases by A2;
+  suppose [P,S] in BetaRoot(V);
+    hence thesis by Th1;
+  end;
+  suppose ( ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in CC BetaRoot(V)
+    & P = eApp(M2,N2) & S = eApp(M3,N2) );
+    hence thesis by Def2;
+  end;
+  suppose ( ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in CC BetaRoot(V)
+    & P = eApp(M2,N2) & S = eApp(M2,N3) );
+    hence thesis by Def2;
+  end;
+  suppose ( ex M2,M3 being EnvEpsTerm of V, x2 being Element of V st
+    [M2,M3] in CC BetaRoot(V) & P = eLam(x2,M2) & S = eLam(x2,M3) );
+    hence thesis by Def2;
+  end;
+  suppose ( ex M2,M3,N2 being EnvEpsTerm of V, x2 being Element of V st
+    [M2,M3] in CC BetaRoot(V) & P = eExt(M2,x2,N2) & S = eExt(M3,x2,N2) );
+    hence thesis by Def2;
+  end;
+  suppose ( ex M2,N2,N3 being EnvEpsTerm of V, x2 being Element of V st
+    [N2,N3] in CC BetaRoot(V) & P = eExt(M2,x2,N2) & S = eExt(M2,x2,N3) );
+    hence thesis by Def2;
+  end;
+  suppose ( ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in CC BetaRoot(V)
+    & P = eComp(M2,N2) & S = eComp(M3,N2) );
+    hence thesis by Def2;
+  end;
+  suppose ( ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in CC BetaRoot(V)
+    & P = eComp(M2,N2) & S = eComp(M2,N3) );
+    hence thesis by Def2;
+  end;
+  suppose ( ex M2,M3 being EnvEpsTerm of V st [M2,M3] in CC BetaRoot(V) &
+    P = eEps M2 & S = eEps M3 );
+    hence thesis by Def2;
+  end;
+end;
+
+begin :: Inversion by the head constructor
+
+theorem Th17:
+  for V being non empty set, x being Element of V, S being EnvEpsTerm of V
+    holds
+  not [eVar x, S] in BetaRed(V)
+proof
+  let V be non empty set, x be Element of V, S be EnvEpsTerm of V;
+  assume [eVar x, S] in BetaRed(V);
+  then A1: [eVar x, S] in CC BetaRoot(V) by Def2;
+  A2: [eVar x, S] in BetaRoot(V) or
+    contradiction by A1,ENVCC:16;
+  per cases by A2;
+  suppose A3: [eVar x, S] in BetaRoot(V);
+    A4: ( ex M2,N2 being EnvEpsTerm of V, x2 being Element of V st eVar x
+      = eApp(eLam(x2,M2),N2) & S = eComp(M2,eExt(N2,x2,eId V)) ) or
+    ( ex M2,N2,L2 being EnvEpsTerm of V, x2 being Element of V st eVar x =
+      eApp(eComp(eLam(x2,M2),L2),N2) & S = eComp(M2,eExt(N2,x2,L2)) ) or
+    ( ex M2,N2 being EnvEpsTerm of V st eVar x = eApp(eEps M2,N2) & S =
+      eComp(M2,N2) ) by A3,Th1;
+    thus thesis by A4,ENVSYN:20;
+  end;
+end;
+
+theorem Th18:
+  for V being non empty set, S being EnvEpsTerm of V holds
+  not [eId V, S] in BetaRed(V)
+proof
+  let V be non empty set, S be EnvEpsTerm of V;
+  assume [eId V, S] in BetaRed(V);
+  then A1: [eId V, S] in CC BetaRoot(V) by Def2;
+  A2: [eId V, S] in BetaRoot(V) or
+    contradiction by A1,ENVCC:17;
+  per cases by A2;
+  suppose A3: [eId V, S] in BetaRoot(V);
+    A4: ( ex M2,N2 being EnvEpsTerm of V, x2 being Element of V st eId V =
+      eApp(eLam(x2,M2),N2) & S = eComp(M2,eExt(N2,x2,eId V)) ) or
+    ( ex M2,N2,L2 being EnvEpsTerm of V, x2 being Element of V st eId V =
+      eApp(eComp(eLam(x2,M2),L2),N2) & S = eComp(M2,eExt(N2,x2,L2)) ) or
+    ( ex M2,N2 being EnvEpsTerm of V st eId V = eApp(eEps M2,N2) & S =
+      eComp(M2,N2) ) by A3,Th1;
+    thus thesis by A4,ENVSYN:20;
+  end;
+end;
+
+theorem Th19:
+  for V being non empty set, M being EnvEpsTerm of V, x being Element of
+    V, S being EnvEpsTerm of V st [eLam(x,M), S] in BetaRed(V) holds
+  ( ex M2,M3 being EnvEpsTerm of V, x2 being Element of V st [M2,M3] in
+    BetaRed(V) & eLam(x,M) = eLam(x2,M2) & S = eLam(x2,M3) )
+proof
+  let V be non empty set, M be EnvEpsTerm of V, x be Element of V, S be
+    EnvEpsTerm of V;
+  assume [eLam(x,M), S] in BetaRed(V);
+  then A1: [eLam(x,M), S] in CC BetaRoot(V) by Def2;
+  A2: [eLam(x,M), S] in BetaRoot(V) or
+    ( ex M1 being EnvEpsTerm of V st [M,M1] in CC BetaRoot(V) & S =
+      eLam(x,M1) ) by A1,ENVCC:18;
+  per cases by A2;
+  suppose A3: [eLam(x,M), S] in BetaRoot(V);
+    A4: ( ex M2,N2 being EnvEpsTerm of V, x2 being Element of V st
+      eLam(x,M) = eApp(eLam(x2,M2),N2) & S = eComp(M2,eExt(N2,x2,eId V)) )
+      or
+    ( ex M2,N2,L2 being EnvEpsTerm of V, x2 being Element of V st
+      eLam(x,M) = eApp(eComp(eLam(x2,M2),L2),N2) & S =
+      eComp(M2,eExt(N2,x2,L2)) ) or
+    ( ex M2,N2 being EnvEpsTerm of V st eLam(x,M) = eApp(eEps M2,N2) & S =
+      eComp(M2,N2) ) by A3,Th1;
+    thus thesis by A4,ENVSYN:20;
+  end;
+  suppose ex M1 being EnvEpsTerm of V st [M,M1] in CC BetaRoot(V) & S =
+    eLam(x,M1);
+    then consider M1 being EnvEpsTerm of V such that
+    E1: [M,M1] in CC BetaRoot(V) & S = eLam(x,M1);
+    E2: [M,M1] in BetaRed(V) by E1,Def2;
+    E3: ( ex M2,M3 being EnvEpsTerm of V, x2 being Element of V st [M2,M3]
+      in BetaRed(V) & eLam(x,M) = eLam(x2,M2) & S = eLam(x2,M3) )
+    proof
+      take M,M1,x;
+      thus thesis by E1,E2;
+    end;
+    thus thesis by E3;
+  end;
+end;
+
+theorem Th20:
+  for V being non empty set, M being EnvEpsTerm of V, S being EnvEpsTerm
+    of V st [eEps M, S] in BetaRed(V) holds
+  ( ex M2,M3 being EnvEpsTerm of V st [M2,M3] in BetaRed(V) & eEps M =
+    eEps M2 & S = eEps M3 )
+proof
+  let V be non empty set, M be EnvEpsTerm of V, S be EnvEpsTerm of V;
+  assume [eEps M, S] in BetaRed(V);
+  then A1: [eEps M, S] in CC BetaRoot(V) by Def2;
+  A2: [eEps M, S] in BetaRoot(V) or
+    ( ex M1 being EnvEpsTerm of V st [M,M1] in CC BetaRoot(V) & S = eEps
+      M1 ) by A1,ENVCC:19;
+  per cases by A2;
+  suppose A3: [eEps M, S] in BetaRoot(V);
+    A4: ( ex M2,N2 being EnvEpsTerm of V, x2 being Element of V st eEps M
+      = eApp(eLam(x2,M2),N2) & S = eComp(M2,eExt(N2,x2,eId V)) ) or
+    ( ex M2,N2,L2 being EnvEpsTerm of V, x2 being Element of V st eEps M =
+      eApp(eComp(eLam(x2,M2),L2),N2) & S = eComp(M2,eExt(N2,x2,L2)) ) or
+    ( ex M2,N2 being EnvEpsTerm of V st eEps M = eApp(eEps M2,N2) & S =
+      eComp(M2,N2) ) by A3,Th1;
+    thus thesis by A4,ENVSYN:20;
+  end;
+  suppose ex M1 being EnvEpsTerm of V st [M,M1] in CC BetaRoot(V) & S =
+    eEps M1;
+    then consider M1 being EnvEpsTerm of V such that
+    E1: [M,M1] in CC BetaRoot(V) & S = eEps M1;
+    E2: [M,M1] in BetaRed(V) by E1,Def2;
+    E3: ( ex M2,M3 being EnvEpsTerm of V st [M2,M3] in BetaRed(V) & eEps M
+      = eEps M2 & S = eEps M3 )
+    proof
+      take M,M1;
+      thus thesis by E1,E2;
+    end;
+    thus thesis by E3;
+  end;
+end;
+
+theorem Th21:
+  for V being non empty set, M,N being EnvEpsTerm of V, S being EnvEpsTerm
+    of V st [eApp(M,N), S] in BetaRed(V) holds
+    ( ( ex M2,N2 being EnvEpsTerm of V, x2 being Element of V st eApp(M,N)
+    = eApp(eLam(x2,M2),N2) & S = eComp(M2,eExt(N2,x2,eId V)) ) or
+    ( ex M2,N2,L2 being EnvEpsTerm of V, x2 being Element of V st
+    eApp(M,N) = eApp(eComp(eLam(x2,M2),L2),N2) & S =
+    eComp(M2,eExt(N2,x2,L2)) ) or
+    ( ex M2,N2 being EnvEpsTerm of V st eApp(M,N) = eApp(eEps M2,N2) & S =
+    eComp(M2,N2) ) ) or
+  ( ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in BetaRed(V) & eApp(M,N)
+    = eApp(M2,N2) & S = eApp(M3,N2) ) or
+  ( ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in BetaRed(V) & eApp(M,N)
+    = eApp(M2,N2) & S = eApp(M2,N3) )
+proof
+  let V be non empty set, M,N be EnvEpsTerm of V, S be EnvEpsTerm of V;
+  assume [eApp(M,N), S] in BetaRed(V);
+  then A1: [eApp(M,N), S] in CC BetaRoot(V) by Def2;
+  A2: [eApp(M,N), S] in BetaRoot(V) or
+    ( ex M1 being EnvEpsTerm of V st [M,M1] in CC BetaRoot(V) & S =
+      eApp(M1,N) ) or
+    ( ex N1 being EnvEpsTerm of V st [N,N1] in CC BetaRoot(V) & S =
+      eApp(M,N1) ) by A1,ENVCC:20;
+  per cases by A2;
+  suppose A3: [eApp(M,N), S] in BetaRoot(V);
+    thus thesis by A3,Th1;
+  end;
+  suppose ex M1 being EnvEpsTerm of V st [M,M1] in CC BetaRoot(V) & S =
+    eApp(M1,N);
+    then consider M1 being EnvEpsTerm of V such that
+    E1: [M,M1] in CC BetaRoot(V) & S = eApp(M1,N);
+    E2: [M,M1] in BetaRed(V) by E1,Def2;
+    E3: ( ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in BetaRed(V) &
+      eApp(M,N) = eApp(M2,N2) & S = eApp(M3,N2) )
+    proof
+      take M,M1,N;
+      thus thesis by E1,E2;
+    end;
+    thus thesis by E3;
+  end;
+  suppose ex N1 being EnvEpsTerm of V st [N,N1] in CC BetaRoot(V) & S =
+    eApp(M,N1);
+    then consider N1 being EnvEpsTerm of V such that
+    E1: [N,N1] in CC BetaRoot(V) & S = eApp(M,N1);
+    E2: [N,N1] in BetaRed(V) by E1,Def2;
+    E3: ( ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in BetaRed(V) &
+      eApp(M,N) = eApp(M2,N2) & S = eApp(M2,N3) )
+    proof
+      take M,N,N1;
+      thus thesis by E1,E2;
+    end;
+    thus thesis by E3;
+  end;
+end;
+
+theorem Th22:
+  for V being non empty set, M,N being EnvEpsTerm of V, S being EnvEpsTerm
+    of V st [eComp(M,N), S] in BetaRed(V) holds
+  ( ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in BetaRed(V) &
+    eComp(M,N) = eComp(M2,N2) & S = eComp(M3,N2) ) or
+  ( ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in BetaRed(V) &
+    eComp(M,N) = eComp(M2,N2) & S = eComp(M2,N3) )
+proof
+  let V be non empty set, M,N be EnvEpsTerm of V, S be EnvEpsTerm of V;
+  assume [eComp(M,N), S] in BetaRed(V);
+  then A1: [eComp(M,N), S] in CC BetaRoot(V) by Def2;
+  A2: [eComp(M,N), S] in BetaRoot(V) or
+    ( ex M1 being EnvEpsTerm of V st [M,M1] in CC BetaRoot(V) & S =
+      eComp(M1,N) ) or
+    ( ex N1 being EnvEpsTerm of V st [N,N1] in CC BetaRoot(V) & S =
+      eComp(M,N1) ) by A1,ENVCC:21;
+  per cases by A2;
+  suppose A3: [eComp(M,N), S] in BetaRoot(V);
+    A4: ( ex M2,N2 being EnvEpsTerm of V, x2 being Element of V st
+      eComp(M,N) = eApp(eLam(x2,M2),N2) & S = eComp(M2,eExt(N2,x2,eId V))
+      ) or
+    ( ex M2,N2,L2 being EnvEpsTerm of V, x2 being Element of V st
+      eComp(M,N) = eApp(eComp(eLam(x2,M2),L2),N2) & S =
+      eComp(M2,eExt(N2,x2,L2)) ) or
+    ( ex M2,N2 being EnvEpsTerm of V st eComp(M,N) = eApp(eEps M2,N2) & S
+      = eComp(M2,N2) ) by A3,Th1;
+    thus thesis by A4,ENVSYN:20;
+  end;
+  suppose ex M1 being EnvEpsTerm of V st [M,M1] in CC BetaRoot(V) & S =
+    eComp(M1,N);
+    then consider M1 being EnvEpsTerm of V such that
+    E1: [M,M1] in CC BetaRoot(V) & S = eComp(M1,N);
+    E2: [M,M1] in BetaRed(V) by E1,Def2;
+    E3: ( ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in BetaRed(V) &
+      eComp(M,N) = eComp(M2,N2) & S = eComp(M3,N2) )
+    proof
+      take M,M1,N;
+      thus thesis by E1,E2;
+    end;
+    thus thesis by E3;
+  end;
+  suppose ex N1 being EnvEpsTerm of V st [N,N1] in CC BetaRoot(V) & S =
+    eComp(M,N1);
+    then consider N1 being EnvEpsTerm of V such that
+    E1: [N,N1] in CC BetaRoot(V) & S = eComp(M,N1);
+    E2: [N,N1] in BetaRed(V) by E1,Def2;
+    E3: ( ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in BetaRed(V) &
+      eComp(M,N) = eComp(M2,N2) & S = eComp(M2,N3) )
+    proof
+      take M,N,N1;
+      thus thesis by E1,E2;
+    end;
+    thus thesis by E3;
+  end;
+end;
+
+theorem Th23:
+  for V being non empty set, M,N being EnvEpsTerm of V, x being Element of
+    V, S being EnvEpsTerm of V st [eExt(M,x,N), S] in BetaRed(V) holds
+  ( ex M2,M3,N2 being EnvEpsTerm of V, x2 being Element of V st [M2,M3] in
+    BetaRed(V) & eExt(M,x,N) = eExt(M2,x2,N2) & S = eExt(M3,x2,N2) ) or
+  ( ex M2,N2,N3 being EnvEpsTerm of V, x2 being Element of V st [N2,N3] in
+    BetaRed(V) & eExt(M,x,N) = eExt(M2,x2,N2) & S = eExt(M2,x2,N3) )
+proof
+  let V be non empty set, M,N be EnvEpsTerm of V, x be Element of V, S be
+    EnvEpsTerm of V;
+  assume [eExt(M,x,N), S] in BetaRed(V);
+  then A1: [eExt(M,x,N), S] in CC BetaRoot(V) by Def2;
+  A2: [eExt(M,x,N), S] in BetaRoot(V) or
+    ( ex M1 being EnvEpsTerm of V st [M,M1] in CC BetaRoot(V) & S =
+      eExt(M1,x,N) ) or
+    ( ex N1 being EnvEpsTerm of V st [N,N1] in CC BetaRoot(V) & S =
+      eExt(M,x,N1) ) by A1,ENVCC:22;
+  per cases by A2;
+  suppose A3: [eExt(M,x,N), S] in BetaRoot(V);
+    A4: ( ex M2,N2 being EnvEpsTerm of V, x2 being Element of V st
+      eExt(M,x,N) = eApp(eLam(x2,M2),N2) & S = eComp(M2,eExt(N2,x2,eId V))
+      ) or
+    ( ex M2,N2,L2 being EnvEpsTerm of V, x2 being Element of V st
+      eExt(M,x,N) = eApp(eComp(eLam(x2,M2),L2),N2) & S =
+      eComp(M2,eExt(N2,x2,L2)) ) or
+    ( ex M2,N2 being EnvEpsTerm of V st eExt(M,x,N) = eApp(eEps M2,N2) & S
+      = eComp(M2,N2) ) by A3,Th1;
+    thus thesis by A4,ENVSYN:20;
+  end;
+  suppose ex M1 being EnvEpsTerm of V st [M,M1] in CC BetaRoot(V) & S =
+    eExt(M1,x,N);
+    then consider M1 being EnvEpsTerm of V such that
+    E1: [M,M1] in CC BetaRoot(V) & S = eExt(M1,x,N);
+    E2: [M,M1] in BetaRed(V) by E1,Def2;
+    E3: ( ex M2,M3,N2 being EnvEpsTerm of V, x2 being Element of V st
+      [M2,M3] in BetaRed(V) & eExt(M,x,N) = eExt(M2,x2,N2) & S =
+      eExt(M3,x2,N2) )
+    proof
+      take M,M1,N,x;
+      thus thesis by E1,E2;
+    end;
+    thus thesis by E3;
+  end;
+  suppose ex N1 being EnvEpsTerm of V st [N,N1] in CC BetaRoot(V) & S =
+    eExt(M,x,N1);
+    then consider N1 being EnvEpsTerm of V such that
+    E1: [N,N1] in CC BetaRoot(V) & S = eExt(M,x,N1);
+    E2: [N,N1] in BetaRed(V) by E1,Def2;
+    E3: ( ex M2,N2,N3 being EnvEpsTerm of V, x2 being Element of V st
+      [N2,N3] in BetaRed(V) & eExt(M,x,N) = eExt(M2,x2,N2) & S =
+      eExt(M2,x2,N3) )
+    proof
+      take M,N,N1,x;
+      thus thesis by E1,E2;
+    end;
+    thus thesis by E3;
+  end;
+end;
+
+begin :: Multi-step congruence for the beta reduction
+
+theorem Th24:
+  for V being non empty set, M,M1,N being EnvEpsTerm of V st BetaRed(V)
+    reduces M,M1 holds
+  BetaRed(V) reduces eApp(M,N), eApp(M1,N)
+proof
+  let V be non empty set, M,M1,N be EnvEpsTerm of V;
+  assume BetaRed(V) reduces M,M1;
+  then CC BetaRoot(V) reduces M,M1 by Def2;
+  then CC BetaRoot(V) reduces eApp(M,N), eApp(M1,N) by ENVCC:23;
+  hence thesis by Def2;
+end;
+
+theorem Th25:
+  for V being non empty set, M,N,N1 being EnvEpsTerm of V st BetaRed(V)
+    reduces N,N1 holds
+  BetaRed(V) reduces eApp(M,N), eApp(M,N1)
+proof
+  let V be non empty set, M,N,N1 be EnvEpsTerm of V;
+  assume BetaRed(V) reduces N,N1;
+  then CC BetaRoot(V) reduces N,N1 by Def2;
+  then CC BetaRoot(V) reduces eApp(M,N), eApp(M,N1) by ENVCC:24;
+  hence thesis by Def2;
+end;
+
+theorem Th26:
+  for V being non empty set, M,M1 being EnvEpsTerm of V, x being Element
+    of V st BetaRed(V) reduces M,M1 holds
+  BetaRed(V) reduces eLam(x,M), eLam(x,M1)
+proof
+  let V be non empty set, M,M1 be EnvEpsTerm of V, x be Element of V;
+  assume BetaRed(V) reduces M,M1;
+  then CC BetaRoot(V) reduces M,M1 by Def2;
+  then CC BetaRoot(V) reduces eLam(x,M), eLam(x,M1) by ENVCC:25;
+  hence thesis by Def2;
+end;
+
+theorem Th27:
+  for V being non empty set, M,M1,N being EnvEpsTerm of V, x being Element
+    of V st BetaRed(V) reduces M,M1 holds
+  BetaRed(V) reduces eExt(M,x,N), eExt(M1,x,N)
+proof
+  let V be non empty set, M,M1,N be EnvEpsTerm of V, x be Element of V;
+  assume BetaRed(V) reduces M,M1;
+  then CC BetaRoot(V) reduces M,M1 by Def2;
+  then CC BetaRoot(V) reduces eExt(M,x,N), eExt(M1,x,N) by ENVCC:26;
+  hence thesis by Def2;
+end;
+
+theorem Th28:
+  for V being non empty set, M,N,N1 being EnvEpsTerm of V, x being Element
+    of V st BetaRed(V) reduces N,N1 holds
+  BetaRed(V) reduces eExt(M,x,N), eExt(M,x,N1)
+proof
+  let V be non empty set, M,N,N1 be EnvEpsTerm of V, x be Element of V;
+  assume BetaRed(V) reduces N,N1;
+  then CC BetaRoot(V) reduces N,N1 by Def2;
+  then CC BetaRoot(V) reduces eExt(M,x,N), eExt(M,x,N1) by ENVCC:27;
+  hence thesis by Def2;
+end;
+
+theorem Th29:
+  for V being non empty set, M,M1,N being EnvEpsTerm of V st BetaRed(V)
+    reduces M,M1 holds
+  BetaRed(V) reduces eComp(M,N), eComp(M1,N)
+proof
+  let V be non empty set, M,M1,N be EnvEpsTerm of V;
+  assume BetaRed(V) reduces M,M1;
+  then CC BetaRoot(V) reduces M,M1 by Def2;
+  then CC BetaRoot(V) reduces eComp(M,N), eComp(M1,N) by ENVCC:28;
+  hence thesis by Def2;
+end;
+
+theorem Th30:
+  for V being non empty set, M,N,N1 being EnvEpsTerm of V st BetaRed(V)
+    reduces N,N1 holds
+  BetaRed(V) reduces eComp(M,N), eComp(M,N1)
+proof
+  let V be non empty set, M,N,N1 be EnvEpsTerm of V;
+  assume BetaRed(V) reduces N,N1;
+  then CC BetaRoot(V) reduces N,N1 by Def2;
+  then CC BetaRoot(V) reduces eComp(M,N), eComp(M,N1) by ENVCC:29;
+  hence thesis by Def2;
+end;
+
+theorem Th31:
+  for V being non empty set, M,M1 being EnvEpsTerm of V st BetaRed(V)
+    reduces M,M1 holds
+  BetaRed(V) reduces eEps M, eEps M1
+proof
+  let V be non empty set, M,M1 be EnvEpsTerm of V;
+  assume BetaRed(V) reduces M,M1;
+  then CC BetaRoot(V) reduces M,M1 by Def2;
+  then CC BetaRoot(V) reduces eEps M, eEps M1 by ENVCC:30;
+  hence thesis by Def2;
+end;
+
+begin :: The beta/sigma reduction
+
+definition
+  let V be non empty set;
+  func BetaSigmaRoot(V) -> EnvEpsRel of V equals
+  :Def3:
+  BetaRoot(V) \/ SigmaRoot(V);
+  coherence
+  proof
+    set G = EnvEpsGram(V);
+    BetaRoot(V) c= [:TS G, TS G:] & SigmaRoot(V) c= [:TS G, TS G:];
+    hence thesis by XBOOLE_1:8;
+  end;
+end;
+
+definition
+  let V be non empty set;
+  func BetaSigmaRed(V) -> EnvEpsRel of V equals
+  :Def4:
+  CC BetaSigmaRoot(V);
+  coherence;
+end;
+
+theorem Th32:
+  for V being non empty set holds
+  BetaSigmaRed(V) = BetaRed(V) \/ SigmaRed(V)
+proof
+  let V be non empty set;
+  A1: BetaSigmaRed(V) = CC BetaSigmaRoot(V) by Def4
+    .= CC (BetaRoot(V) \/ SigmaRoot(V)) by Def3
+    .= CC BetaRoot(V) \/ CC SigmaRoot(V) by ENVCC:15
+    .= BetaRed(V) \/ CC SigmaRoot(V) by Def2
+    .= BetaRed(V) \/ SigmaRed(V) by ENVSIG:def 2;
+  thus thesis by A1;
+end;
+
+theorem Th33:
+  for V being non empty set, M,N being EnvEpsTerm of V holds
+  ( [M,N] in BetaSigmaRed(V) iff
+    [M,N] in BetaRed(V) or [M,N] in SigmaRed(V) )
+proof
+  let V be non empty set, M,N be EnvEpsTerm of V;
+  BetaSigmaRed(V) = BetaRed(V) \/ SigmaRed(V) by Th32;
+  hence thesis by XBOOLE_0:def 3;
+end;
+
+theorem Th34:
+  for V being non empty set holds
+  BetaRoot(V) c= BetaSigmaRoot(V) & SigmaRoot(V) c= BetaSigmaRoot(V)
+proof
+  let V be non empty set;
+  BetaSigmaRoot(V) = BetaRoot(V) \/ SigmaRoot(V) by Def3;
+  hence thesis by XBOOLE_1:7;
+end;
+
+begin :: The nineteen rules of the beta/sigma reduction
+
+theorem Th35:
+  for V being non empty set, M,N being EnvEpsTerm of V, x being Element of
+    V holds
+  [eApp(eLam(x,M),N), eComp(M,eExt(N,x,eId V))] in BetaSigmaRed(V)
+proof
+  let V be non empty set, M,N be EnvEpsTerm of V, x be Element of V;
+  A1: [eApp(eLam(x,M),N), eComp(M,eExt(N,x,eId V))] in BetaRoot(V) by Th2;
+  BetaRoot(V) c= BetaSigmaRoot(V) by Th34;
+  then A2: [eApp(eLam(x,M),N), eComp(M,eExt(N,x,eId V))] in
+    BetaSigmaRoot(V) by A1;
+  BetaSigmaRoot(V) c= CC BetaSigmaRoot(V) by ENVCC:4;
+  hence thesis by A2,Def4;
+end;
+
+theorem Th36:
+  for V being non empty set, M,N,L being EnvEpsTerm of V, x being Element
+    of V holds
+  [eApp(eComp(eLam(x,M),L),N), eComp(M,eExt(N,x,L))] in BetaSigmaRed(V)
+proof
+  let V be non empty set, M,N,L be EnvEpsTerm of V, x be Element of V;
+  A1: [eApp(eComp(eLam(x,M),L),N), eComp(M,eExt(N,x,L))] in BetaRoot(V) by
+    Th3;
+  BetaRoot(V) c= BetaSigmaRoot(V) by Th34;
+  then A2: [eApp(eComp(eLam(x,M),L),N), eComp(M,eExt(N,x,L))] in
+    BetaSigmaRoot(V) by A1;
+  BetaSigmaRoot(V) c= CC BetaSigmaRoot(V) by ENVCC:4;
+  hence thesis by A2,Def4;
+end;
+
+theorem Th37:
+  for V being non empty set, M,N being EnvEpsTerm of V holds
+  [eApp(eEps M,N), eComp(M,N)] in BetaSigmaRed(V)
+proof
+  let V be non empty set, M,N be EnvEpsTerm of V;
+  A1: [eApp(eEps M,N), eComp(M,N)] in BetaRoot(V) by Th4;
+  BetaRoot(V) c= BetaSigmaRoot(V) by Th34;
+  then A2: [eApp(eEps M,N), eComp(M,N)] in BetaSigmaRoot(V) by A1;
+  BetaSigmaRoot(V) c= CC BetaSigmaRoot(V) by ENVCC:4;
+  hence thesis by A2,Def4;
+end;
+
+theorem Th38:
+  for V being non empty set, M,N,L being EnvEpsTerm of V holds
+  [eComp(eComp(M,N),L), eComp(M,eComp(N,L))] in BetaSigmaRed(V)
+proof
+  let V be non empty set, M,N,L be EnvEpsTerm of V;
+  A1: [eComp(eComp(M,N),L), eComp(M,eComp(N,L))] in SigmaRoot(V) by
+    ENVSIG:2;
+  SigmaRoot(V) c= BetaSigmaRoot(V) by Th34;
+  then A2: [eComp(eComp(M,N),L), eComp(M,eComp(N,L))] in BetaSigmaRoot(V)
+    by A1;
+  BetaSigmaRoot(V) c= CC BetaSigmaRoot(V) by ENVCC:4;
+  hence thesis by A2,Def4;
+end;
+
+theorem Th39:
+  for V being non empty set, M being EnvEpsTerm of V holds
+  [eComp(eId V,M), M] in BetaSigmaRed(V)
+proof
+  let V be non empty set, M be EnvEpsTerm of V;
+  A1: [eComp(eId V,M), M] in SigmaRoot(V) by ENVSIG:3;
+  SigmaRoot(V) c= BetaSigmaRoot(V) by Th34;
+  then A2: [eComp(eId V,M), M] in BetaSigmaRoot(V) by A1;
+  BetaSigmaRoot(V) c= CC BetaSigmaRoot(V) by ENVCC:4;
+  hence thesis by A2,Def4;
+end;
+
+theorem Th40:
+  for V being non empty set, M being EnvEpsTerm of V holds
+  [eComp(M,eId V), M] in BetaSigmaRed(V)
+proof
+  let V be non empty set, M be EnvEpsTerm of V;
+  A1: [eComp(M,eId V), M] in SigmaRoot(V) by ENVSIG:4;
+  SigmaRoot(V) c= BetaSigmaRoot(V) by Th34;
+  then A2: [eComp(M,eId V), M] in BetaSigmaRoot(V) by A1;
+  BetaSigmaRoot(V) c= CC BetaSigmaRoot(V) by ENVCC:4;
+  hence thesis by A2,Def4;
+end;
+
+theorem Th41:
+  for V being non empty set, L,M,N being EnvEpsTerm of V, x being Element
+    of V holds
+  [eComp(eExt(L,x,M),N), eExt(eComp(L,N),x,eComp(M,N))] in BetaSigmaRed(V)
+proof
+  let V be non empty set, L,M,N be EnvEpsTerm of V, x be Element of V;
+  A1: [eComp(eExt(L,x,M),N), eExt(eComp(L,N),x,eComp(M,N))] in
+    SigmaRoot(V) by ENVSIG:5;
+  SigmaRoot(V) c= BetaSigmaRoot(V) by Th34;
+  then A2: [eComp(eExt(L,x,M),N), eExt(eComp(L,N),x,eComp(M,N))] in
+    BetaSigmaRoot(V) by A1;
+  BetaSigmaRoot(V) c= CC BetaSigmaRoot(V) by ENVCC:4;
+  hence thesis by A2,Def4;
+end;
+
+theorem Th42:
+  for V being non empty set, M,N being EnvEpsTerm of V, x being Element of
+    V holds
+  [eComp(eVar x, eExt(M,x,N)), M] in BetaSigmaRed(V)
+proof
+  let V be non empty set, M,N be EnvEpsTerm of V, x be Element of V;
+  A1: [eComp(eVar x, eExt(M,x,N)), M] in SigmaRoot(V) by ENVSIG:6;
+  SigmaRoot(V) c= BetaSigmaRoot(V) by Th34;
+  then A2: [eComp(eVar x, eExt(M,x,N)), M] in BetaSigmaRoot(V) by A1;
+  BetaSigmaRoot(V) c= CC BetaSigmaRoot(V) by ENVCC:4;
+  hence thesis by A2,Def4;
+end;
+
+theorem Th43:
+  for V being non empty set, M,N being EnvEpsTerm of V, x,y being Element
+    of V st x <> y holds
+  [eComp(eVar x, eExt(M,y,N)), eComp(eVar x, N)] in BetaSigmaRed(V)
+proof
+  let V be non empty set, M,N be EnvEpsTerm of V, x,y be Element of V;
+  assume A0: x <> y;
+  A1: [eComp(eVar x, eExt(M,y,N)), eComp(eVar x, N)] in SigmaRoot(V) by
+    A0,ENVSIG:7;
+  SigmaRoot(V) c= BetaSigmaRoot(V) by Th34;
+  then A2: [eComp(eVar x, eExt(M,y,N)), eComp(eVar x, N)] in
+    BetaSigmaRoot(V) by A1;
+  BetaSigmaRoot(V) c= CC BetaSigmaRoot(V) by ENVCC:4;
+  hence thesis by A2,Def4;
+end;
+
+theorem Th44:
+  for V being non empty set, M,N,L being EnvEpsTerm of V holds
+  [eComp(eApp(M,N),L), eApp(eComp(M,L),eComp(N,L))] in BetaSigmaRed(V)
+proof
+  let V be non empty set, M,N,L be EnvEpsTerm of V;
+  A1: [eComp(eApp(M,N),L), eApp(eComp(M,L),eComp(N,L))] in SigmaRoot(V) by
+    ENVSIG:8;
+  SigmaRoot(V) c= BetaSigmaRoot(V) by Th34;
+  then A2: [eComp(eApp(M,N),L), eApp(eComp(M,L),eComp(N,L))] in
+    BetaSigmaRoot(V) by A1;
+  BetaSigmaRoot(V) c= CC BetaSigmaRoot(V) by ENVCC:4;
+  hence thesis by A2,Def4;
+end;
+
+theorem Th45:
+  for V being non empty set, M,N being EnvEpsTerm of V holds
+  [eComp(eEps M,N), eEps M] in BetaSigmaRed(V)
+proof
+  let V be non empty set, M,N be EnvEpsTerm of V;
+  A1: [eComp(eEps M,N), eEps M] in SigmaRoot(V) by ENVSIG:9;
+  SigmaRoot(V) c= BetaSigmaRoot(V) by Th34;
+  then A2: [eComp(eEps M,N), eEps M] in BetaSigmaRoot(V) by A1;
+  BetaSigmaRoot(V) c= CC BetaSigmaRoot(V) by ENVCC:4;
+  hence thesis by A2,Def4;
+end;
+
+theorem Th46:
+  for V being non empty set, M,M1,N being EnvEpsTerm of V st [M,M1] in
+    BetaSigmaRed(V) holds
+  [eApp(M,N), eApp(M1,N)] in BetaSigmaRed(V)
+proof
+  let V be non empty set, M,M1,N be EnvEpsTerm of V;
+  assume [M,M1] in BetaSigmaRed(V);
+  then [M,M1] in CC BetaSigmaRoot(V) by Def4;
+  then [eApp(M,N), eApp(M1,N)] in CC BetaSigmaRoot(V) by ENVCC:5;
+  hence thesis by Def4;
+end;
+
+theorem Th47:
+  for V being non empty set, M,N,N1 being EnvEpsTerm of V st [N,N1] in
+    BetaSigmaRed(V) holds
+  [eApp(M,N), eApp(M,N1)] in BetaSigmaRed(V)
+proof
+  let V be non empty set, M,N,N1 be EnvEpsTerm of V;
+  assume [N,N1] in BetaSigmaRed(V);
+  then [N,N1] in CC BetaSigmaRoot(V) by Def4;
+  then [eApp(M,N), eApp(M,N1)] in CC BetaSigmaRoot(V) by ENVCC:6;
+  hence thesis by Def4;
+end;
+
+theorem Th48:
+  for V being non empty set, M,M1 being EnvEpsTerm of V, x being Element
+    of V st [M,M1] in BetaSigmaRed(V) holds
+  [eLam(x,M), eLam(x,M1)] in BetaSigmaRed(V)
+proof
+  let V be non empty set, M,M1 be EnvEpsTerm of V, x be Element of V;
+  assume [M,M1] in BetaSigmaRed(V);
+  then [M,M1] in CC BetaSigmaRoot(V) by Def4;
+  then [eLam(x,M), eLam(x,M1)] in CC BetaSigmaRoot(V) by ENVCC:7;
+  hence thesis by Def4;
+end;
+
+theorem Th49:
+  for V being non empty set, M,M1,N being EnvEpsTerm of V, x being Element
+    of V st [M,M1] in BetaSigmaRed(V) holds
+  [eExt(M,x,N), eExt(M1,x,N)] in BetaSigmaRed(V)
+proof
+  let V be non empty set, M,M1,N be EnvEpsTerm of V, x be Element of V;
+  assume [M,M1] in BetaSigmaRed(V);
+  then [M,M1] in CC BetaSigmaRoot(V) by Def4;
+  then [eExt(M,x,N), eExt(M1,x,N)] in CC BetaSigmaRoot(V) by ENVCC:8;
+  hence thesis by Def4;
+end;
+
+theorem Th50:
+  for V being non empty set, M,N,N1 being EnvEpsTerm of V, x being Element
+    of V st [N,N1] in BetaSigmaRed(V) holds
+  [eExt(M,x,N), eExt(M,x,N1)] in BetaSigmaRed(V)
+proof
+  let V be non empty set, M,N,N1 be EnvEpsTerm of V, x be Element of V;
+  assume [N,N1] in BetaSigmaRed(V);
+  then [N,N1] in CC BetaSigmaRoot(V) by Def4;
+  then [eExt(M,x,N), eExt(M,x,N1)] in CC BetaSigmaRoot(V) by ENVCC:9;
+  hence thesis by Def4;
+end;
+
+theorem Th51:
+  for V being non empty set, M,M1,N being EnvEpsTerm of V st [M,M1] in
+    BetaSigmaRed(V) holds
+  [eComp(M,N), eComp(M1,N)] in BetaSigmaRed(V)
+proof
+  let V be non empty set, M,M1,N be EnvEpsTerm of V;
+  assume [M,M1] in BetaSigmaRed(V);
+  then [M,M1] in CC BetaSigmaRoot(V) by Def4;
+  then [eComp(M,N), eComp(M1,N)] in CC BetaSigmaRoot(V) by ENVCC:10;
+  hence thesis by Def4;
+end;
+
+theorem Th52:
+  for V being non empty set, M,N,N1 being EnvEpsTerm of V st [N,N1] in
+    BetaSigmaRed(V) holds
+  [eComp(M,N), eComp(M,N1)] in BetaSigmaRed(V)
+proof
+  let V be non empty set, M,N,N1 be EnvEpsTerm of V;
+  assume [N,N1] in BetaSigmaRed(V);
+  then [N,N1] in CC BetaSigmaRoot(V) by Def4;
+  then [eComp(M,N), eComp(M,N1)] in CC BetaSigmaRoot(V) by ENVCC:11;
+  hence thesis by Def4;
+end;
+
+theorem Th53:
+  for V being non empty set, M,M1 being EnvEpsTerm of V st [M,M1] in
+    BetaSigmaRed(V) holds
+  [eEps M, eEps M1] in BetaSigmaRed(V)
+proof
+  let V be non empty set, M,M1 be EnvEpsTerm of V;
+  assume [M,M1] in BetaSigmaRed(V);
+  then [M,M1] in CC BetaSigmaRoot(V) by Def4;
+  then [eEps M, eEps M1] in CC BetaSigmaRoot(V) by ENVCC:12;
+  hence thesis by Def4;
+end;
+
+begin :: Multi-step congruence for the beta/sigma reduction
+
+theorem Th54:
+  for V being non empty set, M,M1,N being EnvEpsTerm of V st
+    BetaSigmaRed(V) reduces M,M1 holds
+  BetaSigmaRed(V) reduces eApp(M,N), eApp(M1,N)
+proof
+  let V be non empty set, M,M1,N be EnvEpsTerm of V;
+  assume BetaSigmaRed(V) reduces M,M1;
+  then CC BetaSigmaRoot(V) reduces M,M1 by Def4;
+  then CC BetaSigmaRoot(V) reduces eApp(M,N), eApp(M1,N) by ENVCC:23;
+  hence thesis by Def4;
+end;
+
+theorem Th55:
+  for V being non empty set, M,N,N1 being EnvEpsTerm of V st
+    BetaSigmaRed(V) reduces N,N1 holds
+  BetaSigmaRed(V) reduces eApp(M,N), eApp(M,N1)
+proof
+  let V be non empty set, M,N,N1 be EnvEpsTerm of V;
+  assume BetaSigmaRed(V) reduces N,N1;
+  then CC BetaSigmaRoot(V) reduces N,N1 by Def4;
+  then CC BetaSigmaRoot(V) reduces eApp(M,N), eApp(M,N1) by ENVCC:24;
+  hence thesis by Def4;
+end;
+
+theorem Th56:
+  for V being non empty set, M,M1 being EnvEpsTerm of V, x being Element
+    of V st BetaSigmaRed(V) reduces M,M1 holds
+  BetaSigmaRed(V) reduces eLam(x,M), eLam(x,M1)
+proof
+  let V be non empty set, M,M1 be EnvEpsTerm of V, x be Element of V;
+  assume BetaSigmaRed(V) reduces M,M1;
+  then CC BetaSigmaRoot(V) reduces M,M1 by Def4;
+  then CC BetaSigmaRoot(V) reduces eLam(x,M), eLam(x,M1) by ENVCC:25;
+  hence thesis by Def4;
+end;
+
+theorem Th57:
+  for V being non empty set, M,M1,N being EnvEpsTerm of V, x being Element
+    of V st BetaSigmaRed(V) reduces M,M1 holds
+  BetaSigmaRed(V) reduces eExt(M,x,N), eExt(M1,x,N)
+proof
+  let V be non empty set, M,M1,N be EnvEpsTerm of V, x be Element of V;
+  assume BetaSigmaRed(V) reduces M,M1;
+  then CC BetaSigmaRoot(V) reduces M,M1 by Def4;
+  then CC BetaSigmaRoot(V) reduces eExt(M,x,N), eExt(M1,x,N) by ENVCC:26;
+  hence thesis by Def4;
+end;
+
+theorem Th58:
+  for V being non empty set, M,N,N1 being EnvEpsTerm of V, x being Element
+    of V st BetaSigmaRed(V) reduces N,N1 holds
+  BetaSigmaRed(V) reduces eExt(M,x,N), eExt(M,x,N1)
+proof
+  let V be non empty set, M,N,N1 be EnvEpsTerm of V, x be Element of V;
+  assume BetaSigmaRed(V) reduces N,N1;
+  then CC BetaSigmaRoot(V) reduces N,N1 by Def4;
+  then CC BetaSigmaRoot(V) reduces eExt(M,x,N), eExt(M,x,N1) by ENVCC:27;
+  hence thesis by Def4;
+end;
+
+theorem Th59:
+  for V being non empty set, M,M1,N being EnvEpsTerm of V st
+    BetaSigmaRed(V) reduces M,M1 holds
+  BetaSigmaRed(V) reduces eComp(M,N), eComp(M1,N)
+proof
+  let V be non empty set, M,M1,N be EnvEpsTerm of V;
+  assume BetaSigmaRed(V) reduces M,M1;
+  then CC BetaSigmaRoot(V) reduces M,M1 by Def4;
+  then CC BetaSigmaRoot(V) reduces eComp(M,N), eComp(M1,N) by ENVCC:28;
+  hence thesis by Def4;
+end;
+
+theorem Th60:
+  for V being non empty set, M,N,N1 being EnvEpsTerm of V st
+    BetaSigmaRed(V) reduces N,N1 holds
+  BetaSigmaRed(V) reduces eComp(M,N), eComp(M,N1)
+proof
+  let V be non empty set, M,N,N1 be EnvEpsTerm of V;
+  assume BetaSigmaRed(V) reduces N,N1;
+  then CC BetaSigmaRoot(V) reduces N,N1 by Def4;
+  then CC BetaSigmaRoot(V) reduces eComp(M,N), eComp(M,N1) by ENVCC:29;
+  hence thesis by Def4;
+end;
+
+theorem Th61:
+  for V being non empty set, M,M1 being EnvEpsTerm of V st BetaSigmaRed(V)
+    reduces M,M1 holds
+  BetaSigmaRed(V) reduces eEps M, eEps M1
+proof
+  let V be non empty set, M,M1 be EnvEpsTerm of V;
+  assume BetaSigmaRed(V) reduces M,M1;
+  then CC BetaSigmaRoot(V) reduces M,M1 by Def4;
+  then CC BetaSigmaRoot(V) reduces eEps M, eEps M1 by ENVCC:30;
+  hence thesis by Def4;
+end;

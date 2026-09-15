@@ -6,29 +6,30 @@ environ
       RELAT_1, FUNCT_1, ORDINAL1, CARD_1, ARYTM_3, XXREAL_0, NAT_1, TREES_1,
       TREES_2, TREES_3, TREES_4, LANG1, STRUCT_0, DTCONSTR, MCART_1, XTUPLE_0,
       FINSET_1, TDGROUP, FUNCOP_1, ARYTM_1, FUNCT_7, XREAL_0, XCMPLX_0,
-      REWRITE1, PBOOLE, ENVEPS_1, ENVEPS_5;
+      REWRITE1, PBOOLE, ENVSYN, ENVLEN, ENVNF, ENVCC, ENVSIG, ENVBETA;
  notations TARSKI, XBOOLE_0, ZFMISC_1, SUBSET_1, ORDINAL1, NUMBERS, XCMPLX_0,
-      XXREAL_0, NAT_1, RELAT_1, RELSET_1, FUNCT_1, FUNCT_2, FINSEQ_1, FINSEQ_2,
-      MCART_1, XTUPLE_0, DOMAIN_1, STRUCT_0, LANG1, TREES_1, TREES_2, TREES_3,
-      TREES_4, DTCONSTR, FUNCOP_1, XREAL_0, PBOOLE, REWRITE1, ENVEPS_1;
+      XXREAL_0, NAT_1, RELAT_1, RELSET_1, FUNCT_1, FUNCT_2, FINSEQ_1,
+      FINSEQ_2, MCART_1, XTUPLE_0, DOMAIN_1, STRUCT_0, LANG1, TREES_1,
+      TREES_2, TREES_3, TREES_4, DTCONSTR, FUNCOP_1, XREAL_0, PBOOLE,
+      REWRITE1, ENVSYN, ENVLEN, ENVCC, ENVSIG, ENVBETA;
  constructors NUMBERS, XCMPLX_0, XXREAL_0, NAT_1, RELSET_1, FUNCT_2, FINSEQ_1,
-      FINSEQ_2, MCART_1, XTUPLE_0, DOMAIN_1, STRUCT_0, LANG1, TREES_1, TREES_2,
-      TREES_3, TREES_4, DTCONSTR, PARTFUN1, BINOP_1, SETWISEO, XREAL_0,
-      FUNCOP_1, SUBSET_1, CARD_3, FINSEQOP, FINSEQ_4, FINSOP_1, PRE_POLY,
-      FUNCT_1, RELAT_1, PBOOLE, REWRITE1, ENVEPS_1;
+      FINSEQ_2, MCART_1, XTUPLE_0, DOMAIN_1, STRUCT_0, LANG1, TREES_1,
+      TREES_2, TREES_3, TREES_4, DTCONSTR, PARTFUN1, BINOP_1, SETWISEO,
+      XREAL_0, FUNCOP_1, SUBSET_1, CARD_3, FINSEQOP, FINSEQ_4, FINSOP_1,
+      PRE_POLY, FUNCT_1, RELAT_1, PBOOLE, REWRITE1, ENVSYN, ENVLEN, ENVCC,
+      ENVSIG, ENVBETA;
  registrations XBOOLE_0, SUBSET_1, RELAT_1, FUNCT_1, ORDINAL1, XREAL_0, NAT_1,
       FINSEQ_1, FINSEQ_2, FINSET_1, CARD_1, STRUCT_0, LANG1, TREES_1, TREES_2,
       TREES_3, TREES_4, DTCONSTR, XTUPLE_0, VALUED_0, FUNCOP_1, XCMPLX_0,
-      XXREAL_0, NUMBERS, MEMBERED, PBOOLE, REWRITE1, ENVEPS_1, ENVEPS_4;
+      XXREAL_0, NUMBERS, MEMBERED, PBOOLE, REWRITE1, ENVSYN, ENVPEAK, ENVSIG;
  requirements NUMERALS, REAL, BOOLE, SUBSET, ARITHM;
  definitions TARSKI, XBOOLE_0, DTCONSTR, TREES_3, TREES_4, RELAT_1, FUNCT_1,
-      FINSEQ_1, FUNCOP_1, SUBSET_1, REWRITE1, ENVEPS_1;
+      FINSEQ_1, FUNCOP_1, SUBSET_1, REWRITE1, ENVSYN, ENVLEN;
  theorems TARSKI, XBOOLE_0, XBOOLE_1, ZFMISC_1, FINSEQ_1, FINSEQ_2, FINSEQ_3,
       MCART_1, LANG1, ENUMSET1, TREES_1, TREES_3, TREES_4, DTCONSTR, XTUPLE_0,
       FUNCT_1, RELAT_1, FUNCOP_1, NAT_1, XCMPLX_1, SUBSET_1, FUNCT_2, XREAL_1,
-      REWRITE1, XXREAL_0, ENVEPS_1, ENVEPS_2, ENVEPS_3, ENVEPS_4;
- schemes DTCONSTR, NAT_1, ENVEPS_1, ENVEPS_2;
-
+      REWRITE1, XXREAL_0, ENVSYN, ENVLEN, ENVSIG, ENVPEAK;
+ schemes DTCONSTR, NAT_1, ENVSYN;
 begin :: Reducts stay inside the term set
 
 theorem Th1:
@@ -177,12 +178,12 @@ proof
   let V be non empty set, x be Element of V;
   now
     given N being EnvEpsTerm of V such that A1: [eVar x,N] in SigmaRed(V);
-    thus contradiction by A1,ENVEPS_3:2;
+    thus contradiction by A1,ENVSIG:27;
   end;
   hence eVar x is_a_normal_form_wrt SigmaRed(V) by Th2;
   now
     given N being EnvEpsTerm of V such that A1: [eId V,N] in SigmaRed(V);
-    thus contradiction by A1,ENVEPS_3:3;
+    thus contradiction by A1,ENVSIG:28;
   end;
   hence thesis by Th2;
 end;
@@ -197,7 +198,7 @@ proof
     assume A1: eLam(x,M) is_a_normal_form_wrt SigmaRed(V);
     now
       given N being EnvEpsTerm of V such that B1: [M,N] in SigmaRed(V);
-      [eLam(x,M), eLam(x,N)] in SigmaRed(V) by B1,ENVEPS_2:20;
+      [eLam(x,M), eLam(x,N)] in SigmaRed(V) by B1,ENVSIG:20;
       hence contradiction by A1,Th2;
     end;
     hence M is_a_normal_form_wrt SigmaRed(V) by Th2;
@@ -208,8 +209,8 @@ proof
     B1: [eLam(x,M),W] in SigmaRed(V);
     consider M2,M3 being EnvEpsTerm of V, x2 being Element of V such that
     B2: [M2,M3] in SigmaRed(V) & eLam(x,M) = eLam(x2,M2) & W = eLam(x2,M3)
-      by B1,ENVEPS_3:4;
-    M = M2 by B2,ENVEPS_1:11;
+      by B1,ENVSIG:29;
+    M = M2 by B2,ENVSYN:11;
     hence contradiction by A1,B2,Th2;
   end;
   hence thesis by Th2;
@@ -225,7 +226,7 @@ proof
     assume A1: eEps M is_a_normal_form_wrt SigmaRed(V);
     now
       given N being EnvEpsTerm of V such that B1: [M,N] in SigmaRed(V);
-      [eEps M, eEps N] in SigmaRed(V) by B1,ENVEPS_2:25;
+      [eEps M, eEps N] in SigmaRed(V) by B1,ENVSIG:25;
       hence contradiction by A1,Th2;
     end;
     hence M is_a_normal_form_wrt SigmaRed(V) by Th2;
@@ -235,8 +236,8 @@ proof
     given W being EnvEpsTerm of V such that B1: [eEps M,W] in SigmaRed(V);
     consider M2,M3 being EnvEpsTerm of V such that
     B2: [M2,M3] in SigmaRed(V) & eEps M = eEps M2 & W = eEps M3
-      by B1,ENVEPS_3:5;
-    M = M2 by B2,ENVEPS_1:12;
+      by B1,ENVSIG:30;
+    M = M2 by B2,ENVSYN:12;
     hence contradiction by A1,B2,Th2;
   end;
   hence thesis by Th2;
@@ -253,13 +254,13 @@ proof
     assume A1: eApp(M,N) is_a_normal_form_wrt SigmaRed(V);
     now
       given K being EnvEpsTerm of V such that B1: [M,K] in SigmaRed(V);
-      [eApp(M,N), eApp(K,N)] in SigmaRed(V) by B1,ENVEPS_2:18;
+      [eApp(M,N), eApp(K,N)] in SigmaRed(V) by B1,ENVSIG:18;
       hence contradiction by A1,Th2;
     end;
     hence M is_a_normal_form_wrt SigmaRed(V) by Th2;
     now
       given K being EnvEpsTerm of V such that B1: [N,K] in SigmaRed(V);
-      [eApp(M,N), eApp(M,K)] in SigmaRed(V) by B1,ENVEPS_2:19;
+      [eApp(M,N), eApp(M,K)] in SigmaRed(V) by B1,ENVSIG:19;
       hence contradiction by A1,Th2;
     end;
     hence N is_a_normal_form_wrt SigmaRed(V) by Th2;
@@ -271,14 +272,14 @@ proof
     B2: ( ex P1,Q1,R1 being EnvEpsTerm of V st [P1,Q1] in SigmaRed(V) &
           eApp(M,N) = eApp(P1,R1) & W = eApp(Q1,R1) ) or
         ( ex P1,R1,S1 being EnvEpsTerm of V st [R1,S1] in SigmaRed(V) &
-          eApp(M,N) = eApp(P1,R1) & W = eApp(P1,S1) ) by B1,ENVEPS_3:6;
+          eApp(M,N) = eApp(P1,R1) & W = eApp(P1,S1) ) by B1,ENVSIG:31;
     per cases by B2;
     suppose ex P1,Q1,R1 being EnvEpsTerm of V st [P1,Q1] in SigmaRed(V) &
         eApp(M,N) = eApp(P1,R1) & W = eApp(Q1,R1);
       then consider P1,Q1,R1 being EnvEpsTerm of V such that
       C1: [P1,Q1] in SigmaRed(V) & eApp(M,N) = eApp(P1,R1) &
         W = eApp(Q1,R1);
-      M = P1 by C1,ENVEPS_1:13;
+      M = P1 by C1,ENVSYN:13;
       hence contradiction by A1,C1,Th2;
     end;
     suppose ex P1,R1,S1 being EnvEpsTerm of V st [R1,S1] in SigmaRed(V) &
@@ -286,7 +287,7 @@ proof
       then consider P1,R1,S1 being EnvEpsTerm of V such that
       C1: [R1,S1] in SigmaRed(V) & eApp(M,N) = eApp(P1,R1) &
         W = eApp(P1,S1);
-      N = R1 by C1,ENVEPS_1:13;
+      N = R1 by C1,ENVSYN:13;
       hence contradiction by A1,C1,Th2;
     end;
   end;
@@ -304,13 +305,13 @@ proof
     assume A1: eExt(M,x,N) is_a_normal_form_wrt SigmaRed(V);
     now
       given K being EnvEpsTerm of V such that B1: [M,K] in SigmaRed(V);
-      [eExt(M,x,N), eExt(K,x,N)] in SigmaRed(V) by B1,ENVEPS_2:21;
+      [eExt(M,x,N), eExt(K,x,N)] in SigmaRed(V) by B1,ENVSIG:21;
       hence contradiction by A1,Th2;
     end;
     hence M is_a_normal_form_wrt SigmaRed(V) by Th2;
     now
       given K being EnvEpsTerm of V such that B1: [N,K] in SigmaRed(V);
-      [eExt(M,x,N), eExt(M,x,K)] in SigmaRed(V) by B1,ENVEPS_2:22;
+      [eExt(M,x,N), eExt(M,x,K)] in SigmaRed(V) by B1,ENVSIG:22;
       hence contradiction by A1,Th2;
     end;
     hence N is_a_normal_form_wrt SigmaRed(V) by Th2;
@@ -325,7 +326,7 @@ proof
           W = eExt(Q1,y1,R1) ) or
         ( ex P1,R1,S1 being EnvEpsTerm of V, y1 being Element of V st
           [R1,S1] in SigmaRed(V) & eExt(M,x,N) = eExt(P1,y1,R1) &
-          W = eExt(P1,y1,S1) ) by B1,ENVEPS_3:7;
+          W = eExt(P1,y1,S1) ) by B1,ENVSIG:33;
     per cases by B2;
     suppose ex P1,Q1,R1 being EnvEpsTerm of V, y1 being Element of V st
         [P1,Q1] in SigmaRed(V) & eExt(M,x,N) = eExt(P1,y1,R1) &
@@ -334,7 +335,7 @@ proof
       such that
       C1: [P1,Q1] in SigmaRed(V) & eExt(M,x,N) = eExt(P1,y1,R1) &
         W = eExt(Q1,y1,R1);
-      M = P1 by C1,ENVEPS_1:15;
+      M = P1 by C1,ENVSYN:15;
       hence contradiction by A1,C1,Th2;
     end;
     suppose ex P1,R1,S1 being EnvEpsTerm of V, y1 being Element of V st
@@ -344,7 +345,7 @@ proof
       such that
       C1: [R1,S1] in SigmaRed(V) & eExt(M,x,N) = eExt(P1,y1,R1) &
         W = eExt(P1,y1,S1);
-      N = R1 by C1,ENVEPS_1:15;
+      N = R1 by C1,ENVSYN:15;
       hence contradiction by A1,C1,Th2;
     end;
   end;
@@ -367,19 +368,19 @@ proof
     assume A1: eComp(M,N) is_a_normal_form_wrt SigmaRed(V);
     now
       given K being EnvEpsTerm of V such that B1: [M,K] in SigmaRed(V);
-      [eComp(M,N), eComp(K,N)] in SigmaRed(V) by B1,ENVEPS_2:23;
+      [eComp(M,N), eComp(K,N)] in SigmaRed(V) by B1,ENVSIG:23;
       hence contradiction by A1,Th2;
     end;
     hence M is_a_normal_form_wrt SigmaRed(V) by Th2;
     now
       given K being EnvEpsTerm of V such that B1: [N,K] in SigmaRed(V);
-      [eComp(M,N), eComp(M,K)] in SigmaRed(V) by B1,ENVEPS_2:24;
+      [eComp(M,N), eComp(M,K)] in SigmaRed(V) by B1,ENVSIG:24;
       hence contradiction by A1,Th2;
     end;
     hence N is_a_normal_form_wrt SigmaRed(V) by Th2;
     now
       assume B1: N = eId V;
-      [eComp(M,eId V), M] in SigmaRed(V) by ENVEPS_2:12;
+      [eComp(M,eId V), M] in SigmaRed(V) by ENVSIG:12;
       hence contradiction by A1,B1,Th2;
     end;
     hence N <> eId V;
@@ -389,7 +390,7 @@ proof
            not ex P,Q being EnvEpsTerm of V, z being Element of V st
              N = eExt(P,z,Q) )
     proof
-      per cases by ENVEPS_1:17;
+      per cases by ENVSYN:17;
       suppose ex v being Element of V st M = eVar v;
         then consider v being Element of V such that C1: M = eVar v;
         now
@@ -397,19 +398,19 @@ proof
           C2: N = eExt(P,z,Q);
           per cases;
           suppose C3: v = z;
-            [eComp(eVar v, eExt(P,v,Q)), P] in SigmaRed(V) by ENVEPS_2:14;
+            [eComp(eVar v, eExt(P,v,Q)), P] in SigmaRed(V) by ENVSIG:14;
             hence contradiction by A1,C1,C2,C3,Th2;
           end;
           suppose C3: v <> z;
             [eComp(eVar v, eExt(P,z,Q)), eComp(eVar v, Q)] in SigmaRed(V)
-              by C3,ENVEPS_2:15;
+              by C3,ENVSIG:15;
             hence contradiction by A1,C1,C2,Th2;
           end;
         end;
         hence thesis by C1;
       end;
       suppose C1: M = eId V;
-        [eComp(eId V,N), N] in SigmaRed(V) by ENVEPS_2:11;
+        [eComp(eId V,N), N] in SigmaRed(V) by ENVSIG:11;
         hence thesis by A1,C1,Th2;
       end;
       suppose ex v being Element of V, A being EnvEpsTerm of V st
@@ -418,19 +419,19 @@ proof
       end;
       suppose ex A being EnvEpsTerm of V st M = eEps A;
         then consider A being EnvEpsTerm of V such that C1: M = eEps A;
-        [eComp(eEps A,N), eEps A] in SigmaRed(V) by ENVEPS_2:17;
+        [eComp(eEps A,N), eEps A] in SigmaRed(V) by ENVSIG:17;
         hence thesis by A1,C1,Th2;
       end;
       suppose ex A,B being EnvEpsTerm of V st M = eApp(A,B);
         then consider A,B being EnvEpsTerm of V such that C1: M = eApp(A,B);
         [eComp(eApp(A,B),N), eApp(eComp(A,N),eComp(B,N))] in SigmaRed(V)
-          by ENVEPS_2:16;
+          by ENVSIG:16;
         hence thesis by A1,C1,Th2;
       end;
       suppose ex A,B being EnvEpsTerm of V st M = eComp(A,B);
         then consider A,B being EnvEpsTerm of V such that C1: M = eComp(A,B);
         [eComp(eComp(A,B),N), eComp(A,eComp(B,N))] in SigmaRed(V)
-          by ENVEPS_2:10;
+          by ENVSIG:10;
         hence thesis by A1,C1,Th2;
       end;
       suppose ex A,B being EnvEpsTerm of V, v being Element of V st
@@ -438,7 +439,7 @@ proof
         then consider A,B being EnvEpsTerm of V, v being Element of V
         such that C1: M = eExt(A,v,B);
         [eComp(eExt(A,v,B),N), eExt(eComp(A,N),v,eComp(B,N))] in SigmaRed(V)
-          by ENVEPS_2:13;
+          by ENVSIG:13;
         hence thesis by A1,C1,Th2;
       end;
     end;
@@ -476,27 +477,27 @@ proof
       ( ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in SigmaRed(V) &
         eComp(M,N) = eComp(M2,N2) & W = eComp(M3,N2) ) or
       ( ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in SigmaRed(V) &
-        eComp(M,N) = eComp(M2,N2) & W = eComp(M2,N3) ) by B1,ENVEPS_3:8;
+        eComp(M,N) = eComp(M2,N2) & W = eComp(M2,N3) ) by B1,ENVSIG:32;
     per cases by B2;
     suppose ex M2,N2,L2 being EnvEpsTerm of V st
         eComp(M,N) = eComp(eComp(M2,N2),L2) & W = eComp(M2,eComp(N2,L2));
       then consider M2,N2,L2 being EnvEpsTerm of V such that
       C1: eComp(M,N) = eComp(eComp(M2,N2),L2) & W = eComp(M2,eComp(N2,L2));
-      C2: M = eComp(M2,N2) by C1,ENVEPS_1:14;
-      thus contradiction by A4,C2,ENVEPS_1:44;
+      C2: M = eComp(M2,N2) by C1,ENVSYN:14;
+      thus contradiction by A4,C2,ENVSYN:20;
     end;
     suppose ex M2 being EnvEpsTerm of V st
         eComp(M,N) = eComp(eId V,M2) & W = M2;
       then consider M2 being EnvEpsTerm of V such that
       C1: eComp(M,N) = eComp(eId V,M2) & W = M2;
-      C2: M = eId V by C1,ENVEPS_1:14;
-      thus contradiction by A4,C2,ENVEPS_1:44;
+      C2: M = eId V by C1,ENVSYN:14;
+      thus contradiction by A4,C2,ENVSYN:20;
     end;
     suppose ex M2 being EnvEpsTerm of V st
         eComp(M,N) = eComp(M2,eId V) & W = M2;
       then consider M2 being EnvEpsTerm of V such that
       C1: eComp(M,N) = eComp(M2,eId V) & W = M2;
-      thus contradiction by A3,C1,ENVEPS_1:14;
+      thus contradiction by A3,C1,ENVSYN:14;
     end;
     suppose ex L2,M2,N2 being EnvEpsTerm of V, x2 being Element of V st
         eComp(M,N) = eComp(eExt(L2,x2,M2),N2) &
@@ -505,16 +506,16 @@ proof
       such that
       C1: eComp(M,N) = eComp(eExt(L2,x2,M2),N2) &
         W = eExt(eComp(L2,N2),x2,eComp(M2,N2));
-      C2: M = eExt(L2,x2,M2) by C1,ENVEPS_1:14;
-      thus contradiction by A4,C2,ENVEPS_1:44;
+      C2: M = eExt(L2,x2,M2) by C1,ENVSYN:14;
+      thus contradiction by A4,C2,ENVSYN:20;
     end;
     suppose ex M2,N2 being EnvEpsTerm of V, x2 being Element of V st
         eComp(M,N) = eComp(eVar x2, eExt(M2,x2,N2)) & W = M2;
       then consider M2,N2 being EnvEpsTerm of V, x2 being Element of V
       such that
       C1: eComp(M,N) = eComp(eVar x2, eExt(M2,x2,N2)) & W = M2;
-      C2: M = eVar x2 & N = eExt(M2,x2,N2) by C1,ENVEPS_1:14;
-      thus contradiction by A4,C2,ENVEPS_1:44;
+      C2: M = eVar x2 & N = eExt(M2,x2,N2) by C1,ENVSYN:14;
+      thus contradiction by A4,C2,ENVSYN:20;
     end;
     suppose ex M2,N2 being EnvEpsTerm of V, x2,y2 being Element of V st
         x2 <> y2 & eComp(M,N) = eComp(eVar x2, eExt(M2,y2,N2)) &
@@ -523,8 +524,8 @@ proof
       such that
       C1: x2 <> y2 & eComp(M,N) = eComp(eVar x2, eExt(M2,y2,N2)) &
         W = eComp(eVar x2, N2);
-      C2: M = eVar x2 & N = eExt(M2,y2,N2) by C1,ENVEPS_1:14;
-      thus contradiction by A4,C2,ENVEPS_1:44;
+      C2: M = eVar x2 & N = eExt(M2,y2,N2) by C1,ENVSYN:14;
+      thus contradiction by A4,C2,ENVSYN:20;
     end;
     suppose ex M2,N2,L2 being EnvEpsTerm of V st
         eComp(M,N) = eComp(eApp(M2,N2),L2) &
@@ -532,22 +533,22 @@ proof
       then consider M2,N2,L2 being EnvEpsTerm of V such that
       C1: eComp(M,N) = eComp(eApp(M2,N2),L2) &
         W = eApp(eComp(M2,L2),eComp(N2,L2));
-      C2: M = eApp(M2,N2) by C1,ENVEPS_1:14;
-      thus contradiction by A4,C2,ENVEPS_1:44;
+      C2: M = eApp(M2,N2) by C1,ENVSYN:14;
+      thus contradiction by A4,C2,ENVSYN:20;
     end;
     suppose ex M2,N2 being EnvEpsTerm of V st
         eComp(M,N) = eComp(eEps M2,N2) & W = eEps M2;
       then consider M2,N2 being EnvEpsTerm of V such that
       C1: eComp(M,N) = eComp(eEps M2,N2) & W = eEps M2;
-      C2: M = eEps M2 by C1,ENVEPS_1:14;
-      thus contradiction by A4,C2,ENVEPS_1:44;
+      C2: M = eEps M2 by C1,ENVSYN:14;
+      thus contradiction by A4,C2,ENVSYN:20;
     end;
     suppose ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in SigmaRed(V) &
         eComp(M,N) = eComp(M2,N2) & W = eComp(M3,N2);
       then consider M2,M3,N2 being EnvEpsTerm of V such that
       C1: [M2,M3] in SigmaRed(V) & eComp(M,N) = eComp(M2,N2) &
         W = eComp(M3,N2);
-      M = M2 by C1,ENVEPS_1:14;
+      M = M2 by C1,ENVSYN:14;
       hence contradiction by A1,C1,Th2;
     end;
     suppose ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in SigmaRed(V) &
@@ -555,7 +556,7 @@ proof
       then consider M2,N2,N3 being EnvEpsTerm of V such that
       C1: [N2,N3] in SigmaRed(V) & eComp(M,N) = eComp(M2,N2) &
         W = eComp(M2,N3);
-      N = N2 by C1,ENVEPS_1:14;
+      N = N2 by C1,ENVSYN:14;
       hence contradiction by A2,C1,Th2;
     end;
   end;
@@ -570,7 +571,7 @@ theorem Th15:
 proof
   let V be non empty set, M be EnvEpsTerm of V, x be Element of V;
   A1: SigmaRed(V) reduces M, snf M by Th3;
-  A2: SigmaRed(V) reduces eLam(x,M), eLam(x, snf M) by A1,ENVEPS_2:3;
+  A2: SigmaRed(V) reduces eLam(x,M), eLam(x, snf M) by A1,ENVSIG:36;
   snf M is_a_normal_form_wrt SigmaRed(V) by Th3;
   then eLam(x, snf M) is_a_normal_form_wrt SigmaRed(V) by Th10;
   hence thesis by A2,Th4;
@@ -582,7 +583,7 @@ theorem Th16:
 proof
   let V be non empty set, M be EnvEpsTerm of V;
   A1: SigmaRed(V) reduces M, snf M by Th3;
-  A2: SigmaRed(V) reduces eEps M, eEps (snf M) by A1,ENVEPS_2:8;
+  A2: SigmaRed(V) reduces eEps M, eEps (snf M) by A1,ENVSIG:41;
   snf M is_a_normal_form_wrt SigmaRed(V) by Th3;
   then eEps (snf M) is_a_normal_form_wrt SigmaRed(V) by Th11;
   hence thesis by A2,Th4;
@@ -594,8 +595,8 @@ theorem Th17:
 proof
   let V be non empty set, M,N be EnvEpsTerm of V;
   A1: SigmaRed(V) reduces M, snf M & SigmaRed(V) reduces N, snf N by Th3;
-  A2: SigmaRed(V) reduces eApp(M,N), eApp(snf M, N) by A1,ENVEPS_2:1;
-  SigmaRed(V) reduces eApp(snf M,N), eApp(snf M, snf N) by A1,ENVEPS_2:2;
+  A2: SigmaRed(V) reduces eApp(M,N), eApp(snf M, N) by A1,ENVSIG:34;
+  SigmaRed(V) reduces eApp(snf M,N), eApp(snf M, snf N) by A1,ENVSIG:35;
   then A3: SigmaRed(V) reduces eApp(M,N), eApp(snf M, snf N)
     by A2,REWRITE1:16;
   snf M is_a_normal_form_wrt SigmaRed(V) &
@@ -610,9 +611,9 @@ theorem Th18:
 proof
   let V be non empty set, M,N be EnvEpsTerm of V, x be Element of V;
   A1: SigmaRed(V) reduces M, snf M & SigmaRed(V) reduces N, snf N by Th3;
-  A2: SigmaRed(V) reduces eExt(M,x,N), eExt(snf M, x, N) by A1,ENVEPS_2:4;
+  A2: SigmaRed(V) reduces eExt(M,x,N), eExt(snf M, x, N) by A1,ENVSIG:37;
   SigmaRed(V) reduces eExt(snf M,x,N), eExt(snf M, x, snf N)
-    by A1,ENVEPS_2:5;
+    by A1,ENVSIG:38;
   then A3: SigmaRed(V) reduces eExt(M,x,N), eExt(snf M, x, snf N)
     by A2,REWRITE1:16;
   snf M is_a_normal_form_wrt SigmaRed(V) &
@@ -627,8 +628,8 @@ theorem Th19:
 proof
   let V be non empty set, M,N be EnvEpsTerm of V;
   A1: SigmaRed(V) reduces M, snf M & SigmaRed(V) reduces N, snf N by Th3;
-  A2: SigmaRed(V) reduces eComp(M,N), eComp(snf M, N) by A1,ENVEPS_2:6;
-  SigmaRed(V) reduces eComp(snf M,N), eComp(snf M, snf N) by A1,ENVEPS_2:7;
+  A2: SigmaRed(V) reduces eComp(M,N), eComp(snf M, N) by A1,ENVSIG:39;
+  SigmaRed(V) reduces eComp(snf M,N), eComp(snf M, snf N) by A1,ENVSIG:40;
   then SigmaRed(V) reduces eComp(M,N), eComp(snf M, snf N)
     by A2,REWRITE1:16;
   hence thesis by Th6;

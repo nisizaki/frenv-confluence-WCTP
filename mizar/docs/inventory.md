@@ -5,8 +5,7 @@
 > articles live in `text/` and the vocabularies in `dict/` — the same layout as
 > `mizar/` here. It is reproduced unchanged except for the links, so a few file
 > names it mentions belong to that repository: its `build.sh` corresponds to
-> `verify.sh` here, and its smoke-test article `text/tst1.miz` is not part of
-> this artifact. The document is in Japanese.
+> `verify.sh` here. The document is in Japanese.
 
 本リポジトリ（Mizar）で作成したファイルの一覧と、参照実装
 [nisizaki/frenv-confluence-WCTP](https://github.com/nisizaki/frenv-confluence-WCTP)
@@ -19,60 +18,65 @@
 
 ## 1. 今回作成した成果物（Mizar）
 
+2026-09-15 の可読性のための全面改訂を反映した現在の構成。
+
 ### 1.1 証明スクリプト（article）
 
 | ファイル | 行数 | 文字数 | 内容 |
 |---|---:|---:|---|
-| `text/enveps_1.miz` | 2,104 | 73,146 | λ_EnvEps の構文、7 構成子、構造帰納法、長さ測度、σ 簡約、停止性 |
-| `text/enveps_2.miz` | 866 | 31,313 | 多段適合則、反転補題、16 規則の命名 |
-| `text/enveps_3.miz` | 1,091 | 53,084 | 頭部別反転、収束の目撃者、簡約の連結 |
-| `text/enveps_4.miz` | 2,228 | 106,694 | 8 つの根規則ピーク、合成のピーク、局所合流性、σ の合流性 |
-| `text/enveps_5.miz` | 635 | 25,033 | σ 正規形とその文法、正規形関手 `snf` |
-| `text/enveps_6.miz` | 2,194 | 85,985 | β 簡約、βσ 簡約、19 規則 |
-| `text/enveps_7.miz` | 2,651 | 112,313 | 並行簡約、三角性質、ダイヤモンド性、β の合流性 |
-| `text/enveps_8.miz` | 1,461 | 63,198 | 合成両立性、鍵補題 |
-| `text/enveps_9.miz` | 421 | 15,168 | Hardin の解釈法、λ_EnvEps の完全合流性 |
+| `text/envsyn.miz` | 1,258 | 45,054 | λ_EnvEps の構文、構造帰納法・構造再帰スキーム、項上の関係 |
+| `text/envlen.miz` | 388 | 13,072 | 長さ測度 |
+| `text/envcc.miz` | 1,709 | 65,612 | 合同閉包 `CC Q` の一般論 |
+| `text/envsig.miz` | 1,601 | 62,822 | σ の根規則、σ 簡約、16 規則、反転、長さ減少、停止性 |
+| `text/envbeta.miz` | 1,217 | 45,707 | β の根規則、β 簡約と βσ 簡約、19 規則、反転 |
+| `text/envpeak.miz` | 2,229 | 106,012 | 8 つの根規則ピーク、合成のピーク、局所合流性、σ の合流性 |
+| `text/envnf.miz` | 636 | 25,028 | σ 正規形とその文法、正規形関手 `snf` |
+| `text/envpar.miz` | 2,678 | 113,315 | 並行簡約、三角性質、ダイヤモンド性、β の合流性 |
+| `text/envkey.miz` | 1,461 | 62,639 | 合成両立性、鍵補題 |
+| `text/envconf.miz` | 421 | 15,182 | Hardin の解釈法、λ_EnvEps の完全合流性 |
 | `text/frenv_1.miz` | 818 | 29,699 | λ_FREnv の構文 |
-| `text/frenv_2.miz` | 1,097 | 39,624 | λ_FREnv の βσ 簡約 |
-| `text/frenv_3.miz` | 799 | 28,117 | 翻訳、再帰等式、全射性、逆転 |
-| `text/frenv_4.miz` | 473 | 19,735 | simulation |
-| `text/frenv_5.miz` | 879 | 36,572 | lifting、λ_FREnv の完全合流性 |
-| **小計（14 本）** | **17,717** | **719,681** | |
+| `text/frenv_2.miz` | 1,099 | 39,756 | λ_FREnv の βσ 簡約 |
+| `text/frenv_3.miz` | 800 | 28,172 | 翻訳、再帰等式、全射性、逆転 |
+| `text/frenv_4.miz` | 464 | 19,870 | simulation |
+| `text/frenv_5.miz` | 880 | 36,605 | lifting、λ_FREnv の完全合流性 |
+| **小計（15 本）** | **17,659** | **708,545** | |
 
 ### 1.2 語彙ファイル
 
 | ファイル | 行数 | 文字数 |
 |---|---:|---:|
-| `dict/enveps_1.voc` | 15 | 126 |
-| `dict/enveps_5.voc` | 1 | 5 |
-| `dict/enveps_6.voc` | 3 | 36 |
-| `dict/enveps_7.voc` | 3 | 35 |
-| `dict/enveps_9.voc` | 1 | 8 |
+| `dict/envsyn.voc` | 15 | 116 |
+| `dict/envlen.voc` | 2 | 17 |
+| `dict/envcc.voc` | 2 | 16 |
+| `dict/envsig.voc` | 2 | 21 |
+| `dict/envbeta.voc` | 4 | 48 |
+| `dict/envnf.voc` | 1 | 5 |
+| `dict/envpar.voc` | 3 | 35 |
+| `dict/envconf.voc` | 1 | 8 |
 | `dict/frenv_1.voc` | 9 | 67 |
 | `dict/frenv_2.voc` | 2 | 18 |
 | `dict/frenv_3.voc` | 5 | 27 |
-| **小計（8 本）** | **39** | **322** |
+| **小計（11 本）** | **46** | **378** |
 
-### 1.3 スクリプト・文書・その他
+### 1.3 スクリプト・文書
 
 | ファイル | 行数 | 文字数 | 内容 |
 |---|---:|---:|---|
 | `check.sh` | 7 | 169 | article 1 本を検証しエラーファイルを表示 |
-| `build.sh` | 14 | 441 | 複数 article を順に検証し `prel/` へ書き出す |
-| `README.md` | 152 | 7,107 | 主定理、article 一覧、証明の骨格、設計方針 |
-| `WORKLOG.md` | 454 | 21,572 | 指示の逐語引用と作業記録（開始/終了時刻つき） |
+| `build.sh` | 20 | 655 | 全 article を依存順に検証し `prel/` へ書き出す |
+| `README.md` | 173 | 8,419 | 主定理、article 一覧、証明の骨格、設計方針 |
+| `WORKLOG.md` | 531 | 23,893 | 指示の逐語引用と作業記録（開始/終了時刻つき） |
 | `TIMELINE.md` | 111 | 4,315 | 段階ごとの所要時間と時間的推移 |
-| `.gitignore` | 4 | 87 | Mizar 中間ファイルと `prel/` を除外 |
-| `text/tst1.miz` | 12 | 379 | 環境確認用のダミー article（証明本体ではない） |
+| `INVENTORY.md` | 265 | 9,609 | 本文書 |
 
 ### 1.4 Mizar 側合計
 
 | 区分 | ファイル数 | 行数 | 文字数 |
 |---|---:|---:|---:|
-| 証明スクリプト（`.miz` + `.voc`） | 22 | 17,756 | 720,003 |
-| ビルドスクリプト | 2 | 21 | 610 |
-| 文書 | 3 | 717 | 32,994 |
-| **総計（tst1.miz と .gitignore を除く）** | **27** | **18,494** | **753,607** |
+| 証明スクリプト（`.miz` + `.voc`） | 26 | 17,705 | 708,923 |
+| ビルドスクリプト | 2 | 27 | 824 |
+| 文書 | 4 | 1,080 | 46,236 |
+| **総計** | **32** | **18,812** | **755,983** |
 
 ---
 
@@ -194,7 +198,7 @@
 
 | 証明支援系 | ファイル数 | 行数 | 文字数 | 行数比 | 文字数比 | 1 行あたり文字数 |
 |---|---:|---:|---:|---:|---:|---:|
-| Mizar（`.miz` + `.voc`） | 22 | 17,756 | 720,003 | 6.01 | 6.03 | 40.6 |
+| Mizar（`.miz` + `.voc`） | 26 | 17,705 | 708,923 | 5.99 | 5.94 | 40.0 |
 | Isabelle/HOL（`.thy` + `ROOT`） | 51 | 6,892 | 355,977 | 2.33 | 2.98 | 51.6 |
 | Lean 4（`.lean`） | 15 | 2,956 | 119,392 | 1.00 | 1.00 | 40.4 |
 
@@ -207,12 +211,12 @@
 
 | 証明支援系 | 抽象書き換え系の調達 | 行数（自作） | 行数（ライブラリ込み） |
 |---|---|---:|---:|
-| Mizar | MML の `REWRITE1` をそのまま使用（本リポジトリには含まれない） | 17,756 | 17,756 |
+| Mizar | MML の `REWRITE1` をそのまま使用（本リポジトリには含まれない） | 17,705 | 17,705 |
 | Isabelle/HOL | AFP の `Abstract-Rewriting` をリポジトリに vendoring | 6,892 | 15,963 |
 | Lean 4 | Mathlib を使わず `Rewriting.lean`（142 行）を自前で用意 | 2,956 | 2,956 |
 
 vendoring した AFP を含めると Isabelle 版は 15,963 行・725,739 文字となり、
-Mizar 版（17,756 行・720,003 文字）とほぼ同規模になる。
+Mizar 版（17,705 行・708,923 文字）とほぼ同規模になる。
 Mizar 版が MML の `REWRITE1` に依存している分を勘定に入れると、
 実質的な差は「Mizar ≈ Isabelle ≫ Lean」に近い。
 
@@ -220,7 +224,7 @@ Mizar 版が MML の `REWRITE1` に依存している分を勘定に入れると
 
 | 証明支援系 | 証明 | 文書 | その他 | 総行数 | 総文字数 |
 |---|---:|---:|---:|---:|---:|
-| Mizar | 17,756 | 717 | 21 | 18,494 | 753,607 |
+| Mizar | 17,705 | 1,080 | 27 | 18,812 | 755,983 |
 | Isabelle/HOL（vendor 除く） | 6,892 | 3,274 | — | 10,166 | 601,115 |
 | Lean 4 | 2,956 | 661 | 13 | 3,630 | 143,243 |
 
@@ -266,8 +270,13 @@ Lean は `simp`/`omega` に加えて `cases ... <;> simp_all` のような組み
 **(d) 帰納的定義の有無**
 
 Mizar には帰納的データ型も帰納的述語もない。項は `DTCONSTR` の構文解析木として
-構成し（`enveps_1` の前半 850 行）、簡約関係は「規則で閉じた最小の関係」として
-定義したうえで、反転補題を別途証明する必要がある（各簡約関係につき 300〜500 行）。
-Isabelle の `datatype` + `inductive` と Lean の `inductive` は、
-これらを宣言 1 つで与え、場合分け・帰納法・反転を自動生成する。
-Mizar 版の行数が大きい主因はここにある。
+構成し（`envsyn`）、簡約関係は「規則で閉じた最小の関係」として定義したうえで、
+反転補題を別途証明する必要がある。Isabelle の `datatype` + `inductive` と
+Lean の `inductive` は、これらを宣言 1 つで与え、場合分け・帰納法・反転を
+自動生成する。Mizar 版の行数が大きい主因はここにある。
+
+2026-09-15 の改訂で、この定型作業は 2 つの部品に括り出した。構造再帰は
+`ENVSYN:sch 2` として一度だけ証明され、合同閉包の一般論（合同規則・反転・
+頭部別反転・多段合同則・単調性・和との可換性）は `envcc` で一度だけ証明されて
+σ・β・βσ の 3 つの簡約関係で共有される。行数の合計は改訂前とほぼ同じだが
+（17,717 → 17,659）、各計算系の規則は 1 回しか書かれていない。

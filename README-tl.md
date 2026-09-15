@@ -29,7 +29,7 @@ lean/
   docs/                 Mga espesipikasyon ng syntax at reduction sa Ingles
   README.md             Mga tagubilin sa Lean build, estruktura, at daloy ng patunay
 mizar/
-  text/                 Ang labing-apat na artikulo, at ang artikulong pang-audit
+  text/                 Ang labinlimang artikulo, at ang artikulong pang-audit
   dict/                 Mga pribadong vocabulary para sa mga simbolong idinagdag dito
   verify.sh             Nagbeberipika ng lahat ng artikulo ayon sa pagkakasunod
   check.sh              Nagbeberipika ng isang artikulo
@@ -99,7 +99,7 @@ export MIZFILES=/usr/local/share/mizar   # kung hindi pa ito itinakda ng install
 ./verify.sh
 ```
 
-Binebalida nito ang labing-apat na artikulo ayon sa pagkakasunod ng depensiya, ini-export ang bawat isa sa lokal na `prel/` upang mai-import ito ng susunod, at sa huli ay sinusuri ang isang artikulong pang-audit na inuulit ang bawat pangunahing resulta at pinatutunayan ito sa pamamagitan lamang ng sipi nito. Walang ginagamit na aklatan maliban sa karaniwang MML at walang dina-download habang nagbeberipika. Itinatatag ng build ang
+Binebalida nito ang labinlimang artikulo ayon sa pagkakasunod ng depensiya, ini-export ang bawat isa sa lokal na `prel/` upang mai-import ito ng susunod, at sa huli ay sinusuri ang isang artikulong pang-audit na inuulit ang bawat pangunahing resulta at pinatutunayan ito sa pamamagitan lamang ng sipi nito. Walang ginagamit na aklatan maliban sa karaniwang MML at walang dina-download habang nagbeberipika. Itinatatag ng build ang
 
 ```text
 FRENV_5:8   for V being non empty set holds FrRed(V) is confluent

@@ -6,29 +6,30 @@ environ
       RELAT_1, FUNCT_1, ORDINAL1, CARD_1, ARYTM_3, XXREAL_0, NAT_1, TREES_1,
       TREES_2, TREES_3, TREES_4, LANG1, STRUCT_0, DTCONSTR, MCART_1, XTUPLE_0,
       FINSET_1, TDGROUP, FUNCOP_1, ARYTM_1, FUNCT_7, XREAL_0, XCMPLX_0,
-      REWRITE1, PBOOLE, ENVEPS_1, FRENV_1, FRENV_3;
+      REWRITE1, PBOOLE, ENVSYN, ENVLEN, FRENV_1, FRENV_3, ENVCC, ENVSIG,
+      ENVBETA;
  notations TARSKI, XBOOLE_0, ZFMISC_1, SUBSET_1, ORDINAL1, NUMBERS, XCMPLX_0,
-      XXREAL_0, NAT_1, RELAT_1, RELSET_1, FUNCT_1, FUNCT_2, FINSEQ_1, FINSEQ_2,
-      MCART_1, XTUPLE_0, DOMAIN_1, STRUCT_0, LANG1, TREES_1, TREES_2, TREES_3,
-      TREES_4, DTCONSTR, FUNCOP_1, XREAL_0, PBOOLE, REWRITE1, ENVEPS_1,
-      FRENV_1;
+      XXREAL_0, NAT_1, RELAT_1, RELSET_1, FUNCT_1, FUNCT_2, FINSEQ_1,
+      FINSEQ_2, MCART_1, XTUPLE_0, DOMAIN_1, STRUCT_0, LANG1, TREES_1,
+      TREES_2, TREES_3, TREES_4, DTCONSTR, FUNCOP_1, XREAL_0, PBOOLE,
+      REWRITE1, ENVSYN, ENVLEN, FRENV_1, ENVCC, ENVSIG, ENVBETA;
  constructors NUMBERS, XCMPLX_0, XXREAL_0, NAT_1, RELSET_1, FUNCT_2, FINSEQ_1,
-      FINSEQ_2, MCART_1, XTUPLE_0, DOMAIN_1, STRUCT_0, LANG1, TREES_1, TREES_2,
-      TREES_3, TREES_4, DTCONSTR, PARTFUN1, BINOP_1, SETWISEO, XREAL_0,
-      FUNCOP_1, SUBSET_1, CARD_3, FINSEQOP, FINSEQ_4, FINSOP_1, PRE_POLY,
-      FUNCT_1, RELAT_1, PBOOLE, REWRITE1, ENVEPS_1, FRENV_1;
+      FINSEQ_2, MCART_1, XTUPLE_0, DOMAIN_1, STRUCT_0, LANG1, TREES_1,
+      TREES_2, TREES_3, TREES_4, DTCONSTR, PARTFUN1, BINOP_1, SETWISEO,
+      XREAL_0, FUNCOP_1, SUBSET_1, CARD_3, FINSEQOP, FINSEQ_4, FINSOP_1,
+      PRE_POLY, FUNCT_1, RELAT_1, PBOOLE, REWRITE1, ENVSYN, ENVLEN, FRENV_1,
+      ENVCC, ENVSIG, ENVBETA;
  registrations XBOOLE_0, SUBSET_1, RELAT_1, FUNCT_1, ORDINAL1, XREAL_0, NAT_1,
       FINSEQ_1, FINSEQ_2, FINSET_1, CARD_1, STRUCT_0, LANG1, TREES_1, TREES_2,
       TREES_3, TREES_4, DTCONSTR, XTUPLE_0, VALUED_0, FUNCOP_1, XCMPLX_0,
-      XXREAL_0, NUMBERS, MEMBERED, PBOOLE, REWRITE1, ENVEPS_1, FRENV_1;
+      XXREAL_0, NUMBERS, MEMBERED, PBOOLE, REWRITE1, ENVSYN, FRENV_1, ENVSIG;
  requirements NUMERALS, REAL, BOOLE, SUBSET, ARITHM;
  definitions TARSKI, XBOOLE_0, DTCONSTR, TREES_3, TREES_4, RELAT_1, FUNCT_1,
-      FINSEQ_1, FUNCOP_1, SUBSET_1, REWRITE1, ENVEPS_1, FRENV_1;
+      FINSEQ_1, FUNCOP_1, SUBSET_1, REWRITE1, ENVSYN, ENVLEN, FRENV_1;
  theorems TARSKI, XBOOLE_0, ZFMISC_1, FINSEQ_1, FINSEQ_2, MCART_1, TREES_4,
-      DTCONSTR, XTUPLE_0, FUNCT_1, FUNCT_2, FUNCOP_1, SUBSET_1, ENVEPS_1,
-      FRENV_1;
+      DTCONSTR, XTUPLE_0, FUNCT_1, FUNCT_2, FUNCOP_1, SUBSET_1, ENVSYN,
+      ENVLEN, FRENV_1;
  schemes DTCONSTR, FRENV_1;
-
 begin :: Selectors
 
 reserve V for non empty set;
@@ -318,18 +319,18 @@ theorem Th8:
 proof
   let v be Element of V;
   set G = EnvEpsGram(V);
-  A0: the carrier of G = EnvEpsSym(V) by ENVEPS_1:def 2;
-  then reconsider x = [0,v] as Symbol of G by ENVEPS_1:1;
-  reconsider y = [1,0] as Symbol of G by A0,ENVEPS_1:2;
-  A1: x in Terminals G & y in Terminals G by ENVEPS_1:5;
+  A0: the carrier of G = EnvEpsSym(V) by ENVSYN:def 2;
+  then reconsider x = [0,v] as Symbol of G by ENVSYN:1;
+  reconsider y = [1,0] as Symbol of G by A0,ENVSYN:2;
+  A1: x in Terminals G & y in Terminals G by ENVSYN:5;
   A2: root-tree [0,v] = fVar v by FRENV_1:def 3;
   A3: root-tree [1,0] = fId V by FRENV_1:def 4;
   thus tr (eVar v) = (TrF(V)).(eVar v) by Def5
-    .= (TrF(V)).(root-tree x) by ENVEPS_1:def 3
+    .= (TrF(V)).(root-tree x) by ENVSYN:def 3
     .= fsel(V, fVar v) by A1,A2,Def4
     .= fVar v by Th1;
   thus tr (eId V) = (TrF(V)).(eId V) by Def5
-    .= (TrF(V)).(root-tree y) by ENVEPS_1:def 4
+    .= (TrF(V)).(root-tree y) by ENVSYN:def 4
     .= fsel(V, fId V) by A1,A3,Def4
     .= fId V by Th1;
 end;
@@ -341,16 +342,16 @@ proof
   let v be Element of V, M be EnvEpsTerm of V;
   set G = EnvEpsGram(V);
   set f = TrF(V);
-  A0: the carrier of G = EnvEpsSym(V) by ENVEPS_1:def 2;
-  then reconsider x = [2,v] as Symbol of G by ENVEPS_1:1;
-  A1: x ==> roots <*M*> by ENVEPS_1:20;
+  A0: the carrier of G = EnvEpsSym(V) by ENVSYN:def 2;
+  then reconsider x = [2,v] as Symbol of G by ENVSYN:1;
+  A1: x ==> roots <*M*> by ENVSYN:18;
   set a1 = fseq(V,f*<*M*>,1);
   set a2 = fseq(V,f*<*M*>,2);
   A2: a1 = tr M by Th5;
   A3: x`1 = 2 & x`2 = v;
   A4: vsel(V,x`2) = v by A3,Th2;
   thus tr (eLam(v,M)) = f.(eLam(v,M)) by Def5
-    .= f.(x-tree <*M*>) by ENVEPS_1:def 5
+    .= f.(x-tree <*M*>) by ENVSYN:def 5
     .= fsel(V, IFEQ(x`1,2,fLam(vsel(V,x`2),a1),
          IFEQ(x`1,5,fEps a1,IFEQ(x`1,3,fApp(a1,a2),
          IFEQ(x`1,4,fExt(a1,vsel(V,x`2),a2),fApp(fEps a1,a2))))))
@@ -365,15 +366,15 @@ proof
   let M be EnvEpsTerm of V;
   set G = EnvEpsGram(V);
   set f = TrF(V);
-  A0: the carrier of G = EnvEpsSym(V) by ENVEPS_1:def 2;
-  then reconsider x = [5,0] as Symbol of G by ENVEPS_1:2;
-  A1: x ==> roots <*M*> by ENVEPS_1:20;
+  A0: the carrier of G = EnvEpsSym(V) by ENVSYN:def 2;
+  then reconsider x = [5,0] as Symbol of G by ENVSYN:2;
+  A1: x ==> roots <*M*> by ENVSYN:18;
   set a1 = fseq(V,f*<*M*>,1);
   set a2 = fseq(V,f*<*M*>,2);
   A2: a1 = tr M by Th5;
   A3: x`1 = 5;
   thus tr (eEps M) = f.(eEps M) by Def5
-    .= f.(x-tree <*M*>) by ENVEPS_1:def 6
+    .= f.(x-tree <*M*>) by ENVSYN:def 6
     .= fsel(V, IFEQ(x`1,2,fLam(vsel(V,x`2),a1),
          IFEQ(x`1,5,fEps a1,IFEQ(x`1,3,fApp(a1,a2),
          IFEQ(x`1,4,fExt(a1,vsel(V,x`2),a2),fApp(fEps a1,a2))))))
@@ -388,16 +389,16 @@ proof
   let M,N be EnvEpsTerm of V;
   set G = EnvEpsGram(V);
   set f = TrF(V);
-  A0: the carrier of G = EnvEpsSym(V) by ENVEPS_1:def 2;
-  then reconsider x = [3,0] as Symbol of G by ENVEPS_1:2;
+  A0: the carrier of G = EnvEpsSym(V) by ENVSYN:def 2;
+  then reconsider x = [3,0] as Symbol of G by ENVSYN:2;
   reconsider ts = <*M,N*> as FinSequence of TS(EnvEpsGram(V)) by FINSEQ_2:13;
-  A1: x ==> roots ts by ENVEPS_1:21;
+  A1: x ==> roots ts by ENVSYN:19;
   set a1 = fseq(V,f*ts,1);
   set a2 = fseq(V,f*ts,2);
   A2: a1 = tr M & a2 = tr N by Th6;
   A3: x`1 = 3;
   thus tr (eApp(M,N)) = f.(eApp(M,N)) by Def5
-    .= f.(x-tree <*M,N*>) by ENVEPS_1:def 7
+    .= f.(x-tree <*M,N*>) by ENVSYN:def 7
     .= fsel(V, IFEQ(x`1,2,fLam(vsel(V,x`2),a1),
          IFEQ(x`1,5,fEps a1,IFEQ(x`1,3,fApp(a1,a2),
          IFEQ(x`1,4,fExt(a1,vsel(V,x`2),a2),fApp(fEps a1,a2))))))
@@ -413,17 +414,17 @@ proof
   let M,N be EnvEpsTerm of V, v be Element of V;
   set G = EnvEpsGram(V);
   set f = TrF(V);
-  A0: the carrier of G = EnvEpsSym(V) by ENVEPS_1:def 2;
-  then reconsider x = [4,v] as Symbol of G by ENVEPS_1:1;
+  A0: the carrier of G = EnvEpsSym(V) by ENVSYN:def 2;
+  then reconsider x = [4,v] as Symbol of G by ENVSYN:1;
   reconsider ts = <*M,N*> as FinSequence of TS(EnvEpsGram(V)) by FINSEQ_2:13;
-  A1: x ==> roots ts by ENVEPS_1:21;
+  A1: x ==> roots ts by ENVSYN:19;
   set a1 = fseq(V,f*ts,1);
   set a2 = fseq(V,f*ts,2);
   A2: a1 = tr M & a2 = tr N by Th6;
   A3: x`1 = 4 & x`2 = v;
   A4: vsel(V,x`2) = v by A3,Th2;
   thus tr (eExt(M,v,N)) = f.(eExt(M,v,N)) by Def5
-    .= f.(x-tree <*M,N*>) by ENVEPS_1:def 9
+    .= f.(x-tree <*M,N*>) by ENVSYN:def 9
     .= fsel(V, IFEQ(x`1,2,fLam(vsel(V,x`2),a1),
          IFEQ(x`1,5,fEps a1,IFEQ(x`1,3,fApp(a1,a2),
          IFEQ(x`1,4,fExt(a1,vsel(V,x`2),a2),fApp(fEps a1,a2))))))
@@ -439,16 +440,16 @@ proof
   let M,N be EnvEpsTerm of V;
   set G = EnvEpsGram(V);
   set f = TrF(V);
-  A0: the carrier of G = EnvEpsSym(V) by ENVEPS_1:def 2;
-  then reconsider x = [6,0] as Symbol of G by ENVEPS_1:2;
+  A0: the carrier of G = EnvEpsSym(V) by ENVSYN:def 2;
+  then reconsider x = [6,0] as Symbol of G by ENVSYN:2;
   reconsider ts = <*M,N*> as FinSequence of TS(EnvEpsGram(V)) by FINSEQ_2:13;
-  A1: x ==> roots ts by ENVEPS_1:21;
+  A1: x ==> roots ts by ENVSYN:19;
   set a1 = fseq(V,f*ts,1);
   set a2 = fseq(V,f*ts,2);
   A2: a1 = tr M & a2 = tr N by Th6;
   A3: x`1 = 6;
   thus tr (eComp(M,N)) = f.(eComp(M,N)) by Def5
-    .= f.(x-tree <*M,N*>) by ENVEPS_1:def 8
+    .= f.(x-tree <*M,N*>) by ENVSYN:def 8
     .= fsel(V, IFEQ(x`1,2,fLam(vsel(V,x`2),a1),
          IFEQ(x`1,5,fEps a1,IFEQ(x`1,3,fApp(a1,a2),
          IFEQ(x`1,4,fExt(a1,vsel(V,x`2),a2),fApp(fEps a1,a2))))))
@@ -519,7 +520,7 @@ theorem Th15:
 proof
   let M be EnvEpsTerm of V, x be Element of V;
   assume A0: tr M = fVar x;
-  per cases by ENVEPS_1:17;
+  per cases by ENVSYN:17;
   suppose ex v being Element of V st M = eVar v;
     then consider v being Element of V such that B1: M = eVar v;
     tr M = fVar v by B1,Th8;
@@ -565,7 +566,7 @@ theorem Th16:
 proof
   let M be EnvEpsTerm of V;
   assume A0: tr M = fId V;
-  per cases by ENVEPS_1:17;
+  per cases by ENVSYN:17;
   suppose ex v being Element of V st M = eVar v;
     then consider v being Element of V such that B1: M = eVar v;
     tr M = fVar v by B1,Th8;
@@ -611,7 +612,7 @@ theorem Th17:
 proof
   let M be EnvEpsTerm of V, x be Element of V, a be FrEnvTerm of V;
   assume A0: tr M = fLam(x,a);
-  per cases by ENVEPS_1:17;
+  per cases by ENVSYN:17;
   suppose ex v being Element of V st M = eVar v;
     then consider v being Element of V such that B1: M = eVar v;
     tr M = fVar v by B1,Th8;
@@ -658,7 +659,7 @@ theorem Th18:
 proof
   let M be EnvEpsTerm of V, a be FrEnvTerm of V;
   assume A0: tr M = fEps a;
-  per cases by ENVEPS_1:17;
+  per cases by ENVSYN:17;
   suppose ex v being Element of V st M = eVar v;
     then consider v being Element of V such that B1: M = eVar v;
     tr M = fVar v by B1,Th8;
@@ -706,7 +707,7 @@ theorem Th19:
 proof
   let M be EnvEpsTerm of V, x be Element of V, a,b be FrEnvTerm of V;
   assume A0: tr M = fExt(a,x,b);
-  per cases by ENVEPS_1:17;
+  per cases by ENVSYN:17;
   suppose ex v being Element of V st M = eVar v;
     then consider v being Element of V such that B1: M = eVar v;
     tr M = fVar v by B1,Th8;
@@ -756,7 +757,7 @@ theorem Th20:
 proof
   let M be EnvEpsTerm of V, a,b be FrEnvTerm of V;
   assume A0: tr M = fApp(a,b);
-  per cases by ENVEPS_1:17;
+  per cases by ENVSYN:17;
   suppose ex v being Element of V st M = eVar v;
     then consider v being Element of V such that B1: M = eVar v;
     tr M = fVar v by B1,Th8;

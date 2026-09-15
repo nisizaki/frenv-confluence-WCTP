@@ -1,0 +1,1709 @@
+:: The compatible closure of a relation on lambda_EnvEps terms
+
+environ
+
+ vocabularies NUMBERS, XBOOLE_0, SUBSET_1, TARSKI, ZFMISC_1, FINSEQ_1,
+      RELAT_1, FUNCT_1, ORDINAL1, CARD_1, ARYTM_3, XXREAL_0, NAT_1, TREES_1,
+      TREES_2, TREES_3, TREES_4, LANG1, STRUCT_0, DTCONSTR, MCART_1, XTUPLE_0,
+      FINSET_1, TDGROUP, FUNCOP_1, ARYTM_1, FUNCT_7, XREAL_0, XCMPLX_0,
+      REWRITE1, PBOOLE, ENVSYN, ENVCC;
+ notations TARSKI, XBOOLE_0, ZFMISC_1, SUBSET_1, ORDINAL1, NUMBERS, XCMPLX_0,
+      XXREAL_0, NAT_1, RELAT_1, RELSET_1, FUNCT_1, FUNCT_2, FINSEQ_1, FINSEQ_2,
+      MCART_1, XTUPLE_0, DOMAIN_1, STRUCT_0, LANG1, TREES_1, TREES_2, TREES_3,
+      TREES_4, DTCONSTR, FUNCOP_1, XREAL_0, PBOOLE, REWRITE1, ENVSYN;
+ constructors NUMBERS, XCMPLX_0, XXREAL_0, NAT_1, RELSET_1, FUNCT_2, FINSEQ_1,
+      FINSEQ_2, MCART_1, XTUPLE_0, DOMAIN_1, STRUCT_0, LANG1, TREES_1, TREES_2,
+      TREES_3, TREES_4, DTCONSTR, PARTFUN1, BINOP_1, SETWISEO, XREAL_0,
+      FUNCOP_1, SUBSET_1, CARD_3, FINSEQOP, FINSEQ_4, FINSOP_1, PRE_POLY,
+      FUNCT_1, RELAT_1, PBOOLE, REWRITE1, ENVSYN;
+ registrations XBOOLE_0, SUBSET_1, RELAT_1, FUNCT_1, ORDINAL1, XREAL_0, NAT_1,
+      FINSEQ_1, FINSEQ_2, FINSET_1, CARD_1, STRUCT_0, LANG1, TREES_1, TREES_2,
+      TREES_3, TREES_4, DTCONSTR, XTUPLE_0, VALUED_0, FUNCOP_1, XCMPLX_0,
+      XXREAL_0, NUMBERS, MEMBERED, PBOOLE, REWRITE1, ENVSYN;
+ requirements NUMERALS, REAL, BOOLE, SUBSET, ARITHM;
+ definitions TARSKI, XBOOLE_0, RELAT_1, SUBSET_1, REWRITE1, ENVSYN;
+ theorems TARSKI, XBOOLE_0, XBOOLE_1, ZFMISC_1, XTUPLE_0, RELAT_1, REWRITE1,
+      NAT_1, XXREAL_0, FINSEQ_1, FINSEQ_3, FUNCT_1, ENVSYN;
+ schemes NAT_1;
+
+begin :: Relations closed under the congruence rules
+
+reserve V for non empty set;
+
+definition
+  let V be non empty set;
+  let Q,R be EnvEpsRel of V;
+  pred R is_cc_over Q means
+  :Def1:
+  (Q c= R) &
+  (for M,M1,N being EnvEpsTerm of V st [M,M1] in R holds [eApp(M,N),
+     eApp(M1,N)] in R) &
+  (for M,N,N1 being EnvEpsTerm of V st [N,N1] in R holds [eApp(M,N),
+     eApp(M,N1)] in R) &
+  (for M,M1 being EnvEpsTerm of V, x being Element of V st [M,M1] in R
+     holds [eLam(x,M), eLam(x,M1)] in R) &
+  (for M,M1,N being EnvEpsTerm of V, x being Element of V st [M,M1] in R
+     holds [eExt(M,x,N), eExt(M1,x,N)] in R) &
+  (for M,N,N1 being EnvEpsTerm of V, x being Element of V st [N,N1] in R
+     holds [eExt(M,x,N), eExt(M,x,N1)] in R) &
+  (for M,M1,N being EnvEpsTerm of V st [M,M1] in R holds [eComp(M,N),
+     eComp(M1,N)] in R) &
+  (for M,N,N1 being EnvEpsTerm of V st [N,N1] in R holds [eComp(M,N),
+     eComp(M,N1)] in R) &
+  (for M,M1 being EnvEpsTerm of V st [M,M1] in R holds [eEps M, eEps M1]
+     in R);
+end;
+
+definition
+  let V be non empty set;
+  let Q be EnvEpsRel of V;
+  func CC Q -> EnvEpsRel of V equals
+  :Def2:
+  { z where z is Element of [:TS(EnvEpsGram(V)),TS(EnvEpsGram(V)):] :
+      for R being EnvEpsRel of V st R is_cc_over Q holds z in R };
+  coherence
+  proof
+    set G = EnvEpsGram(V);
+    set D = [:TS G, TS G:];
+    set S = { z where z is Element of D :
+      for R being EnvEpsRel of V st R is_cc_over Q holds z in R };
+    S c= D
+    proof
+      let u be object;
+      assume u in S;
+      then ex z being Element of D st u = z &
+        for R being EnvEpsRel of V st R is_cc_over Q holds z in R;
+      hence thesis;
+    end;
+    hence thesis;
+  end;
+end;
+
+theorem Th1:
+  for V being non empty set, Q being EnvEpsRel of V,
+      M,N being EnvEpsTerm of V holds
+  ( [M,N] in CC Q iff
+    for R being EnvEpsRel of V st R is_cc_over Q holds [M,N] in R )
+proof
+  let V be non empty set, Q be EnvEpsRel of V, M,N be EnvEpsTerm of V;
+  set G = EnvEpsGram(V);
+  set D = [:TS G, TS G:];
+  A1: [M,N] in D by ZFMISC_1:87;
+  hereby
+    assume [M,N] in CC Q;
+    then [M,N] in { z where z is Element of D :
+      for R being EnvEpsRel of V st R is_cc_over Q holds z in R } by Def2;
+    then consider z being Element of D such that
+    B1: [M,N] = z and
+    B2: for R being EnvEpsRel of V st R is_cc_over Q holds z in R;
+    thus for R being EnvEpsRel of V st R is_cc_over Q
+      holds [M,N] in R by B1,B2;
+  end;
+  assume C1: for R being EnvEpsRel of V st R is_cc_over Q
+    holds [M,N] in R;
+  reconsider z = [M,N] as Element of D by A1;
+  z in { z2 where z2 is Element of D :
+    for R being EnvEpsRel of V st R is_cc_over Q holds z2 in R } by C1;
+  hence thesis by Def2;
+end;
+
+theorem Th2:
+  for V being non empty set, Q,R being EnvEpsRel of V
+  st R is_cc_over Q holds CC Q c= R
+proof
+  let V be non empty set, Q,R be EnvEpsRel of V;
+  assume A1: R is_cc_over Q;
+  set G = EnvEpsGram(V);
+  set D = [:TS G, TS G:];
+  now
+    let u be object;
+    assume u in CC Q;
+    then u in { z where z is Element of D :
+      for P being EnvEpsRel of V st P is_cc_over Q holds z in P } by Def2;
+    then consider z being Element of D such that
+    B1: u = z and
+    B2: for P being EnvEpsRel of V st P is_cc_over Q holds z in P;
+    thus u in R by A1,B1,B2;
+  end;
+  hence thesis by TARSKI:def 3;
+end;
+
+theorem Th3:
+  for V being non empty set, Q being EnvEpsRel of V holds CC Q is_cc_over Q
+proof
+  let V be non empty set, Q be EnvEpsRel of V;
+  set G = EnvEpsGram(V);
+  thus Q c= CC Q
+  proof
+    now
+      let u be object;
+      assume A0: u in Q;
+      Q c= [:TS G, TS G:];
+      then u in [:TS G, TS G:] by A0;
+      then consider a,b being object such that
+      A1: a in TS G & b in TS G & u = [a,b] by ZFMISC_1:84;
+      reconsider M = a, N = b as EnvEpsTerm of V by A1;
+      now
+        let R be EnvEpsRel of V;
+        assume R is_cc_over Q;
+        then Q c= R by Def1;
+        hence [M,N] in R by A0,A1;
+      end;
+      then [M,N] in CC Q by Th1;
+      hence u in CC Q by A1;
+    end;
+    hence thesis by TARSKI:def 3;
+  end;
+  thus for M,M1,N being EnvEpsTerm of V st [M,M1] in CC Q holds
+    [eApp(M,N), eApp(M1,N)] in CC Q
+  proof
+    let M,M1,N be EnvEpsTerm of V;
+    assume A0: [M,M1] in CC Q;
+    now
+      let R be EnvEpsRel of V;
+      assume A1: R is_cc_over Q;
+      then [M,M1] in R by A0,Th1;
+      hence [eApp(M,N), eApp(M1,N)] in R by A1,Def1;
+    end;
+    hence thesis by Th1;
+  end;
+  thus for M,N,N1 being EnvEpsTerm of V st [N,N1] in CC Q holds
+    [eApp(M,N), eApp(M,N1)] in CC Q
+  proof
+    let M,N,N1 be EnvEpsTerm of V;
+    assume A0: [N,N1] in CC Q;
+    now
+      let R be EnvEpsRel of V;
+      assume A1: R is_cc_over Q;
+      then [N,N1] in R by A0,Th1;
+      hence [eApp(M,N), eApp(M,N1)] in R by A1,Def1;
+    end;
+    hence thesis by Th1;
+  end;
+  thus for M,M1 being EnvEpsTerm of V, x being Element of V st [M,M1] in
+    CC Q holds [eLam(x,M), eLam(x,M1)] in CC Q
+  proof
+    let M,M1 be EnvEpsTerm of V, x be Element of V;
+    assume A0: [M,M1] in CC Q;
+    now
+      let R be EnvEpsRel of V;
+      assume A1: R is_cc_over Q;
+      then [M,M1] in R by A0,Th1;
+      hence [eLam(x,M), eLam(x,M1)] in R by A1,Def1;
+    end;
+    hence thesis by Th1;
+  end;
+  thus for M,M1,N being EnvEpsTerm of V, x being Element of V st [M,M1] in
+    CC Q holds [eExt(M,x,N), eExt(M1,x,N)] in CC Q
+  proof
+    let M,M1,N be EnvEpsTerm of V, x be Element of V;
+    assume A0: [M,M1] in CC Q;
+    now
+      let R be EnvEpsRel of V;
+      assume A1: R is_cc_over Q;
+      then [M,M1] in R by A0,Th1;
+      hence [eExt(M,x,N), eExt(M1,x,N)] in R by A1,Def1;
+    end;
+    hence thesis by Th1;
+  end;
+  thus for M,N,N1 being EnvEpsTerm of V, x being Element of V st [N,N1] in
+    CC Q holds [eExt(M,x,N), eExt(M,x,N1)] in CC Q
+  proof
+    let M,N,N1 be EnvEpsTerm of V, x be Element of V;
+    assume A0: [N,N1] in CC Q;
+    now
+      let R be EnvEpsRel of V;
+      assume A1: R is_cc_over Q;
+      then [N,N1] in R by A0,Th1;
+      hence [eExt(M,x,N), eExt(M,x,N1)] in R by A1,Def1;
+    end;
+    hence thesis by Th1;
+  end;
+  thus for M,M1,N being EnvEpsTerm of V st [M,M1] in CC Q holds
+    [eComp(M,N), eComp(M1,N)] in CC Q
+  proof
+    let M,M1,N be EnvEpsTerm of V;
+    assume A0: [M,M1] in CC Q;
+    now
+      let R be EnvEpsRel of V;
+      assume A1: R is_cc_over Q;
+      then [M,M1] in R by A0,Th1;
+      hence [eComp(M,N), eComp(M1,N)] in R by A1,Def1;
+    end;
+    hence thesis by Th1;
+  end;
+  thus for M,N,N1 being EnvEpsTerm of V st [N,N1] in CC Q holds
+    [eComp(M,N), eComp(M,N1)] in CC Q
+  proof
+    let M,N,N1 be EnvEpsTerm of V;
+    assume A0: [N,N1] in CC Q;
+    now
+      let R be EnvEpsRel of V;
+      assume A1: R is_cc_over Q;
+      then [N,N1] in R by A0,Th1;
+      hence [eComp(M,N), eComp(M,N1)] in R by A1,Def1;
+    end;
+    hence thesis by Th1;
+  end;
+  thus for M,M1 being EnvEpsTerm of V st [M,M1] in CC Q holds [eEps M,
+    eEps M1] in CC Q
+  proof
+    let M,M1 be EnvEpsTerm of V;
+    assume A0: [M,M1] in CC Q;
+    now
+      let R be EnvEpsRel of V;
+      assume A1: R is_cc_over Q;
+      then [M,M1] in R by A0,Th1;
+      hence [eEps M, eEps M1] in R by A1,Def1;
+    end;
+    hence thesis by Th1;
+  end;
+end;
+
+theorem Th4:
+  for V being non empty set, Q being EnvEpsRel of V holds Q c= CC Q
+proof
+  let V be non empty set, Q be EnvEpsRel of V;
+  CC Q is_cc_over Q by Th3;
+  hence thesis by Def1;
+end;
+
+begin :: The eight congruence rules
+
+theorem Th5:
+  for V being non empty set, Q being EnvEpsRel of V, M,M1,N being
+    EnvEpsTerm of V st [M,M1] in CC Q holds
+  [eApp(M,N), eApp(M1,N)] in CC Q
+proof
+  let V be non empty set, Q be EnvEpsRel of V, M,M1,N be EnvEpsTerm of V;
+  assume A0: [M,M1] in CC Q;
+  CC Q is_cc_over Q by Th3;
+  hence thesis by A0,Def1;
+end;
+
+theorem Th6:
+  for V being non empty set, Q being EnvEpsRel of V, M,N,N1 being
+    EnvEpsTerm of V st [N,N1] in CC Q holds
+  [eApp(M,N), eApp(M,N1)] in CC Q
+proof
+  let V be non empty set, Q be EnvEpsRel of V, M,N,N1 be EnvEpsTerm of V;
+  assume A0: [N,N1] in CC Q;
+  CC Q is_cc_over Q by Th3;
+  hence thesis by A0,Def1;
+end;
+
+theorem Th7:
+  for V being non empty set, Q being EnvEpsRel of V, M,M1 being EnvEpsTerm
+    of V, x being Element of V st [M,M1] in CC Q holds
+  [eLam(x,M), eLam(x,M1)] in CC Q
+proof
+  let V be non empty set, Q be EnvEpsRel of V, M,M1 be EnvEpsTerm of V, x
+    be Element of V;
+  assume A0: [M,M1] in CC Q;
+  CC Q is_cc_over Q by Th3;
+  hence thesis by A0,Def1;
+end;
+
+theorem Th8:
+  for V being non empty set, Q being EnvEpsRel of V, M,M1,N being
+    EnvEpsTerm of V, x being Element of V st [M,M1] in CC Q holds
+  [eExt(M,x,N), eExt(M1,x,N)] in CC Q
+proof
+  let V be non empty set, Q be EnvEpsRel of V, M,M1,N be EnvEpsTerm of V,
+    x be Element of V;
+  assume A0: [M,M1] in CC Q;
+  CC Q is_cc_over Q by Th3;
+  hence thesis by A0,Def1;
+end;
+
+theorem Th9:
+  for V being non empty set, Q being EnvEpsRel of V, M,N,N1 being
+    EnvEpsTerm of V, x being Element of V st [N,N1] in CC Q holds
+  [eExt(M,x,N), eExt(M,x,N1)] in CC Q
+proof
+  let V be non empty set, Q be EnvEpsRel of V, M,N,N1 be EnvEpsTerm of V,
+    x be Element of V;
+  assume A0: [N,N1] in CC Q;
+  CC Q is_cc_over Q by Th3;
+  hence thesis by A0,Def1;
+end;
+
+theorem Th10:
+  for V being non empty set, Q being EnvEpsRel of V, M,M1,N being
+    EnvEpsTerm of V st [M,M1] in CC Q holds
+  [eComp(M,N), eComp(M1,N)] in CC Q
+proof
+  let V be non empty set, Q be EnvEpsRel of V, M,M1,N be EnvEpsTerm of V;
+  assume A0: [M,M1] in CC Q;
+  CC Q is_cc_over Q by Th3;
+  hence thesis by A0,Def1;
+end;
+
+theorem Th11:
+  for V being non empty set, Q being EnvEpsRel of V, M,N,N1 being
+    EnvEpsTerm of V st [N,N1] in CC Q holds
+  [eComp(M,N), eComp(M,N1)] in CC Q
+proof
+  let V be non empty set, Q be EnvEpsRel of V, M,N,N1 be EnvEpsTerm of V;
+  assume A0: [N,N1] in CC Q;
+  CC Q is_cc_over Q by Th3;
+  hence thesis by A0,Def1;
+end;
+
+theorem Th12:
+  for V being non empty set, Q being EnvEpsRel of V, M,M1 being EnvEpsTerm
+    of V st [M,M1] in CC Q holds
+  [eEps M, eEps M1] in CC Q
+proof
+  let V be non empty set, Q be EnvEpsRel of V, M,M1 be EnvEpsTerm of V;
+  assume A0: [M,M1] in CC Q;
+  CC Q is_cc_over Q by Th3;
+  hence thesis by A0,Def1;
+end;
+
+begin :: Inversion
+
+theorem Th13:
+  for V being non empty set, Q being EnvEpsRel of V,
+      P,S being EnvEpsTerm of V st [P,S] in CC Q holds
+  [P,S] in Q or
+  ( ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in CC Q & P = eApp(M2,N2)
+    & S = eApp(M3,N2) ) or
+  ( ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in CC Q & P = eApp(M2,N2)
+    & S = eApp(M2,N3) ) or
+  ( ex M2,M3 being EnvEpsTerm of V, x2 being Element of V st [M2,M3] in CC
+    Q & P = eLam(x2,M2) & S = eLam(x2,M3) ) or
+  ( ex M2,M3,N2 being EnvEpsTerm of V, x2 being Element of V st [M2,M3] in
+    CC Q & P = eExt(M2,x2,N2) & S = eExt(M3,x2,N2) ) or
+  ( ex M2,N2,N3 being EnvEpsTerm of V, x2 being Element of V st [N2,N3] in
+    CC Q & P = eExt(M2,x2,N2) & S = eExt(M2,x2,N3) ) or
+  ( ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in CC Q & P =
+    eComp(M2,N2) & S = eComp(M3,N2) ) or
+  ( ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in CC Q & P =
+    eComp(M2,N2) & S = eComp(M2,N3) ) or
+  ( ex M2,M3 being EnvEpsTerm of V st [M2,M3] in CC Q & P = eEps M2 & S =
+    eEps M3 )
+proof
+  let V be non empty set, Q be EnvEpsRel of V;
+  set G = EnvEpsGram(V);
+  defpred D[object,object] means [$1,$2] in Q or
+    ( ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in CC Q & $1 =
+      eApp(M2,N2) & $2 = eApp(M3,N2) ) or
+    ( ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in CC Q & $1 =
+      eApp(M2,N2) & $2 = eApp(M2,N3) ) or
+    ( ex M2,M3 being EnvEpsTerm of V, x2 being Element of V st [M2,M3] in
+      CC Q & $1 = eLam(x2,M2) & $2 = eLam(x2,M3) ) or
+    ( ex M2,M3,N2 being EnvEpsTerm of V, x2 being Element of V st [M2,M3]
+      in CC Q & $1 = eExt(M2,x2,N2) & $2 = eExt(M3,x2,N2) ) or
+    ( ex M2,N2,N3 being EnvEpsTerm of V, x2 being Element of V st [N2,N3]
+      in CC Q & $1 = eExt(M2,x2,N2) & $2 = eExt(M2,x2,N3) ) or
+    ( ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in CC Q & $1 =
+      eComp(M2,N2) & $2 = eComp(M3,N2) ) or
+    ( ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in CC Q & $1 =
+      eComp(M2,N2) & $2 = eComp(M2,N3) ) or
+    ( ex M2,M3 being EnvEpsTerm of V st [M2,M3] in CC Q & $1 = eEps M2 &
+      $2 = eEps M3 );
+  set S0 = { z where z is Element of [:TS G, TS G:] :
+    z in CC Q & ex P,S being EnvEpsTerm of V st z = [P,S] & D[P,S] };
+  A1: S0 c= [:TS G, TS G:]
+  proof
+    let u be object;
+    assume u in S0;
+    then ex z being Element of [:TS G, TS G:] st u = z &
+      ( z in CC Q & ex P,S being EnvEpsTerm of V st z = [P,S] & D[P,S] );
+    hence thesis;
+  end;
+  reconsider S1 = S0 as EnvEpsRel of V by A1;
+  A2: for a,b being EnvEpsTerm of V holds
+    ( [a,b] in S1 iff ( [a,b] in CC Q & D[a,b] ) )
+  proof
+    let a,b be EnvEpsTerm of V;
+    hereby
+      assume [a,b] in S1;
+      then consider z being Element of [:TS G, TS G:] such that
+      B1: [a,b] = z and
+      B2: z in CC Q & ex P,S being EnvEpsTerm of V st z = [P,S] & D[P,S];
+      consider P,S being EnvEpsTerm of V such that
+      B3: z = [P,S] & D[P,S] by B2;
+      a = P & b = S by B1,B3,XTUPLE_0:1;
+      hence [a,b] in CC Q & D[a,b] by B1,B2,B3;
+    end;
+    assume C1: [a,b] in CC Q & D[a,b];
+    C2: [a,b] in [:TS G, TS G:] by ZFMISC_1:87;
+    then reconsider z = [a,b] as Element of [:TS G, TS G:];
+    z in CC Q & ex P,S being EnvEpsTerm of V st z = [P,S] & D[P,S] by C1;
+    hence thesis;
+  end;
+  A3: S1 is_cc_over Q
+  proof
+    thus Q c= S1
+    proof
+      now
+        let u be object;
+        assume A0: u in Q;
+        Q c= [:TS G, TS G:];
+        then u in [:TS G, TS G:] by A0;
+        then consider a,b being object such that
+        B1: a in TS G & b in TS G & u = [a,b] by ZFMISC_1:84;
+        reconsider M = a, N = b as EnvEpsTerm of V by B1;
+        B3: [M,N] in Q by A0,B1;
+        B4: Q c= CC Q by Th4;
+        D[M,N] by B3;
+        then [M,N] in S1 by A2,B3,B4;
+        hence u in S1 by B1;
+      end;
+      hence thesis by TARSKI:def 3;
+    end;
+    thus for M,M1,N being EnvEpsTerm of V st [M,M1] in S1 holds
+      [eApp(M,N), eApp(M1,N)] in S1
+    proof
+      let M,M1,N be EnvEpsTerm of V;
+      assume G0: [M,M1] in S1;
+      then G1: [M,M1] in CC Q by A2;
+      G2: [eApp(M,N), eApp(M1,N)] in CC Q by G1,Th5;
+      G3: ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in CC Q & eApp(M,N)
+        = eApp(M2,N2) & eApp(M1,N) = eApp(M3,N2)
+      proof
+        take M,M1,N;
+        thus thesis by G1;
+      end;
+      G4: D[eApp(M,N), eApp(M1,N)] by G3;
+      thus thesis by A2,G2,G4;
+    end;
+    thus for M,N,N1 being EnvEpsTerm of V st [N,N1] in S1 holds
+      [eApp(M,N), eApp(M,N1)] in S1
+    proof
+      let M,N,N1 be EnvEpsTerm of V;
+      assume G0: [N,N1] in S1;
+      then G1: [N,N1] in CC Q by A2;
+      G2: [eApp(M,N), eApp(M,N1)] in CC Q by G1,Th6;
+      G3: ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in CC Q & eApp(M,N)
+        = eApp(M2,N2) & eApp(M,N1) = eApp(M2,N3)
+      proof
+        take M,N,N1;
+        thus thesis by G1;
+      end;
+      G4: D[eApp(M,N), eApp(M,N1)] by G3;
+      thus thesis by A2,G2,G4;
+    end;
+    thus for M,M1 being EnvEpsTerm of V, x being Element of V st [M,M1] in
+      S1 holds [eLam(x,M), eLam(x,M1)] in S1
+    proof
+      let M,M1 be EnvEpsTerm of V, x be Element of V;
+      assume G0: [M,M1] in S1;
+      then G1: [M,M1] in CC Q by A2;
+      G2: [eLam(x,M), eLam(x,M1)] in CC Q by G1,Th7;
+      G3: ex M2,M3 being EnvEpsTerm of V, x2 being Element of V st [M2,M3]
+        in CC Q & eLam(x,M) = eLam(x2,M2) & eLam(x,M1) = eLam(x2,M3)
+      proof
+        take M,M1,x;
+        thus thesis by G1;
+      end;
+      G4: D[eLam(x,M), eLam(x,M1)] by G3;
+      thus thesis by A2,G2,G4;
+    end;
+    thus for M,M1,N being EnvEpsTerm of V, x being Element of V st [M,M1]
+      in S1 holds [eExt(M,x,N), eExt(M1,x,N)] in S1
+    proof
+      let M,M1,N be EnvEpsTerm of V, x be Element of V;
+      assume G0: [M,M1] in S1;
+      then G1: [M,M1] in CC Q by A2;
+      G2: [eExt(M,x,N), eExt(M1,x,N)] in CC Q by G1,Th8;
+      G3: ex M2,M3,N2 being EnvEpsTerm of V, x2 being Element of V st
+        [M2,M3] in CC Q & eExt(M,x,N) = eExt(M2,x2,N2) & eExt(M1,x,N) =
+        eExt(M3,x2,N2)
+      proof
+        take M,M1,N,x;
+        thus thesis by G1;
+      end;
+      G4: D[eExt(M,x,N), eExt(M1,x,N)] by G3;
+      thus thesis by A2,G2,G4;
+    end;
+    thus for M,N,N1 being EnvEpsTerm of V, x being Element of V st [N,N1]
+      in S1 holds [eExt(M,x,N), eExt(M,x,N1)] in S1
+    proof
+      let M,N,N1 be EnvEpsTerm of V, x be Element of V;
+      assume G0: [N,N1] in S1;
+      then G1: [N,N1] in CC Q by A2;
+      G2: [eExt(M,x,N), eExt(M,x,N1)] in CC Q by G1,Th9;
+      G3: ex M2,N2,N3 being EnvEpsTerm of V, x2 being Element of V st
+        [N2,N3] in CC Q & eExt(M,x,N) = eExt(M2,x2,N2) & eExt(M,x,N1) =
+        eExt(M2,x2,N3)
+      proof
+        take M,N,N1,x;
+        thus thesis by G1;
+      end;
+      G4: D[eExt(M,x,N), eExt(M,x,N1)] by G3;
+      thus thesis by A2,G2,G4;
+    end;
+    thus for M,M1,N being EnvEpsTerm of V st [M,M1] in S1 holds
+      [eComp(M,N), eComp(M1,N)] in S1
+    proof
+      let M,M1,N be EnvEpsTerm of V;
+      assume G0: [M,M1] in S1;
+      then G1: [M,M1] in CC Q by A2;
+      G2: [eComp(M,N), eComp(M1,N)] in CC Q by G1,Th10;
+      G3: ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in CC Q &
+        eComp(M,N) = eComp(M2,N2) & eComp(M1,N) = eComp(M3,N2)
+      proof
+        take M,M1,N;
+        thus thesis by G1;
+      end;
+      G4: D[eComp(M,N), eComp(M1,N)] by G3;
+      thus thesis by A2,G2,G4;
+    end;
+    thus for M,N,N1 being EnvEpsTerm of V st [N,N1] in S1 holds
+      [eComp(M,N), eComp(M,N1)] in S1
+    proof
+      let M,N,N1 be EnvEpsTerm of V;
+      assume G0: [N,N1] in S1;
+      then G1: [N,N1] in CC Q by A2;
+      G2: [eComp(M,N), eComp(M,N1)] in CC Q by G1,Th11;
+      G3: ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in CC Q &
+        eComp(M,N) = eComp(M2,N2) & eComp(M,N1) = eComp(M2,N3)
+      proof
+        take M,N,N1;
+        thus thesis by G1;
+      end;
+      G4: D[eComp(M,N), eComp(M,N1)] by G3;
+      thus thesis by A2,G2,G4;
+    end;
+    thus for M,M1 being EnvEpsTerm of V st [M,M1] in S1 holds [eEps M,
+      eEps M1] in S1
+    proof
+      let M,M1 be EnvEpsTerm of V;
+      assume G0: [M,M1] in S1;
+      then G1: [M,M1] in CC Q by A2;
+      G2: [eEps M, eEps M1] in CC Q by G1,Th12;
+      G3: ex M2,M3 being EnvEpsTerm of V st [M2,M3] in CC Q & eEps M =
+        eEps M2 & eEps M1 = eEps M3
+      proof
+        take M,M1;
+        thus thesis by G1;
+      end;
+      G4: D[eEps M, eEps M1] by G3;
+      thus thesis by A2,G2,G4;
+    end;
+  end;
+  A4: CC Q c= S1 by A3,Th2;
+  let P,S be EnvEpsTerm of V;
+  assume [P,S] in CC Q;
+  then [P,S] in S1 by A4;
+  hence thesis by A2;
+end;
+
+begin :: Monotonicity and unions
+
+theorem Th14:
+  for V being non empty set, Q1,Q2 being EnvEpsRel of V st Q1 c= Q2
+  holds CC Q1 c= CC Q2
+proof
+  let V be non empty set, Q1,Q2 be EnvEpsRel of V;
+  assume A1: Q1 c= Q2;
+  A2: Q2 c= CC Q2 by Th4;
+  CC Q2 is_cc_over Q1
+  proof
+    thus Q1 c= CC Q2 by A1,A2,XBOOLE_1:1;
+    thus for M,M1,N being EnvEpsTerm of V st [M,M1] in CC Q2 holds
+      [eApp(M,N), eApp(M1,N)] in CC Q2 by Th5;
+    thus for M,N,N1 being EnvEpsTerm of V st [N,N1] in CC Q2 holds
+      [eApp(M,N), eApp(M,N1)] in CC Q2 by Th6;
+    thus for M,M1 being EnvEpsTerm of V, x being Element of V st [M,M1] in
+      CC Q2 holds [eLam(x,M), eLam(x,M1)] in CC Q2 by Th7;
+    thus for M,M1,N being EnvEpsTerm of V, x being Element of V st [M,M1]
+      in CC Q2 holds [eExt(M,x,N), eExt(M1,x,N)] in CC Q2 by Th8;
+    thus for M,N,N1 being EnvEpsTerm of V, x being Element of V st [N,N1]
+      in CC Q2 holds [eExt(M,x,N), eExt(M,x,N1)] in CC Q2 by Th9;
+    thus for M,M1,N being EnvEpsTerm of V st [M,M1] in CC Q2 holds
+      [eComp(M,N), eComp(M1,N)] in CC Q2 by Th10;
+    thus for M,N,N1 being EnvEpsTerm of V st [N,N1] in CC Q2 holds
+      [eComp(M,N), eComp(M,N1)] in CC Q2 by Th11;
+    thus for M,M1 being EnvEpsTerm of V st [M,M1] in CC Q2 holds [eEps M,
+      eEps M1] in CC Q2 by Th12;
+  end;
+  hence thesis by Th2;
+end;
+
+theorem Th15:
+  for V being non empty set, Q1,Q2 being EnvEpsRel of V holds
+  CC (Q1 \/ Q2) = CC Q1 \/ CC Q2
+proof
+  let V be non empty set, Q1,Q2 be EnvEpsRel of V;
+  set G = EnvEpsGram(V);
+  A1: Q1 c= Q1 \/ Q2 & Q2 c= Q1 \/ Q2 by XBOOLE_1:7;
+  then A2: CC Q1 c= CC (Q1 \/ Q2) & CC Q2 c= CC (Q1 \/ Q2) by Th14;
+  CC Q1 c= [:TS G, TS G:] & CC Q2 c= [:TS G, TS G:];
+  then CC Q1 \/ CC Q2 c= [:TS G, TS G:] by XBOOLE_1:8;
+  then reconsider U = CC Q1 \/ CC Q2 as EnvEpsRel of V;
+  B1: U is_cc_over (Q1 \/ Q2)
+  proof
+    C1: Q1 c= CC Q1 by Th4;
+    C1a: Q2 c= CC Q2 by Th4;
+    C2: CC Q1 c= U by XBOOLE_1:7;
+    C2a: CC Q2 c= U by XBOOLE_1:7;
+    C3: Q1 c= U by C1,C2,XBOOLE_1:1;
+    C4: Q2 c= U by C1a,C2a,XBOOLE_1:1;
+    thus Q1 \/ Q2 c= U by C3,C4,XBOOLE_1:8;
+    thus for M,M1,N being EnvEpsTerm of V st [M,M1] in U holds [eApp(M,N),
+      eApp(M1,N)] in U
+    proof
+      let M,M1,N be EnvEpsTerm of V;
+      assume [M,M1] in U;
+      then D1: [M,M1] in CC Q1 or [M,M1] in CC Q2
+        by XBOOLE_0:def 3;
+      per cases by D1;
+      suppose [M,M1] in CC Q1;
+        then [eApp(M,N), eApp(M1,N)] in CC Q1 by Th5;
+        hence thesis by XBOOLE_0:def 3;
+      end;
+      suppose [M,M1] in CC Q2;
+        then [eApp(M,N), eApp(M1,N)] in CC Q2 by Th5;
+        hence thesis by XBOOLE_0:def 3;
+      end;
+    end;
+    thus for M,N,N1 being EnvEpsTerm of V st [N,N1] in U holds [eApp(M,N),
+      eApp(M,N1)] in U
+    proof
+      let M,N,N1 be EnvEpsTerm of V;
+      assume [N,N1] in U;
+      then D1: [N,N1] in CC Q1 or [N,N1] in CC Q2
+        by XBOOLE_0:def 3;
+      per cases by D1;
+      suppose [N,N1] in CC Q1;
+        then [eApp(M,N), eApp(M,N1)] in CC Q1 by Th6;
+        hence thesis by XBOOLE_0:def 3;
+      end;
+      suppose [N,N1] in CC Q2;
+        then [eApp(M,N), eApp(M,N1)] in CC Q2 by Th6;
+        hence thesis by XBOOLE_0:def 3;
+      end;
+    end;
+    thus for M,M1 being EnvEpsTerm of V, x being Element of V st [M,M1] in
+      U holds [eLam(x,M), eLam(x,M1)] in U
+    proof
+      let M,M1 be EnvEpsTerm of V, x be Element of V;
+      assume [M,M1] in U;
+      then D1: [M,M1] in CC Q1 or [M,M1] in CC Q2
+        by XBOOLE_0:def 3;
+      per cases by D1;
+      suppose [M,M1] in CC Q1;
+        then [eLam(x,M), eLam(x,M1)] in CC Q1 by Th7;
+        hence thesis by XBOOLE_0:def 3;
+      end;
+      suppose [M,M1] in CC Q2;
+        then [eLam(x,M), eLam(x,M1)] in CC Q2 by Th7;
+        hence thesis by XBOOLE_0:def 3;
+      end;
+    end;
+    thus for M,M1,N being EnvEpsTerm of V, x being Element of V st [M,M1]
+      in U holds [eExt(M,x,N), eExt(M1,x,N)] in U
+    proof
+      let M,M1,N be EnvEpsTerm of V, x be Element of V;
+      assume [M,M1] in U;
+      then D1: [M,M1] in CC Q1 or [M,M1] in CC Q2
+        by XBOOLE_0:def 3;
+      per cases by D1;
+      suppose [M,M1] in CC Q1;
+        then [eExt(M,x,N), eExt(M1,x,N)] in CC Q1 by Th8;
+        hence thesis by XBOOLE_0:def 3;
+      end;
+      suppose [M,M1] in CC Q2;
+        then [eExt(M,x,N), eExt(M1,x,N)] in CC Q2 by Th8;
+        hence thesis by XBOOLE_0:def 3;
+      end;
+    end;
+    thus for M,N,N1 being EnvEpsTerm of V, x being Element of V st [N,N1]
+      in U holds [eExt(M,x,N), eExt(M,x,N1)] in U
+    proof
+      let M,N,N1 be EnvEpsTerm of V, x be Element of V;
+      assume [N,N1] in U;
+      then D1: [N,N1] in CC Q1 or [N,N1] in CC Q2
+        by XBOOLE_0:def 3;
+      per cases by D1;
+      suppose [N,N1] in CC Q1;
+        then [eExt(M,x,N), eExt(M,x,N1)] in CC Q1 by Th9;
+        hence thesis by XBOOLE_0:def 3;
+      end;
+      suppose [N,N1] in CC Q2;
+        then [eExt(M,x,N), eExt(M,x,N1)] in CC Q2 by Th9;
+        hence thesis by XBOOLE_0:def 3;
+      end;
+    end;
+    thus for M,M1,N being EnvEpsTerm of V st [M,M1] in U holds
+      [eComp(M,N), eComp(M1,N)] in U
+    proof
+      let M,M1,N be EnvEpsTerm of V;
+      assume [M,M1] in U;
+      then D1: [M,M1] in CC Q1 or [M,M1] in CC Q2
+        by XBOOLE_0:def 3;
+      per cases by D1;
+      suppose [M,M1] in CC Q1;
+        then [eComp(M,N), eComp(M1,N)] in CC Q1 by Th10;
+        hence thesis by XBOOLE_0:def 3;
+      end;
+      suppose [M,M1] in CC Q2;
+        then [eComp(M,N), eComp(M1,N)] in CC Q2 by Th10;
+        hence thesis by XBOOLE_0:def 3;
+      end;
+    end;
+    thus for M,N,N1 being EnvEpsTerm of V st [N,N1] in U holds
+      [eComp(M,N), eComp(M,N1)] in U
+    proof
+      let M,N,N1 be EnvEpsTerm of V;
+      assume [N,N1] in U;
+      then D1: [N,N1] in CC Q1 or [N,N1] in CC Q2
+        by XBOOLE_0:def 3;
+      per cases by D1;
+      suppose [N,N1] in CC Q1;
+        then [eComp(M,N), eComp(M,N1)] in CC Q1 by Th11;
+        hence thesis by XBOOLE_0:def 3;
+      end;
+      suppose [N,N1] in CC Q2;
+        then [eComp(M,N), eComp(M,N1)] in CC Q2 by Th11;
+        hence thesis by XBOOLE_0:def 3;
+      end;
+    end;
+    thus for M,M1 being EnvEpsTerm of V st [M,M1] in U holds [eEps M, eEps
+      M1] in U
+    proof
+      let M,M1 be EnvEpsTerm of V;
+      assume [M,M1] in U;
+      then D1: [M,M1] in CC Q1 or [M,M1] in CC Q2
+        by XBOOLE_0:def 3;
+      per cases by D1;
+      suppose [M,M1] in CC Q1;
+        then [eEps M, eEps M1] in CC Q1 by Th12;
+        hence thesis by XBOOLE_0:def 3;
+      end;
+      suppose [M,M1] in CC Q2;
+        then [eEps M, eEps M1] in CC Q2 by Th12;
+        hence thesis by XBOOLE_0:def 3;
+      end;
+    end;
+  end;
+  B2: CC (Q1 \/ Q2) c= U by B1,Th2;
+  U c= CC (Q1 \/ Q2) by A2,XBOOLE_1:8;
+  hence thesis by B2,XBOOLE_0:def 10;
+end;
+
+begin :: Inversion by the head constructor
+
+theorem Th16:
+  for V being non empty set, Q being EnvEpsRel of V, x being Element of V,
+    S being EnvEpsTerm of V st [eVar x, S] in CC Q holds
+  ( [eVar x, S] in Q )
+proof
+  let V be non empty set, Q be EnvEpsRel of V, x be Element of V, S be
+    EnvEpsTerm of V;
+  assume [eVar x, S] in CC Q;
+  then A1: [eVar x, S] in Q or
+    ( ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in CC Q & eVar x =
+      eApp(M2,N2) & S = eApp(M3,N2) ) or
+    ( ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in CC Q & eVar x =
+      eApp(M2,N2) & S = eApp(M2,N3) ) or
+    ( ex M2,M3 being EnvEpsTerm of V, x2 being Element of V st [M2,M3] in
+      CC Q & eVar x = eLam(x2,M2) & S = eLam(x2,M3) ) or
+    ( ex M2,M3,N2 being EnvEpsTerm of V, x2 being Element of V st [M2,M3]
+      in CC Q & eVar x = eExt(M2,x2,N2) & S = eExt(M3,x2,N2) ) or
+    ( ex M2,N2,N3 being EnvEpsTerm of V, x2 being Element of V st [N2,N3]
+      in CC Q & eVar x = eExt(M2,x2,N2) & S = eExt(M2,x2,N3) ) or
+    ( ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in CC Q & eVar x =
+      eComp(M2,N2) & S = eComp(M3,N2) ) or
+    ( ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in CC Q & eVar x =
+      eComp(M2,N2) & S = eComp(M2,N3) ) or
+    ( ex M2,M3 being EnvEpsTerm of V st [M2,M3] in CC Q & eVar x = eEps M2
+      & S = eEps M3 ) by Th13;
+  per cases by A1;
+  suppose [eVar x, S] in Q;
+    hence thesis;
+  end;
+  suppose ( ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in CC Q & eVar x
+    = eApp(M2,N2) & S = eApp(M3,N2) );
+    then consider M2,M3,N2 being EnvEpsTerm of V such that
+    E1: [M2,M3] in CC Q & eVar x = eApp(M2,N2) & S = eApp(M3,N2);
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose ( ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in CC Q & eVar x
+    = eApp(M2,N2) & S = eApp(M2,N3) );
+    then consider M2,N2,N3 being EnvEpsTerm of V such that
+    E1: [N2,N3] in CC Q & eVar x = eApp(M2,N2) & S = eApp(M2,N3);
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose ( ex M2,M3 being EnvEpsTerm of V, x2 being Element of V st
+    [M2,M3] in CC Q & eVar x = eLam(x2,M2) & S = eLam(x2,M3) );
+    then consider M2,M3 being EnvEpsTerm of V, x2 being Element of V such
+      that
+    E1: [M2,M3] in CC Q & eVar x = eLam(x2,M2) & S = eLam(x2,M3);
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose ( ex M2,M3,N2 being EnvEpsTerm of V, x2 being Element of V st
+    [M2,M3] in CC Q & eVar x = eExt(M2,x2,N2) & S = eExt(M3,x2,N2) );
+    then consider M2,M3,N2 being EnvEpsTerm of V, x2 being Element of V
+      such that
+    E1: [M2,M3] in CC Q & eVar x = eExt(M2,x2,N2) & S = eExt(M3,x2,N2);
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose ( ex M2,N2,N3 being EnvEpsTerm of V, x2 being Element of V st
+    [N2,N3] in CC Q & eVar x = eExt(M2,x2,N2) & S = eExt(M2,x2,N3) );
+    then consider M2,N2,N3 being EnvEpsTerm of V, x2 being Element of V
+      such that
+    E1: [N2,N3] in CC Q & eVar x = eExt(M2,x2,N2) & S = eExt(M2,x2,N3);
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose ( ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in CC Q & eVar x
+    = eComp(M2,N2) & S = eComp(M3,N2) );
+    then consider M2,M3,N2 being EnvEpsTerm of V such that
+    E1: [M2,M3] in CC Q & eVar x = eComp(M2,N2) & S = eComp(M3,N2);
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose ( ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in CC Q & eVar x
+    = eComp(M2,N2) & S = eComp(M2,N3) );
+    then consider M2,N2,N3 being EnvEpsTerm of V such that
+    E1: [N2,N3] in CC Q & eVar x = eComp(M2,N2) & S = eComp(M2,N3);
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose ( ex M2,M3 being EnvEpsTerm of V st [M2,M3] in CC Q & eVar x =
+    eEps M2 & S = eEps M3 );
+    then consider M2,M3 being EnvEpsTerm of V such that
+    E1: [M2,M3] in CC Q & eVar x = eEps M2 & S = eEps M3;
+    thus thesis by E1,ENVSYN:20;
+  end;
+end;
+
+theorem Th17:
+  for V being non empty set, Q being EnvEpsRel of V, S being EnvEpsTerm of
+    V st [eId V, S] in CC Q holds
+  ( [eId V, S] in Q )
+proof
+  let V be non empty set, Q be EnvEpsRel of V, S be EnvEpsTerm of V;
+  assume [eId V, S] in CC Q;
+  then A1: [eId V, S] in Q or
+    ( ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in CC Q & eId V =
+      eApp(M2,N2) & S = eApp(M3,N2) ) or
+    ( ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in CC Q & eId V =
+      eApp(M2,N2) & S = eApp(M2,N3) ) or
+    ( ex M2,M3 being EnvEpsTerm of V, x2 being Element of V st [M2,M3] in
+      CC Q & eId V = eLam(x2,M2) & S = eLam(x2,M3) ) or
+    ( ex M2,M3,N2 being EnvEpsTerm of V, x2 being Element of V st [M2,M3]
+      in CC Q & eId V = eExt(M2,x2,N2) & S = eExt(M3,x2,N2) ) or
+    ( ex M2,N2,N3 being EnvEpsTerm of V, x2 being Element of V st [N2,N3]
+      in CC Q & eId V = eExt(M2,x2,N2) & S = eExt(M2,x2,N3) ) or
+    ( ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in CC Q & eId V =
+      eComp(M2,N2) & S = eComp(M3,N2) ) or
+    ( ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in CC Q & eId V =
+      eComp(M2,N2) & S = eComp(M2,N3) ) or
+    ( ex M2,M3 being EnvEpsTerm of V st [M2,M3] in CC Q & eId V = eEps M2
+      & S = eEps M3 ) by Th13;
+  per cases by A1;
+  suppose [eId V, S] in Q;
+    hence thesis;
+  end;
+  suppose ( ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in CC Q & eId V =
+    eApp(M2,N2) & S = eApp(M3,N2) );
+    then consider M2,M3,N2 being EnvEpsTerm of V such that
+    E1: [M2,M3] in CC Q & eId V = eApp(M2,N2) & S = eApp(M3,N2);
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose ( ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in CC Q & eId V =
+    eApp(M2,N2) & S = eApp(M2,N3) );
+    then consider M2,N2,N3 being EnvEpsTerm of V such that
+    E1: [N2,N3] in CC Q & eId V = eApp(M2,N2) & S = eApp(M2,N3);
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose ( ex M2,M3 being EnvEpsTerm of V, x2 being Element of V st
+    [M2,M3] in CC Q & eId V = eLam(x2,M2) & S = eLam(x2,M3) );
+    then consider M2,M3 being EnvEpsTerm of V, x2 being Element of V such
+      that
+    E1: [M2,M3] in CC Q & eId V = eLam(x2,M2) & S = eLam(x2,M3);
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose ( ex M2,M3,N2 being EnvEpsTerm of V, x2 being Element of V st
+    [M2,M3] in CC Q & eId V = eExt(M2,x2,N2) & S = eExt(M3,x2,N2) );
+    then consider M2,M3,N2 being EnvEpsTerm of V, x2 being Element of V
+      such that
+    E1: [M2,M3] in CC Q & eId V = eExt(M2,x2,N2) & S = eExt(M3,x2,N2);
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose ( ex M2,N2,N3 being EnvEpsTerm of V, x2 being Element of V st
+    [N2,N3] in CC Q & eId V = eExt(M2,x2,N2) & S = eExt(M2,x2,N3) );
+    then consider M2,N2,N3 being EnvEpsTerm of V, x2 being Element of V
+      such that
+    E1: [N2,N3] in CC Q & eId V = eExt(M2,x2,N2) & S = eExt(M2,x2,N3);
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose ( ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in CC Q & eId V =
+    eComp(M2,N2) & S = eComp(M3,N2) );
+    then consider M2,M3,N2 being EnvEpsTerm of V such that
+    E1: [M2,M3] in CC Q & eId V = eComp(M2,N2) & S = eComp(M3,N2);
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose ( ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in CC Q & eId V =
+    eComp(M2,N2) & S = eComp(M2,N3) );
+    then consider M2,N2,N3 being EnvEpsTerm of V such that
+    E1: [N2,N3] in CC Q & eId V = eComp(M2,N2) & S = eComp(M2,N3);
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose ( ex M2,M3 being EnvEpsTerm of V st [M2,M3] in CC Q & eId V =
+    eEps M2 & S = eEps M3 );
+    then consider M2,M3 being EnvEpsTerm of V such that
+    E1: [M2,M3] in CC Q & eId V = eEps M2 & S = eEps M3;
+    thus thesis by E1,ENVSYN:20;
+  end;
+end;
+
+theorem Th18:
+  for V being non empty set, Q being EnvEpsRel of V, M being EnvEpsTerm of
+    V, x being Element of V, S being EnvEpsTerm of V st [eLam(x,M), S] in
+    CC Q holds
+  ( [eLam(x,M), S] in Q ) or
+  ( ex M1 being EnvEpsTerm of V st [M,M1] in CC Q & S = eLam(x,M1) )
+proof
+  let V be non empty set, Q be EnvEpsRel of V, M be EnvEpsTerm of V, x be
+    Element of V, S be EnvEpsTerm of V;
+  assume [eLam(x,M), S] in CC Q;
+  then A1: [eLam(x,M), S] in Q or
+    ( ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in CC Q & eLam(x,M) =
+      eApp(M2,N2) & S = eApp(M3,N2) ) or
+    ( ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in CC Q & eLam(x,M) =
+      eApp(M2,N2) & S = eApp(M2,N3) ) or
+    ( ex M2,M3 being EnvEpsTerm of V, x2 being Element of V st [M2,M3] in
+      CC Q & eLam(x,M) = eLam(x2,M2) & S = eLam(x2,M3) ) or
+    ( ex M2,M3,N2 being EnvEpsTerm of V, x2 being Element of V st [M2,M3]
+      in CC Q & eLam(x,M) = eExt(M2,x2,N2) & S = eExt(M3,x2,N2) ) or
+    ( ex M2,N2,N3 being EnvEpsTerm of V, x2 being Element of V st [N2,N3]
+      in CC Q & eLam(x,M) = eExt(M2,x2,N2) & S = eExt(M2,x2,N3) ) or
+    ( ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in CC Q & eLam(x,M) =
+      eComp(M2,N2) & S = eComp(M3,N2) ) or
+    ( ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in CC Q & eLam(x,M) =
+      eComp(M2,N2) & S = eComp(M2,N3) ) or
+    ( ex M2,M3 being EnvEpsTerm of V st [M2,M3] in CC Q & eLam(x,M) = eEps
+      M2 & S = eEps M3 ) by Th13;
+  per cases by A1;
+  suppose [eLam(x,M), S] in Q;
+    hence thesis;
+  end;
+  suppose ( ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in CC Q &
+    eLam(x,M) = eApp(M2,N2) & S = eApp(M3,N2) );
+    then consider M2,M3,N2 being EnvEpsTerm of V such that
+    E1: [M2,M3] in CC Q & eLam(x,M) = eApp(M2,N2) & S = eApp(M3,N2);
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose ( ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in CC Q &
+    eLam(x,M) = eApp(M2,N2) & S = eApp(M2,N3) );
+    then consider M2,N2,N3 being EnvEpsTerm of V such that
+    E1: [N2,N3] in CC Q & eLam(x,M) = eApp(M2,N2) & S = eApp(M2,N3);
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose ( ex M2,M3 being EnvEpsTerm of V, x2 being Element of V st
+    [M2,M3] in CC Q & eLam(x,M) = eLam(x2,M2) & S = eLam(x2,M3) );
+    then consider M2,M3 being EnvEpsTerm of V, x2 being Element of V such
+      that
+    E1: [M2,M3] in CC Q & eLam(x,M) = eLam(x2,M2) & S = eLam(x2,M3);
+    E2: x = x2 & M = M2 by E1,ENVSYN:11;
+    E3: ex M1 being EnvEpsTerm of V st [M,M1] in CC Q & S = eLam(x,M1)
+    proof
+      take M3;
+      thus thesis by E1,E2;
+    end;
+    thus thesis by E3;
+  end;
+  suppose ( ex M2,M3,N2 being EnvEpsTerm of V, x2 being Element of V st
+    [M2,M3] in CC Q & eLam(x,M) = eExt(M2,x2,N2) & S = eExt(M3,x2,N2) );
+    then consider M2,M3,N2 being EnvEpsTerm of V, x2 being Element of V
+      such that
+    E1: [M2,M3] in CC Q & eLam(x,M) = eExt(M2,x2,N2) & S = eExt(M3,x2,N2);
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose ( ex M2,N2,N3 being EnvEpsTerm of V, x2 being Element of V st
+    [N2,N3] in CC Q & eLam(x,M) = eExt(M2,x2,N2) & S = eExt(M2,x2,N3) );
+    then consider M2,N2,N3 being EnvEpsTerm of V, x2 being Element of V
+      such that
+    E1: [N2,N3] in CC Q & eLam(x,M) = eExt(M2,x2,N2) & S = eExt(M2,x2,N3);
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose ( ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in CC Q &
+    eLam(x,M) = eComp(M2,N2) & S = eComp(M3,N2) );
+    then consider M2,M3,N2 being EnvEpsTerm of V such that
+    E1: [M2,M3] in CC Q & eLam(x,M) = eComp(M2,N2) & S = eComp(M3,N2);
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose ( ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in CC Q &
+    eLam(x,M) = eComp(M2,N2) & S = eComp(M2,N3) );
+    then consider M2,N2,N3 being EnvEpsTerm of V such that
+    E1: [N2,N3] in CC Q & eLam(x,M) = eComp(M2,N2) & S = eComp(M2,N3);
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose ( ex M2,M3 being EnvEpsTerm of V st [M2,M3] in CC Q & eLam(x,M)
+    = eEps M2 & S = eEps M3 );
+    then consider M2,M3 being EnvEpsTerm of V such that
+    E1: [M2,M3] in CC Q & eLam(x,M) = eEps M2 & S = eEps M3;
+    thus thesis by E1,ENVSYN:20;
+  end;
+end;
+
+theorem Th19:
+  for V being non empty set, Q being EnvEpsRel of V, M being EnvEpsTerm of
+    V, S being EnvEpsTerm of V st [eEps M, S] in CC Q holds
+  ( [eEps M, S] in Q ) or
+  ( ex M1 being EnvEpsTerm of V st [M,M1] in CC Q & S = eEps M1 )
+proof
+  let V be non empty set, Q be EnvEpsRel of V, M be EnvEpsTerm of V, S be
+    EnvEpsTerm of V;
+  assume [eEps M, S] in CC Q;
+  then A1: [eEps M, S] in Q or
+    ( ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in CC Q & eEps M =
+      eApp(M2,N2) & S = eApp(M3,N2) ) or
+    ( ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in CC Q & eEps M =
+      eApp(M2,N2) & S = eApp(M2,N3) ) or
+    ( ex M2,M3 being EnvEpsTerm of V, x2 being Element of V st [M2,M3] in
+      CC Q & eEps M = eLam(x2,M2) & S = eLam(x2,M3) ) or
+    ( ex M2,M3,N2 being EnvEpsTerm of V, x2 being Element of V st [M2,M3]
+      in CC Q & eEps M = eExt(M2,x2,N2) & S = eExt(M3,x2,N2) ) or
+    ( ex M2,N2,N3 being EnvEpsTerm of V, x2 being Element of V st [N2,N3]
+      in CC Q & eEps M = eExt(M2,x2,N2) & S = eExt(M2,x2,N3) ) or
+    ( ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in CC Q & eEps M =
+      eComp(M2,N2) & S = eComp(M3,N2) ) or
+    ( ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in CC Q & eEps M =
+      eComp(M2,N2) & S = eComp(M2,N3) ) or
+    ( ex M2,M3 being EnvEpsTerm of V st [M2,M3] in CC Q & eEps M = eEps M2
+      & S = eEps M3 ) by Th13;
+  per cases by A1;
+  suppose [eEps M, S] in Q;
+    hence thesis;
+  end;
+  suppose ( ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in CC Q & eEps M
+    = eApp(M2,N2) & S = eApp(M3,N2) );
+    then consider M2,M3,N2 being EnvEpsTerm of V such that
+    E1: [M2,M3] in CC Q & eEps M = eApp(M2,N2) & S = eApp(M3,N2);
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose ( ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in CC Q & eEps M
+    = eApp(M2,N2) & S = eApp(M2,N3) );
+    then consider M2,N2,N3 being EnvEpsTerm of V such that
+    E1: [N2,N3] in CC Q & eEps M = eApp(M2,N2) & S = eApp(M2,N3);
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose ( ex M2,M3 being EnvEpsTerm of V, x2 being Element of V st
+    [M2,M3] in CC Q & eEps M = eLam(x2,M2) & S = eLam(x2,M3) );
+    then consider M2,M3 being EnvEpsTerm of V, x2 being Element of V such
+      that
+    E1: [M2,M3] in CC Q & eEps M = eLam(x2,M2) & S = eLam(x2,M3);
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose ( ex M2,M3,N2 being EnvEpsTerm of V, x2 being Element of V st
+    [M2,M3] in CC Q & eEps M = eExt(M2,x2,N2) & S = eExt(M3,x2,N2) );
+    then consider M2,M3,N2 being EnvEpsTerm of V, x2 being Element of V
+      such that
+    E1: [M2,M3] in CC Q & eEps M = eExt(M2,x2,N2) & S = eExt(M3,x2,N2);
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose ( ex M2,N2,N3 being EnvEpsTerm of V, x2 being Element of V st
+    [N2,N3] in CC Q & eEps M = eExt(M2,x2,N2) & S = eExt(M2,x2,N3) );
+    then consider M2,N2,N3 being EnvEpsTerm of V, x2 being Element of V
+      such that
+    E1: [N2,N3] in CC Q & eEps M = eExt(M2,x2,N2) & S = eExt(M2,x2,N3);
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose ( ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in CC Q & eEps M
+    = eComp(M2,N2) & S = eComp(M3,N2) );
+    then consider M2,M3,N2 being EnvEpsTerm of V such that
+    E1: [M2,M3] in CC Q & eEps M = eComp(M2,N2) & S = eComp(M3,N2);
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose ( ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in CC Q & eEps M
+    = eComp(M2,N2) & S = eComp(M2,N3) );
+    then consider M2,N2,N3 being EnvEpsTerm of V such that
+    E1: [N2,N3] in CC Q & eEps M = eComp(M2,N2) & S = eComp(M2,N3);
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose ( ex M2,M3 being EnvEpsTerm of V st [M2,M3] in CC Q & eEps M =
+    eEps M2 & S = eEps M3 );
+    then consider M2,M3 being EnvEpsTerm of V such that
+    E1: [M2,M3] in CC Q & eEps M = eEps M2 & S = eEps M3;
+    E2: M = M2 by E1,ENVSYN:12;
+    E3: ex M1 being EnvEpsTerm of V st [M,M1] in CC Q & S = eEps M1
+    proof
+      take M3;
+      thus thesis by E1,E2;
+    end;
+    thus thesis by E3;
+  end;
+end;
+
+theorem Th20:
+  for V being non empty set, Q being EnvEpsRel of V, M,N being EnvEpsTerm
+    of V, S being EnvEpsTerm of V st [eApp(M,N), S] in CC Q holds
+  ( [eApp(M,N), S] in Q ) or
+  ( ex M1 being EnvEpsTerm of V st [M,M1] in CC Q & S = eApp(M1,N) ) or
+  ( ex N1 being EnvEpsTerm of V st [N,N1] in CC Q & S = eApp(M,N1) )
+proof
+  let V be non empty set, Q be EnvEpsRel of V, M,N be EnvEpsTerm of V, S
+    be EnvEpsTerm of V;
+  assume [eApp(M,N), S] in CC Q;
+  then A1: [eApp(M,N), S] in Q or
+    ( ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in CC Q & eApp(M,N) =
+      eApp(M2,N2) & S = eApp(M3,N2) ) or
+    ( ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in CC Q & eApp(M,N) =
+      eApp(M2,N2) & S = eApp(M2,N3) ) or
+    ( ex M2,M3 being EnvEpsTerm of V, x2 being Element of V st [M2,M3] in
+      CC Q & eApp(M,N) = eLam(x2,M2) & S = eLam(x2,M3) ) or
+    ( ex M2,M3,N2 being EnvEpsTerm of V, x2 being Element of V st [M2,M3]
+      in CC Q & eApp(M,N) = eExt(M2,x2,N2) & S = eExt(M3,x2,N2) ) or
+    ( ex M2,N2,N3 being EnvEpsTerm of V, x2 being Element of V st [N2,N3]
+      in CC Q & eApp(M,N) = eExt(M2,x2,N2) & S = eExt(M2,x2,N3) ) or
+    ( ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in CC Q & eApp(M,N) =
+      eComp(M2,N2) & S = eComp(M3,N2) ) or
+    ( ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in CC Q & eApp(M,N) =
+      eComp(M2,N2) & S = eComp(M2,N3) ) or
+    ( ex M2,M3 being EnvEpsTerm of V st [M2,M3] in CC Q & eApp(M,N) = eEps
+      M2 & S = eEps M3 ) by Th13;
+  per cases by A1;
+  suppose [eApp(M,N), S] in Q;
+    hence thesis;
+  end;
+  suppose ( ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in CC Q &
+    eApp(M,N) = eApp(M2,N2) & S = eApp(M3,N2) );
+    then consider M2,M3,N2 being EnvEpsTerm of V such that
+    E1: [M2,M3] in CC Q & eApp(M,N) = eApp(M2,N2) & S = eApp(M3,N2);
+    E2: M = M2 & N = N2 by E1,ENVSYN:13;
+    E3: ex M1 being EnvEpsTerm of V st [M,M1] in CC Q & S = eApp(M1,N)
+    proof
+      take M3;
+      thus thesis by E1,E2;
+    end;
+    thus thesis by E3;
+  end;
+  suppose ( ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in CC Q &
+    eApp(M,N) = eApp(M2,N2) & S = eApp(M2,N3) );
+    then consider M2,N2,N3 being EnvEpsTerm of V such that
+    E1: [N2,N3] in CC Q & eApp(M,N) = eApp(M2,N2) & S = eApp(M2,N3);
+    E2: M = M2 & N = N2 by E1,ENVSYN:13;
+    E3: ex N1 being EnvEpsTerm of V st [N,N1] in CC Q & S = eApp(M,N1)
+    proof
+      take N3;
+      thus thesis by E1,E2;
+    end;
+    thus thesis by E3;
+  end;
+  suppose ( ex M2,M3 being EnvEpsTerm of V, x2 being Element of V st
+    [M2,M3] in CC Q & eApp(M,N) = eLam(x2,M2) & S = eLam(x2,M3) );
+    then consider M2,M3 being EnvEpsTerm of V, x2 being Element of V such
+      that
+    E1: [M2,M3] in CC Q & eApp(M,N) = eLam(x2,M2) & S = eLam(x2,M3);
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose ( ex M2,M3,N2 being EnvEpsTerm of V, x2 being Element of V st
+    [M2,M3] in CC Q & eApp(M,N) = eExt(M2,x2,N2) & S = eExt(M3,x2,N2) );
+    then consider M2,M3,N2 being EnvEpsTerm of V, x2 being Element of V
+      such that
+    E1: [M2,M3] in CC Q & eApp(M,N) = eExt(M2,x2,N2) & S = eExt(M3,x2,N2);
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose ( ex M2,N2,N3 being EnvEpsTerm of V, x2 being Element of V st
+    [N2,N3] in CC Q & eApp(M,N) = eExt(M2,x2,N2) & S = eExt(M2,x2,N3) );
+    then consider M2,N2,N3 being EnvEpsTerm of V, x2 being Element of V
+      such that
+    E1: [N2,N3] in CC Q & eApp(M,N) = eExt(M2,x2,N2) & S = eExt(M2,x2,N3);
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose ( ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in CC Q &
+    eApp(M,N) = eComp(M2,N2) & S = eComp(M3,N2) );
+    then consider M2,M3,N2 being EnvEpsTerm of V such that
+    E1: [M2,M3] in CC Q & eApp(M,N) = eComp(M2,N2) & S = eComp(M3,N2);
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose ( ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in CC Q &
+    eApp(M,N) = eComp(M2,N2) & S = eComp(M2,N3) );
+    then consider M2,N2,N3 being EnvEpsTerm of V such that
+    E1: [N2,N3] in CC Q & eApp(M,N) = eComp(M2,N2) & S = eComp(M2,N3);
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose ( ex M2,M3 being EnvEpsTerm of V st [M2,M3] in CC Q & eApp(M,N)
+    = eEps M2 & S = eEps M3 );
+    then consider M2,M3 being EnvEpsTerm of V such that
+    E1: [M2,M3] in CC Q & eApp(M,N) = eEps M2 & S = eEps M3;
+    thus thesis by E1,ENVSYN:20;
+  end;
+end;
+
+theorem Th21:
+  for V being non empty set, Q being EnvEpsRel of V, M,N being EnvEpsTerm
+    of V, S being EnvEpsTerm of V st [eComp(M,N), S] in CC Q holds
+  ( [eComp(M,N), S] in Q ) or
+  ( ex M1 being EnvEpsTerm of V st [M,M1] in CC Q & S = eComp(M1,N) ) or
+  ( ex N1 being EnvEpsTerm of V st [N,N1] in CC Q & S = eComp(M,N1) )
+proof
+  let V be non empty set, Q be EnvEpsRel of V, M,N be EnvEpsTerm of V, S
+    be EnvEpsTerm of V;
+  assume [eComp(M,N), S] in CC Q;
+  then A1: [eComp(M,N), S] in Q or
+    ( ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in CC Q & eComp(M,N) =
+      eApp(M2,N2) & S = eApp(M3,N2) ) or
+    ( ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in CC Q & eComp(M,N) =
+      eApp(M2,N2) & S = eApp(M2,N3) ) or
+    ( ex M2,M3 being EnvEpsTerm of V, x2 being Element of V st [M2,M3] in
+      CC Q & eComp(M,N) = eLam(x2,M2) & S = eLam(x2,M3) ) or
+    ( ex M2,M3,N2 being EnvEpsTerm of V, x2 being Element of V st [M2,M3]
+      in CC Q & eComp(M,N) = eExt(M2,x2,N2) & S = eExt(M3,x2,N2) ) or
+    ( ex M2,N2,N3 being EnvEpsTerm of V, x2 being Element of V st [N2,N3]
+      in CC Q & eComp(M,N) = eExt(M2,x2,N2) & S = eExt(M2,x2,N3) ) or
+    ( ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in CC Q & eComp(M,N) =
+      eComp(M2,N2) & S = eComp(M3,N2) ) or
+    ( ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in CC Q & eComp(M,N) =
+      eComp(M2,N2) & S = eComp(M2,N3) ) or
+    ( ex M2,M3 being EnvEpsTerm of V st [M2,M3] in CC Q & eComp(M,N) =
+      eEps M2 & S = eEps M3 ) by Th13;
+  per cases by A1;
+  suppose [eComp(M,N), S] in Q;
+    hence thesis;
+  end;
+  suppose ( ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in CC Q &
+    eComp(M,N) = eApp(M2,N2) & S = eApp(M3,N2) );
+    then consider M2,M3,N2 being EnvEpsTerm of V such that
+    E1: [M2,M3] in CC Q & eComp(M,N) = eApp(M2,N2) & S = eApp(M3,N2);
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose ( ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in CC Q &
+    eComp(M,N) = eApp(M2,N2) & S = eApp(M2,N3) );
+    then consider M2,N2,N3 being EnvEpsTerm of V such that
+    E1: [N2,N3] in CC Q & eComp(M,N) = eApp(M2,N2) & S = eApp(M2,N3);
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose ( ex M2,M3 being EnvEpsTerm of V, x2 being Element of V st
+    [M2,M3] in CC Q & eComp(M,N) = eLam(x2,M2) & S = eLam(x2,M3) );
+    then consider M2,M3 being EnvEpsTerm of V, x2 being Element of V such
+      that
+    E1: [M2,M3] in CC Q & eComp(M,N) = eLam(x2,M2) & S = eLam(x2,M3);
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose ( ex M2,M3,N2 being EnvEpsTerm of V, x2 being Element of V st
+    [M2,M3] in CC Q & eComp(M,N) = eExt(M2,x2,N2) & S = eExt(M3,x2,N2) );
+    then consider M2,M3,N2 being EnvEpsTerm of V, x2 being Element of V
+      such that
+    E1: [M2,M3] in CC Q & eComp(M,N) = eExt(M2,x2,N2) & S = eExt(M3,x2,N2);
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose ( ex M2,N2,N3 being EnvEpsTerm of V, x2 being Element of V st
+    [N2,N3] in CC Q & eComp(M,N) = eExt(M2,x2,N2) & S = eExt(M2,x2,N3) );
+    then consider M2,N2,N3 being EnvEpsTerm of V, x2 being Element of V
+      such that
+    E1: [N2,N3] in CC Q & eComp(M,N) = eExt(M2,x2,N2) & S = eExt(M2,x2,N3);
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose ( ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in CC Q &
+    eComp(M,N) = eComp(M2,N2) & S = eComp(M3,N2) );
+    then consider M2,M3,N2 being EnvEpsTerm of V such that
+    E1: [M2,M3] in CC Q & eComp(M,N) = eComp(M2,N2) & S = eComp(M3,N2);
+    E2: M = M2 & N = N2 by E1,ENVSYN:14;
+    E3: ex M1 being EnvEpsTerm of V st [M,M1] in CC Q & S = eComp(M1,N)
+    proof
+      take M3;
+      thus thesis by E1,E2;
+    end;
+    thus thesis by E3;
+  end;
+  suppose ( ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in CC Q &
+    eComp(M,N) = eComp(M2,N2) & S = eComp(M2,N3) );
+    then consider M2,N2,N3 being EnvEpsTerm of V such that
+    E1: [N2,N3] in CC Q & eComp(M,N) = eComp(M2,N2) & S = eComp(M2,N3);
+    E2: M = M2 & N = N2 by E1,ENVSYN:14;
+    E3: ex N1 being EnvEpsTerm of V st [N,N1] in CC Q & S = eComp(M,N1)
+    proof
+      take N3;
+      thus thesis by E1,E2;
+    end;
+    thus thesis by E3;
+  end;
+  suppose ( ex M2,M3 being EnvEpsTerm of V st [M2,M3] in CC Q & eComp(M,N)
+    = eEps M2 & S = eEps M3 );
+    then consider M2,M3 being EnvEpsTerm of V such that
+    E1: [M2,M3] in CC Q & eComp(M,N) = eEps M2 & S = eEps M3;
+    thus thesis by E1,ENVSYN:20;
+  end;
+end;
+
+theorem Th22:
+  for V being non empty set, Q being EnvEpsRel of V, M,N being EnvEpsTerm
+    of V, x being Element of V, S being EnvEpsTerm of V st [eExt(M,x,N),
+    S] in CC Q holds
+  ( [eExt(M,x,N), S] in Q ) or
+  ( ex M1 being EnvEpsTerm of V st [M,M1] in CC Q & S = eExt(M1,x,N) ) or
+  ( ex N1 being EnvEpsTerm of V st [N,N1] in CC Q & S = eExt(M,x,N1) )
+proof
+  let V be non empty set, Q be EnvEpsRel of V, M,N be EnvEpsTerm of V, x
+    be Element of V, S be EnvEpsTerm of V;
+  assume [eExt(M,x,N), S] in CC Q;
+  then A1: [eExt(M,x,N), S] in Q or
+    ( ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in CC Q & eExt(M,x,N) =
+      eApp(M2,N2) & S = eApp(M3,N2) ) or
+    ( ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in CC Q & eExt(M,x,N) =
+      eApp(M2,N2) & S = eApp(M2,N3) ) or
+    ( ex M2,M3 being EnvEpsTerm of V, x2 being Element of V st [M2,M3] in
+      CC Q & eExt(M,x,N) = eLam(x2,M2) & S = eLam(x2,M3) ) or
+    ( ex M2,M3,N2 being EnvEpsTerm of V, x2 being Element of V st [M2,M3]
+      in CC Q & eExt(M,x,N) = eExt(M2,x2,N2) & S = eExt(M3,x2,N2) ) or
+    ( ex M2,N2,N3 being EnvEpsTerm of V, x2 being Element of V st [N2,N3]
+      in CC Q & eExt(M,x,N) = eExt(M2,x2,N2) & S = eExt(M2,x2,N3) ) or
+    ( ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in CC Q & eExt(M,x,N) =
+      eComp(M2,N2) & S = eComp(M3,N2) ) or
+    ( ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in CC Q & eExt(M,x,N) =
+      eComp(M2,N2) & S = eComp(M2,N3) ) or
+    ( ex M2,M3 being EnvEpsTerm of V st [M2,M3] in CC Q & eExt(M,x,N) =
+      eEps M2 & S = eEps M3 ) by Th13;
+  per cases by A1;
+  suppose [eExt(M,x,N), S] in Q;
+    hence thesis;
+  end;
+  suppose ( ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in CC Q &
+    eExt(M,x,N) = eApp(M2,N2) & S = eApp(M3,N2) );
+    then consider M2,M3,N2 being EnvEpsTerm of V such that
+    E1: [M2,M3] in CC Q & eExt(M,x,N) = eApp(M2,N2) & S = eApp(M3,N2);
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose ( ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in CC Q &
+    eExt(M,x,N) = eApp(M2,N2) & S = eApp(M2,N3) );
+    then consider M2,N2,N3 being EnvEpsTerm of V such that
+    E1: [N2,N3] in CC Q & eExt(M,x,N) = eApp(M2,N2) & S = eApp(M2,N3);
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose ( ex M2,M3 being EnvEpsTerm of V, x2 being Element of V st
+    [M2,M3] in CC Q & eExt(M,x,N) = eLam(x2,M2) & S = eLam(x2,M3) );
+    then consider M2,M3 being EnvEpsTerm of V, x2 being Element of V such
+      that
+    E1: [M2,M3] in CC Q & eExt(M,x,N) = eLam(x2,M2) & S = eLam(x2,M3);
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose ( ex M2,M3,N2 being EnvEpsTerm of V, x2 being Element of V st
+    [M2,M3] in CC Q & eExt(M,x,N) = eExt(M2,x2,N2) & S = eExt(M3,x2,N2) );
+    then consider M2,M3,N2 being EnvEpsTerm of V, x2 being Element of V
+      such that
+    E1: [M2,M3] in CC Q & eExt(M,x,N) = eExt(M2,x2,N2) & S =
+      eExt(M3,x2,N2);
+    E2: M = M2 & x = x2 & N = N2 by E1,ENVSYN:15;
+    E3: ex M1 being EnvEpsTerm of V st [M,M1] in CC Q & S = eExt(M1,x,N)
+    proof
+      take M3;
+      thus thesis by E1,E2;
+    end;
+    thus thesis by E3;
+  end;
+  suppose ( ex M2,N2,N3 being EnvEpsTerm of V, x2 being Element of V st
+    [N2,N3] in CC Q & eExt(M,x,N) = eExt(M2,x2,N2) & S = eExt(M2,x2,N3) );
+    then consider M2,N2,N3 being EnvEpsTerm of V, x2 being Element of V
+      such that
+    E1: [N2,N3] in CC Q & eExt(M,x,N) = eExt(M2,x2,N2) & S =
+      eExt(M2,x2,N3);
+    E2: M = M2 & x = x2 & N = N2 by E1,ENVSYN:15;
+    E3: ex N1 being EnvEpsTerm of V st [N,N1] in CC Q & S = eExt(M,x,N1)
+    proof
+      take N3;
+      thus thesis by E1,E2;
+    end;
+    thus thesis by E3;
+  end;
+  suppose ( ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in CC Q &
+    eExt(M,x,N) = eComp(M2,N2) & S = eComp(M3,N2) );
+    then consider M2,M3,N2 being EnvEpsTerm of V such that
+    E1: [M2,M3] in CC Q & eExt(M,x,N) = eComp(M2,N2) & S = eComp(M3,N2);
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose ( ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in CC Q &
+    eExt(M,x,N) = eComp(M2,N2) & S = eComp(M2,N3) );
+    then consider M2,N2,N3 being EnvEpsTerm of V such that
+    E1: [N2,N3] in CC Q & eExt(M,x,N) = eComp(M2,N2) & S = eComp(M2,N3);
+    thus thesis by E1,ENVSYN:20;
+  end;
+  suppose ( ex M2,M3 being EnvEpsTerm of V st [M2,M3] in CC Q &
+    eExt(M,x,N) = eEps M2 & S = eEps M3 );
+    then consider M2,M3 being EnvEpsTerm of V such that
+    E1: [M2,M3] in CC Q & eExt(M,x,N) = eEps M2 & S = eEps M3;
+    thus thesis by E1,ENVSYN:20;
+  end;
+end;
+
+begin :: Multi-step congruence
+
+scheme
+  RedCong { R() -> Relation, F(object) -> object }:
+  for a,b being object st R() reduces a,b holds R() reduces F(a),F(b)
+provided
+AA: for a,b being object st [a,b] in R() holds [F(a),F(b)] in R()
+proof
+  defpred Q[Nat] means for p being RedSequence of R() st len p = $1+1
+    holds R() reduces F(p.1), F(p.(len p));
+  B0: Q[0]
+  proof
+    let p be RedSequence of R();
+    assume len p = 0+1;
+    hence thesis by REWRITE1:12;
+  end;
+  B1: for n being Nat st Q[n] holds Q[n+1]
+  proof
+    let n be Nat;
+    assume C0: Q[n];
+    let p be RedSequence of R();
+    assume C1: len p = n+1+1;
+    C2: n+1 <= len p by C1,NAT_1:11;
+    reconsider q = p|(Seg (n+1)) as FinSequence by FINSEQ_1:15;
+    C3: len q = n+1 & dom q = Seg (n+1) by C2,FINSEQ_1:17;
+    C4: for i being Nat st i in dom q holds q.i = p.i
+    proof
+      let i be Nat;
+      assume i in dom q;
+      hence thesis by FUNCT_1:47;
+    end;
+    C5: q is RedSequence of R()
+    proof
+      thus len q > 0 by C3;
+      let i be Nat;
+      assume D1: i in dom q & i+1 in dom q;
+      D2: q.i = p.i & q.(i+1) = p.(i+1) by C4,D1;
+      D3: dom p = Seg (len p) by FINSEQ_1:def 3;
+      i <= n+1 & i+1 <= n+1 by C3,D1,FINSEQ_1:1;
+      then D4: i <= len p & i+1 <= len p by C2,XXREAL_0:2;
+      1 <= i & 1 <= i+1 by C3,D1,FINSEQ_1:1;
+      then i in dom p & i+1 in dom p by D3,D4,FINSEQ_1:1;
+      hence thesis by D2,REWRITE1:def 2;
+    end;
+    reconsider r = q as RedSequence of R() by C5;
+    E0: len r = n+1 & dom r = Seg (n+1) by C3;
+    E1: R() reduces F(r.1), F(r.(len r)) by C0,E0;
+    E0a: 1 <= n+1 & n+1 <= n+1+1 by NAT_1:11;
+    E2: 1 in dom q & n+1 in dom q by C3,E0a,FINSEQ_1:1;
+    then E3: q.1 = p.1 & q.(n+1) = p.(n+1) by C4;
+    F1: dom p = Seg (len p) by FINSEQ_1:def 3;
+    F2: 1 <= n+1+1 by NAT_1:11;
+    n+1 in dom p & n+1+1 in dom p by C1,E0a,F1,F2,FINSEQ_1:1;
+    then [p.(n+1), p.(n+1+1)] in R() by REWRITE1:def 2;
+    then [F(p.(n+1)), F(p.(n+1+1))] in R() by AA;
+    then R() reduces F(p.(n+1)), F(p.(n+1+1)) by REWRITE1:15;
+    hence thesis by C1,E0,E1,E3,REWRITE1:16;
+  end;
+  G1: for n being Nat holds Q[n] from NAT_1:sch 2(B0,B1);
+  let a,b be object;
+  assume R() reduces a,b;
+  then consider p being RedSequence of R() such that
+  H1: p.1 = a & p.(len p) = b by REWRITE1:def 3;
+  len p > 0 by REWRITE1:def 2;
+  then consider n being Nat such that H2: len p = n+1 by NAT_1:6;
+  thus thesis by G1,H1,H2;
+end;
+
+theorem Th23:
+  for V being non empty set, Q being EnvEpsRel of V, M,M1,N being
+    EnvEpsTerm of V st CC Q reduces M,M1 holds
+  CC Q reduces eApp(M,N), eApp(M1,N)
+proof
+  let V be non empty set, Q be EnvEpsRel of V, M,M1,N be EnvEpsTerm of V;
+  set G = EnvEpsGram(V);
+  set R = CC Q;
+  deffunc F(object) = eApp(In($1,TS G), N);
+  A1: for u,v being object st [u,v] in R holds [F(u),F(v)] in R
+  proof
+    let u,v be object;
+    assume B1: [u,v] in R;
+    then consider a1,b1 being EnvEpsTerm of V such that
+    B2: u = a1 & v = b1 by ENVSYN:26;
+    B3: In(u,TS G) = a1 & In(v,TS G) = b1 by B2;
+    [a1,b1] in R by B1,B2;
+    then [eApp(a1,N), eApp(b1,N)] in R by Th5;
+    hence thesis by B3;
+  end;
+  A2: for u,v being object st R reduces u,v holds R reduces F(u),F(v)
+    from RedCong(A1);
+  assume A3: R reduces M,M1;
+  A4: In(M,TS G) = M & In(M1,TS G) = M1;
+  thus thesis by A2,A3,A4;
+end;
+
+theorem Th24:
+  for V being non empty set, Q being EnvEpsRel of V, M,N,N1 being
+    EnvEpsTerm of V st CC Q reduces N,N1 holds
+  CC Q reduces eApp(M,N), eApp(M,N1)
+proof
+  let V be non empty set, Q be EnvEpsRel of V, M,N,N1 be EnvEpsTerm of V;
+  set G = EnvEpsGram(V);
+  set R = CC Q;
+  deffunc F(object) = eApp(M, In($1,TS G));
+  A1: for u,v being object st [u,v] in R holds [F(u),F(v)] in R
+  proof
+    let u,v be object;
+    assume B1: [u,v] in R;
+    then consider a1,b1 being EnvEpsTerm of V such that
+    B2: u = a1 & v = b1 by ENVSYN:26;
+    B3: In(u,TS G) = a1 & In(v,TS G) = b1 by B2;
+    [a1,b1] in R by B1,B2;
+    then [eApp(M,a1), eApp(M,b1)] in R by Th6;
+    hence thesis by B3;
+  end;
+  A2: for u,v being object st R reduces u,v holds R reduces F(u),F(v)
+    from RedCong(A1);
+  assume A3: R reduces N,N1;
+  A4: In(N,TS G) = N & In(N1,TS G) = N1;
+  thus thesis by A2,A3,A4;
+end;
+
+theorem Th25:
+  for V being non empty set, Q being EnvEpsRel of V, M,M1 being EnvEpsTerm
+    of V, x being Element of V st CC Q reduces M,M1 holds
+  CC Q reduces eLam(x,M), eLam(x,M1)
+proof
+  let V be non empty set, Q be EnvEpsRel of V, M,M1 be EnvEpsTerm of V, x
+    be Element of V;
+  set G = EnvEpsGram(V);
+  set R = CC Q;
+  deffunc F(object) = eLam(x, In($1,TS G));
+  A1: for u,v being object st [u,v] in R holds [F(u),F(v)] in R
+  proof
+    let u,v be object;
+    assume B1: [u,v] in R;
+    then consider a1,b1 being EnvEpsTerm of V such that
+    B2: u = a1 & v = b1 by ENVSYN:26;
+    B3: In(u,TS G) = a1 & In(v,TS G) = b1 by B2;
+    [a1,b1] in R by B1,B2;
+    then [eLam(x,a1), eLam(x,b1)] in R by Th7;
+    hence thesis by B3;
+  end;
+  A2: for u,v being object st R reduces u,v holds R reduces F(u),F(v)
+    from RedCong(A1);
+  assume A3: R reduces M,M1;
+  A4: In(M,TS G) = M & In(M1,TS G) = M1;
+  thus thesis by A2,A3,A4;
+end;
+
+theorem Th26:
+  for V being non empty set, Q being EnvEpsRel of V, M,M1,N being
+    EnvEpsTerm of V, x being Element of V st CC Q reduces M,M1 holds
+  CC Q reduces eExt(M,x,N), eExt(M1,x,N)
+proof
+  let V be non empty set, Q be EnvEpsRel of V, M,M1,N be EnvEpsTerm of V,
+    x be Element of V;
+  set G = EnvEpsGram(V);
+  set R = CC Q;
+  deffunc F(object) = eExt(In($1,TS G), x, N);
+  A1: for u,v being object st [u,v] in R holds [F(u),F(v)] in R
+  proof
+    let u,v be object;
+    assume B1: [u,v] in R;
+    then consider a1,b1 being EnvEpsTerm of V such that
+    B2: u = a1 & v = b1 by ENVSYN:26;
+    B3: In(u,TS G) = a1 & In(v,TS G) = b1 by B2;
+    [a1,b1] in R by B1,B2;
+    then [eExt(a1,x,N), eExt(b1,x,N)] in R by Th8;
+    hence thesis by B3;
+  end;
+  A2: for u,v being object st R reduces u,v holds R reduces F(u),F(v)
+    from RedCong(A1);
+  assume A3: R reduces M,M1;
+  A4: In(M,TS G) = M & In(M1,TS G) = M1;
+  thus thesis by A2,A3,A4;
+end;
+
+theorem Th27:
+  for V being non empty set, Q being EnvEpsRel of V, M,N,N1 being
+    EnvEpsTerm of V, x being Element of V st CC Q reduces N,N1 holds
+  CC Q reduces eExt(M,x,N), eExt(M,x,N1)
+proof
+  let V be non empty set, Q be EnvEpsRel of V, M,N,N1 be EnvEpsTerm of V,
+    x be Element of V;
+  set G = EnvEpsGram(V);
+  set R = CC Q;
+  deffunc F(object) = eExt(M, x, In($1,TS G));
+  A1: for u,v being object st [u,v] in R holds [F(u),F(v)] in R
+  proof
+    let u,v be object;
+    assume B1: [u,v] in R;
+    then consider a1,b1 being EnvEpsTerm of V such that
+    B2: u = a1 & v = b1 by ENVSYN:26;
+    B3: In(u,TS G) = a1 & In(v,TS G) = b1 by B2;
+    [a1,b1] in R by B1,B2;
+    then [eExt(M,x,a1), eExt(M,x,b1)] in R by Th9;
+    hence thesis by B3;
+  end;
+  A2: for u,v being object st R reduces u,v holds R reduces F(u),F(v)
+    from RedCong(A1);
+  assume A3: R reduces N,N1;
+  A4: In(N,TS G) = N & In(N1,TS G) = N1;
+  thus thesis by A2,A3,A4;
+end;
+
+theorem Th28:
+  for V being non empty set, Q being EnvEpsRel of V, M,M1,N being
+    EnvEpsTerm of V st CC Q reduces M,M1 holds
+  CC Q reduces eComp(M,N), eComp(M1,N)
+proof
+  let V be non empty set, Q be EnvEpsRel of V, M,M1,N be EnvEpsTerm of V;
+  set G = EnvEpsGram(V);
+  set R = CC Q;
+  deffunc F(object) = eComp(In($1,TS G), N);
+  A1: for u,v being object st [u,v] in R holds [F(u),F(v)] in R
+  proof
+    let u,v be object;
+    assume B1: [u,v] in R;
+    then consider a1,b1 being EnvEpsTerm of V such that
+    B2: u = a1 & v = b1 by ENVSYN:26;
+    B3: In(u,TS G) = a1 & In(v,TS G) = b1 by B2;
+    [a1,b1] in R by B1,B2;
+    then [eComp(a1,N), eComp(b1,N)] in R by Th10;
+    hence thesis by B3;
+  end;
+  A2: for u,v being object st R reduces u,v holds R reduces F(u),F(v)
+    from RedCong(A1);
+  assume A3: R reduces M,M1;
+  A4: In(M,TS G) = M & In(M1,TS G) = M1;
+  thus thesis by A2,A3,A4;
+end;
+
+theorem Th29:
+  for V being non empty set, Q being EnvEpsRel of V, M,N,N1 being
+    EnvEpsTerm of V st CC Q reduces N,N1 holds
+  CC Q reduces eComp(M,N), eComp(M,N1)
+proof
+  let V be non empty set, Q be EnvEpsRel of V, M,N,N1 be EnvEpsTerm of V;
+  set G = EnvEpsGram(V);
+  set R = CC Q;
+  deffunc F(object) = eComp(M, In($1,TS G));
+  A1: for u,v being object st [u,v] in R holds [F(u),F(v)] in R
+  proof
+    let u,v be object;
+    assume B1: [u,v] in R;
+    then consider a1,b1 being EnvEpsTerm of V such that
+    B2: u = a1 & v = b1 by ENVSYN:26;
+    B3: In(u,TS G) = a1 & In(v,TS G) = b1 by B2;
+    [a1,b1] in R by B1,B2;
+    then [eComp(M,a1), eComp(M,b1)] in R by Th11;
+    hence thesis by B3;
+  end;
+  A2: for u,v being object st R reduces u,v holds R reduces F(u),F(v)
+    from RedCong(A1);
+  assume A3: R reduces N,N1;
+  A4: In(N,TS G) = N & In(N1,TS G) = N1;
+  thus thesis by A2,A3,A4;
+end;
+
+theorem Th30:
+  for V being non empty set, Q being EnvEpsRel of V, M,M1 being EnvEpsTerm
+    of V st CC Q reduces M,M1 holds
+  CC Q reduces eEps M, eEps M1
+proof
+  let V be non empty set, Q be EnvEpsRel of V, M,M1 be EnvEpsTerm of V;
+  set G = EnvEpsGram(V);
+  set R = CC Q;
+  deffunc F(object) = eEps (In($1,TS G));
+  A1: for u,v being object st [u,v] in R holds [F(u),F(v)] in R
+  proof
+    let u,v be object;
+    assume B1: [u,v] in R;
+    then consider a1,b1 being EnvEpsTerm of V such that
+    B2: u = a1 & v = b1 by ENVSYN:26;
+    B3: In(u,TS G) = a1 & In(v,TS G) = b1 by B2;
+    [a1,b1] in R by B1,B2;
+    then [eEps a1, eEps b1] in R by Th12;
+    hence thesis by B3;
+  end;
+  A2: for u,v being object st R reduces u,v holds R reduces F(u),F(v)
+    from RedCong(A1);
+  assume A3: R reduces M,M1;
+  A4: In(M,TS G) = M & In(M1,TS G) = M1;
+  thus thesis by A2,A3,A4;
+end;

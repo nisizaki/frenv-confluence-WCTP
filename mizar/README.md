@@ -34,13 +34,13 @@ From this `mizar/` directory:
 ./verify.sh
 ```
 
-The script verifies the fourteen articles in dependency order and exports each
+The script verifies the fifteen articles in dependency order and exports each
 to a local `prel/` database so that the next one can import it, then checks
 `text/audit.miz`, which restates each main result and justifies it by its
 citation alone. On success it prints one `ok` per article and ends with
 
 ```text
-All 14 articles verified with no errors, and the audit article
+All 15 articles verified with no errors, and the audit article
 re-derives each main result from its citation alone.
 Main theorem: FRENV_5:8  (FrRed(V) is confluent)
 ```
@@ -87,18 +87,18 @@ Intermediate results:
 
 | Result | Declaration |
 |---|---|
-| $\to_\sigma$ terminates | `ENVEPS_1:43` |
-| $\to_\sigma$ is locally confluent | `ENVEPS_4:11` |
-| $\to_\sigma$ is confluent | `ENVEPS_4:12` |
-| $\to_\beta$ is confluent | `ENVEPS_7:34` |
-| parallel reduction commutes with sigma normalization | `ENVEPS_8:30` |
-| $\to_{\beta\sigma}$ of $\lambda_{\mathrm{Env}\varepsilon}$ is confluent | `ENVEPS_9:13` |
+| $\to_\sigma$ terminates | `ENVSIG:51` |
+| $\to_\sigma$ is locally confluent | `ENVPEAK:11` |
+| $\to_\sigma$ is confluent | `ENVPEAK:12` |
+| $\to_\beta$ is confluent | `ENVPAR:34` |
+| parallel reduction commutes with sigma normalization | `ENVKEY:30` |
+| $\to_{\beta\sigma}$ of $\lambda_{\mathrm{Env}\varepsilon}$ is confluent | `ENVCONF:13` |
 | **$\to_{\beta\sigma}$ of $\lambda_{\mathrm{FREnv}}$ is confluent** | `FRENV_5:8` |
 
 ## Layout
 
 ```text
-text/          the fourteen Mizar articles (.miz), plus audit.miz
+text/          the fifteen Mizar articles (.miz), plus audit.miz
 dict/          private vocabularies for the symbols introduced here (.voc)
 verify.sh      verify everything in dependency order; `clean` removes output
 check.sh       verify one article and show its error file
@@ -108,21 +108,22 @@ prel/          local library, created by verify.sh (not tracked)
 
 | Article | Lines | Theorems | Content |
 |---|---:|---:|---|
-| `enveps_1` | 2104 | 44 | syntax, constructors, structural induction, length measure, $\sigma$ reduction, termination |
-| `enveps_2` | 866 | 28 | multi-step congruence, inversion, the sixteen $\sigma$ rules as named steps |
-| `enveps_3` | 1091 | 9 | inversion by head constructor, convergence witness, chaining |
-| `enveps_4` | 2228 | 12 | the eight root peaks, the composition peak, local confluence, confluence |
-| `enveps_5` | 635 | 19 | $\sigma$ normal forms, their grammar, `snf` and its computation laws |
-| `enveps_6` | 2194 | 57 | $\beta$ reduction, $\beta\sigma$ reduction, the nineteen rules |
-| `enveps_7` | 2651 | 34 | parallel reduction, the triangle property, the diamond property, confluence of $\beta$ |
-| `enveps_8` | 1461 | 30 | composition compatibility and the key lemma |
-| `enveps_9` | 421 | 13 | Hardin's interpretation method; confluence of $\beta\sigma$ |
+| `envsyn` | 1258 | 26 | syntax as parse trees, the seven constructors, structural induction and structural recursion schemes, relations on terms |
+| `envlen` | 388 | 15 | the length measure, defined by the recursion scheme |
+| `envcc` | 1709 | 30 | the compatible closure `CC Q` of a relation on terms, with its congruence rules, inversion, inversion by head constructor, monotonicity, `CC (Q1 \/ Q2) = CC Q1 \/ CC Q2` and multi-step congruence |
+| `envsig` | 1601 | 56 | the eight $\sigma$ root rules; $\to_\sigma$ as their compatible closure; the sixteen named rules, inversion, length decrease, termination |
+| `envbeta` | 1217 | 61 | the three $\beta$ root rules; $\to_\beta$ and $\to_{\beta\sigma}$ as compatible closures; the nineteen named rules, inversion, multi-step congruence |
+| `envpeak` | 2229 | 12 | the eight root peaks, the composition peak, local confluence, confluence of $\sigma$ |
+| `envnf` | 636 | 19 | $\sigma$ normal forms, their grammar, `snf` and its computation laws |
+| `envpar` | 2678 | 34 | parallel reduction, the triangle property, the diamond property, confluence of $\beta$ |
+| `envkey` | 1461 | 30 | composition compatibility and the key lemma |
+| `envconf` | 421 | 13 | Hardin's interpretation method; confluence of $\beta\sigma$ |
 | `frenv_1` | 818 | 17 | syntax of $\lambda_{\mathrm{FREnv}}$ |
-| `frenv_2` | 1097 | 25 | $\beta\sigma$ reduction of $\lambda_{\mathrm{FREnv}}$ |
-| `frenv_3` | 799 | 20 | the translation, its recursion equations, surjectivity and inversion |
-| `frenv_4` | 473 | 3 | simulation |
-| `frenv_5` | 879 | 8 | single-step and multi-step lifting, confluence |
-| `audit` | 54 | 6 | restates the main results, each justified by its citation alone |
+| `frenv_2` | 1099 | 25 | $\beta\sigma$ reduction of $\lambda_{\mathrm{FREnv}}$ |
+| `frenv_3` | 800 | 20 | the translation, its recursion equations, surjectivity and inversion |
+| `frenv_4` | 464 | 3 | simulation |
+| `frenv_5` | 880 | 8 | single-step and multi-step lifting, confluence |
+| `audit` | 46 | 6 | restates the main results, each justified by its citation alone |
 
 ## The proof route
 
@@ -149,10 +150,33 @@ prel/          local library, created by verify.sh (not tracked)
 
 ## Design notes
 
-Mizar has no inductive datatypes and no inductive predicates. Terms are built
-as parse trees over a symbol alphabet using `DTCONSTR` — the term set `TS(G)`,
-its induction scheme `sch 7`, its recursion scheme `sch 8` and its uniqueness
-scheme `sch 9`. Symbols are pairs, tagged by their first component:
+Mizar has no inductive datatypes and no inductive predicates. Two pieces of
+infrastructure carry that weight, and both are proved once and reused.
+
+**Structural recursion.** Terms are parse trees over a symbol alphabet, built
+with `DTCONSTR`. Its recursion scheme hands a definition the *values* at the
+children together with the node's symbol, so a recursive definition written
+directly against it has to project values out of a sequence and dispatch on a
+tag with a cascade of `IFEQ`s. `ENVSYN:sch 2` does that once, and a recursive
+definition is then seven equations, one per constructor.
+
+**The compatible closure.** A reduction relation is the least relation
+containing its root rules and closed under the eight congruence rules. `envcc`
+defines that closure `CC Q` for an arbitrary `Q` and proves there — once — the
+congruence rules, inversion, inversion by each head constructor, the multi-step
+congruence lemmas, monotonicity, and that closing a union is the union of the
+closures. Each calculus then only names its own root rules:
+
+```text
+  func SigmaRed(V)     -> EnvEpsRel of V equals CC SigmaRoot(V);
+  func BetaRed(V)      -> EnvEpsRel of V equals CC BetaRoot(V);
+  func BetaSigmaRed(V) -> EnvEpsRel of V equals CC BetaSigmaRoot(V);
+```
+
+and `BetaSigmaRed(V) = BetaRed(V) \/ SigmaRed(V)` is a theorem (`ENVBETA:32`),
+not a definition: it follows from `CC (Q1 \/ Q2) = CC Q1 \/ CC Q2`.
+
+Symbols are pairs, tagged by their first component:
 
 | Symbol | Meaning | Arity |
 |---|---|---|

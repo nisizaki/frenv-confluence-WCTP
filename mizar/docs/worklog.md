@@ -5,8 +5,7 @@
 > articles live in `text/` and the vocabularies in `dict/` — the same layout as
 > `mizar/` here. It is reproduced unchanged except for the links, so a few file
 > names it mentions belong to that repository: its `build.sh` corresponds to
-> `verify.sh` here, and its smoke-test article `text/tst1.miz` is not part of
-> this artifact. The document is in Japanese.
+> `verify.sh` here. The document is in Japanese.
 
 Mizar による形式化作業の記録。ユーザ指示は逐語で引用し、各作業の開始/終了時刻を記す。
 時刻はすべて JST。
@@ -460,3 +459,80 @@ VarSkip, DApp）と 6 個の合同規則（appL, appR, lam, extL, extR, envAbst�
 - `ENVEPS_8:30` — 並行簡約は σ 正規化と可換（鍵補題）
 - `ENVEPS_9:13` — λ_EnvEps の βσ は合流する
 - `FRENV_5:8` — **λ_FREnv の βσ は合流する**
+
+---
+
+## 2026-09-15 16:55–18:20 可読性のための全面改訂
+
+**指示（逐語）**
+
+> Mizarのコードをよんでみましたが、Mizarでの形式化は、項の定義など、再帰的定義がないため、すごく読みにくいです。
+> 可読性を向上させる方法はないですか？
+
+> (2)まで含めて一気にお願いします。
+
+> β/βσ層を先に片付けてください
+
+> 停止性と下流の付け替えに進んでください
+
+**活動種別**: 設計変更・形式化・検証
+
+**内容**
+
+読みにくさの原因を 3 つに切り分け、すべてに対処した。
+
+1. **再帰的定義がない** — `elen` と `tr` が `DTCONSTR:sch 8` を直に叩いており、
+   選択子 `natsel`/`fseq` と `IFEQ` の 4 段ネストが露出していた。
+2. **規則テキストの重複** — 帰納的述語がないため、各規則が「属性の節・存在性の
+   登録・coherence の登録・反転補題の選言・命名定理」の 5 箇所に書かれていた。
+   合同規則 appL の本文は開発全体で 25 回出現していた。
+3. **構文解析木の層が漏れていた** — `Relation of TS(EnvEpsGram(V))` を使うため、
+   後続の記事にも `R c= [:TS G,TS G:]; then ...; then reconsider ...` の
+   5 行定型が数十箇所に現れていた。
+
+**新しい基盤（3 記事）**
+
+- `envsyn`（1258 行、26 定理）— 構文解析木の層をここに閉じ込め、**構造再帰
+  スキーム** `ENVSYN:sch 2` を `DTCONSTR:sch 8` から一度だけ証明した。
+  選択子と `IFEQ` 連鎖はスキームの内側にある。あわせて `EnvEpsRel` モードと
+  対の取り出し補題（原因 3 の定型を引用 1 個に潰す）、構成子の中置記法。
+- `envlen`（388 行、15 定理）— 長さ測度。定義が 7 本の等式になった。
+- `envcc`（1709 行、30 定理）— 任意の関係 `Q` の**合同閉包** `CC Q`。
+  8 つの合同規則・反転・頭部別反転 7 本・多段合同則 8 本・単調性・
+  `CC (Q1 \/ Q2) = CC Q1 \/ CC Q2` を、計算系ごとではなく一度だけ証明する。
+
+**計算系（2 記事）**
+
+- `envsig`（1601 行、56 定理）— σ の根規則 8 本を明示的な関係として書き、
+  `SigmaRed(V) = CC SigmaRoot(V)`。16 の命名規則・反転・頭部別反転・多段合同は
+  すべて `envcc` からの数行の導出。長さ減少と停止性も移植した。
+- `envbeta`（1217 行、61 定理）— β の根規則 3 本、`BetaRed(V) = CC BetaRoot(V)`、
+  `BetaSigmaRed(V) = CC BetaSigmaRoot(V)`。
+  `BetaSigmaRed(V) = BetaRed(V) \/ SigmaRed(V)` は定義ではなく**定理**
+  （`ENVBETA:32`）になり、一般則 `CC (Q1 \/ Q2) = CC Q1 \/ CC Q2` から従う。
+
+**下流の付け替え**
+
+旧 `enveps_1, 2, 3, 6` を退役させ、残りを内容に即した名前に改めた
+（`enveps_4 → envpeak`, `enveps_5 → envnf`, `enveps_7 → envpar`,
+`enveps_8 → envkey`, `enveps_9 → envconf`）。引用の付け替えは
+定理番号の対応表をスクリプトで当て、検証器に照合させた。
+構造の書き換えが必要だったのは 2 箇所だけ。
+
+- `envpar` の Th20（`BetaRed(V) c= ParRed(V)`）— `ParRed(V) is beta-closed`
+  を `ParRed(V) is_cc_over BetaRoot(V)` に。
+- `frenv_4` の Th2（simulation）— 旧版は `Q1 is beta-closed`（11 節）と
+  `Q1 is sigma-closed`（16 節）を別々に証明していた。新版は
+  `Q1 is_cc_over BetaSigmaRoot(V)` 一本で済み、8 つの合同節が 1 回になった。
+
+**到達点**
+
+15 記事、17,659 行、369 定理。`./build.sh` で全記事が検証を通る。
+主定理は `ENVSIG:51`（σ の停止性）、`ENVPEAK:12`（σ の合流性）、
+`ENVPAR:34`（β の合流性）、`ENVKEY:30`（鍵補題）、
+`ENVCONF:13`（λ_EnvEps の合流性）、`FRENV_5:8`（λ_FREnv の合流性）。
+
+行数の合計はほぼ変わっていない（17,717 → 17,659）。置き換えた 4 記事
+（6,255 行）と新しい 5 記事（6,173 行）もほぼ同じである。削減されたのは
+行数ではなく**重複**で、各計算系の規則は 1 回しか書かれておらず、
+合同閉包まわりの一般論は 3 つの簡約関係で共有されている。
