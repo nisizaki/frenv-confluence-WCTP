@@ -35,7 +35,7 @@ This extended development was then verified on clean runners as well. Both jobs 
 
 The Mizar development was added after the runs above and is checked locally, not in CI: there is no packaged Mizar distribution that a clean runner can install without a manual download step.
 
-It was verified on 2026-09-15 with Mizar Ver. 8.1.15 (Linux/FPC) and MML 5.99 on Ubuntu under WSL 2, by running `./verify.sh` from `mizar/` on a clean checkout. All fifteen articles produced empty `.err` files, and so did `text/audit.miz`, which restates the six main results and justifies each by its citation alone. The development was reorganised for readability later the same day and re-verified in full afterwards. The main result is
+It was verified on 2026-09-15 with Mizar Ver. 8.1.15 (Linux/FPC) and MML 5.99 on Ubuntu under WSL 2, by running `./verify.sh` from `mizar/` on a clean checkout. All fifteen articles produced empty `.err` files, and so did `text/audit.miz`, which restates the six main results and justifies each by its citation alone. The development was then reorganised for readability in two passes later the same day — first factoring out a structural recursion scheme and the compatible closure of a relation, then reformatting the root-rule definitions and introducing an infix notation for terms — and re-verified in full from a clean state after each pass. The main result is
 
 ```text
 FRENV_5:8   for V being non empty set holds FrRed(V) is confluent

@@ -50,7 +50,7 @@ The triangle property is stated in existential form — for every term there is 
 | Variable names | Strings | Parameter type `V` | Parameter set `V`, any non-empty set |
 | Primitive constants | None | Parameter type `C`, constructor `Trm.const`, and a constant reduction rule | None |
 | Bindings in raw syntax | Names are ordinary datatype arguments | Variable parameters are ordinary datatype arguments | Binder symbols are indexed by the variable, so the name is part of the node |
-| Auxiliary EnvEps calculus | Included | Included (`LambdaFrenv/EnvEps/`) | Included (`mizar/text/enveps_*.miz`) |
+| Auxiliary EnvEps calculus | Included | Included (`LambdaFrenv/EnvEps/`) | Included (`mizar/text/env*.miz`) |
 | Main route | Sigma normalization, parallel reduction on the auxiliary side, and transfer | The same route, with parallel beta on all terms and the diamond property obtained from a complete development | The same route, with the triangle property stated in existential form instead of a complete-development function |
 | Final confluence result | Theorem supplied | Theorem supplied | Theorem supplied |
 

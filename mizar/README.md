@@ -34,7 +34,8 @@ From this `mizar/` directory:
 ./verify.sh
 ```
 
-The script verifies the fifteen articles in dependency order and exports each
+The script verifies the fifteen articles (19,409 lines, 369 theorems) in
+dependency order and exports each
 to a local `prel/` database so that the next one can import it, then checks
 `text/audit.miz`, which restates each main result and justifies it by its
 citation alone. On success it prints one `ok` per article and ends with
@@ -54,7 +55,7 @@ sources.
 To re-check a single article after the ones it depends on have been exported:
 
 ```sh
-./check.sh enveps_8
+./check.sh envkey
 ```
 
 Mizar has no `sorry` and no admitted-goal mechanism, so an empty `.err` file
@@ -108,12 +109,12 @@ prel/          local library, created by verify.sh (not tracked)
 
 | Article | Lines | Theorems | Content |
 |---|---:|---:|---|
-| `envsyn` | 1258 | 26 | syntax as parse trees, the seven constructors, structural induction and structural recursion schemes, relations on terms |
+| `envsyn` | 1258 | 26 | syntax as parse trees, the seven constructors, structural induction and structural recursion schemes, relations on terms, the infix notation |
 | `envlen` | 388 | 15 | the length measure, defined by the recursion scheme |
 | `envcc` | 1709 | 30 | the compatible closure `CC Q` of a relation on terms, with its congruence rules, inversion, inversion by head constructor, monotonicity, `CC (Q1 \/ Q2) = CC Q1 \/ CC Q2` and multi-step congruence |
-| `envsig` | 1601 | 56 | the eight $\sigma$ root rules; $\to_\sigma$ as their compatible closure; the sixteen named rules, inversion, length decrease, termination |
-| `envbeta` | 1217 | 61 | the three $\beta$ root rules; $\to_\beta$ and $\to_{\beta\sigma}$ as compatible closures; the nineteen named rules, inversion, multi-step congruence |
-| `envpeak` | 2229 | 12 | the eight root peaks, the composition peak, local confluence, confluence of $\sigma$ |
+| `envsig` | 2631 | 56 | the eight $\sigma$ root rules; $\to_\sigma$ as their compatible closure; the sixteen named rules, inversion, length decrease, termination |
+| `envbeta` | 1942 | 61 | the three $\beta$ root rules; $\to_\beta$ and $\to_{\beta\sigma}$ as compatible closures; the nineteen named rules, inversion, multi-step congruence |
+| `envpeak` | 2225 | 12 | the eight root peaks, the composition peak, local confluence, confluence of $\sigma$ |
 | `envnf` | 636 | 19 | $\sigma$ normal forms, their grammar, `snf` and its computation laws |
 | `envpar` | 2678 | 34 | parallel reduction, the triangle property, the diamond property, confluence of $\beta$ |
 | `envkey` | 1461 | 30 | composition compatibility and the key lemma |
@@ -121,9 +122,9 @@ prel/          local library, created by verify.sh (not tracked)
 | `frenv_1` | 818 | 17 | syntax of $\lambda_{\mathrm{FREnv}}$ |
 | `frenv_2` | 1099 | 25 | $\beta\sigma$ reduction of $\lambda_{\mathrm{FREnv}}$ |
 | `frenv_3` | 800 | 20 | the translation, its recursion equations, surjectivity and inversion |
-| `frenv_4` | 464 | 3 | simulation |
+| `frenv_4` | 463 | 3 | simulation |
 | `frenv_5` | 880 | 8 | single-step and multi-step lifting, confluence |
-| `audit` | 46 | 6 | restates the main results, each justified by its citation alone |
+| `audit` | 54 | 6 | restates the main results, each justified by its citation alone |
 
 ## The proof route
 
@@ -214,7 +215,10 @@ Every reduction relation is defined as the least relation closed under its
 rules, which gives rule induction for free from the minimality clause. Rule
 induction alone does not give inversion; that is obtained by showing that the
 set of pairs matching one of the rule shapes, intersected with the reduction
-itself, is closed under the rules, and then appealing to minimality.
+itself, is closed under the rules, and then appealing to minimality. For the
+three reductions of $\lambda_{\mathrm{Env}\varepsilon}$ that argument is made
+once in `envcc`, for an arbitrary root relation; `frenv_2` repeats it for
+`FrRed(V)`, whose terms live in a different parse-tree algebra.
 
 ## Differences from the other two developments
 
