@@ -1,0 +1,54 @@
+:: Restates the main results and justifies each by its citation alone.
+
+environ
+
+ vocabularies NUMBERS, XBOOLE_0, SUBSET_1, TARSKI, ZFMISC_1, FINSEQ_1,
+      RELAT_1, FUNCT_1, ORDINAL1, CARD_1, ARYTM_3, XXREAL_0, NAT_1, TREES_1,
+      TREES_2, TREES_3, TREES_4, LANG1, STRUCT_0, DTCONSTR, MCART_1, XTUPLE_0,
+      FINSET_1, TDGROUP, FUNCOP_1, ARYTM_1, FUNCT_7, XREAL_0, XCMPLX_0,
+      REWRITE1, PBOOLE, ENVEPS_1, ENVEPS_6, FRENV_1, FRENV_2;
+ notations TARSKI, XBOOLE_0, ZFMISC_1, SUBSET_1, ORDINAL1, NUMBERS, XCMPLX_0,
+      XXREAL_0, NAT_1, RELAT_1, RELSET_1, FUNCT_1, FUNCT_2, FINSEQ_1, FINSEQ_2,
+      MCART_1, XTUPLE_0, DOMAIN_1, STRUCT_0, LANG1, TREES_1, TREES_2, TREES_3,
+      TREES_4, DTCONSTR, FUNCOP_1, XREAL_0, PBOOLE, REWRITE1, ENVEPS_1,
+      ENVEPS_6, FRENV_1, FRENV_2;
+ constructors NUMBERS, XCMPLX_0, XXREAL_0, NAT_1, RELSET_1, FUNCT_2, FINSEQ_1,
+      FINSEQ_2, MCART_1, XTUPLE_0, DOMAIN_1, STRUCT_0, LANG1, TREES_1, TREES_2,
+      TREES_3, TREES_4, DTCONSTR, PARTFUN1, BINOP_1, SETWISEO, XREAL_0,
+      FUNCOP_1, SUBSET_1, CARD_3, FINSEQOP, FINSEQ_4, FINSOP_1, PRE_POLY,
+      FUNCT_1, RELAT_1, PBOOLE, REWRITE1, ENVEPS_1, ENVEPS_6, FRENV_1,
+      FRENV_2;
+ registrations XBOOLE_0, SUBSET_1, RELAT_1, FUNCT_1, ORDINAL1, XREAL_0, NAT_1,
+      FINSEQ_1, FINSEQ_2, FINSET_1, CARD_1, STRUCT_0, LANG1, TREES_1, TREES_2,
+      TREES_3, TREES_4, DTCONSTR, XTUPLE_0, VALUED_0, FUNCOP_1, XCMPLX_0,
+      XXREAL_0, NUMBERS, MEMBERED, PBOOLE, REWRITE1, ENVEPS_1, ENVEPS_4,
+      FRENV_1;
+ requirements NUMERALS, REAL, BOOLE, SUBSET, ARITHM;
+ definitions TARSKI, XBOOLE_0, REWRITE1;
+ theorems ENVEPS_1, ENVEPS_4, ENVEPS_7, ENVEPS_8, ENVEPS_9, FRENV_5;
+
+begin
+
+reserve V for non empty set;
+
+theorem
+  SigmaRed(V) is strongly-normalizing by ENVEPS_1:43;
+
+theorem
+  SigmaRed(V) is confluent by ENVEPS_4:12;
+
+theorem
+  BetaRed(V) is confluent by ENVEPS_7:34;
+
+theorem
+  BetaSigmaRed(V) is confluent by ENVEPS_9:13;
+
+theorem
+  FrRed(V) is confluent by FRENV_5:8;
+
+theorem
+  for P,Q1,Q2 being FrEnvTerm of V
+  st FrRed(V) reduces P,Q1 & FrRed(V) reduces P,Q2
+  ex Q being FrEnvTerm of V st
+    FrRed(V) reduces Q1,Q & FrRed(V) reduces Q2,Q
+  by FRENV_5:6;

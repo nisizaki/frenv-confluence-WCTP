@@ -1,0 +1,1461 @@
+:: Parallel reduction commutes with sigma normalisation
+
+environ
+
+ vocabularies NUMBERS, XBOOLE_0, SUBSET_1, TARSKI, ZFMISC_1, FINSEQ_1,
+      RELAT_1, FUNCT_1, ORDINAL1, CARD_1, ARYTM_3, XXREAL_0, NAT_1, TREES_1,
+      TREES_2, TREES_3, TREES_4, LANG1, STRUCT_0, DTCONSTR, MCART_1, XTUPLE_0,
+      FINSET_1, TDGROUP, FUNCOP_1, ARYTM_1, FUNCT_7, XREAL_0, XCMPLX_0,
+      REWRITE1, PBOOLE, ENVEPS_1, ENVEPS_5, ENVEPS_6, ENVEPS_7;
+ notations TARSKI, XBOOLE_0, ZFMISC_1, SUBSET_1, ORDINAL1, NUMBERS, XCMPLX_0,
+      XXREAL_0, NAT_1, RELAT_1, RELSET_1, FUNCT_1, FUNCT_2, FINSEQ_1, FINSEQ_2,
+      MCART_1, XTUPLE_0, DOMAIN_1, STRUCT_0, LANG1, TREES_1, TREES_2, TREES_3,
+      TREES_4, DTCONSTR, FUNCOP_1, XREAL_0, PBOOLE, REWRITE1, ENVEPS_1,
+      ENVEPS_5, ENVEPS_6, ENVEPS_7;
+ constructors NUMBERS, XCMPLX_0, XXREAL_0, NAT_1, RELSET_1, FUNCT_2, FINSEQ_1,
+      FINSEQ_2, MCART_1, XTUPLE_0, DOMAIN_1, STRUCT_0, LANG1, TREES_1, TREES_2,
+      TREES_3, TREES_4, DTCONSTR, PARTFUN1, BINOP_1, SETWISEO, XREAL_0,
+      FUNCOP_1, SUBSET_1, CARD_3, FINSEQOP, FINSEQ_4, FINSOP_1, PRE_POLY,
+      FUNCT_1, RELAT_1, PBOOLE, REWRITE1, ENVEPS_1, ENVEPS_5, ENVEPS_6,
+      ENVEPS_7;
+ registrations XBOOLE_0, SUBSET_1, RELAT_1, FUNCT_1, ORDINAL1, XREAL_0, NAT_1,
+      FINSEQ_1, FINSEQ_2, FINSET_1, CARD_1, STRUCT_0, LANG1, TREES_1, TREES_2,
+      TREES_3, TREES_4, DTCONSTR, XTUPLE_0, VALUED_0, FUNCOP_1, XCMPLX_0,
+      XXREAL_0, NUMBERS, MEMBERED, PBOOLE, REWRITE1, ENVEPS_1, ENVEPS_4;
+ requirements NUMERALS, REAL, BOOLE, SUBSET, ARITHM;
+ definitions TARSKI, XBOOLE_0, DTCONSTR, TREES_3, TREES_4, RELAT_1, FUNCT_1,
+      FINSEQ_1, FUNCOP_1, SUBSET_1, REWRITE1, ENVEPS_1, ENVEPS_7;
+ theorems TARSKI, ZFMISC_1, XTUPLE_0, REWRITE1, NAT_1, XXREAL_0, FINSEQ_1,
+      FUNCT_1, XREAL_1, ENVEPS_1, ENVEPS_2, ENVEPS_5, ENVEPS_6, ENVEPS_7;
+ schemes DTCONSTR, NAT_1, ENVEPS_1, ENVEPS_2;
+
+begin :: Computing normal forms through the sigma rules
+
+reserve V for non empty set;
+
+theorem Th1:
+  for x being Element of V holds snf (eVar x) = eVar x
+proof
+  let x be Element of V;
+  eVar x is_a_normal_form_wrt SigmaRed(V) by ENVEPS_5:9;
+  hence thesis by ENVEPS_5:5;
+end;
+
+theorem Th2:
+  snf (eId V) = eId V
+proof
+  eId V is_a_normal_form_wrt SigmaRed(V) by ENVEPS_5:9;
+  hence thesis by ENVEPS_5:5;
+end;
+
+theorem Th3:
+  for M,N,L being EnvEpsTerm of V holds
+  snf (eComp(eComp(M,N),L)) = snf (eComp(M,eComp(N,L)))
+proof
+  let M,N,L be EnvEpsTerm of V;
+  [eComp(eComp(M,N),L), eComp(M,eComp(N,L))] in SigmaRed(V) by ENVEPS_2:10;
+  hence thesis by ENVEPS_5:7;
+end;
+
+theorem Th4:
+  for M being EnvEpsTerm of V holds snf (eComp(eId V,M)) = snf M
+proof
+  let M be EnvEpsTerm of V;
+  [eComp(eId V,M), M] in SigmaRed(V) by ENVEPS_2:11;
+  hence thesis by ENVEPS_5:7;
+end;
+
+theorem Th5:
+  for M being EnvEpsTerm of V holds snf (eComp(M,eId V)) = snf M
+proof
+  let M be EnvEpsTerm of V;
+  [eComp(M,eId V), M] in SigmaRed(V) by ENVEPS_2:12;
+  hence thesis by ENVEPS_5:7;
+end;
+
+theorem Th6:
+  for L,M,N being EnvEpsTerm of V, x being Element of V holds
+  snf (eComp(eExt(L,x,M),N)) = snf (eExt(eComp(L,N),x,eComp(M,N)))
+proof
+  let L,M,N be EnvEpsTerm of V, x be Element of V;
+  [eComp(eExt(L,x,M),N), eExt(eComp(L,N),x,eComp(M,N))] in SigmaRed(V)
+    by ENVEPS_2:13;
+  hence thesis by ENVEPS_5:7;
+end;
+
+theorem Th7:
+  for M,N being EnvEpsTerm of V, x being Element of V holds
+  snf (eComp(eVar x, eExt(M,x,N))) = snf M
+proof
+  let M,N be EnvEpsTerm of V, x be Element of V;
+  [eComp(eVar x, eExt(M,x,N)), M] in SigmaRed(V) by ENVEPS_2:14;
+  hence thesis by ENVEPS_5:7;
+end;
+
+theorem Th8:
+  for M,N being EnvEpsTerm of V, x,y being Element of V st x <> y holds
+  snf (eComp(eVar x, eExt(M,y,N))) = snf (eComp(eVar x, N))
+proof
+  let M,N be EnvEpsTerm of V, x,y be Element of V;
+  assume x <> y;
+  then [eComp(eVar x, eExt(M,y,N)), eComp(eVar x, N)] in SigmaRed(V)
+    by ENVEPS_2:15;
+  hence thesis by ENVEPS_5:7;
+end;
+
+theorem Th9:
+  for M,N,L being EnvEpsTerm of V holds
+  snf (eComp(eApp(M,N),L)) = snf (eApp(eComp(M,L),eComp(N,L)))
+proof
+  let M,N,L be EnvEpsTerm of V;
+  [eComp(eApp(M,N),L), eApp(eComp(M,L),eComp(N,L))] in SigmaRed(V)
+    by ENVEPS_2:16;
+  hence thesis by ENVEPS_5:7;
+end;
+
+theorem Th10:
+  for M,N being EnvEpsTerm of V holds
+  snf (eComp(eEps M,N)) = snf (eEps M)
+proof
+  let M,N be EnvEpsTerm of V;
+  [eComp(eEps M,N), eEps M] in SigmaRed(V) by ENVEPS_2:17;
+  hence thesis by ENVEPS_5:7;
+end;
+
+theorem Th11:
+  for M being EnvEpsTerm of V holds
+  snf M is_a_normal_form_wrt SigmaRed(V) & SigmaRed(V) reduces M, snf M
+  by ENVEPS_5:3;
+
+theorem Th12:
+  for M,N being EnvEpsTerm of V, x being Element of V
+  st M is_a_normal_form_wrt SigmaRed(V) &
+     N is_a_normal_form_wrt SigmaRed(V) & N <> eId V
+  holds snf (eComp(eLam(x,M),N)) = eComp(eLam(x,M),N)
+proof
+  let M,N be EnvEpsTerm of V, x be Element of V;
+  assume A1: M is_a_normal_form_wrt SigmaRed(V) &
+    N is_a_normal_form_wrt SigmaRed(V) & N <> eId V;
+  A2: eLam(x,M) is_a_normal_form_wrt SigmaRed(V) by A1,ENVEPS_5:10;
+  ex y being Element of V, U being EnvEpsTerm of V st eLam(x,M) = eLam(y,U);
+  then eComp(eLam(x,M),N) is_a_normal_form_wrt SigmaRed(V)
+    by A1,A2,ENVEPS_5:14;
+  hence thesis by ENVEPS_5:5;
+end;
+
+theorem Th13:
+  for N being EnvEpsTerm of V, x being Element of V
+  st N is_a_normal_form_wrt SigmaRed(V) & N <> eId V &
+     not ex P,Q being EnvEpsTerm of V, z being Element of V st
+       N = eExt(P,z,Q)
+  holds snf (eComp(eVar x, N)) = eComp(eVar x, N)
+proof
+  let N be EnvEpsTerm of V, x be Element of V;
+  assume A1: N is_a_normal_form_wrt SigmaRed(V) & N <> eId V &
+    not ex P,Q being EnvEpsTerm of V, z being Element of V st
+      N = eExt(P,z,Q);
+  A2: eVar x is_a_normal_form_wrt SigmaRed(V) by ENVEPS_5:9;
+  ex y being Element of V st eVar x = eVar y;
+  then eComp(eVar x, N) is_a_normal_form_wrt SigmaRed(V)
+    by A1,A2,ENVEPS_5:14;
+  hence thesis by ENVEPS_5:5;
+end;
+
+begin :: Composition compatibility, the easy cases
+
+theorem Th14:
+  for U,S1,S2 being EnvEpsTerm of V
+  st U is_a_normal_form_wrt SigmaRed(V) & [U,S1] in ParRed(V) &
+     [eId V,S2] in ParRed(V)
+  ex S being EnvEpsTerm of V st
+    [snf (eComp(U,eId V)), S] in ParRed(V) & snf S = snf (eComp(S1,S2))
+proof
+  let U,S1,S2 be EnvEpsTerm of V;
+  assume that A1: U is_a_normal_form_wrt SigmaRed(V) and
+  A2: [U,S1] in ParRed(V) and A3: [eId V,S2] in ParRed(V);
+  consider M2 being EnvEpsTerm of V such that
+  A4: eId V = M2 & S2 = M2 by A3,ENVEPS_7:14;
+  take S1;
+  A5: snf (eComp(U,eId V)) = snf U by Th5
+    .= U by A1,ENVEPS_5:5;
+  thus [snf (eComp(U,eId V)), S1] in ParRed(V) by A2,A5;
+  thus snf S1 = snf (eComp(S1,eId V)) by Th5
+    .= snf (eComp(S1,S2)) by A4;
+end;
+
+theorem Th15:
+  for W,S1,S2 being EnvEpsTerm of V
+  st W is_a_normal_form_wrt SigmaRed(V) & [eId V,S1] in ParRed(V) &
+     [W,S2] in ParRed(V)
+  ex S being EnvEpsTerm of V st
+    [snf (eComp(eId V,W)), S] in ParRed(V) & snf S = snf (eComp(S1,S2))
+proof
+  let W,S1,S2 be EnvEpsTerm of V;
+  assume that A1: W is_a_normal_form_wrt SigmaRed(V) and
+  A2: [eId V,S1] in ParRed(V) and A3: [W,S2] in ParRed(V);
+  consider M2 being EnvEpsTerm of V such that
+  A4: eId V = M2 & S1 = M2 by A2,ENVEPS_7:14;
+  take S2;
+  A5: snf (eComp(eId V,W)) = snf W by Th4
+    .= W by A1,ENVEPS_5:5;
+  thus [snf (eComp(eId V,W)), S2] in ParRed(V) by A3,A5;
+  thus snf S2 = snf (eComp(eId V,S2)) by Th4
+    .= snf (eComp(S1,S2)) by A4;
+end;
+
+theorem Th16:
+  for U,W,S1,S2 being EnvEpsTerm of V
+  st eComp(U,W) is_a_normal_form_wrt SigmaRed(V) &
+     [U,S1] in ParRed(V) & [W,S2] in ParRed(V)
+  ex S being EnvEpsTerm of V st
+    [snf (eComp(U,W)), S] in ParRed(V) & snf S = snf (eComp(S1,S2))
+proof
+  let U,W,S1,S2 be EnvEpsTerm of V;
+  assume that A1: eComp(U,W) is_a_normal_form_wrt SigmaRed(V) and
+  A2: [U,S1] in ParRed(V) & [W,S2] in ParRed(V);
+  take eComp(S1,S2);
+  A3: snf (eComp(U,W)) = eComp(U,W) by A1,ENVEPS_5:5;
+  thus [snf (eComp(U,W)), eComp(S1,S2)] in ParRed(V) by A2,A3,ENVEPS_7:9;
+  thus thesis;
+end;
+
+theorem Th17:
+  for P,Q,S1,S2 being EnvEpsTerm of V, x being Element of V
+  st eExt(P,x,Q) is_a_normal_form_wrt SigmaRed(V) &
+     [eVar x,S1] in ParRed(V) & [eExt(P,x,Q),S2] in ParRed(V)
+  ex S being EnvEpsTerm of V st
+    [snf (eComp(eVar x, eExt(P,x,Q))), S] in ParRed(V) &
+    snf S = snf (eComp(S1,S2))
+proof
+  let P,Q,S1,S2 be EnvEpsTerm of V, x be Element of V;
+  assume that A1: eExt(P,x,Q) is_a_normal_form_wrt SigmaRed(V) and
+  A2: [eVar x,S1] in ParRed(V) and A3: [eExt(P,x,Q),S2] in ParRed(V);
+  consider M2 being EnvEpsTerm of V such that
+  A4: eVar x = M2 & S1 = M2 by A2,ENVEPS_7:13;
+  A5: ( ex M3 being EnvEpsTerm of V st eExt(P,x,Q) = M3 & S2 = M3 ) or
+      ( ex M3,M4,N3,N4 being EnvEpsTerm of V, x2 being Element of V st
+        [M3,M4] in ParRed(V) & [N3,N4] in ParRed(V) &
+        eExt(P,x,Q) = eExt(M3,x2,N3) & S2 = eExt(M4,x2,N4) ) by A3,ENVEPS_7:18;
+  A6: ex P3,Q3 being EnvEpsTerm of V st [P,P3] in ParRed(V) &
+    [Q,Q3] in ParRed(V) & S2 = eExt(P3,x,Q3)
+  proof
+    per cases by A5;
+    suppose ex M3 being EnvEpsTerm of V st eExt(P,x,Q) = M3 & S2 = M3;
+      then B1: S2 = eExt(P,x,Q);
+      [P,P] in ParRed(V) & [Q,Q] in ParRed(V) by ENVEPS_7:4;
+      hence thesis by B1;
+    end;
+    suppose ex M3,M4,N3,N4 being EnvEpsTerm of V, x2 being Element of V st
+        [M3,M4] in ParRed(V) & [N3,N4] in ParRed(V) &
+        eExt(P,x,Q) = eExt(M3,x2,N3) & S2 = eExt(M4,x2,N4);
+      then consider M3,M4,N3,N4 being EnvEpsTerm of V,
+      x2 being Element of V such that
+      B1: [M3,M4] in ParRed(V) & [N3,N4] in ParRed(V) &
+        eExt(P,x,Q) = eExt(M3,x2,N3) & S2 = eExt(M4,x2,N4);
+      B2: x = x2 & P = M3 & Q = N3 by B1,ENVEPS_1:15;
+      take M4,N4;
+      thus thesis by B1,B2;
+    end;
+  end;
+  consider P3,Q3 being EnvEpsTerm of V such that
+  A7: [P,P3] in ParRed(V) & [Q,Q3] in ParRed(V) & S2 = eExt(P3,x,Q3) by A6;
+  A7a: P is_a_normal_form_wrt SigmaRed(V) by A1,ENVEPS_5:13;
+  A8: snf (eComp(eVar x, eExt(P,x,Q))) = snf P by Th7
+    .= P by A7a,ENVEPS_5:5;
+  take P3;
+  thus [snf (eComp(eVar x, eExt(P,x,Q))), P3] in ParRed(V) by A7,A8;
+  thus snf P3 = snf (eComp(eVar x, eExt(P3,x,Q3))) by Th7
+    .= snf (eComp(S1,S2)) by A4,A7;
+end;
+
+theorem Th18:
+  for A,W,S1,S2 being EnvEpsTerm of V
+  st eEps A is_a_normal_form_wrt SigmaRed(V) &
+     [eEps A,S1] in ParRed(V) & [W,S2] in ParRed(V)
+  ex S being EnvEpsTerm of V st
+    [snf (eComp(eEps A,W)), S] in ParRed(V) & snf S = snf (eComp(S1,S2))
+proof
+  let A,W,S1,S2 be EnvEpsTerm of V;
+  assume that A1: eEps A is_a_normal_form_wrt SigmaRed(V) and
+  A2: [eEps A,S1] in ParRed(V) and A3: [W,S2] in ParRed(V);
+  A4: ( ex M2 being EnvEpsTerm of V st eEps A = M2 & S1 = M2 ) or
+      ( ex M2,M3 being EnvEpsTerm of V st
+        [M2,M3] in ParRed(V) & eEps A = eEps M2 &
+        S1 = eEps M3 ) by A2,ENVEPS_7:16;
+  A5: ex A3 being EnvEpsTerm of V st [A,A3] in ParRed(V) & S1 = eEps A3
+  proof
+    per cases by A4;
+    suppose ex M2 being EnvEpsTerm of V st eEps A = M2 & S1 = M2;
+      then B1: S1 = eEps A;
+      [A,A] in ParRed(V) by ENVEPS_7:4;
+      hence thesis by B1;
+    end;
+    suppose ex M2,M3 being EnvEpsTerm of V st
+        [M2,M3] in ParRed(V) & eEps A = eEps M2 & S1 = eEps M3;
+      then consider M2,M3 being EnvEpsTerm of V such that
+      B1: [M2,M3] in ParRed(V) & eEps A = eEps M2 & S1 = eEps M3;
+      A = M2 by B1,ENVEPS_1:12;
+      hence thesis by B1;
+    end;
+  end;
+  consider A3 being EnvEpsTerm of V such that
+  A6: [A,A3] in ParRed(V) & S1 = eEps A3 by A5;
+  A7: snf (eComp(eEps A,W)) = snf (eEps A) by Th10
+    .= eEps A by A1,ENVEPS_5:5;
+  take eEps A3;
+  thus [snf (eComp(eEps A,W)), eEps A3] in ParRed(V) by A6,A7,ENVEPS_7:6;
+  thus snf (eEps A3) = snf (eComp(eEps A3,S2)) by Th10
+    .= snf (eComp(S1,S2)) by A6;
+end;
+
+theorem Th19:
+  for k being Nat, P,Q,S1,S2 being EnvEpsTerm of V, x,y being Element of V
+  st x <> y & elen (eComp(eVar x, eExt(P,y,Q))) = k &
+     eExt(P,y,Q) is_a_normal_form_wrt SigmaRed(V) &
+     [eVar x,S1] in ParRed(V) & [eExt(P,y,Q),S2] in ParRed(V) &
+     (for U2,W2,T1,T2 being EnvEpsTerm of V
+        st elen (eComp(U2,W2)) < k &
+           U2 is_a_normal_form_wrt SigmaRed(V) &
+           W2 is_a_normal_form_wrt SigmaRed(V) &
+           [U2,T1] in ParRed(V) & [W2,T2] in ParRed(V)
+        ex T being EnvEpsTerm of V st
+          [snf (eComp(U2,W2)), T] in ParRed(V) & snf T = snf (eComp(T1,T2)))
+  ex S being EnvEpsTerm of V st
+    [snf (eComp(eVar x, eExt(P,y,Q))), S] in ParRed(V) &
+    snf S = snf (eComp(S1,S2))
+proof
+  let k be Nat, P,Q,S1,S2 be EnvEpsTerm of V, x,y be Element of V;
+  assume that A0: x <> y and A1: elen (eComp(eVar x, eExt(P,y,Q))) = k and
+  A2: eExt(P,y,Q) is_a_normal_form_wrt SigmaRed(V) and
+  A3: [eVar x,S1] in ParRed(V) and A4: [eExt(P,y,Q),S2] in ParRed(V) and
+  A5: for U2,W2,T1,T2 being EnvEpsTerm of V
+    st elen (eComp(U2,W2)) < k &
+       U2 is_a_normal_form_wrt SigmaRed(V) &
+       W2 is_a_normal_form_wrt SigmaRed(V) &
+       [U2,T1] in ParRed(V) & [W2,T2] in ParRed(V)
+    ex T being EnvEpsTerm of V st
+      [snf (eComp(U2,W2)), T] in ParRed(V) & snf T = snf (eComp(T1,T2));
+  consider M2 being EnvEpsTerm of V such that
+  A6: eVar x = M2 & S1 = M2 by A3,ENVEPS_7:13;
+  A7: ( ex M3 being EnvEpsTerm of V st eExt(P,y,Q) = M3 & S2 = M3 ) or
+      ( ex M3,M4,N3,N4 being EnvEpsTerm of V, x2 being Element of V st
+        [M3,M4] in ParRed(V) & [N3,N4] in ParRed(V) &
+        eExt(P,y,Q) = eExt(M3,x2,N3) & S2 = eExt(M4,x2,N4) ) by A4,ENVEPS_7:18;
+  A8: ex P3,Q3 being EnvEpsTerm of V st [P,P3] in ParRed(V) &
+    [Q,Q3] in ParRed(V) & S2 = eExt(P3,y,Q3)
+  proof
+    per cases by A7;
+    suppose ex M3 being EnvEpsTerm of V st eExt(P,y,Q) = M3 & S2 = M3;
+      then B1: S2 = eExt(P,y,Q);
+      [P,P] in ParRed(V) & [Q,Q] in ParRed(V) by ENVEPS_7:4;
+      hence thesis by B1;
+    end;
+    suppose ex M3,M4,N3,N4 being EnvEpsTerm of V, x2 being Element of V st
+        [M3,M4] in ParRed(V) & [N3,N4] in ParRed(V) &
+        eExt(P,y,Q) = eExt(M3,x2,N3) & S2 = eExt(M4,x2,N4);
+      then consider M3,M4,N3,N4 being EnvEpsTerm of V,
+      x2 being Element of V such that
+      B1: [M3,M4] in ParRed(V) & [N3,N4] in ParRed(V) &
+        eExt(P,y,Q) = eExt(M3,x2,N3) & S2 = eExt(M4,x2,N4);
+      B2: y = x2 & P = M3 & Q = N3 by B1,ENVEPS_1:15;
+      take M4,N4;
+      thus thesis by B1,B2;
+    end;
+  end;
+  consider P3,Q3 being EnvEpsTerm of V such that
+  A9: [P,P3] in ParRed(V) & [Q,Q3] in ParRed(V) & S2 = eExt(P3,y,Q3) by A8;
+  B1: Q is_a_normal_form_wrt SigmaRed(V) by A2,ENVEPS_5:13;
+  B2: eVar x is_a_normal_form_wrt SigmaRed(V) by ENVEPS_5:9;
+  B3: elen (eVar x) = 1 by ENVEPS_1:25;
+  B4: elen (eComp(eVar x, eExt(P,y,Q))) =
+    elen (eVar x) * (elen (eExt(P,y,Q)) + 1) by ENVEPS_1:30
+    .= 1 * ((elen P + elen Q + 1) + 1) by B3,ENVEPS_1:29;
+  B5: elen (eComp(eVar x, Q)) = elen (eVar x) * (elen Q + 1) by ENVEPS_1:30
+    .= 1 * (elen Q + 1) by B3;
+  B6: 0 < elen P by ENVEPS_1:31;
+  B6a: k = elen P + elen Q + 2 by A1,B4;
+  B6b: elen (eComp(eVar x, Q)) = elen Q + 1 by B5;
+  B6c: 0 < elen P + 1 by B6;
+  B6d: elen Q + 1 < (elen Q + 1) + (elen P + 1) by B6c,ENVEPS_1:38;
+  B7: elen (eComp(eVar x, Q)) < k by B6a,B6b,B6d;
+  B7a: [eVar x, eVar x] in ParRed(V) by ENVEPS_7:4;
+  consider T being EnvEpsTerm of V such that
+  B8: [snf (eComp(eVar x, Q)), T] in ParRed(V) &
+    snf T = snf (eComp(eVar x, Q3)) by A5,A9,B1,B2,B7,B7a;
+  take T;
+  snf (eComp(eVar x, eExt(P,y,Q))) = snf (eComp(eVar x, Q)) by A0,Th8;
+  hence [snf (eComp(eVar x, eExt(P,y,Q))), T] in ParRed(V) by B8;
+  thus snf T = snf (eComp(eVar x, eExt(P3,y,Q3))) by A0,B8,Th8
+    .= snf (eComp(S1,S2)) by A6,A9;
+end;
+
+begin :: Sigma reduction does not increase the length
+
+scheme
+  RedInd { R() -> Relation, P[object] }:
+  for a,b being object st R() reduces a,b & P[a] holds P[b]
+provided
+AA: for a,b being object st P[a] & [a,b] in R() holds P[b]
+proof
+  defpred Q[Nat] means for p being RedSequence of R() st len p = $1+1 & P[p.1]
+    holds P[p.(len p)];
+  B0: Q[0]
+  proof
+    let p be RedSequence of R();
+    assume len p = 0+1 & P[p.1];
+    hence thesis;
+  end;
+  B1: for n being Nat st Q[n] holds Q[n+1]
+  proof
+    let n be Nat;
+    assume C0: Q[n];
+    let p be RedSequence of R();
+    assume C1: len p = n+1+1 & P[p.1];
+    C2: n+1 <= len p by C1,NAT_1:11;
+    reconsider q = p|(Seg (n+1)) as FinSequence by FINSEQ_1:15;
+    C3: len q = n+1 & dom q = Seg (n+1) by C2,FINSEQ_1:17;
+    C4: for i being Nat st i in dom q holds q.i = p.i
+    proof
+      let i be Nat;
+      assume i in dom q;
+      hence thesis by FUNCT_1:47;
+    end;
+    C5: q is RedSequence of R()
+    proof
+      thus len q > 0 by C3;
+      let i be Nat;
+      assume D1: i in dom q & i+1 in dom q;
+      D2: q.i = p.i & q.(i+1) = p.(i+1) by C4,D1;
+      D3: dom p = Seg (len p) by FINSEQ_1:def 3;
+      i <= n+1 & i+1 <= n+1 by C3,D1,FINSEQ_1:1;
+      then D4: i <= len p & i+1 <= len p by C2,XXREAL_0:2;
+      1 <= i & 1 <= i+1 by C3,D1,FINSEQ_1:1;
+      then i in dom p & i+1 in dom p by D3,D4,FINSEQ_1:1;
+      hence thesis by D2,REWRITE1:def 2;
+    end;
+    reconsider r = q as RedSequence of R() by C5;
+    E0: len r = n+1 & dom r = Seg (n+1) by C3;
+    E0a: 1 <= n+1 & n+1 <= n+1+1 by NAT_1:11;
+    E2: 1 in dom q & n+1 in dom q by C3,E0a,FINSEQ_1:1;
+    then E3: q.1 = p.1 & q.(n+1) = p.(n+1) by C4;
+    E1: P[r.(len r)] by C0,C1,E0,E3;
+    F1: dom p = Seg (len p) by FINSEQ_1:def 3;
+    F2: 1 <= n+1+1 by NAT_1:11;
+    n+1 in dom p & n+1+1 in dom p by C1,E0a,F1,F2,FINSEQ_1:1;
+    then [p.(n+1), p.(n+1+1)] in R() by REWRITE1:def 2;
+    hence thesis by C1,E0,E1,E3,AA;
+  end;
+  G1: for n being Nat holds Q[n] from NAT_1:sch 2(B0,B1);
+  let a,b be object;
+  assume AS: R() reduces a,b & P[a];
+  then consider p being RedSequence of R() such that
+  H1: p.1 = a & p.(len p) = b by REWRITE1:def 3;
+  H2: P[p.1] by AS,H1;
+  len p > 0 by REWRITE1:def 2;
+  then consider n being Nat such that H3: len p = n+1 by NAT_1:6;
+  thus thesis by G1,H1,H2,H3;
+end;
+
+theorem Th20:
+  for M,N being EnvEpsTerm of V st SigmaRed(V) reduces M,N
+  holds elen N <= elen M
+proof
+  let M,N be EnvEpsTerm of V;
+  set G = EnvEpsGram(V);
+  defpred P[object] means ex A being EnvEpsTerm of V st A = $1 &
+    elen A <= elen M;
+  A1: for a,b being object st P[a] & [a,b] in SigmaRed(V) holds P[b]
+  proof
+    let a,b be object;
+    assume that B1: P[a] and B2: [a,b] in SigmaRed(V);
+    consider A being EnvEpsTerm of V such that
+    B3: A = a & elen A <= elen M by B1;
+    SigmaRed(V) c= [:TS G, TS G:];
+    then [a,b] in [:TS G, TS G:] by B2;
+    then b in TS G by ZFMISC_1:87;
+    then reconsider b1 = b as EnvEpsTerm of V;
+    [A,b1] in SigmaRed(V) by B2,B3;
+    then elen b1 < elen A by ENVEPS_1:42;
+    then elen b1 <= elen M by B3,XXREAL_0:2;
+    hence thesis;
+  end;
+  A2: for a,b being object st SigmaRed(V) reduces a,b & P[a] holds P[b]
+    from RedInd(A1);
+  assume A3: SigmaRed(V) reduces M,N;
+  P[M];
+  then P[N] by A2,A3;
+  then consider A being EnvEpsTerm of V such that
+  A4: A = N & elen A <= elen M;
+  thus thesis by A4;
+end;
+
+theorem Th21:
+  for M being EnvEpsTerm of V holds elen (snf M) <= elen M
+proof
+  let M be EnvEpsTerm of V;
+  SigmaRed(V) reduces M, snf M by ENVEPS_5:3;
+  hence thesis by Th20;
+end;
+
+begin :: Composition compatibility, the environment extension case
+
+theorem Th22:
+  for k being Nat, A,B,W,S1,S2 being EnvEpsTerm of V, x being Element of V
+  st elen (eComp(eExt(A,x,B),W)) = k &
+     eExt(A,x,B) is_a_normal_form_wrt SigmaRed(V) &
+     W is_a_normal_form_wrt SigmaRed(V) &
+     [eExt(A,x,B),S1] in ParRed(V) & [W,S2] in ParRed(V) &
+     (for U2,W2,T1,T2 being EnvEpsTerm of V
+        st elen (eComp(U2,W2)) < k &
+           U2 is_a_normal_form_wrt SigmaRed(V) &
+           W2 is_a_normal_form_wrt SigmaRed(V) &
+           [U2,T1] in ParRed(V) & [W2,T2] in ParRed(V)
+        ex T being EnvEpsTerm of V st
+          [snf (eComp(U2,W2)), T] in ParRed(V) & snf T = snf (eComp(T1,T2)))
+  ex S being EnvEpsTerm of V st
+    [snf (eComp(eExt(A,x,B),W)), S] in ParRed(V) & snf S = snf (eComp(S1,S2))
+proof
+  let k be Nat, A,B,W,S1,S2 be EnvEpsTerm of V, x be Element of V;
+  assume that A1: elen (eComp(eExt(A,x,B),W)) = k and
+  A2: eExt(A,x,B) is_a_normal_form_wrt SigmaRed(V) and
+  A3: W is_a_normal_form_wrt SigmaRed(V) and
+  A4: [eExt(A,x,B),S1] in ParRed(V) and A5: [W,S2] in ParRed(V) and
+  A6: for U2,W2,T1,T2 being EnvEpsTerm of V
+    st elen (eComp(U2,W2)) < k &
+       U2 is_a_normal_form_wrt SigmaRed(V) &
+       W2 is_a_normal_form_wrt SigmaRed(V) &
+       [U2,T1] in ParRed(V) & [W2,T2] in ParRed(V)
+    ex T being EnvEpsTerm of V st
+      [snf (eComp(U2,W2)), T] in ParRed(V) & snf T = snf (eComp(T1,T2));
+  B1: A is_a_normal_form_wrt SigmaRed(V) &
+    B is_a_normal_form_wrt SigmaRed(V) by A2,ENVEPS_5:13;
+  B2: ( ex M3 being EnvEpsTerm of V st eExt(A,x,B) = M3 & S1 = M3 ) or
+      ( ex M3,M4,N3,N4 being EnvEpsTerm of V, x2 being Element of V st
+        [M3,M4] in ParRed(V) & [N3,N4] in ParRed(V) &
+        eExt(A,x,B) = eExt(M3,x2,N3) & S1 = eExt(M4,x2,N4) ) by A4,ENVEPS_7:18;
+  B3: ex A3,B3 being EnvEpsTerm of V st [A,A3] in ParRed(V) &
+    [B,B3] in ParRed(V) & S1 = eExt(A3,x,B3)
+  proof
+    per cases by B2;
+    suppose ex M3 being EnvEpsTerm of V st eExt(A,x,B) = M3 & S1 = M3;
+      then C1: S1 = eExt(A,x,B);
+      [A,A] in ParRed(V) & [B,B] in ParRed(V) by ENVEPS_7:4;
+      hence thesis by C1;
+    end;
+    suppose ex M3,M4,N3,N4 being EnvEpsTerm of V, x2 being Element of V st
+        [M3,M4] in ParRed(V) & [N3,N4] in ParRed(V) &
+        eExt(A,x,B) = eExt(M3,x2,N3) & S1 = eExt(M4,x2,N4);
+      then consider M3,M4,N3,N4 being EnvEpsTerm of V,
+      x2 being Element of V such that
+      C1: [M3,M4] in ParRed(V) & [N3,N4] in ParRed(V) &
+        eExt(A,x,B) = eExt(M3,x2,N3) & S1 = eExt(M4,x2,N4);
+      C2: x = x2 & A = M3 & B = N3 by C1,ENVEPS_1:15;
+      take M4,N4;
+      thus thesis by C1,C2;
+    end;
+  end;
+  consider A3,B3 being EnvEpsTerm of V such that
+  B4: [A,A3] in ParRed(V) & [B,B3] in ParRed(V) & S1 = eExt(A3,x,B3) by B3;
+  C0: k = elen (eExt(A,x,B)) * (elen W + 1) by A1,ENVEPS_1:30
+    .= (elen A + elen B + 1) * (elen W + 1) by ENVEPS_1:29;
+  C1: 0 < elen W + 1;
+  C2: 0 < elen B + 1 & 0 < elen A + 1;
+  C3: elen A < elen A + (elen B + 1) by C2,ENVEPS_1:38;
+  then C4: (elen W + 1) * elen A < (elen W + 1) * (elen A + elen B + 1)
+    by C1,ENVEPS_1:41;
+  C5: elen (eComp(A,W)) = elen A * (elen W + 1) by ENVEPS_1:30;
+  C6: elen (eComp(A,W)) < k by C0,C4,C5;
+  C7: elen B < elen B + (elen A + 1) by C2,ENVEPS_1:38;
+  then (elen W + 1) * elen B < (elen W + 1) * (elen A + elen B + 1)
+    by C1,ENVEPS_1:41;
+  then C8: elen (eComp(B,W)) < k by C0,ENVEPS_1:30;
+  consider T1 being EnvEpsTerm of V such that
+  D1: [snf (eComp(A,W)), T1] in ParRed(V) &
+    snf T1 = snf (eComp(A3,S2)) by A3,A5,A6,B1,B4,C6;
+  consider T2 being EnvEpsTerm of V such that
+  D2: [snf (eComp(B,W)), T2] in ParRed(V) &
+    snf T2 = snf (eComp(B3,S2)) by A3,A5,A6,B1,B4,C8;
+  E1: snf (eComp(eExt(A,x,B),W)) = snf (eExt(eComp(A,W),x,eComp(B,W))) by Th6
+    .= eExt(snf (eComp(A,W)), x, snf (eComp(B,W))) by ENVEPS_5:18;
+  take eExt(T1,x,T2);
+  thus [snf (eComp(eExt(A,x,B),W)), eExt(T1,x,T2)] in ParRed(V)
+    by D1,D2,E1,ENVEPS_7:8;
+  thus snf (eExt(T1,x,T2)) = eExt(snf T1, x, snf T2) by ENVEPS_5:18
+    .= eExt(snf (eComp(A3,S2)), x, snf (eComp(B3,S2))) by D1,D2
+    .= snf (eExt(eComp(A3,S2), x, eComp(B3,S2))) by ENVEPS_5:18
+    .= snf (eComp(eExt(A3,x,B3),S2)) by Th6
+    .= snf (eComp(S1,S2)) by B4;
+end;
+
+begin :: Composition compatibility, the associativity case
+
+theorem Th23:
+  for k being Nat, C,D,W,S1,S2 being EnvEpsTerm of V
+  st elen (eComp(eComp(C,D),W)) = k &
+     eComp(C,D) is_a_normal_form_wrt SigmaRed(V) &
+     W is_a_normal_form_wrt SigmaRed(V) &
+     [eComp(C,D),S1] in ParRed(V) & [W,S2] in ParRed(V) &
+     (for U2,W2,T1,T2 being EnvEpsTerm of V
+        st elen (eComp(U2,W2)) < k &
+           U2 is_a_normal_form_wrt SigmaRed(V) &
+           W2 is_a_normal_form_wrt SigmaRed(V) &
+           [U2,T1] in ParRed(V) & [W2,T2] in ParRed(V)
+        ex T being EnvEpsTerm of V st
+          [snf (eComp(U2,W2)), T] in ParRed(V) & snf T = snf (eComp(T1,T2)))
+  ex S being EnvEpsTerm of V st
+    [snf (eComp(eComp(C,D),W)), S] in ParRed(V) & snf S = snf (eComp(S1,S2))
+proof
+  let k be Nat, C,D,W,S1,S2 be EnvEpsTerm of V;
+  assume that A1: elen (eComp(eComp(C,D),W)) = k and
+  A2: eComp(C,D) is_a_normal_form_wrt SigmaRed(V) and
+  A3: W is_a_normal_form_wrt SigmaRed(V) and
+  A4: [eComp(C,D),S1] in ParRed(V) and A5: [W,S2] in ParRed(V) and
+  A6: for U2,W2,T1,T2 being EnvEpsTerm of V
+    st elen (eComp(U2,W2)) < k &
+       U2 is_a_normal_form_wrt SigmaRed(V) &
+       W2 is_a_normal_form_wrt SigmaRed(V) &
+       [U2,T1] in ParRed(V) & [W2,T2] in ParRed(V)
+    ex T being EnvEpsTerm of V st
+      [snf (eComp(U2,W2)), T] in ParRed(V) & snf T = snf (eComp(T1,T2));
+  B1: C is_a_normal_form_wrt SigmaRed(V) &
+    D is_a_normal_form_wrt SigmaRed(V) by A2,ENVEPS_5:14;
+  B2: ( ex M3 being EnvEpsTerm of V st eComp(C,D) = M3 & S1 = M3 ) or
+      ( ex M3,M4,N3,N4 being EnvEpsTerm of V st
+        [M3,M4] in ParRed(V) & [N3,N4] in ParRed(V) &
+        eComp(C,D) = eComp(M3,N3) & S1 = eComp(M4,N4) ) by A4,ENVEPS_7:19;
+  B3: ex C3,D3 being EnvEpsTerm of V st [C,C3] in ParRed(V) &
+    [D,D3] in ParRed(V) & S1 = eComp(C3,D3)
+  proof
+    per cases by B2;
+    suppose ex M3 being EnvEpsTerm of V st eComp(C,D) = M3 & S1 = M3;
+      then D1: S1 = eComp(C,D);
+      [C,C] in ParRed(V) & [D,D] in ParRed(V) by ENVEPS_7:4;
+      hence thesis by D1;
+    end;
+    suppose ex M3,M4,N3,N4 being EnvEpsTerm of V st
+        [M3,M4] in ParRed(V) & [N3,N4] in ParRed(V) &
+        eComp(C,D) = eComp(M3,N3) & S1 = eComp(M4,N4);
+      then consider M3,M4,N3,N4 being EnvEpsTerm of V such that
+      D1: [M3,M4] in ParRed(V) & [N3,N4] in ParRed(V) &
+        eComp(C,D) = eComp(M3,N3) & S1 = eComp(M4,N4);
+      D2: C = M3 & D = N3 by D1,ENVEPS_1:14;
+      take M4,N4;
+      thus thesis by D1,D2;
+    end;
+  end;
+  consider C3,D3 being EnvEpsTerm of V such that
+  B4: [C,C3] in ParRed(V) & [D,D3] in ParRed(V) & S1 = eComp(C3,D3) by B3;
+  C0: k = elen (eComp(C,D)) * (elen W + 1) by A1,ENVEPS_1:30
+    .= (elen C * (elen D + 1)) * (elen W + 1) by ENVEPS_1:30;
+  C1: 0 < elen C & 0 < elen D & 0 < elen W by ENVEPS_1:31;
+  C2: elen (eComp(D,W)) = elen D * (elen W + 1) by ENVEPS_1:30;
+  C3: 0 < elen C by C1;
+  C3a: 1 < elen C + 1 by C1,ENVEPS_1:34;
+  C3b: 1 <= elen C by C3a,NAT_1:13;
+  C4: elen D < elen D + 1 by ENVEPS_1:38;
+  C5: 1 * (elen D + 1) <= elen C * (elen D + 1) by C3b,XREAL_1:64;
+  C6: elen D < elen C * (elen D + 1) by C4,C5,XXREAL_0:2;
+  C7: 0 < elen W + 1;
+  C8: (elen W + 1) * elen D < (elen W + 1) * (elen C * (elen D + 1))
+    by C6,C7,ENVEPS_1:41;
+  C9: elen (eComp(D,W)) < k by C0,C2,C8;
+  consider T1 being EnvEpsTerm of V such that
+  D1: [snf (eComp(D,W)), T1] in ParRed(V) &
+    snf T1 = snf (eComp(D3,S2)) by A3,A5,A6,B1,B4,C9;
+  set X = snf (eComp(D,W));
+  E1: X is_a_normal_form_wrt SigmaRed(V) by ENVEPS_5:3;
+  E2: elen X <= elen D * (elen W + 1) by C2,Th21;
+  E3: 1 < elen W + 1 by C1,ENVEPS_1:34;
+  E4: elen X + 1 <= elen D * (elen W + 1) + 1 by E2,XREAL_1:6;
+  E5: 1 + elen D * (elen W + 1) < (elen W + 1) + elen D * (elen W + 1)
+    by E3,XREAL_1:8;
+  E5a: elen D * (elen W + 1) + 1 < elen D * (elen W + 1) + (elen W + 1)
+    by E5;
+  E6: elen X + 1 < elen D * (elen W + 1) + (elen W + 1) by E4,E5a,XXREAL_0:2;
+  E7: elen C * (elen X + 1) <
+    elen C * (elen D * (elen W + 1) + (elen W + 1)) by C3,E6,ENVEPS_1:41;
+  E8: elen (eComp(C,X)) = elen C * (elen X + 1) by ENVEPS_1:30;
+  E9: elen (eComp(C,X)) < k by C0,E7,E8;
+  consider T being EnvEpsTerm of V such that
+  F1: [snf (eComp(C,X)), T] in ParRed(V) &
+    snf T = snf (eComp(C3,T1)) by A6,B1,B4,D1,E1,E9;
+  F2: snf (eComp(eComp(C,D),W)) = snf (eComp(C, eComp(D,W))) by Th3
+    .= snf (eComp(snf C, X)) by ENVEPS_5:19
+    .= snf (eComp(C,X)) by B1,ENVEPS_5:5;
+  take T;
+  thus [snf (eComp(eComp(C,D),W)), T] in ParRed(V) by F1,F2;
+  thus snf T = snf (eComp(snf C3, snf T1)) by F1,ENVEPS_5:19
+    .= snf (eComp(snf C3, snf (eComp(D3,S2)))) by D1
+    .= snf (eComp(C3, eComp(D3,S2))) by ENVEPS_5:19
+    .= snf (eComp(eComp(C3,D3),S2)) by Th3
+    .= snf (eComp(S1,S2)) by B4;
+end;
+
+begin :: Composition compatibility, the application case
+
+theorem Th24:
+  for k being Nat, A,B,W,A3,B3,S2 being EnvEpsTerm of V
+  st elen (eComp(eApp(A,B),W)) = k &
+     eApp(A,B) is_a_normal_form_wrt SigmaRed(V) &
+     W is_a_normal_form_wrt SigmaRed(V) &
+     [A,A3] in ParRed(V) & [B,B3] in ParRed(V) & [W,S2] in ParRed(V) &
+     (for U2,W2,T1,T2 being EnvEpsTerm of V
+        st elen (eComp(U2,W2)) < k &
+           U2 is_a_normal_form_wrt SigmaRed(V) &
+           W2 is_a_normal_form_wrt SigmaRed(V) &
+           [U2,T1] in ParRed(V) & [W2,T2] in ParRed(V)
+        ex T being EnvEpsTerm of V st
+          [snf (eComp(U2,W2)), T] in ParRed(V) & snf T = snf (eComp(T1,T2)))
+  ex S being EnvEpsTerm of V st
+    [snf (eComp(eApp(A,B),W)), S] in ParRed(V) &
+    snf S = snf (eComp(eApp(A3,B3),S2))
+proof
+  let k be Nat, A,B,W,A3,B3,S2 be EnvEpsTerm of V;
+  assume that A1: elen (eComp(eApp(A,B),W)) = k and
+  A2: eApp(A,B) is_a_normal_form_wrt SigmaRed(V) and
+  A3: W is_a_normal_form_wrt SigmaRed(V) and
+  A4: [A,A3] in ParRed(V) and A5: [B,B3] in ParRed(V) and
+  A7: [W,S2] in ParRed(V) and
+  A6: for U2,W2,T1,T2 being EnvEpsTerm of V
+    st elen (eComp(U2,W2)) < k &
+       U2 is_a_normal_form_wrt SigmaRed(V) &
+       W2 is_a_normal_form_wrt SigmaRed(V) &
+       [U2,T1] in ParRed(V) & [W2,T2] in ParRed(V)
+    ex T being EnvEpsTerm of V st
+      [snf (eComp(U2,W2)), T] in ParRed(V) & snf T = snf (eComp(T1,T2));
+  B1: A is_a_normal_form_wrt SigmaRed(V) &
+    B is_a_normal_form_wrt SigmaRed(V) by A2,ENVEPS_5:12;
+  C0: k = elen (eApp(A,B)) * (elen W + 1) by A1,ENVEPS_1:30
+    .= (elen A + elen B + 1) * (elen W + 1) by ENVEPS_1:28;
+  C1: 0 < elen W + 1;
+  C2: 0 < elen B + 1 & 0 < elen A + 1;
+  C3: elen A < elen A + (elen B + 1) by C2,ENVEPS_1:38;
+  then (elen W + 1) * elen A < (elen W + 1) * (elen A + elen B + 1)
+    by C1,ENVEPS_1:41;
+  then C6: elen (eComp(A,W)) < k by C0,ENVEPS_1:30;
+  C7: elen B < elen B + (elen A + 1) by C2,ENVEPS_1:38;
+  then (elen W + 1) * elen B < (elen W + 1) * (elen A + elen B + 1)
+    by C1,ENVEPS_1:41;
+  then C8: elen (eComp(B,W)) < k by C0,ENVEPS_1:30;
+  consider T1 being EnvEpsTerm of V such that
+  D1: [snf (eComp(A,W)), T1] in ParRed(V) &
+    snf T1 = snf (eComp(A3,S2)) by A3,A4,A6,A7,B1,C6;
+  consider T2 being EnvEpsTerm of V such that
+  D2: [snf (eComp(B,W)), T2] in ParRed(V) &
+    snf T2 = snf (eComp(B3,S2)) by A3,A5,A6,A7,B1,C8;
+  E1: snf (eComp(eApp(A,B),W)) = snf (eApp(eComp(A,W),eComp(B,W))) by Th9
+    .= eApp(snf (eComp(A,W)), snf (eComp(B,W))) by ENVEPS_5:17;
+  take eApp(T1,T2);
+  thus [snf (eComp(eApp(A,B),W)), eApp(T1,T2)] in ParRed(V)
+    by D1,D2,E1,ENVEPS_7:7;
+  thus snf (eApp(T1,T2)) = eApp(snf T1, snf T2) by ENVEPS_5:17
+    .= eApp(snf (eComp(A3,S2)), snf (eComp(B3,S2))) by D1,D2
+    .= snf (eApp(eComp(A3,S2), eComp(B3,S2))) by ENVEPS_5:17
+    .= snf (eComp(eApp(A3,B3),S2)) by Th9;
+end;
+
+theorem Th25:
+  for k being Nat, C,B,W,C3,B3,S2 being EnvEpsTerm of V
+  st elen (eComp(eApp(eEps C,B),W)) = k &
+     eApp(eEps C,B) is_a_normal_form_wrt SigmaRed(V) &
+     W is_a_normal_form_wrt SigmaRed(V) &
+     [C,C3] in ParRed(V) & [B,B3] in ParRed(V) & [W,S2] in ParRed(V) &
+     (for U2,W2,T1,T2 being EnvEpsTerm of V
+        st elen (eComp(U2,W2)) < k &
+           U2 is_a_normal_form_wrt SigmaRed(V) &
+           W2 is_a_normal_form_wrt SigmaRed(V) &
+           [U2,T1] in ParRed(V) & [W2,T2] in ParRed(V)
+        ex T being EnvEpsTerm of V st
+          [snf (eComp(U2,W2)), T] in ParRed(V) & snf T = snf (eComp(T1,T2)))
+  ex S being EnvEpsTerm of V st
+    [snf (eComp(eApp(eEps C,B),W)), S] in ParRed(V) &
+    snf S = snf (eComp(eComp(C3,B3),S2))
+proof
+  let k be Nat, C,B,W,C3,B3,S2 be EnvEpsTerm of V;
+  assume that A1: elen (eComp(eApp(eEps C,B),W)) = k and
+  A2: eApp(eEps C,B) is_a_normal_form_wrt SigmaRed(V) and
+  A3: W is_a_normal_form_wrt SigmaRed(V) and
+  A4: [C,C3] in ParRed(V) and A5: [B,B3] in ParRed(V) and
+  A7: [W,S2] in ParRed(V) and
+  A6: for U2,W2,T1,T2 being EnvEpsTerm of V
+    st elen (eComp(U2,W2)) < k &
+       U2 is_a_normal_form_wrt SigmaRed(V) &
+       W2 is_a_normal_form_wrt SigmaRed(V) &
+       [U2,T1] in ParRed(V) & [W2,T2] in ParRed(V)
+    ex T being EnvEpsTerm of V st
+      [snf (eComp(U2,W2)), T] in ParRed(V) & snf T = snf (eComp(T1,T2));
+  B0: eEps C is_a_normal_form_wrt SigmaRed(V) &
+    B is_a_normal_form_wrt SigmaRed(V) by A2,ENVEPS_5:12;
+  C0: k = elen (eApp(eEps C,B)) * (elen W + 1) by A1,ENVEPS_1:30
+    .= (elen (eEps C) + elen B + 1) * (elen W + 1) by ENVEPS_1:28;
+  C1: 0 < elen W + 1;
+  C2: 0 < elen (eEps C) + 1;
+  C7: elen B < elen B + (elen (eEps C) + 1) by C2,ENVEPS_1:38;
+  then (elen W + 1) * elen B <
+    (elen W + 1) * (elen (eEps C) + elen B + 1) by C1,ENVEPS_1:41;
+  then C8: elen (eComp(B,W)) < k by C0,ENVEPS_1:30;
+  consider T2 being EnvEpsTerm of V such that
+  D2: [snf (eComp(B,W)), T2] in ParRed(V) &
+    snf T2 = snf (eComp(B3,S2)) by A3,A5,A6,A7,B0,C8;
+  E0: snf (eComp(eEps C,W)) = snf (eEps C) by Th10
+    .= eEps C by B0,ENVEPS_5:5;
+  E1: snf (eComp(eApp(eEps C,B),W)) =
+    snf (eApp(eComp(eEps C,W),eComp(B,W))) by Th9
+    .= eApp(snf (eComp(eEps C,W)), snf (eComp(B,W))) by ENVEPS_5:17
+    .= eApp(eEps C, snf (eComp(B,W))) by E0;
+  take eComp(C3,T2);
+  thus [snf (eComp(eApp(eEps C,B),W)), eComp(C3,T2)] in ParRed(V)
+    by A4,D2,E1,ENVEPS_7:12;
+  thus snf (eComp(C3,T2)) = snf (eComp(snf C3, snf T2)) by ENVEPS_5:19
+    .= snf (eComp(snf C3, snf (eComp(B3,S2)))) by D2
+    .= snf (eComp(C3, eComp(B3,S2))) by ENVEPS_5:19
+    .= snf (eComp(eComp(C3,B3),S2)) by Th3;
+end;
+
+theorem Th26:
+  for k being Nat, C,B,W,C3,B3,S2 being EnvEpsTerm of V,
+    y being Element of V
+  st elen (eComp(eApp(eLam(y,C),B),W)) = k & W <> eId V &
+     eApp(eLam(y,C),B) is_a_normal_form_wrt SigmaRed(V) &
+     W is_a_normal_form_wrt SigmaRed(V) &
+     [C,C3] in ParRed(V) & [B,B3] in ParRed(V) & [W,S2] in ParRed(V) &
+     (for U2,W2,T1,T2 being EnvEpsTerm of V
+        st elen (eComp(U2,W2)) < k &
+           U2 is_a_normal_form_wrt SigmaRed(V) &
+           W2 is_a_normal_form_wrt SigmaRed(V) &
+           [U2,T1] in ParRed(V) & [W2,T2] in ParRed(V)
+        ex T being EnvEpsTerm of V st
+          [snf (eComp(U2,W2)), T] in ParRed(V) & snf T = snf (eComp(T1,T2)))
+  ex S being EnvEpsTerm of V st
+    [snf (eComp(eApp(eLam(y,C),B),W)), S] in ParRed(V) &
+    snf S = snf (eComp(eComp(C3,eExt(B3,y,eId V)),S2))
+proof
+  let k be Nat, C,B,W,C3,B3,S2 be EnvEpsTerm of V, y be Element of V;
+  assume that A1: elen (eComp(eApp(eLam(y,C),B),W)) = k and
+  A0: W <> eId V and
+  A2: eApp(eLam(y,C),B) is_a_normal_form_wrt SigmaRed(V) and
+  A3: W is_a_normal_form_wrt SigmaRed(V) and
+  A4: [C,C3] in ParRed(V) and A5: [B,B3] in ParRed(V) and
+  A7: [W,S2] in ParRed(V) and
+  A6: for U2,W2,T1,T2 being EnvEpsTerm of V
+    st elen (eComp(U2,W2)) < k &
+       U2 is_a_normal_form_wrt SigmaRed(V) &
+       W2 is_a_normal_form_wrt SigmaRed(V) &
+       [U2,T1] in ParRed(V) & [W2,T2] in ParRed(V)
+    ex T being EnvEpsTerm of V st
+      [snf (eComp(U2,W2)), T] in ParRed(V) & snf T = snf (eComp(T1,T2));
+  B0: eLam(y,C) is_a_normal_form_wrt SigmaRed(V) &
+    B is_a_normal_form_wrt SigmaRed(V) by A2,ENVEPS_5:12;
+  then B1: C is_a_normal_form_wrt SigmaRed(V) by ENVEPS_5:10;
+  C0: k = elen (eApp(eLam(y,C),B)) * (elen W + 1) by A1,ENVEPS_1:30
+    .= (elen (eLam(y,C)) + elen B + 1) * (elen W + 1) by ENVEPS_1:28;
+  C1: 0 < elen W + 1;
+  C2: 0 < elen (eLam(y,C)) + 1;
+  C7: elen B < elen B + (elen (eLam(y,C)) + 1) by C2,ENVEPS_1:38;
+  then (elen W + 1) * elen B <
+    (elen W + 1) * (elen (eLam(y,C)) + elen B + 1) by C1,ENVEPS_1:41;
+  then C8: elen (eComp(B,W)) < k by C0,ENVEPS_1:30;
+  consider T2 being EnvEpsTerm of V such that
+  D2: [snf (eComp(B,W)), T2] in ParRed(V) &
+    snf T2 = snf (eComp(B3,S2)) by A3,A5,A6,A7,B0,C8;
+  E0: snf (eComp(eLam(y,C),W)) = eComp(eLam(y,C),W) by A0,A3,B1,Th12;
+  E1: snf (eComp(eApp(eLam(y,C),B),W)) =
+    snf (eApp(eComp(eLam(y,C),W),eComp(B,W))) by Th9
+    .= eApp(snf (eComp(eLam(y,C),W)), snf (eComp(B,W))) by ENVEPS_5:17
+    .= eApp(eComp(eLam(y,C),W), snf (eComp(B,W))) by E0;
+  take eComp(C3,eExt(T2,y,S2));
+  thus [snf (eComp(eApp(eLam(y,C),B),W)), eComp(C3,eExt(T2,y,S2))]
+    in ParRed(V) by A4,A7,D2,E1,ENVEPS_7:11;
+  F1: snf (eComp(eExt(B3,y,eId V),S2)) =
+    snf (eExt(eComp(B3,S2),y,eComp(eId V,S2))) by Th6
+    .= eExt(snf (eComp(B3,S2)), y, snf (eComp(eId V,S2))) by ENVEPS_5:18
+    .= eExt(snf (eComp(B3,S2)), y, snf S2) by Th4;
+  thus snf (eComp(C3,eExt(T2,y,S2))) =
+    snf (eComp(snf C3, snf (eExt(T2,y,S2)))) by ENVEPS_5:19
+    .= snf (eComp(snf C3, eExt(snf T2, y, snf S2))) by ENVEPS_5:18
+    .= snf (eComp(snf C3, snf (eComp(eExt(B3,y,eId V),S2)))) by D2,F1
+    .= snf (eComp(C3, eComp(eExt(B3,y,eId V),S2))) by ENVEPS_5:19
+    .= snf (eComp(eComp(C3,eExt(B3,y,eId V)),S2)) by Th3;
+end;
+
+theorem Th27:
+  for k being Nat, C,L,B,W,C3,L3,B3,S2 being EnvEpsTerm of V,
+    y being Element of V
+  st elen (eComp(eApp(eComp(eLam(y,C),L),B),W)) = k &
+     eApp(eComp(eLam(y,C),L),B) is_a_normal_form_wrt SigmaRed(V) &
+     W is_a_normal_form_wrt SigmaRed(V) &
+     [C,C3] in ParRed(V) & [L,L3] in ParRed(V) & [B,B3] in ParRed(V) &
+     [W,S2] in ParRed(V) &
+     (for U2,W2,T1,T2 being EnvEpsTerm of V
+        st elen (eComp(U2,W2)) < k &
+           U2 is_a_normal_form_wrt SigmaRed(V) &
+           W2 is_a_normal_form_wrt SigmaRed(V) &
+           [U2,T1] in ParRed(V) & [W2,T2] in ParRed(V)
+        ex T being EnvEpsTerm of V st
+          [snf (eComp(U2,W2)), T] in ParRed(V) & snf T = snf (eComp(T1,T2)))
+  ex S being EnvEpsTerm of V st
+    [snf (eComp(eApp(eComp(eLam(y,C),L),B),W)), S] in ParRed(V) &
+    snf S = snf (eComp(eComp(C3,eExt(B3,y,L3)),S2))
+proof
+  let k be Nat, C,L,B,W,C3,L3,B3,S2 be EnvEpsTerm of V, y be Element of V;
+  assume that A1: elen (eComp(eApp(eComp(eLam(y,C),L),B),W)) = k and
+  A2: eApp(eComp(eLam(y,C),L),B) is_a_normal_form_wrt SigmaRed(V) and
+  A3: W is_a_normal_form_wrt SigmaRed(V) and
+  A4: [C,C3] in ParRed(V) and A8: [L,L3] in ParRed(V) and
+  A5: [B,B3] in ParRed(V) and A7: [W,S2] in ParRed(V) and
+  A6: for U2,W2,T1,T2 being EnvEpsTerm of V
+    st elen (eComp(U2,W2)) < k &
+       U2 is_a_normal_form_wrt SigmaRed(V) &
+       W2 is_a_normal_form_wrt SigmaRed(V) &
+       [U2,T1] in ParRed(V) & [W2,T2] in ParRed(V)
+    ex T being EnvEpsTerm of V st
+      [snf (eComp(U2,W2)), T] in ParRed(V) & snf T = snf (eComp(T1,T2));
+  set A = eComp(eLam(y,C),L);
+  B0: A is_a_normal_form_wrt SigmaRed(V) &
+    B is_a_normal_form_wrt SigmaRed(V) by A2,ENVEPS_5:12;
+  then B2: eLam(y,C) is_a_normal_form_wrt SigmaRed(V) &
+    L is_a_normal_form_wrt SigmaRed(V) by ENVEPS_5:14;
+  then B1: C is_a_normal_form_wrt SigmaRed(V) by ENVEPS_5:10;
+  C0: k = elen (eApp(A,B)) * (elen W + 1) by A1,ENVEPS_1:30
+    .= (elen A + elen B + 1) * (elen W + 1) by ENVEPS_1:28;
+  C1: 0 < elen W + 1;
+  C2: 0 < elen A + 1 & 0 < elen B + 1;
+  C7: elen B < elen B + (elen A + 1) by C2,ENVEPS_1:38;
+  then (elen W + 1) * elen B < (elen W + 1) * (elen A + elen B + 1)
+    by C1,ENVEPS_1:41;
+  then C8: elen (eComp(B,W)) < k by C0,ENVEPS_1:30;
+  G0: elen A = elen (eLam(y,C)) * (elen L + 1) by ENVEPS_1:30;
+  G1: 0 < elen (eLam(y,C)) by ENVEPS_1:31;
+  G2: 1 < elen (eLam(y,C)) + 1 by G1,ENVEPS_1:34;
+  G3: 1 <= elen (eLam(y,C)) by G2,NAT_1:13;
+  G4: 1 * (elen L + 1) <= elen (eLam(y,C)) * (elen L + 1) by G3,XREAL_1:64;
+  G5: elen L < elen L + 1 by ENVEPS_1:38;
+  G6: elen L < elen A by G0,G4,G5,XXREAL_0:2;
+  G7: elen A < elen A + (elen B + 1) by C2,ENVEPS_1:38;
+  G8: elen L < elen A + elen B + 1 by G6,G7,XXREAL_0:2;
+  (elen W + 1) * elen L < (elen W + 1) * (elen A + elen B + 1)
+    by C1,G8,ENVEPS_1:41;
+  then G9: elen (eComp(L,W)) < k by C0,ENVEPS_1:30;
+  consider T2 being EnvEpsTerm of V such that
+  D2: [snf (eComp(B,W)), T2] in ParRed(V) &
+    snf T2 = snf (eComp(B3,S2)) by A3,A5,A6,A7,B0,C8;
+  consider TL being EnvEpsTerm of V such that
+  D3: [snf (eComp(L,W)), TL] in ParRed(V) &
+    snf TL = snf (eComp(L3,S2)) by A3,A6,A7,A8,B2,G9;
+  set Y = snf (eComp(L,W));
+  E2: Y is_a_normal_form_wrt SigmaRed(V) by ENVEPS_5:3;
+  E0: snf (eComp(A,W)) = snf (eComp(eLam(y,C), eComp(L,W))) by Th3
+    .= snf (eComp(snf (eLam(y,C)), Y)) by ENVEPS_5:19
+    .= snf (eComp(eLam(y,C), Y)) by B2,ENVEPS_5:5;
+  E1: snf (eComp(eApp(A,B),W)) = snf (eApp(eComp(A,W),eComp(B,W))) by Th9
+    .= eApp(snf (eComp(A,W)), snf (eComp(B,W))) by ENVEPS_5:17;
+  F1: snf (eComp(eExt(B3,y,L3),S2)) =
+    snf (eExt(eComp(B3,S2),y,eComp(L3,S2))) by Th6
+    .= eExt(snf (eComp(B3,S2)), y, snf (eComp(L3,S2))) by ENVEPS_5:18;
+  per cases;
+  suppose H0: Y <> eId V;
+    H1: snf (eComp(eLam(y,C),Y)) = eComp(eLam(y,C),Y) by B1,E2,H0,Th12;
+    take eComp(C3,eExt(T2,y,TL));
+    thus [snf (eComp(eApp(A,B),W)), eComp(C3,eExt(T2,y,TL))] in ParRed(V)
+      by A4,D2,D3,E0,E1,H1,ENVEPS_7:11;
+    thus snf (eComp(C3,eExt(T2,y,TL))) =
+      snf (eComp(snf C3, snf (eExt(T2,y,TL)))) by ENVEPS_5:19
+      .= snf (eComp(snf C3, eExt(snf T2, y, snf TL))) by ENVEPS_5:18
+      .= snf (eComp(snf C3, snf (eComp(eExt(B3,y,L3),S2)))) by D2,D3,F1
+      .= snf (eComp(C3, eComp(eExt(B3,y,L3),S2))) by ENVEPS_5:19
+      .= snf (eComp(eComp(C3,eExt(B3,y,L3)),S2)) by Th3;
+  end;
+  suppose H0: Y = eId V;
+    then consider M2 being EnvEpsTerm of V such that
+    H1: eId V = M2 & TL = M2 by D3,ENVEPS_7:14;
+    H2: snf (eComp(L3,S2)) = eId V by D3,H1,Th2;
+    H3: snf (eComp(eLam(y,C),Y)) = snf (eLam(y,C)) by H0,Th5
+      .= eLam(y,C) by B2,ENVEPS_5:5;
+    take eComp(C3,eExt(T2,y,eId V));
+    thus [snf (eComp(eApp(A,B),W)), eComp(C3,eExt(T2,y,eId V))] in ParRed(V)
+      by A4,D2,E0,E1,H3,ENVEPS_7:10;
+    thus snf (eComp(C3,eExt(T2,y,eId V))) =
+      snf (eComp(snf C3, snf (eExt(T2,y,eId V)))) by ENVEPS_5:19
+      .= snf (eComp(snf C3, eExt(snf T2, y, snf (eId V)))) by ENVEPS_5:18
+      .= snf (eComp(snf C3, eExt(snf T2, y, eId V))) by Th2
+      .= snf (eComp(snf C3, snf (eComp(eExt(B3,y,L3),S2)))) by D2,F1,H2
+      .= snf (eComp(C3, eComp(eExt(B3,y,L3),S2))) by ENVEPS_5:19
+      .= snf (eComp(eComp(C3,eExt(B3,y,L3)),S2)) by Th3;
+  end;
+end;
+
+theorem Th28:
+  for k being Nat, A,B,W,S1,S2 being EnvEpsTerm of V
+  st elen (eComp(eApp(A,B),W)) = k & W <> eId V &
+     eApp(A,B) is_a_normal_form_wrt SigmaRed(V) &
+     W is_a_normal_form_wrt SigmaRed(V) &
+     [eApp(A,B),S1] in ParRed(V) & [W,S2] in ParRed(V) &
+     (for U2,W2,T1,T2 being EnvEpsTerm of V
+        st elen (eComp(U2,W2)) < k &
+           U2 is_a_normal_form_wrt SigmaRed(V) &
+           W2 is_a_normal_form_wrt SigmaRed(V) &
+           [U2,T1] in ParRed(V) & [W2,T2] in ParRed(V)
+        ex T being EnvEpsTerm of V st
+          [snf (eComp(U2,W2)), T] in ParRed(V) & snf T = snf (eComp(T1,T2)))
+  ex S being EnvEpsTerm of V st
+    [snf (eComp(eApp(A,B),W)), S] in ParRed(V) & snf S = snf (eComp(S1,S2))
+proof
+  let k be Nat, A,B,W,S1,S2 be EnvEpsTerm of V;
+  assume that A1: elen (eComp(eApp(A,B),W)) = k and A0: W <> eId V and
+  A2: eApp(A,B) is_a_normal_form_wrt SigmaRed(V) and
+  A3: W is_a_normal_form_wrt SigmaRed(V) and
+  A4: [eApp(A,B),S1] in ParRed(V) and A7: [W,S2] in ParRed(V) and
+  A6: for U2,W2,T1,T2 being EnvEpsTerm of V
+    st elen (eComp(U2,W2)) < k &
+       U2 is_a_normal_form_wrt SigmaRed(V) &
+       W2 is_a_normal_form_wrt SigmaRed(V) &
+       [U2,T1] in ParRed(V) & [W2,T2] in ParRed(V)
+    ex T being EnvEpsTerm of V st
+      [snf (eComp(U2,W2)), T] in ParRed(V) & snf T = snf (eComp(T1,T2));
+  B1: ( ex M2 being EnvEpsTerm of V st eApp(A,B) = M2 & S1 = M2 ) or
+      ( ex M2,M3,N2,N3 being EnvEpsTerm of V st
+        [M2,M3] in ParRed(V) & [N2,N3] in ParRed(V) &
+        eApp(A,B) = eApp(M2,N2) & S1 = eApp(M3,N3) ) or
+      ( ex M2,M3,N2,N3 being EnvEpsTerm of V, x2 being Element of V st
+        [M2,M3] in ParRed(V) & [N2,N3] in ParRed(V) &
+        eApp(A,B) = eApp(eLam(x2,M2),N2) &
+        S1 = eComp(M3,eExt(N3,x2,eId V)) ) or
+      ( ex M2,M3,N2,N3,L2,L3 being EnvEpsTerm of V, x2 being Element of V st
+        [M2,M3] in ParRed(V) & [N2,N3] in ParRed(V) &
+        [L2,L3] in ParRed(V) &
+        eApp(A,B) = eApp(eComp(eLam(x2,M2),L2),N2) &
+        S1 = eComp(M3,eExt(N3,x2,L3)) ) or
+      ( ex M2,M3,N2,N3 being EnvEpsTerm of V st
+        [M2,M3] in ParRed(V) & [N2,N3] in ParRed(V) &
+        eApp(A,B) = eApp(eEps M2,N2) & S1 = eComp(M3,N3) ) by A4,ENVEPS_7:17;
+  per cases by B1;
+  suppose ex M2 being EnvEpsTerm of V st eApp(A,B) = M2 & S1 = M2;
+    then C1: S1 = eApp(A,B);
+    C2: [A,A] in ParRed(V) & [B,B] in ParRed(V) by ENVEPS_7:4;
+    thus thesis by A1,A2,A3,A6,A7,C1,C2,Th24;
+  end;
+  suppose ex M2,M3,N2,N3 being EnvEpsTerm of V st
+      [M2,M3] in ParRed(V) & [N2,N3] in ParRed(V) &
+      eApp(A,B) = eApp(M2,N2) & S1 = eApp(M3,N3);
+    then consider M2,M3,N2,N3 being EnvEpsTerm of V such that
+    C1: [M2,M3] in ParRed(V) & [N2,N3] in ParRed(V) &
+      eApp(A,B) = eApp(M2,N2) & S1 = eApp(M3,N3);
+    C2: A = M2 & B = N2 by C1,ENVEPS_1:13;
+    thus thesis by A1,A2,A3,A6,A7,C1,C2,Th24;
+  end;
+  suppose ex M2,M3,N2,N3 being EnvEpsTerm of V, x2 being Element of V st
+      [M2,M3] in ParRed(V) & [N2,N3] in ParRed(V) &
+      eApp(A,B) = eApp(eLam(x2,M2),N2) & S1 = eComp(M3,eExt(N3,x2,eId V));
+    then consider M2,M3,N2,N3 being EnvEpsTerm of V, x2 being Element of V
+    such that
+    C1: [M2,M3] in ParRed(V) & [N2,N3] in ParRed(V) &
+      eApp(A,B) = eApp(eLam(x2,M2),N2) & S1 = eComp(M3,eExt(N3,x2,eId V));
+    C2: A = eLam(x2,M2) & B = N2 by C1,ENVEPS_1:13;
+    thus thesis by A0,A1,A2,A3,A6,A7,C1,C2,Th26;
+  end;
+  suppose ex M2,M3,N2,N3,L2,L3 being EnvEpsTerm of V,
+      x2 being Element of V st
+      [M2,M3] in ParRed(V) & [N2,N3] in ParRed(V) & [L2,L3] in ParRed(V) &
+      eApp(A,B) = eApp(eComp(eLam(x2,M2),L2),N2) &
+      S1 = eComp(M3,eExt(N3,x2,L3));
+    then consider M2,M3,N2,N3,L2,L3 being EnvEpsTerm of V,
+    x2 being Element of V such that
+    C1: [M2,M3] in ParRed(V) & [N2,N3] in ParRed(V) &
+      [L2,L3] in ParRed(V) &
+      eApp(A,B) = eApp(eComp(eLam(x2,M2),L2),N2) &
+      S1 = eComp(M3,eExt(N3,x2,L3));
+    C2: A = eComp(eLam(x2,M2),L2) & B = N2 by C1,ENVEPS_1:13;
+    thus thesis by A1,A2,A3,A6,A7,C1,C2,Th27;
+  end;
+  suppose ex M2,M3,N2,N3 being EnvEpsTerm of V st
+      [M2,M3] in ParRed(V) & [N2,N3] in ParRed(V) &
+      eApp(A,B) = eApp(eEps M2,N2) & S1 = eComp(M3,N3);
+    then consider M2,M3,N2,N3 being EnvEpsTerm of V such that
+    C1: [M2,M3] in ParRed(V) & [N2,N3] in ParRed(V) &
+      eApp(A,B) = eApp(eEps M2,N2) & S1 = eComp(M3,N3);
+    C2: A = eEps M2 & B = N2 by C1,ENVEPS_1:13;
+    thus thesis by A1,A2,A3,A6,A7,C1,C2,Th25;
+  end;
+end;
+
+begin :: Composition compatibility
+
+theorem Th29:
+  for U,W,S1,S2 being EnvEpsTerm of V
+  st U is_a_normal_form_wrt SigmaRed(V) &
+     W is_a_normal_form_wrt SigmaRed(V) &
+     [U,S1] in ParRed(V) & [W,S2] in ParRed(V)
+  ex S being EnvEpsTerm of V st
+    [snf (eComp(U,W)), S] in ParRed(V) & snf S = snf (eComp(S1,S2))
+proof
+  defpred Q[Nat] means for U,W,S1,S2 being EnvEpsTerm of V
+    st elen (eComp(U,W)) = $1 &
+       U is_a_normal_form_wrt SigmaRed(V) &
+       W is_a_normal_form_wrt SigmaRed(V) &
+       [U,S1] in ParRed(V) & [W,S2] in ParRed(V)
+    ex S being EnvEpsTerm of V st
+      [snf (eComp(U,W)), S] in ParRed(V) & snf S = snf (eComp(S1,S2));
+  A1: for k being Nat st for n being Nat st n < k holds Q[n] holds Q[k]
+  proof
+    let k be Nat;
+    assume A0: for n being Nat st n < k holds Q[n];
+    let U,W,S1,S2 be EnvEpsTerm of V;
+    assume that B1: elen (eComp(U,W)) = k and
+    B2: U is_a_normal_form_wrt SigmaRed(V) and
+    B3: W is_a_normal_form_wrt SigmaRed(V) and
+    B4: [U,S1] in ParRed(V) and B5: [W,S2] in ParRed(V);
+    IH: for U2,W2,T1,T2 being EnvEpsTerm of V
+      st elen (eComp(U2,W2)) < k &
+         U2 is_a_normal_form_wrt SigmaRed(V) &
+         W2 is_a_normal_form_wrt SigmaRed(V) &
+         [U2,T1] in ParRed(V) & [W2,T2] in ParRed(V)
+      ex T being EnvEpsTerm of V st
+        [snf (eComp(U2,W2)), T] in ParRed(V) & snf T = snf (eComp(T1,T2))
+    proof
+      let U2,W2,T1,T2 be EnvEpsTerm of V;
+      assume C1: elen (eComp(U2,W2)) < k &
+        U2 is_a_normal_form_wrt SigmaRed(V) &
+        W2 is_a_normal_form_wrt SigmaRed(V) &
+        [U2,T1] in ParRed(V) & [W2,T2] in ParRed(V);
+      then Q[elen (eComp(U2,W2))] by A0;
+      hence thesis by C1;
+    end;
+    per cases;
+    suppose D0: W = eId V;
+      thus thesis by B2,B4,B5,D0,Th14;
+    end;
+    suppose D0: W <> eId V;
+      per cases by ENVEPS_1:17;
+      suppose ex v being Element of V st U = eVar v;
+        then consider v being Element of V such that E1: U = eVar v;
+        per cases;
+        suppose F0: ex P,Q being EnvEpsTerm of V, z being Element of V st
+            W = eExt(P,z,Q);
+          consider P,Q being EnvEpsTerm of V, z being Element of V such that
+          F1: W = eExt(P,z,Q) by F0;
+          per cases;
+          suppose G0: v = z;
+            thus thesis by B3,B4,B5,E1,F1,G0,Th17;
+          end;
+          suppose G0: v <> z;
+            thus thesis by B1,B3,B4,B5,E1,F1,G0,IH,Th19;
+          end;
+        end;
+        suppose F0: not ex P,Q being EnvEpsTerm of V, z being Element of V st
+            W = eExt(P,z,Q);
+          snf (eComp(eVar v, W)) = eComp(eVar v, W) by B3,D0,F0,Th13;
+          then eComp(U,W) is_a_normal_form_wrt SigmaRed(V) by E1,ENVEPS_5:3;
+          hence thesis by B4,B5,Th16;
+        end;
+      end;
+      suppose E1: U = eId V;
+        thus thesis by B3,B4,B5,E1,Th15;
+      end;
+      suppose ex v being Element of V, A being EnvEpsTerm of V st
+          U = eLam(v,A);
+        then consider v being Element of V, A being EnvEpsTerm of V such that
+        E1: U = eLam(v,A);
+        A is_a_normal_form_wrt SigmaRed(V) by B2,E1,ENVEPS_5:10;
+        then snf (eComp(eLam(v,A), W)) = eComp(eLam(v,A), W) by B3,D0,Th12;
+        then eComp(U,W) is_a_normal_form_wrt SigmaRed(V) by E1,ENVEPS_5:3;
+        hence thesis by B4,B5,Th16;
+      end;
+      suppose ex A being EnvEpsTerm of V st U = eEps A;
+        then consider A being EnvEpsTerm of V such that E1: U = eEps A;
+        thus thesis by B2,B4,B5,E1,Th18;
+      end;
+      suppose ex A,B being EnvEpsTerm of V st U = eApp(A,B);
+        then consider A,B being EnvEpsTerm of V such that E1: U = eApp(A,B);
+        thus thesis by B1,B2,B3,B4,B5,D0,E1,IH,Th28;
+      end;
+      suppose ex A,B being EnvEpsTerm of V st U = eComp(A,B);
+        then consider A,B being EnvEpsTerm of V such that E1: U = eComp(A,B);
+        thus thesis by B1,B2,B3,B4,B5,E1,IH,Th23;
+      end;
+      suppose ex A,B being EnvEpsTerm of V, v being Element of V st
+          U = eExt(A,v,B);
+        then consider A,B being EnvEpsTerm of V, v being Element of V
+        such that E1: U = eExt(A,v,B);
+        thus thesis by B1,B2,B3,B4,B5,E1,IH,Th22;
+      end;
+    end;
+  end;
+  A2: for k being Nat holds Q[k] from NAT_1:sch 4(A1);
+  let U,W,S1,S2 be EnvEpsTerm of V;
+  assume B: U is_a_normal_form_wrt SigmaRed(V) &
+    W is_a_normal_form_wrt SigmaRed(V) &
+    [U,S1] in ParRed(V) & [W,S2] in ParRed(V);
+  Q[elen (eComp(U,W))] by A2;
+  hence thesis by B;
+end;
+
+begin :: Parallel reduction commutes with sigma normalisation
+
+theorem Th30:
+  for P,R being EnvEpsTerm of V st [P,R] in ParRed(V)
+  ex S being EnvEpsTerm of V st [snf P, S] in ParRed(V) & snf S = snf R
+proof
+  set G = EnvEpsGram(V);
+  set R0 = ParRed(V);
+  defpred D[object,object] means
+    ex P2,R2,S being EnvEpsTerm of V st $1 = P2 & $2 = R2 &
+      [snf P2, S] in ParRed(V) & snf S = snf R2;
+  set K = { z where z is Element of [:TS G, TS G:] :
+    z in R0 & ex P,R being EnvEpsTerm of V st z = [P,R] & D[P,R] };
+  A1: K c= [:TS G, TS G:]
+  proof
+    let u be object;
+    assume u in K;
+    then ex z being Element of [:TS G, TS G:] st u = z &
+      ( z in R0 & ex P,R being EnvEpsTerm of V st z = [P,R] & D[P,R] );
+    hence thesis;
+  end;
+  reconsider K1 = K as Relation of TS G by A1;
+  A2: for a,b being EnvEpsTerm of V holds
+    ( [a,b] in K1 iff ( [a,b] in R0 & D[a,b] ) )
+  proof
+    let a,b be EnvEpsTerm of V;
+    hereby
+      assume [a,b] in K1;
+      then consider z being Element of [:TS G, TS G:] such that
+      B1: [a,b] = z and
+      B2: z in R0 & ex P,R being EnvEpsTerm of V st z = [P,R] & D[P,R];
+      consider P,R being EnvEpsTerm of V such that
+      B3: z = [P,R] & D[P,R] by B2;
+      a = P & b = R by B1,B3,XTUPLE_0:1;
+      hence [a,b] in R0 & D[a,b] by B1,B2,B3;
+    end;
+    assume C1: [a,b] in R0 & D[a,b];
+    C2: [a,b] in [:TS G, TS G:] by ZFMISC_1:87;
+    then reconsider z = [a,b] as Element of [:TS G, TS G:];
+    z in R0 & ex P,R being EnvEpsTerm of V st z = [P,R] & D[P,R] by C1;
+    hence thesis;
+  end;
+  A2a: for a,b being EnvEpsTerm of V holds
+    ( [a,b] in K1 iff ( [a,b] in R0 &
+      ex S being EnvEpsTerm of V st [snf a, S] in ParRed(V) & snf S = snf b ) )
+  proof
+    let a,b be EnvEpsTerm of V;
+    hereby
+      assume [a,b] in K1;
+      then C1: [a,b] in R0 & D[a,b] by A2;
+      then consider P2,R2,S being EnvEpsTerm of V such that
+      C2: a = P2 & b = R2 & [snf P2, S] in ParRed(V) & snf S = snf R2;
+      thus [a,b] in R0 & ex S being EnvEpsTerm of V st
+        [snf a, S] in ParRed(V) & snf S = snf b by C1,C2;
+    end;
+    assume C1: [a,b] in R0 &
+      ex S being EnvEpsTerm of V st [snf a, S] in ParRed(V) & snf S = snf b;
+    then consider S being EnvEpsTerm of V such that
+    C2: [snf a, S] in ParRed(V) & snf S = snf b;
+    D[a,b] by C2;
+    hence thesis by A2,C1;
+  end;
+  A3: K1 is par-closed
+  proof
+    thus for M being EnvEpsTerm of V holds [M, M] in K1
+    proof
+      let M be EnvEpsTerm of V;
+      E1: [M,M] in R0 by ENVEPS_7:4;
+      E2: [snf M, snf M] in ParRed(V) by ENVEPS_7:4;
+      snf (snf M) = snf M by ENVEPS_5:8;
+      hence thesis by A2a,E1,E2;
+    end;
+    thus for M,M1 being EnvEpsTerm of V, x being Element of V
+      st [M,M1] in K1 holds [eLam(x,M), eLam(x,M1)] in K1
+    proof
+      let M,M1 be EnvEpsTerm of V, x be Element of V;
+      assume E0: [M,M1] in K1;
+      then E1: [M,M1] in R0 by A2a;
+      then E1a: [eLam(x,M), eLam(x,M1)] in R0 by ENVEPS_7:5;
+      consider S1 being EnvEpsTerm of V such that
+      E2: [snf M, S1] in ParRed(V) & snf S1 = snf M1 by A2a,E0;
+      E3: snf (eLam(x,M)) = eLam(x, snf M) by ENVEPS_5:15;
+      E4: [eLam(x, snf M), eLam(x,S1)] in ParRed(V) by E2,ENVEPS_7:5;
+      snf (eLam(x,S1)) = eLam(x, snf S1) by ENVEPS_5:15
+        .= snf (eLam(x,M1)) by E2,ENVEPS_5:15;
+      hence thesis by A2a,E1a,E3,E4;
+    end;
+    thus for M,M1 being EnvEpsTerm of V st [M,M1] in K1 holds
+      [eEps M, eEps M1] in K1
+    proof
+      let M,M1 be EnvEpsTerm of V;
+      assume E0: [M,M1] in K1;
+      then E1: [M,M1] in R0 by A2a;
+      then E1a: [eEps M, eEps M1] in R0 by ENVEPS_7:6;
+      consider S1 being EnvEpsTerm of V such that
+      E2: [snf M, S1] in ParRed(V) & snf S1 = snf M1 by A2a,E0;
+      E3: snf (eEps M) = eEps (snf M) by ENVEPS_5:16;
+      E4: [eEps (snf M), eEps S1] in ParRed(V) by E2,ENVEPS_7:6;
+      snf (eEps S1) = eEps (snf S1) by ENVEPS_5:16
+        .= snf (eEps M1) by E2,ENVEPS_5:16;
+      hence thesis by A2a,E1a,E3,E4;
+    end;
+    thus for M,M1,N,N1 being EnvEpsTerm of V
+      st [M,M1] in K1 & [N,N1] in K1 holds [eApp(M,N), eApp(M1,N1)] in K1
+    proof
+      let M,M1,N,N1 be EnvEpsTerm of V;
+      assume E0: [M,M1] in K1 & [N,N1] in K1;
+      then E1: [M,M1] in R0 & [N,N1] in R0 by A2a;
+      then E1a: [eApp(M,N), eApp(M1,N1)] in R0 by ENVEPS_7:7;
+      consider S1 being EnvEpsTerm of V such that
+      E2: [snf M, S1] in ParRed(V) & snf S1 = snf M1 by A2a,E0;
+      consider S2 being EnvEpsTerm of V such that
+      E3: [snf N, S2] in ParRed(V) & snf S2 = snf N1 by A2a,E0;
+      E4: snf (eApp(M,N)) = eApp(snf M, snf N) by ENVEPS_5:17;
+      E5: [eApp(snf M, snf N), eApp(S1,S2)] in ParRed(V) by E2,E3,ENVEPS_7:7;
+      snf (eApp(S1,S2)) = eApp(snf S1, snf S2) by ENVEPS_5:17
+        .= snf (eApp(M1,N1)) by E2,E3,ENVEPS_5:17;
+      hence thesis by A2a,E1a,E4,E5;
+    end;
+    thus for M,M1,N,N1 being EnvEpsTerm of V, x being Element of V
+      st [M,M1] in K1 & [N,N1] in K1 holds
+      [eExt(M,x,N), eExt(M1,x,N1)] in K1
+    proof
+      let M,M1,N,N1 be EnvEpsTerm of V, x be Element of V;
+      assume E0: [M,M1] in K1 & [N,N1] in K1;
+      then E1: [M,M1] in R0 & [N,N1] in R0 by A2a;
+      then E1a: [eExt(M,x,N), eExt(M1,x,N1)] in R0 by ENVEPS_7:8;
+      consider S1 being EnvEpsTerm of V such that
+      E2: [snf M, S1] in ParRed(V) & snf S1 = snf M1 by A2a,E0;
+      consider S2 being EnvEpsTerm of V such that
+      E3: [snf N, S2] in ParRed(V) & snf S2 = snf N1 by A2a,E0;
+      E4: snf (eExt(M,x,N)) = eExt(snf M, x, snf N) by ENVEPS_5:18;
+      E5: [eExt(snf M, x, snf N), eExt(S1,x,S2)] in ParRed(V)
+        by E2,E3,ENVEPS_7:8;
+      snf (eExt(S1,x,S2)) = eExt(snf S1, x, snf S2) by ENVEPS_5:18
+        .= snf (eExt(M1,x,N1)) by E2,E3,ENVEPS_5:18;
+      hence thesis by A2a,E1a,E4,E5;
+    end;
+    thus for M,M1,N,N1 being EnvEpsTerm of V
+      st [M,M1] in K1 & [N,N1] in K1 holds [eComp(M,N), eComp(M1,N1)] in K1
+    proof
+      let M,M1,N,N1 be EnvEpsTerm of V;
+      assume E0: [M,M1] in K1 & [N,N1] in K1;
+      then E1: [M,M1] in R0 & [N,N1] in R0 by A2a;
+      then E1a: [eComp(M,N), eComp(M1,N1)] in R0 by ENVEPS_7:9;
+      consider S1 being EnvEpsTerm of V such that
+      E2: [snf M, S1] in ParRed(V) & snf S1 = snf M1 by A2a,E0;
+      consider S2 being EnvEpsTerm of V such that
+      E3: [snf N, S2] in ParRed(V) & snf S2 = snf N1 by A2a,E0;
+      E4: snf M is_a_normal_form_wrt SigmaRed(V) &
+        snf N is_a_normal_form_wrt SigmaRed(V) by ENVEPS_5:3;
+      consider S being EnvEpsTerm of V such that
+      E5: [snf (eComp(snf M, snf N)), S] in ParRed(V) &
+        snf S = snf (eComp(S1,S2)) by E2,E3,E4,Th29;
+      E6: snf (eComp(M,N)) = snf (eComp(snf M, snf N)) by ENVEPS_5:19;
+      snf S = snf (eComp(snf S1, snf S2)) by E5,ENVEPS_5:19
+        .= snf (eComp(snf M1, snf N1)) by E2,E3
+        .= snf (eComp(M1,N1)) by ENVEPS_5:19;
+      hence thesis by A2a,E1a,E5,E6;
+    end;
+    thus for M,M1,N,N1 being EnvEpsTerm of V, x being Element of V
+      st [M,M1] in K1 & [N,N1] in K1 holds
+      [eApp(eLam(x,M),N), eComp(M1,eExt(N1,x,eId V))] in K1
+    proof
+      let M,M1,N,N1 be EnvEpsTerm of V, x be Element of V;
+      assume E0: [M,M1] in K1 & [N,N1] in K1;
+      then E1: [M,M1] in R0 & [N,N1] in R0 by A2a;
+      then E1a: [eApp(eLam(x,M),N), eComp(M1,eExt(N1,x,eId V))] in R0
+        by ENVEPS_7:10;
+      consider S1 being EnvEpsTerm of V such that
+      E2: [snf M, S1] in ParRed(V) & snf S1 = snf M1 by A2a,E0;
+      consider S2 being EnvEpsTerm of V such that
+      E3: [snf N, S2] in ParRed(V) & snf S2 = snf N1 by A2a,E0;
+      E4: snf (eApp(eLam(x,M),N)) = eApp(snf (eLam(x,M)), snf N)
+        by ENVEPS_5:17
+        .= eApp(eLam(x, snf M), snf N) by ENVEPS_5:15;
+      E5: [eApp(eLam(x, snf M), snf N),
+        eComp(S1, eExt(S2,x,eId V))] in ParRed(V) by E2,E3,ENVEPS_7:10;
+      E6: snf (eComp(S1, eExt(S2,x,eId V))) =
+        snf (eComp(snf S1, snf (eExt(S2,x,eId V)))) by ENVEPS_5:19
+        .= snf (eComp(snf S1, eExt(snf S2, x, snf (eId V)))) by ENVEPS_5:18
+        .= snf (eComp(snf M1, eExt(snf N1, x, eId V))) by E2,E3,Th2;
+      snf (eComp(M1,eExt(N1,x,eId V))) =
+        snf (eComp(snf M1, snf (eExt(N1,x,eId V)))) by ENVEPS_5:19
+        .= snf (eComp(snf M1, eExt(snf N1, x, snf (eId V)))) by ENVEPS_5:18
+        .= snf (eComp(snf M1, eExt(snf N1, x, eId V))) by Th2;
+      hence thesis by A2a,E1a,E4,E5,E6;
+    end;
+    thus for M,M1,N,N1,L,L1 being EnvEpsTerm of V, x being Element of V
+      st [M,M1] in K1 & [N,N1] in K1 & [L,L1] in K1 holds
+      [eApp(eComp(eLam(x,M),L),N), eComp(M1,eExt(N1,x,L1))] in K1
+    proof
+      let M,M1,N,N1,L,L1 be EnvEpsTerm of V, x be Element of V;
+      assume E0: [M,M1] in K1 & [N,N1] in K1 & [L,L1] in K1;
+      then E1: [M,M1] in R0 & [N,N1] in R0 & [L,L1] in R0 by A2a;
+      then E1a: [eApp(eComp(eLam(x,M),L),N), eComp(M1,eExt(N1,x,L1))] in R0
+        by ENVEPS_7:11;
+      consider S1 being EnvEpsTerm of V such that
+      E2: [snf M, S1] in ParRed(V) & snf S1 = snf M1 by A2a,E0;
+      consider S2 being EnvEpsTerm of V such that
+      E3: [snf N, S2] in ParRed(V) & snf S2 = snf N1 by A2a,E0;
+      consider S3 being EnvEpsTerm of V such that
+      E4: [snf L, S3] in ParRed(V) & snf S3 = snf L1 by A2a,E0;
+      E5: snf M is_a_normal_form_wrt SigmaRed(V) &
+        snf L is_a_normal_form_wrt SigmaRed(V) by ENVEPS_5:3;
+      E6: snf (eComp(eLam(x,M),L)) =
+        snf (eComp(snf (eLam(x,M)), snf L)) by ENVEPS_5:19
+        .= snf (eComp(eLam(x, snf M), snf L)) by ENVEPS_5:15;
+      E7: snf (eApp(eComp(eLam(x,M),L),N)) =
+        eApp(snf (eComp(eLam(x,M),L)), snf N) by ENVEPS_5:17;
+      E8: snf (eComp(M1,eExt(N1,x,L1))) =
+        snf (eComp(snf M1, snf (eExt(N1,x,L1)))) by ENVEPS_5:19
+        .= snf (eComp(snf M1, eExt(snf N1, x, snf L1))) by ENVEPS_5:18;
+      per cases;
+      suppose F0: snf L <> eId V;
+        F1: snf (eComp(eLam(x, snf M), snf L)) =
+          eComp(eLam(x, snf M), snf L) by E5,F0,Th12;
+        F2: [eApp(eComp(eLam(x, snf M), snf L), snf N),
+          eComp(S1, eExt(S2,x,S3))] in ParRed(V) by E2,E3,E4,ENVEPS_7:11;
+        snf (eComp(S1, eExt(S2,x,S3))) =
+          snf (eComp(snf S1, snf (eExt(S2,x,S3)))) by ENVEPS_5:19
+          .= snf (eComp(snf S1, eExt(snf S2, x, snf S3))) by ENVEPS_5:18
+          .= snf (eComp(M1,eExt(N1,x,L1))) by E2,E3,E4,E8;
+        hence thesis by A2a,E1a,E6,E7,F1,F2;
+      end;
+      suppose F0: snf L = eId V;
+        then consider M2 being EnvEpsTerm of V such that
+        F1: eId V = M2 & S3 = M2 by E4,ENVEPS_7:14;
+        F2: snf L1 = eId V by E4,F1,Th2;
+        F3: snf (eComp(eLam(x, snf M), snf L)) = snf (eLam(x, snf M))
+          by F0,Th5
+          .= eLam(x, snf M) by E5,ENVEPS_5:10,ENVEPS_5:5;
+        F4: [eApp(eLam(x, snf M), snf N),
+          eComp(S1, eExt(S2,x,eId V))] in ParRed(V) by E2,E3,ENVEPS_7:10;
+        snf (eComp(S1, eExt(S2,x,eId V))) =
+          snf (eComp(snf S1, snf (eExt(S2,x,eId V)))) by ENVEPS_5:19
+          .= snf (eComp(snf S1, eExt(snf S2, x, snf (eId V)))) by ENVEPS_5:18
+          .= snf (eComp(snf M1, eExt(snf N1, x, eId V))) by E2,E3,Th2
+          .= snf (eComp(M1,eExt(N1,x,L1))) by E8,F2;
+        hence thesis by A2a,E1a,E6,E7,F3,F4;
+      end;
+    end;
+    thus for M,M1,N,N1 being EnvEpsTerm of V
+      st [M,M1] in K1 & [N,N1] in K1 holds
+      [eApp(eEps M,N), eComp(M1,N1)] in K1
+    proof
+      let M,M1,N,N1 be EnvEpsTerm of V;
+      assume E0: [M,M1] in K1 & [N,N1] in K1;
+      then E1: [M,M1] in R0 & [N,N1] in R0 by A2a;
+      then E1a: [eApp(eEps M,N), eComp(M1,N1)] in R0 by ENVEPS_7:12;
+      consider S1 being EnvEpsTerm of V such that
+      E2: [snf M, S1] in ParRed(V) & snf S1 = snf M1 by A2a,E0;
+      consider S2 being EnvEpsTerm of V such that
+      E3: [snf N, S2] in ParRed(V) & snf S2 = snf N1 by A2a,E0;
+      E4: snf (eApp(eEps M,N)) = eApp(snf (eEps M), snf N) by ENVEPS_5:17
+        .= eApp(eEps (snf M), snf N) by ENVEPS_5:16;
+      E5: [eApp(eEps (snf M), snf N), eComp(S1,S2)] in ParRed(V)
+        by E2,E3,ENVEPS_7:12;
+      snf (eComp(S1,S2)) = snf (eComp(snf S1, snf S2)) by ENVEPS_5:19
+        .= snf (eComp(snf M1, snf N1)) by E2,E3
+        .= snf (eComp(M1,N1)) by ENVEPS_5:19;
+      hence thesis by A2a,E1a,E4,E5;
+    end;
+  end;
+  A4: R0 c= K1 by A3,ENVEPS_7:2;
+  let P,R be EnvEpsTerm of V;
+  assume [P,R] in ParRed(V);
+  then [P,R] in K1 by A4;
+  hence thesis by A2a;
+end;

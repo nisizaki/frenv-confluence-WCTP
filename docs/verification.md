@@ -2,7 +2,7 @@
 
 ## Source inspection
 
-The artifact was assembled from the two revisions recorded in [PROVENANCE.md](../PROVENANCE.md). Isabelle's final theorem is present with its transitive imports. The Lean development has since been extended with its own confluence proof; see [proof-map.md](proof-map.md).
+The artifact was assembled from the two revisions recorded in [PROVENANCE.md](../PROVENANCE.md). Isabelle's final theorem is present with its transitive imports. The Lean development has since been extended with its own confluence proof, and a third, Mizar development was written for this artifact; see [proof-map.md](proof-map.md).
 
 ## Reproducible checks
 
@@ -30,6 +30,18 @@ The Lean sources were subsequently extended with a full confluence proof. The ex
 The main declaration is `LambdaFrenv.frenv_beta_sigma_confluent`. `LambdaFrenv.not_parStronglyConfluent` additionally refutes the strong-confluence target that the earlier revision had left open.
 
 This extended development was then verified on clean runners as well. Both jobs of [run 34750771522](https://github.com/nisizaki/frenv-confluence-WCTP/actions/runs/34750771522) succeeded on 2026-09-13 at artifact commit `725b0b698632235c1f4881966e0c1653331f1b99` on `main`, on `ubuntu-24.04` x86_64 runners: the Isabelle job in 2 m 10 s and the Lean job in 21 s. The Lean job log reports `Build completed successfully (16 jobs)` and prints, for `LambdaFrenv.frenv_beta_sigma_confluent`, the axioms `[propext, Classical.choice, Quot.sound]`; the job fails if any audited theorem depends on `sorryAx`, and it did not. The local build was on aarch64 and the CI build on x86_64, so the result is not architecture-specific.
+
+## Mizar result
+
+The Mizar development was added after the runs above and is checked locally, not in CI: there is no packaged Mizar distribution that a clean runner can install without a manual download step.
+
+It was verified on 2026-09-15 with Mizar Ver. 8.1.15 (Linux/FPC) and MML 5.99 on Ubuntu under WSL 2, by running `./verify.sh` from `mizar/` on a clean checkout. All fourteen articles produced empty `.err` files, and so did `text/audit.miz`, which restates the six main results and justifies each by its citation alone. The run took about 91 seconds. The main result is
+
+```text
+FRENV_5:8   for V being non empty set holds FrRed(V) is confluent
+```
+
+Mizar has no `sorry` and no mechanism for an article to introduce an axiom, so an empty error file means the verifier accepted every inference in the article. The only items an article may assume are the environment items it declares, which the accommodator resolves against the MML and the local `prel/` database built from the earlier articles. See [the Mizar verification guide](../mizar/docs/verification.md) for the details and for how to inspect individual results.
 
 ## Isabelle result
 

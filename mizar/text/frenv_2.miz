@@ -1,0 +1,1097 @@
+:: Beta-sigma reduction of lambda_FREnv
+
+environ
+
+ vocabularies NUMBERS, XBOOLE_0, SUBSET_1, TARSKI, ZFMISC_1, FINSEQ_1,
+      RELAT_1, FUNCT_1, ORDINAL1, CARD_1, ARYTM_3, XXREAL_0, NAT_1, TREES_1,
+      TREES_2, TREES_3, TREES_4, LANG1, STRUCT_0, DTCONSTR, MCART_1, XTUPLE_0,
+      FINSET_1, TDGROUP, FUNCOP_1, ARYTM_1, FUNCT_7, XREAL_0, XCMPLX_0,
+      REWRITE1, PBOOLE, FRENV_1, FRENV_2;
+ notations TARSKI, XBOOLE_0, ZFMISC_1, SUBSET_1, ORDINAL1, NUMBERS, XCMPLX_0,
+      XXREAL_0, NAT_1, RELAT_1, RELSET_1, FUNCT_1, FUNCT_2, FINSEQ_1, FINSEQ_2,
+      MCART_1, XTUPLE_0, DOMAIN_1, STRUCT_0, LANG1, TREES_1, TREES_2, TREES_3,
+      TREES_4, DTCONSTR, FUNCOP_1, XREAL_0, PBOOLE, REWRITE1, FRENV_1;
+ constructors NUMBERS, XCMPLX_0, XXREAL_0, NAT_1, RELSET_1, FUNCT_2, FINSEQ_1,
+      FINSEQ_2, MCART_1, XTUPLE_0, DOMAIN_1, STRUCT_0, LANG1, TREES_1, TREES_2,
+      TREES_3, TREES_4, DTCONSTR, PARTFUN1, BINOP_1, SETWISEO, XREAL_0,
+      FUNCOP_1, SUBSET_1, CARD_3, FINSEQOP, FINSEQ_4, FINSOP_1, PRE_POLY,
+      FUNCT_1, RELAT_1, PBOOLE, REWRITE1, FRENV_1;
+ registrations XBOOLE_0, SUBSET_1, RELAT_1, FUNCT_1, ORDINAL1, XREAL_0, NAT_1,
+      FINSEQ_1, FINSEQ_2, FINSET_1, CARD_1, STRUCT_0, LANG1, TREES_1, TREES_2,
+      TREES_3, TREES_4, DTCONSTR, XTUPLE_0, VALUED_0, FUNCOP_1, XCMPLX_0,
+      XXREAL_0, NUMBERS, MEMBERED, PBOOLE, REWRITE1, FRENV_1;
+ requirements NUMERALS, REAL, BOOLE, SUBSET, ARITHM;
+ definitions TARSKI, XBOOLE_0, DTCONSTR, TREES_3, TREES_4, RELAT_1, FUNCT_1,
+      FINSEQ_1, FUNCOP_1, SUBSET_1, REWRITE1, FRENV_1;
+ theorems TARSKI, XBOOLE_0, ZFMISC_1, XTUPLE_0, REWRITE1, FRENV_1;
+ schemes ENVEPS_2;
+
+begin :: The beta-sigma reduction relation
+
+definition
+  let V be non empty set;
+  let R be Relation of TS(FrEnvGram(V));
+  attr R is bs-closed means
+  :Def1:
+  (for M,N being FrEnvTerm of V, x being Element of V holds
+     [fApp(fLam(x,M),N), fApp(fEps M, fExt(N,x,fId V))] in R) &
+  (for M,N,L being FrEnvTerm of V, x being Element of V holds
+     [fApp(fApp(fEps (fLam(x,M)),L),N), fApp(fEps M, fExt(N,x,L))] in R) &
+  (for M,N being FrEnvTerm of V holds [fApp(fEps (fEps M),N), fEps M] in
+     R) &
+  (for L,M,N being FrEnvTerm of V holds [fApp(fEps (fApp(fEps L,M)),N),
+     fApp(fEps L, fApp(fEps M,N))] in R) &
+  (for M being FrEnvTerm of V holds [fApp(fEps (fId V),M), M] in R) &
+  (for M being FrEnvTerm of V holds [fApp(fEps M, fId V), M] in R) &
+  (for L,M,N being FrEnvTerm of V, x being Element of V holds [fApp(fEps
+     (fExt(L,x,M)),N), fExt(fApp(fEps L,N),x,fApp(fEps M,N))] in R) &
+  (for M,N being FrEnvTerm of V, x being Element of V holds [fApp(fEps
+     (fVar x), fExt(M,x,N)), M] in R) &
+  (for M,N being FrEnvTerm of V, x,y being Element of V st x <> y holds
+     [fApp(fEps (fVar y), fExt(M,x,N)), fApp(fEps (fVar y), N)] in R) &
+  (for M,N,L being FrEnvTerm of V holds [fApp(fEps (fApp(M,N)),L),
+     fApp(fApp(fEps M,L), fApp(fEps N,L))] in R) &
+  (for M,M1,N being FrEnvTerm of V st [M,M1] in R holds [fApp(M,N),
+     fApp(M1,N)] in R) &
+  (for M,N,N1 being FrEnvTerm of V st [N,N1] in R holds [fApp(M,N),
+     fApp(M,N1)] in R) &
+  (for M,M1 being FrEnvTerm of V, x being Element of V st [M,M1] in R
+     holds [fLam(x,M), fLam(x,M1)] in R) &
+  (for M,M1,N being FrEnvTerm of V, x being Element of V st [M,M1] in R
+     holds [fExt(M,x,N), fExt(M1,x,N)] in R) &
+  (for M,N,N1 being FrEnvTerm of V, x being Element of V st [N,N1] in R
+     holds [fExt(M,x,N), fExt(M,x,N1)] in R) &
+  (for M,M1 being FrEnvTerm of V st [M,M1] in R holds [fEps M, fEps M1] in
+     R);
+end;
+
+registration
+  let V be non empty set;
+  cluster bs-closed for Relation of TS(FrEnvGram(V));
+  existence
+  proof
+    set G = FrEnvGram(V);
+    A0: [:TS G, TS G:] c= [:TS G, TS G:];
+    reconsider R = [:TS G, TS G:] as Relation of TS G by A0;
+    take R;
+    A1: for a,b being FrEnvTerm of V holds [a,b] in R by ZFMISC_1:87;
+    thus for M,N being FrEnvTerm of V, x being Element of V holds
+      [fApp(fLam(x,M),N), fApp(fEps M, fExt(N,x,fId V))] in R by A1;
+    thus for M,N,L being FrEnvTerm of V, x being Element of V holds
+      [fApp(fApp(fEps (fLam(x,M)),L),N), fApp(fEps M, fExt(N,x,L))] in R
+      by A1;
+    thus for M,N being FrEnvTerm of V holds [fApp(fEps (fEps M),N), fEps
+      M] in R by A1;
+    thus for L,M,N being FrEnvTerm of V holds [fApp(fEps (fApp(fEps
+      L,M)),N), fApp(fEps L, fApp(fEps M,N))] in R by A1;
+    thus for M being FrEnvTerm of V holds [fApp(fEps (fId V),M), M] in R
+      by A1;
+    thus for M being FrEnvTerm of V holds [fApp(fEps M, fId V), M] in R by
+      A1;
+    thus for L,M,N being FrEnvTerm of V, x being Element of V holds
+      [fApp(fEps (fExt(L,x,M)),N), fExt(fApp(fEps L,N),x,fApp(fEps M,N))]
+      in R by A1;
+    thus for M,N being FrEnvTerm of V, x being Element of V holds
+      [fApp(fEps (fVar x), fExt(M,x,N)), M] in R by A1;
+    thus for M,N being FrEnvTerm of V, x,y being Element of V st x <> y
+      holds [fApp(fEps (fVar y), fExt(M,x,N)), fApp(fEps (fVar y), N)] in
+      R by A1;
+    thus for M,N,L being FrEnvTerm of V holds [fApp(fEps (fApp(M,N)),L),
+      fApp(fApp(fEps M,L), fApp(fEps N,L))] in R by A1;
+    thus for M,M1,N being FrEnvTerm of V st [M,M1] in R holds [fApp(M,N),
+      fApp(M1,N)] in R by A1;
+    thus for M,N,N1 being FrEnvTerm of V st [N,N1] in R holds [fApp(M,N),
+      fApp(M,N1)] in R by A1;
+    thus for M,M1 being FrEnvTerm of V, x being Element of V st [M,M1] in
+      R holds [fLam(x,M), fLam(x,M1)] in R by A1;
+    thus for M,M1,N being FrEnvTerm of V, x being Element of V st [M,M1]
+      in R holds [fExt(M,x,N), fExt(M1,x,N)] in R by A1;
+    thus for M,N,N1 being FrEnvTerm of V, x being Element of V st [N,N1]
+      in R holds [fExt(M,x,N), fExt(M,x,N1)] in R by A1;
+    thus for M,M1 being FrEnvTerm of V st [M,M1] in R holds [fEps M, fEps
+      M1] in R by A1;
+  end;
+end;
+
+definition
+  let V be non empty set;
+  func FrRed(V) -> Relation of TS(FrEnvGram(V)) equals
+  :Def2:
+  { z where z is Element of [:TS(FrEnvGram(V)),TS(FrEnvGram(V)):] :
+      for R being Relation of TS(FrEnvGram(V)) st R is bs-closed
+        holds z in R };
+  coherence
+  proof
+    set G = FrEnvGram(V);
+    set D = [:TS G, TS G:];
+    set S = { z where z is Element of D :
+      for R being Relation of TS G st R is bs-closed holds z in R };
+    S c= D
+    proof
+      let u be object;
+      assume u in S;
+      then ex z being Element of D st u = z &
+        for R being Relation of TS G st R is bs-closed holds z in R;
+      hence thesis;
+    end;
+    hence thesis;
+  end;
+end;
+
+theorem Th1:
+  for V being non empty set, M,N being FrEnvTerm of V holds
+  ( [M,N] in FrRed(V) iff
+    for R being Relation of TS(FrEnvGram(V)) st R is bs-closed
+      holds [M,N] in R )
+proof
+  let V be non empty set, M,N be FrEnvTerm of V;
+  set G = FrEnvGram(V);
+  set D = [:TS G, TS G:];
+  A1: [M,N] in D by ZFMISC_1:87;
+  hereby
+    assume [M,N] in FrRed(V);
+    then [M,N] in { z where z is Element of D :
+      for R being Relation of TS G st R is bs-closed holds z in R } by Def2;
+    then consider z being Element of D such that
+    B1: [M,N] = z and
+    B2: for R being Relation of TS G st R is bs-closed holds z in R;
+    thus for R being Relation of TS G st R is bs-closed
+      holds [M,N] in R by B1,B2;
+  end;
+  assume C1: for R being Relation of TS G st R is bs-closed
+    holds [M,N] in R;
+  reconsider z = [M,N] as Element of D by A1;
+  z in { z2 where z2 is Element of D :
+    for R being Relation of TS G st R is bs-closed holds z2 in R } by C1;
+  hence thesis by Def2;
+end;
+
+theorem Th2:
+  for V being non empty set, R being Relation of TS(FrEnvGram(V))
+  st R is bs-closed holds FrRed(V) c= R
+proof
+  let V be non empty set, R be Relation of TS(FrEnvGram(V));
+  assume A1: R is bs-closed;
+  set G = FrEnvGram(V);
+  set D = [:TS G, TS G:];
+  now
+    let u be object;
+    assume u in FrRed(V);
+    then u in { z where z is Element of D :
+      for Q being Relation of TS G st Q is bs-closed holds z in Q } by Def2;
+    then consider z being Element of D such that
+    B1: u = z and
+    B2: for Q being Relation of TS G st Q is bs-closed holds z in Q;
+    thus u in R by A1,B1,B2;
+  end;
+  hence thesis by TARSKI:def 3;
+end;
+
+registration
+  let V be non empty set;
+  cluster FrRed(V) -> bs-closed;
+  coherence
+  proof
+    set G = FrEnvGram(V);
+    thus for M,N being FrEnvTerm of V, x being Element of V holds
+      [fApp(fLam(x,M),N), fApp(fEps M, fExt(N,x,fId V))] in FrRed(V)
+    proof
+      let M,N be FrEnvTerm of V, x be Element of V;
+      now
+        let R be Relation of TS G;
+        assume A1: R is bs-closed;
+        hence [fApp(fLam(x,M),N), fApp(fEps M, fExt(N,x,fId V))] in R by
+          A1,Def1;
+      end;
+      hence thesis by Th1;
+    end;
+    thus for M,N,L being FrEnvTerm of V, x being Element of V holds
+      [fApp(fApp(fEps (fLam(x,M)),L),N), fApp(fEps M, fExt(N,x,L))] in
+      FrRed(V)
+    proof
+      let M,N,L be FrEnvTerm of V, x be Element of V;
+      now
+        let R be Relation of TS G;
+        assume A1: R is bs-closed;
+        hence [fApp(fApp(fEps (fLam(x,M)),L),N), fApp(fEps M,
+          fExt(N,x,L))] in R by A1,Def1;
+      end;
+      hence thesis by Th1;
+    end;
+    thus for M,N being FrEnvTerm of V holds [fApp(fEps (fEps M),N), fEps
+      M] in FrRed(V)
+    proof
+      let M,N be FrEnvTerm of V;
+      now
+        let R be Relation of TS G;
+        assume A1: R is bs-closed;
+        hence [fApp(fEps (fEps M),N), fEps M] in R by A1,Def1;
+      end;
+      hence thesis by Th1;
+    end;
+    thus for L,M,N being FrEnvTerm of V holds [fApp(fEps (fApp(fEps
+      L,M)),N), fApp(fEps L, fApp(fEps M,N))] in FrRed(V)
+    proof
+      let L,M,N be FrEnvTerm of V;
+      now
+        let R be Relation of TS G;
+        assume A1: R is bs-closed;
+        hence [fApp(fEps (fApp(fEps L,M)),N), fApp(fEps L, fApp(fEps
+          M,N))] in R by A1,Def1;
+      end;
+      hence thesis by Th1;
+    end;
+    thus for M being FrEnvTerm of V holds [fApp(fEps (fId V),M), M] in
+      FrRed(V)
+    proof
+      let M be FrEnvTerm of V;
+      now
+        let R be Relation of TS G;
+        assume A1: R is bs-closed;
+        hence [fApp(fEps (fId V),M), M] in R by A1,Def1;
+      end;
+      hence thesis by Th1;
+    end;
+    thus for M being FrEnvTerm of V holds [fApp(fEps M, fId V), M] in
+      FrRed(V)
+    proof
+      let M be FrEnvTerm of V;
+      now
+        let R be Relation of TS G;
+        assume A1: R is bs-closed;
+        hence [fApp(fEps M, fId V), M] in R by A1,Def1;
+      end;
+      hence thesis by Th1;
+    end;
+    thus for L,M,N being FrEnvTerm of V, x being Element of V holds
+      [fApp(fEps (fExt(L,x,M)),N), fExt(fApp(fEps L,N),x,fApp(fEps M,N))]
+      in FrRed(V)
+    proof
+      let L,M,N be FrEnvTerm of V, x be Element of V;
+      now
+        let R be Relation of TS G;
+        assume A1: R is bs-closed;
+        hence [fApp(fEps (fExt(L,x,M)),N), fExt(fApp(fEps L,N),x,fApp(fEps
+          M,N))] in R by A1,Def1;
+      end;
+      hence thesis by Th1;
+    end;
+    thus for M,N being FrEnvTerm of V, x being Element of V holds
+      [fApp(fEps (fVar x), fExt(M,x,N)), M] in FrRed(V)
+    proof
+      let M,N be FrEnvTerm of V, x be Element of V;
+      now
+        let R be Relation of TS G;
+        assume A1: R is bs-closed;
+        hence [fApp(fEps (fVar x), fExt(M,x,N)), M] in R by A1,Def1;
+      end;
+      hence thesis by Th1;
+    end;
+    thus for M,N being FrEnvTerm of V, x,y being Element of V st x <> y
+      holds [fApp(fEps (fVar y), fExt(M,x,N)), fApp(fEps (fVar y), N)] in
+      FrRed(V)
+    proof
+      let M,N be FrEnvTerm of V, x,y be Element of V;
+      assume A0: x <> y;
+      now
+        let R be Relation of TS G;
+        assume A1: R is bs-closed;
+        hence [fApp(fEps (fVar y), fExt(M,x,N)), fApp(fEps (fVar y), N)]
+          in R by A0,A1,Def1;
+      end;
+      hence thesis by Th1;
+    end;
+    thus for M,N,L being FrEnvTerm of V holds [fApp(fEps (fApp(M,N)),L),
+      fApp(fApp(fEps M,L), fApp(fEps N,L))] in FrRed(V)
+    proof
+      let M,N,L be FrEnvTerm of V;
+      now
+        let R be Relation of TS G;
+        assume A1: R is bs-closed;
+        hence [fApp(fEps (fApp(M,N)),L), fApp(fApp(fEps M,L), fApp(fEps
+          N,L))] in R by A1,Def1;
+      end;
+      hence thesis by Th1;
+    end;
+    thus for M,M1,N being FrEnvTerm of V st [M,M1] in FrRed(V) holds
+      [fApp(M,N), fApp(M1,N)] in FrRed(V)
+    proof
+      let M,M1,N be FrEnvTerm of V;
+      assume A0: [M,M1] in FrRed(V);
+      now
+        let R be Relation of TS G;
+        assume A1: R is bs-closed;
+        then [M,M1] in R by A0,Th1;
+        hence [fApp(M,N), fApp(M1,N)] in R by A1,Def1;
+      end;
+      hence thesis by Th1;
+    end;
+    thus for M,N,N1 being FrEnvTerm of V st [N,N1] in FrRed(V) holds
+      [fApp(M,N), fApp(M,N1)] in FrRed(V)
+    proof
+      let M,N,N1 be FrEnvTerm of V;
+      assume A0: [N,N1] in FrRed(V);
+      now
+        let R be Relation of TS G;
+        assume A1: R is bs-closed;
+        then [N,N1] in R by A0,Th1;
+        hence [fApp(M,N), fApp(M,N1)] in R by A1,Def1;
+      end;
+      hence thesis by Th1;
+    end;
+    thus for M,M1 being FrEnvTerm of V, x being Element of V st [M,M1] in
+      FrRed(V) holds [fLam(x,M), fLam(x,M1)] in FrRed(V)
+    proof
+      let M,M1 be FrEnvTerm of V, x be Element of V;
+      assume A0: [M,M1] in FrRed(V);
+      now
+        let R be Relation of TS G;
+        assume A1: R is bs-closed;
+        then [M,M1] in R by A0,Th1;
+        hence [fLam(x,M), fLam(x,M1)] in R by A1,Def1;
+      end;
+      hence thesis by Th1;
+    end;
+    thus for M,M1,N being FrEnvTerm of V, x being Element of V st [M,M1]
+      in FrRed(V) holds [fExt(M,x,N), fExt(M1,x,N)] in FrRed(V)
+    proof
+      let M,M1,N be FrEnvTerm of V, x be Element of V;
+      assume A0: [M,M1] in FrRed(V);
+      now
+        let R be Relation of TS G;
+        assume A1: R is bs-closed;
+        then [M,M1] in R by A0,Th1;
+        hence [fExt(M,x,N), fExt(M1,x,N)] in R by A1,Def1;
+      end;
+      hence thesis by Th1;
+    end;
+    thus for M,N,N1 being FrEnvTerm of V, x being Element of V st [N,N1]
+      in FrRed(V) holds [fExt(M,x,N), fExt(M,x,N1)] in FrRed(V)
+    proof
+      let M,N,N1 be FrEnvTerm of V, x be Element of V;
+      assume A0: [N,N1] in FrRed(V);
+      now
+        let R be Relation of TS G;
+        assume A1: R is bs-closed;
+        then [N,N1] in R by A0,Th1;
+        hence [fExt(M,x,N), fExt(M,x,N1)] in R by A1,Def1;
+      end;
+      hence thesis by Th1;
+    end;
+    thus for M,M1 being FrEnvTerm of V st [M,M1] in FrRed(V) holds [fEps
+      M, fEps M1] in FrRed(V)
+    proof
+      let M,M1 be FrEnvTerm of V;
+      assume A0: [M,M1] in FrRed(V);
+      now
+        let R be Relation of TS G;
+        assume A1: R is bs-closed;
+        then [M,M1] in R by A0,Th1;
+        hence [fEps M, fEps M1] in R by A1,Def1;
+      end;
+      hence thesis by Th1;
+    end;
+  end;
+end;
+
+theorem Th3:
+  for V being non empty set, P,Q being FrEnvTerm of V
+  st [P,Q] in FrRed(V) holds
+  ( ex M2,N2 being FrEnvTerm of V, x2 being Element of V st P =
+    fApp(fLam(x2,M2),N2) & Q = fApp(fEps M2, fExt(N2,x2,fId V)) ) or
+  ( ex M2,N2,L2 being FrEnvTerm of V, x2 being Element of V st P =
+    fApp(fApp(fEps (fLam(x2,M2)),L2),N2) & Q = fApp(fEps M2,
+    fExt(N2,x2,L2)) ) or
+  ( ex M2,N2 being FrEnvTerm of V st P = fApp(fEps (fEps M2),N2) & Q =
+    fEps M2 ) or
+  ( ex L2,M2,N2 being FrEnvTerm of V st P = fApp(fEps (fApp(fEps
+    L2,M2)),N2) & Q = fApp(fEps L2, fApp(fEps M2,N2)) ) or
+  ( ex M2 being FrEnvTerm of V st P = fApp(fEps (fId V),M2) & Q = M2 ) or
+  ( ex M2 being FrEnvTerm of V st P = fApp(fEps M2, fId V) & Q = M2 ) or
+  ( ex L2,M2,N2 being FrEnvTerm of V, x2 being Element of V st P =
+    fApp(fEps (fExt(L2,x2,M2)),N2) & Q = fExt(fApp(fEps
+    L2,N2),x2,fApp(fEps M2,N2)) ) or
+  ( ex M2,N2 being FrEnvTerm of V, x2 being Element of V st P = fApp(fEps
+    (fVar x2), fExt(M2,x2,N2)) & Q = M2 ) or
+  ( ex M2,N2 being FrEnvTerm of V, x2,y2 being Element of V st x2 <> y2 &
+    P = fApp(fEps (fVar y2), fExt(M2,x2,N2)) & Q = fApp(fEps (fVar y2),
+    N2) ) or
+  ( ex M2,N2,L2 being FrEnvTerm of V st P = fApp(fEps (fApp(M2,N2)),L2) &
+    Q = fApp(fApp(fEps M2,L2), fApp(fEps N2,L2)) ) or
+  ( ex M2,M3,N2 being FrEnvTerm of V st [M2,M3] in FrRed(V) & P =
+    fApp(M2,N2) & Q = fApp(M3,N2) ) or
+  ( ex M2,N2,N3 being FrEnvTerm of V st [N2,N3] in FrRed(V) & P =
+    fApp(M2,N2) & Q = fApp(M2,N3) ) or
+  ( ex M2,M3 being FrEnvTerm of V, x2 being Element of V st [M2,M3] in
+    FrRed(V) & P = fLam(x2,M2) & Q = fLam(x2,M3) ) or
+  ( ex M2,M3,N2 being FrEnvTerm of V, x2 being Element of V st [M2,M3] in
+    FrRed(V) & P = fExt(M2,x2,N2) & Q = fExt(M3,x2,N2) ) or
+  ( ex M2,N2,N3 being FrEnvTerm of V, x2 being Element of V st [N2,N3] in
+    FrRed(V) & P = fExt(M2,x2,N2) & Q = fExt(M2,x2,N3) ) or
+  ( ex M2,M3 being FrEnvTerm of V st [M2,M3] in FrRed(V) & P = fEps M2 & Q
+    = fEps M3 )
+proof
+  let V be non empty set;
+  set G = FrEnvGram(V);
+  set R = FrRed(V);
+  defpred D[object,object] means
+    ( ex M2,N2 being FrEnvTerm of V, x2 being Element of V st $1 =
+      fApp(fLam(x2,M2),N2) & $2 = fApp(fEps M2, fExt(N2,x2,fId V)) ) or
+    ( ex M2,N2,L2 being FrEnvTerm of V, x2 being Element of V st $1 =
+      fApp(fApp(fEps (fLam(x2,M2)),L2),N2) & $2 = fApp(fEps M2,
+      fExt(N2,x2,L2)) ) or
+    ( ex M2,N2 being FrEnvTerm of V st $1 = fApp(fEps (fEps M2),N2) & $2 =
+      fEps M2 ) or
+    ( ex L2,M2,N2 being FrEnvTerm of V st $1 = fApp(fEps (fApp(fEps
+      L2,M2)),N2) & $2 = fApp(fEps L2, fApp(fEps M2,N2)) ) or
+    ( ex M2 being FrEnvTerm of V st $1 = fApp(fEps (fId V),M2) & $2 = M2 ) or
+    ( ex M2 being FrEnvTerm of V st $1 = fApp(fEps M2, fId V) & $2 = M2 ) or
+    ( ex L2,M2,N2 being FrEnvTerm of V, x2 being Element of V st $1 =
+      fApp(fEps (fExt(L2,x2,M2)),N2) & $2 = fExt(fApp(fEps
+      L2,N2),x2,fApp(fEps M2,N2)) ) or
+    ( ex M2,N2 being FrEnvTerm of V, x2 being Element of V st $1 =
+      fApp(fEps (fVar x2), fExt(M2,x2,N2)) & $2 = M2 ) or
+    ( ex M2,N2 being FrEnvTerm of V, x2,y2 being Element of V st x2 <> y2
+      & $1 = fApp(fEps (fVar y2), fExt(M2,x2,N2)) & $2 = fApp(fEps (fVar
+      y2), N2) ) or
+    ( ex M2,N2,L2 being FrEnvTerm of V st $1 = fApp(fEps (fApp(M2,N2)),L2)
+      & $2 = fApp(fApp(fEps M2,L2), fApp(fEps N2,L2)) ) or
+    ( ex M2,M3,N2 being FrEnvTerm of V st [M2,M3] in FrRed(V) & $1 =
+      fApp(M2,N2) & $2 = fApp(M3,N2) ) or
+    ( ex M2,N2,N3 being FrEnvTerm of V st [N2,N3] in FrRed(V) & $1 =
+      fApp(M2,N2) & $2 = fApp(M2,N3) ) or
+    ( ex M2,M3 being FrEnvTerm of V, x2 being Element of V st [M2,M3] in
+      FrRed(V) & $1 = fLam(x2,M2) & $2 = fLam(x2,M3) ) or
+    ( ex M2,M3,N2 being FrEnvTerm of V, x2 being Element of V st [M2,M3]
+      in FrRed(V) & $1 = fExt(M2,x2,N2) & $2 = fExt(M3,x2,N2) ) or
+    ( ex M2,N2,N3 being FrEnvTerm of V, x2 being Element of V st [N2,N3]
+      in FrRed(V) & $1 = fExt(M2,x2,N2) & $2 = fExt(M2,x2,N3) ) or
+    ( ex M2,M3 being FrEnvTerm of V st [M2,M3] in FrRed(V) & $1 = fEps M2
+      & $2 = fEps M3 );
+  set S = { z where z is Element of [:TS G, TS G:] :
+    z in R & ex P,Q being FrEnvTerm of V st z = [P,Q] & D[P,Q] };
+  A1: S c= [:TS G, TS G:]
+  proof
+    let u be object;
+    assume u in S;
+    then ex z being Element of [:TS G, TS G:] st u = z &
+      ( z in R & ex P,Q being FrEnvTerm of V st z = [P,Q] & D[P,Q] );
+    hence thesis;
+  end;
+  reconsider S1 = S as Relation of TS G by A1;
+  A2: for a,b being FrEnvTerm of V holds
+    ( [a,b] in S1 iff ( [a,b] in R & D[a,b] ) )
+  proof
+    let a,b be FrEnvTerm of V;
+    hereby
+      assume [a,b] in S1;
+      then consider z being Element of [:TS G, TS G:] such that
+      B1: [a,b] = z and
+      B2: z in R & ex P,Q being FrEnvTerm of V st z = [P,Q] & D[P,Q];
+      consider P,Q being FrEnvTerm of V such that
+      B3: z = [P,Q] & D[P,Q] by B2;
+      a = P & b = Q by B1,B3,XTUPLE_0:1;
+      hence [a,b] in R & D[a,b] by B1,B2,B3;
+    end;
+    assume C1: [a,b] in R & D[a,b];
+    C2: [a,b] in [:TS G, TS G:] by ZFMISC_1:87;
+    then reconsider z = [a,b] as Element of [:TS G, TS G:];
+    z in R & ex P,Q being FrEnvTerm of V st z = [P,Q] & D[P,Q] by C1;
+    hence thesis;
+  end;
+  A3: S1 is bs-closed
+  proof
+    thus for M,N being FrEnvTerm of V, x being Element of V holds
+      [fApp(fLam(x,M),N), fApp(fEps M, fExt(N,x,fId V))] in S1
+    proof
+      let M,N be FrEnvTerm of V, x be Element of V;
+      G2: [fApp(fLam(x,M),N), fApp(fEps M, fExt(N,x,fId V))] in R by Def1;
+      G3: ex M2,N2 being FrEnvTerm of V, x2 being Element of V st
+        fApp(fLam(x,M),N) = fApp(fLam(x2,M2),N2) & fApp(fEps M,
+        fExt(N,x,fId V)) = fApp(fEps M2, fExt(N2,x2,fId V))
+      proof
+        take M,N,x;
+        thus thesis;
+      end;
+      G4: D[fApp(fLam(x,M),N), fApp(fEps M, fExt(N,x,fId V))] by G3;
+      thus thesis by A2,G2,G4;
+    end;
+    thus for M,N,L being FrEnvTerm of V, x being Element of V holds
+      [fApp(fApp(fEps (fLam(x,M)),L),N), fApp(fEps M, fExt(N,x,L))] in S1
+    proof
+      let M,N,L be FrEnvTerm of V, x be Element of V;
+      G2: [fApp(fApp(fEps (fLam(x,M)),L),N), fApp(fEps M, fExt(N,x,L))] in
+        R by Def1;
+      G3: ex M2,N2,L2 being FrEnvTerm of V, x2 being Element of V st
+        fApp(fApp(fEps (fLam(x,M)),L),N) = fApp(fApp(fEps
+        (fLam(x2,M2)),L2),N2) & fApp(fEps M, fExt(N,x,L)) = fApp(fEps M2,
+        fExt(N2,x2,L2))
+      proof
+        take M,N,L,x;
+        thus thesis;
+      end;
+      G4: D[fApp(fApp(fEps (fLam(x,M)),L),N), fApp(fEps M, fExt(N,x,L))]
+        by G3;
+      thus thesis by A2,G2,G4;
+    end;
+    thus for M,N being FrEnvTerm of V holds [fApp(fEps (fEps M),N), fEps
+      M] in S1
+    proof
+      let M,N be FrEnvTerm of V;
+      G2: [fApp(fEps (fEps M),N), fEps M] in R by Def1;
+      G3: ex M2,N2 being FrEnvTerm of V st fApp(fEps (fEps M),N) =
+        fApp(fEps (fEps M2),N2) & fEps M = fEps M2
+      proof
+        take M,N;
+        thus thesis;
+      end;
+      G4: D[fApp(fEps (fEps M),N), fEps M] by G3;
+      thus thesis by A2,G2,G4;
+    end;
+    thus for L,M,N being FrEnvTerm of V holds [fApp(fEps (fApp(fEps
+      L,M)),N), fApp(fEps L, fApp(fEps M,N))] in S1
+    proof
+      let L,M,N be FrEnvTerm of V;
+      G2: [fApp(fEps (fApp(fEps L,M)),N), fApp(fEps L, fApp(fEps M,N))] in
+        R by Def1;
+      G3: ex L2,M2,N2 being FrEnvTerm of V st fApp(fEps (fApp(fEps
+        L,M)),N) = fApp(fEps (fApp(fEps L2,M2)),N2) & fApp(fEps L,
+        fApp(fEps M,N)) = fApp(fEps L2, fApp(fEps M2,N2))
+      proof
+        take L,M,N;
+        thus thesis;
+      end;
+      G4: D[fApp(fEps (fApp(fEps L,M)),N), fApp(fEps L, fApp(fEps M,N))]
+        by G3;
+      thus thesis by A2,G2,G4;
+    end;
+    thus for M being FrEnvTerm of V holds [fApp(fEps (fId V),M), M] in S1
+    proof
+      let M be FrEnvTerm of V;
+      G2: [fApp(fEps (fId V),M), M] in R by Def1;
+      G3: ex M2 being FrEnvTerm of V st fApp(fEps (fId V),M) = fApp(fEps
+        (fId V),M2) & M = M2
+      proof
+        take M;
+        thus thesis;
+      end;
+      G4: D[fApp(fEps (fId V),M), M] by G3;
+      thus thesis by A2,G2,G4;
+    end;
+    thus for M being FrEnvTerm of V holds [fApp(fEps M, fId V), M] in S1
+    proof
+      let M be FrEnvTerm of V;
+      G2: [fApp(fEps M, fId V), M] in R by Def1;
+      G3: ex M2 being FrEnvTerm of V st fApp(fEps M, fId V) = fApp(fEps
+        M2, fId V) & M = M2
+      proof
+        take M;
+        thus thesis;
+      end;
+      G4: D[fApp(fEps M, fId V), M] by G3;
+      thus thesis by A2,G2,G4;
+    end;
+    thus for L,M,N being FrEnvTerm of V, x being Element of V holds
+      [fApp(fEps (fExt(L,x,M)),N), fExt(fApp(fEps L,N),x,fApp(fEps M,N))]
+      in S1
+    proof
+      let L,M,N be FrEnvTerm of V, x be Element of V;
+      G2: [fApp(fEps (fExt(L,x,M)),N), fExt(fApp(fEps L,N),x,fApp(fEps
+        M,N))] in R by Def1;
+      G3: ex L2,M2,N2 being FrEnvTerm of V, x2 being Element of V st
+        fApp(fEps (fExt(L,x,M)),N) = fApp(fEps (fExt(L2,x2,M2)),N2) &
+        fExt(fApp(fEps L,N),x,fApp(fEps M,N)) = fExt(fApp(fEps
+        L2,N2),x2,fApp(fEps M2,N2))
+      proof
+        take L,M,N,x;
+        thus thesis;
+      end;
+      G4: D[fApp(fEps (fExt(L,x,M)),N), fExt(fApp(fEps L,N),x,fApp(fEps
+        M,N))] by G3;
+      thus thesis by A2,G2,G4;
+    end;
+    thus for M,N being FrEnvTerm of V, x being Element of V holds
+      [fApp(fEps (fVar x), fExt(M,x,N)), M] in S1
+    proof
+      let M,N be FrEnvTerm of V, x be Element of V;
+      G2: [fApp(fEps (fVar x), fExt(M,x,N)), M] in R by Def1;
+      G3: ex M2,N2 being FrEnvTerm of V, x2 being Element of V st
+        fApp(fEps (fVar x), fExt(M,x,N)) = fApp(fEps (fVar x2),
+        fExt(M2,x2,N2)) & M = M2
+      proof
+        take M,N,x;
+        thus thesis;
+      end;
+      G4: D[fApp(fEps (fVar x), fExt(M,x,N)), M] by G3;
+      thus thesis by A2,G2,G4;
+    end;
+    thus for M,N being FrEnvTerm of V, x,y being Element of V st x <> y
+      holds [fApp(fEps (fVar y), fExt(M,x,N)), fApp(fEps (fVar y), N)] in
+      S1
+    proof
+      let M,N be FrEnvTerm of V, x,y be Element of V;
+      assume G0: x <> y;
+      G2: [fApp(fEps (fVar y), fExt(M,x,N)), fApp(fEps (fVar y), N)] in R
+        by G0,Def1;
+      G3: ex M2,N2 being FrEnvTerm of V, x2,y2 being Element of V st x2 <>
+        y2 & fApp(fEps (fVar y), fExt(M,x,N)) = fApp(fEps (fVar y2),
+        fExt(M2,x2,N2)) & fApp(fEps (fVar y), N) = fApp(fEps (fVar y2),
+        N2)
+      proof
+        take M,N,x,y;
+        thus thesis by G0;
+      end;
+      G4: D[fApp(fEps (fVar y), fExt(M,x,N)), fApp(fEps (fVar y), N)] by
+        G3;
+      thus thesis by A2,G2,G4;
+    end;
+    thus for M,N,L being FrEnvTerm of V holds [fApp(fEps (fApp(M,N)),L),
+      fApp(fApp(fEps M,L), fApp(fEps N,L))] in S1
+    proof
+      let M,N,L be FrEnvTerm of V;
+      G2: [fApp(fEps (fApp(M,N)),L), fApp(fApp(fEps M,L), fApp(fEps N,L))]
+        in R by Def1;
+      G3: ex M2,N2,L2 being FrEnvTerm of V st fApp(fEps (fApp(M,N)),L) =
+        fApp(fEps (fApp(M2,N2)),L2) & fApp(fApp(fEps M,L), fApp(fEps N,L))
+        = fApp(fApp(fEps M2,L2), fApp(fEps N2,L2))
+      proof
+        take M,N,L;
+        thus thesis;
+      end;
+      G4: D[fApp(fEps (fApp(M,N)),L), fApp(fApp(fEps M,L), fApp(fEps
+        N,L))] by G3;
+      thus thesis by A2,G2,G4;
+    end;
+    thus for M,M1,N being FrEnvTerm of V st [M,M1] in S1 holds [fApp(M,N),
+      fApp(M1,N)] in S1
+    proof
+      let M,M1,N be FrEnvTerm of V;
+      assume G0: [M,M1] in S1;
+      then G1: [M,M1] in R by A2;
+      G2: [fApp(M,N), fApp(M1,N)] in R by G1,Def1;
+      G3: ex M2,M3,N2 being FrEnvTerm of V st [M2,M3] in FrRed(V) &
+        fApp(M,N) = fApp(M2,N2) & fApp(M1,N) = fApp(M3,N2)
+      proof
+        take M,M1,N;
+        thus thesis by G1;
+      end;
+      G4: D[fApp(M,N), fApp(M1,N)] by G3;
+      thus thesis by A2,G2,G4;
+    end;
+    thus for M,N,N1 being FrEnvTerm of V st [N,N1] in S1 holds [fApp(M,N),
+      fApp(M,N1)] in S1
+    proof
+      let M,N,N1 be FrEnvTerm of V;
+      assume G0: [N,N1] in S1;
+      then G1: [N,N1] in R by A2;
+      G2: [fApp(M,N), fApp(M,N1)] in R by G1,Def1;
+      G3: ex M2,N2,N3 being FrEnvTerm of V st [N2,N3] in FrRed(V) &
+        fApp(M,N) = fApp(M2,N2) & fApp(M,N1) = fApp(M2,N3)
+      proof
+        take M,N,N1;
+        thus thesis by G1;
+      end;
+      G4: D[fApp(M,N), fApp(M,N1)] by G3;
+      thus thesis by A2,G2,G4;
+    end;
+    thus for M,M1 being FrEnvTerm of V, x being Element of V st [M,M1] in
+      S1 holds [fLam(x,M), fLam(x,M1)] in S1
+    proof
+      let M,M1 be FrEnvTerm of V, x be Element of V;
+      assume G0: [M,M1] in S1;
+      then G1: [M,M1] in R by A2;
+      G2: [fLam(x,M), fLam(x,M1)] in R by G1,Def1;
+      G3: ex M2,M3 being FrEnvTerm of V, x2 being Element of V st [M2,M3]
+        in FrRed(V) & fLam(x,M) = fLam(x2,M2) & fLam(x,M1) = fLam(x2,M3)
+      proof
+        take M,M1,x;
+        thus thesis by G1;
+      end;
+      G4: D[fLam(x,M), fLam(x,M1)] by G3;
+      thus thesis by A2,G2,G4;
+    end;
+    thus for M,M1,N being FrEnvTerm of V, x being Element of V st [M,M1]
+      in S1 holds [fExt(M,x,N), fExt(M1,x,N)] in S1
+    proof
+      let M,M1,N be FrEnvTerm of V, x be Element of V;
+      assume G0: [M,M1] in S1;
+      then G1: [M,M1] in R by A2;
+      G2: [fExt(M,x,N), fExt(M1,x,N)] in R by G1,Def1;
+      G3: ex M2,M3,N2 being FrEnvTerm of V, x2 being Element of V st
+        [M2,M3] in FrRed(V) & fExt(M,x,N) = fExt(M2,x2,N2) & fExt(M1,x,N)
+        = fExt(M3,x2,N2)
+      proof
+        take M,M1,N,x;
+        thus thesis by G1;
+      end;
+      G4: D[fExt(M,x,N), fExt(M1,x,N)] by G3;
+      thus thesis by A2,G2,G4;
+    end;
+    thus for M,N,N1 being FrEnvTerm of V, x being Element of V st [N,N1]
+      in S1 holds [fExt(M,x,N), fExt(M,x,N1)] in S1
+    proof
+      let M,N,N1 be FrEnvTerm of V, x be Element of V;
+      assume G0: [N,N1] in S1;
+      then G1: [N,N1] in R by A2;
+      G2: [fExt(M,x,N), fExt(M,x,N1)] in R by G1,Def1;
+      G3: ex M2,N2,N3 being FrEnvTerm of V, x2 being Element of V st
+        [N2,N3] in FrRed(V) & fExt(M,x,N) = fExt(M2,x2,N2) & fExt(M,x,N1)
+        = fExt(M2,x2,N3)
+      proof
+        take M,N,N1,x;
+        thus thesis by G1;
+      end;
+      G4: D[fExt(M,x,N), fExt(M,x,N1)] by G3;
+      thus thesis by A2,G2,G4;
+    end;
+    thus for M,M1 being FrEnvTerm of V st [M,M1] in S1 holds [fEps M, fEps
+      M1] in S1
+    proof
+      let M,M1 be FrEnvTerm of V;
+      assume G0: [M,M1] in S1;
+      then G1: [M,M1] in R by A2;
+      G2: [fEps M, fEps M1] in R by G1,Def1;
+      G3: ex M2,M3 being FrEnvTerm of V st [M2,M3] in FrRed(V) & fEps M =
+        fEps M2 & fEps M1 = fEps M3
+      proof
+        take M,M1;
+        thus thesis by G1;
+      end;
+      G4: D[fEps M, fEps M1] by G3;
+      thus thesis by A2,G2,G4;
+    end;
+  end;
+  A4: R c= S1 by A3,Th2;
+  let P,Q be FrEnvTerm of V;
+  assume [P,Q] in FrRed(V);
+  then [P,Q] in S1 by A4;
+  hence thesis by A2;
+end;
+
+begin :: The sixteen rules
+
+theorem Th4:
+  for V being non empty set, M,N being FrEnvTerm of V, x being Element of
+    V holds
+  [fApp(fLam(x,M),N), fApp(fEps M, fExt(N,x,fId V))] in FrRed(V)
+proof
+  let V be non empty set, M,N be FrEnvTerm of V, x be Element of V;
+  thus thesis by Def1;
+end;
+
+theorem Th5:
+  for V being non empty set, M,N,L being FrEnvTerm of V, x being Element
+    of V holds
+  [fApp(fApp(fEps (fLam(x,M)),L),N), fApp(fEps M, fExt(N,x,L))] in
+    FrRed(V)
+proof
+  let V be non empty set, M,N,L be FrEnvTerm of V, x be Element of V;
+  thus thesis by Def1;
+end;
+
+theorem Th6:
+  for V being non empty set, M,N being FrEnvTerm of V holds
+  [fApp(fEps (fEps M),N), fEps M] in FrRed(V)
+proof
+  let V be non empty set, M,N be FrEnvTerm of V;
+  thus thesis by Def1;
+end;
+
+theorem Th7:
+  for V being non empty set, L,M,N being FrEnvTerm of V holds
+  [fApp(fEps (fApp(fEps L,M)),N), fApp(fEps L, fApp(fEps M,N))] in
+    FrRed(V)
+proof
+  let V be non empty set, L,M,N be FrEnvTerm of V;
+  thus thesis by Def1;
+end;
+
+theorem Th8:
+  for V being non empty set, M being FrEnvTerm of V holds
+  [fApp(fEps (fId V),M), M] in FrRed(V)
+proof
+  let V be non empty set, M be FrEnvTerm of V;
+  thus thesis by Def1;
+end;
+
+theorem Th9:
+  for V being non empty set, M being FrEnvTerm of V holds
+  [fApp(fEps M, fId V), M] in FrRed(V)
+proof
+  let V be non empty set, M be FrEnvTerm of V;
+  thus thesis by Def1;
+end;
+
+theorem Th10:
+  for V being non empty set, L,M,N being FrEnvTerm of V, x being Element
+    of V holds
+  [fApp(fEps (fExt(L,x,M)),N), fExt(fApp(fEps L,N),x,fApp(fEps M,N))] in
+    FrRed(V)
+proof
+  let V be non empty set, L,M,N be FrEnvTerm of V, x be Element of V;
+  thus thesis by Def1;
+end;
+
+theorem Th11:
+  for V being non empty set, M,N being FrEnvTerm of V, x being Element of
+    V holds
+  [fApp(fEps (fVar x), fExt(M,x,N)), M] in FrRed(V)
+proof
+  let V be non empty set, M,N be FrEnvTerm of V, x be Element of V;
+  thus thesis by Def1;
+end;
+
+theorem Th12:
+  for V being non empty set, M,N being FrEnvTerm of V, x,y being Element
+    of V st x <> y holds
+  [fApp(fEps (fVar y), fExt(M,x,N)), fApp(fEps (fVar y), N)] in FrRed(V)
+proof
+  let V be non empty set, M,N be FrEnvTerm of V, x,y be Element of V;
+  assume A0: x <> y;
+  thus thesis by A0,Def1;
+end;
+
+theorem Th13:
+  for V being non empty set, M,N,L being FrEnvTerm of V holds
+  [fApp(fEps (fApp(M,N)),L), fApp(fApp(fEps M,L), fApp(fEps N,L))] in
+    FrRed(V)
+proof
+  let V be non empty set, M,N,L be FrEnvTerm of V;
+  thus thesis by Def1;
+end;
+
+theorem Th14:
+  for V being non empty set, M,M1,N being FrEnvTerm of V st [M,M1] in
+    FrRed(V) holds
+  [fApp(M,N), fApp(M1,N)] in FrRed(V)
+proof
+  let V be non empty set, M,M1,N be FrEnvTerm of V;
+  assume A0: [M,M1] in FrRed(V);
+  thus thesis by A0,Def1;
+end;
+
+theorem Th15:
+  for V being non empty set, M,N,N1 being FrEnvTerm of V st [N,N1] in
+    FrRed(V) holds
+  [fApp(M,N), fApp(M,N1)] in FrRed(V)
+proof
+  let V be non empty set, M,N,N1 be FrEnvTerm of V;
+  assume A0: [N,N1] in FrRed(V);
+  thus thesis by A0,Def1;
+end;
+
+theorem Th16:
+  for V being non empty set, M,M1 being FrEnvTerm of V, x being Element of
+    V st [M,M1] in FrRed(V) holds
+  [fLam(x,M), fLam(x,M1)] in FrRed(V)
+proof
+  let V be non empty set, M,M1 be FrEnvTerm of V, x be Element of V;
+  assume A0: [M,M1] in FrRed(V);
+  thus thesis by A0,Def1;
+end;
+
+theorem Th17:
+  for V being non empty set, M,M1,N being FrEnvTerm of V, x being Element
+    of V st [M,M1] in FrRed(V) holds
+  [fExt(M,x,N), fExt(M1,x,N)] in FrRed(V)
+proof
+  let V be non empty set, M,M1,N be FrEnvTerm of V, x be Element of V;
+  assume A0: [M,M1] in FrRed(V);
+  thus thesis by A0,Def1;
+end;
+
+theorem Th18:
+  for V being non empty set, M,N,N1 being FrEnvTerm of V, x being Element
+    of V st [N,N1] in FrRed(V) holds
+  [fExt(M,x,N), fExt(M,x,N1)] in FrRed(V)
+proof
+  let V be non empty set, M,N,N1 be FrEnvTerm of V, x be Element of V;
+  assume A0: [N,N1] in FrRed(V);
+  thus thesis by A0,Def1;
+end;
+
+theorem Th19:
+  for V being non empty set, M,M1 being FrEnvTerm of V st [M,M1] in
+    FrRed(V) holds
+  [fEps M, fEps M1] in FrRed(V)
+proof
+  let V be non empty set, M,M1 be FrEnvTerm of V;
+  assume A0: [M,M1] in FrRed(V);
+  thus thesis by A0,Def1;
+end;
+
+begin :: Multi-step congruence
+
+theorem Th20:
+  for V being non empty set, M,M1,N being FrEnvTerm of V st FrRed(V)
+    reduces M,M1 holds
+  FrRed(V) reduces fApp(M,N), fApp(M1,N)
+proof
+  let V be non empty set, M,M1,N be FrEnvTerm of V;
+  set G = FrEnvGram(V);
+  set R = FrRed(V);
+  deffunc F(object) = fApp(In($1,TS G), N);
+  A1: for u,v being object st [u,v] in R holds [F(u),F(v)] in R
+  proof
+    let u,v be object;
+    assume B1: [u,v] in R;
+    R c= [:TS G,TS G:];
+    then [u,v] in [:TS G,TS G:] by B1;
+    then u in TS G & v in TS G by ZFMISC_1:87;
+    then reconsider a1 = u, b1 = v as FrEnvTerm of V;
+    B2: In(u,TS G) = a1 & In(v,TS G) = b1;
+    [a1,b1] in R by B1;
+    then [fApp(a1,N), fApp(b1,N)] in R by Th14;
+    hence thesis by B2;
+  end;
+  A2: for u,v being object st R reduces u,v holds R reduces F(u),F(v)
+    from ENVEPS_2:sch 1(A1);
+  assume A3: R reduces M,M1;
+  A4: In(M,TS G) = M & In(M1,TS G) = M1;
+  thus thesis by A2,A3,A4;
+end;
+
+theorem Th21:
+  for V being non empty set, M,N,N1 being FrEnvTerm of V st FrRed(V)
+    reduces N,N1 holds
+  FrRed(V) reduces fApp(M,N), fApp(M,N1)
+proof
+  let V be non empty set, M,N,N1 be FrEnvTerm of V;
+  set G = FrEnvGram(V);
+  set R = FrRed(V);
+  deffunc F(object) = fApp(M, In($1,TS G));
+  A1: for u,v being object st [u,v] in R holds [F(u),F(v)] in R
+  proof
+    let u,v be object;
+    assume B1: [u,v] in R;
+    R c= [:TS G,TS G:];
+    then [u,v] in [:TS G,TS G:] by B1;
+    then u in TS G & v in TS G by ZFMISC_1:87;
+    then reconsider a1 = u, b1 = v as FrEnvTerm of V;
+    B2: In(u,TS G) = a1 & In(v,TS G) = b1;
+    [a1,b1] in R by B1;
+    then [fApp(M,a1), fApp(M,b1)] in R by Th15;
+    hence thesis by B2;
+  end;
+  A2: for u,v being object st R reduces u,v holds R reduces F(u),F(v)
+    from ENVEPS_2:sch 1(A1);
+  assume A3: R reduces N,N1;
+  A4: In(N,TS G) = N & In(N1,TS G) = N1;
+  thus thesis by A2,A3,A4;
+end;
+
+theorem Th22:
+  for V being non empty set, M,M1 being FrEnvTerm of V, x0 being Element
+    of V st FrRed(V) reduces M,M1 holds
+  FrRed(V) reduces fLam(x0,M), fLam(x0,M1)
+proof
+  let V be non empty set, M,M1 be FrEnvTerm of V, x0 be Element of V;
+  set G = FrEnvGram(V);
+  set R = FrRed(V);
+  deffunc F(object) = fLam(x0, In($1,TS G));
+  A1: for u,v being object st [u,v] in R holds [F(u),F(v)] in R
+  proof
+    let u,v be object;
+    assume B1: [u,v] in R;
+    R c= [:TS G,TS G:];
+    then [u,v] in [:TS G,TS G:] by B1;
+    then u in TS G & v in TS G by ZFMISC_1:87;
+    then reconsider a1 = u, b1 = v as FrEnvTerm of V;
+    B2: In(u,TS G) = a1 & In(v,TS G) = b1;
+    [a1,b1] in R by B1;
+    then [fLam(x0,a1), fLam(x0,b1)] in R by Th16;
+    hence thesis by B2;
+  end;
+  A2: for u,v being object st R reduces u,v holds R reduces F(u),F(v)
+    from ENVEPS_2:sch 1(A1);
+  assume A3: R reduces M,M1;
+  A4: In(M,TS G) = M & In(M1,TS G) = M1;
+  thus thesis by A2,A3,A4;
+end;
+
+theorem Th23:
+  for V being non empty set, M,M1,N being FrEnvTerm of V, x0 being Element
+    of V st FrRed(V) reduces M,M1 holds
+  FrRed(V) reduces fExt(M,x0,N), fExt(M1,x0,N)
+proof
+  let V be non empty set, M,M1,N be FrEnvTerm of V, x0 be Element of V;
+  set G = FrEnvGram(V);
+  set R = FrRed(V);
+  deffunc F(object) = fExt(In($1,TS G), x0, N);
+  A1: for u,v being object st [u,v] in R holds [F(u),F(v)] in R
+  proof
+    let u,v be object;
+    assume B1: [u,v] in R;
+    R c= [:TS G,TS G:];
+    then [u,v] in [:TS G,TS G:] by B1;
+    then u in TS G & v in TS G by ZFMISC_1:87;
+    then reconsider a1 = u, b1 = v as FrEnvTerm of V;
+    B2: In(u,TS G) = a1 & In(v,TS G) = b1;
+    [a1,b1] in R by B1;
+    then [fExt(a1,x0,N), fExt(b1,x0,N)] in R by Th17;
+    hence thesis by B2;
+  end;
+  A2: for u,v being object st R reduces u,v holds R reduces F(u),F(v)
+    from ENVEPS_2:sch 1(A1);
+  assume A3: R reduces M,M1;
+  A4: In(M,TS G) = M & In(M1,TS G) = M1;
+  thus thesis by A2,A3,A4;
+end;
+
+theorem Th24:
+  for V being non empty set, M,N,N1 being FrEnvTerm of V, x0 being Element
+    of V st FrRed(V) reduces N,N1 holds
+  FrRed(V) reduces fExt(M,x0,N), fExt(M,x0,N1)
+proof
+  let V be non empty set, M,N,N1 be FrEnvTerm of V, x0 be Element of V;
+  set G = FrEnvGram(V);
+  set R = FrRed(V);
+  deffunc F(object) = fExt(M, x0, In($1,TS G));
+  A1: for u,v being object st [u,v] in R holds [F(u),F(v)] in R
+  proof
+    let u,v be object;
+    assume B1: [u,v] in R;
+    R c= [:TS G,TS G:];
+    then [u,v] in [:TS G,TS G:] by B1;
+    then u in TS G & v in TS G by ZFMISC_1:87;
+    then reconsider a1 = u, b1 = v as FrEnvTerm of V;
+    B2: In(u,TS G) = a1 & In(v,TS G) = b1;
+    [a1,b1] in R by B1;
+    then [fExt(M,x0,a1), fExt(M,x0,b1)] in R by Th18;
+    hence thesis by B2;
+  end;
+  A2: for u,v being object st R reduces u,v holds R reduces F(u),F(v)
+    from ENVEPS_2:sch 1(A1);
+  assume A3: R reduces N,N1;
+  A4: In(N,TS G) = N & In(N1,TS G) = N1;
+  thus thesis by A2,A3,A4;
+end;
+
+theorem Th25:
+  for V being non empty set, M,M1 being FrEnvTerm of V st FrRed(V) reduces
+    M,M1 holds
+  FrRed(V) reduces fEps M, fEps M1
+proof
+  let V be non empty set, M,M1 be FrEnvTerm of V;
+  set G = FrEnvGram(V);
+  set R = FrRed(V);
+  deffunc F(object) = fEps (In($1,TS G));
+  A1: for u,v being object st [u,v] in R holds [F(u),F(v)] in R
+  proof
+    let u,v be object;
+    assume B1: [u,v] in R;
+    R c= [:TS G,TS G:];
+    then [u,v] in [:TS G,TS G:] by B1;
+    then u in TS G & v in TS G by ZFMISC_1:87;
+    then reconsider a1 = u, b1 = v as FrEnvTerm of V;
+    B2: In(u,TS G) = a1 & In(v,TS G) = b1;
+    [a1,b1] in R by B1;
+    then [fEps a1, fEps b1] in R by Th19;
+    hence thesis by B2;
+  end;
+  A2: for u,v being object st R reduces u,v holds R reduces F(u),F(v)
+    from ENVEPS_2:sch 1(A1);
+  assume A3: R reduces M,M1;
+  A4: In(M,TS G) = M & In(M1,TS G) = M1;
+  thus thesis by A2,A3,A4;
+end;

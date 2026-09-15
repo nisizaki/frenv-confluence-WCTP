@@ -2,3 +2,6 @@ lean/.lake/
 .isabelle/
 *.log
 __pycache__/
+mizar/prel/
+mizar/text/*
+!mizar/text/*.miz

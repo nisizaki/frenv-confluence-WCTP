@@ -1,0 +1,2228 @@
+:: Local confluence of the sigma reduction of lambda_EnvEps
+
+environ
+
+ vocabularies NUMBERS, XBOOLE_0, SUBSET_1, TARSKI, ZFMISC_1, FINSEQ_1,
+      RELAT_1, FUNCT_1, ORDINAL1, CARD_1, ARYTM_3, XXREAL_0, NAT_1, TREES_1,
+      TREES_2, TREES_3, TREES_4, LANG1, STRUCT_0, DTCONSTR, MCART_1, XTUPLE_0,
+      FINSET_1, TDGROUP, FUNCOP_1, ARYTM_1, FUNCT_7, XREAL_0, XCMPLX_0,
+      REWRITE1, PBOOLE, ENVEPS_1;
+ notations TARSKI, XBOOLE_0, ZFMISC_1, SUBSET_1, ORDINAL1, NUMBERS, XCMPLX_0,
+      XXREAL_0, NAT_1, RELAT_1, RELSET_1, FUNCT_1, FUNCT_2, FINSEQ_1, FINSEQ_2,
+      MCART_1, XTUPLE_0, DOMAIN_1, STRUCT_0, LANG1, TREES_1, TREES_2, TREES_3,
+      TREES_4, DTCONSTR, FUNCOP_1, XREAL_0, PBOOLE, REWRITE1, ENVEPS_1;
+ constructors NUMBERS, XCMPLX_0, XXREAL_0, NAT_1, RELSET_1, FUNCT_2, FINSEQ_1,
+      FINSEQ_2, MCART_1, XTUPLE_0, DOMAIN_1, STRUCT_0, LANG1, TREES_1, TREES_2,
+      TREES_3, TREES_4, DTCONSTR, PARTFUN1, BINOP_1, SETWISEO, XREAL_0,
+      FUNCOP_1, SUBSET_1, CARD_3, FINSEQOP, FINSEQ_4, FINSOP_1, PRE_POLY,
+      FUNCT_1, RELAT_1, PBOOLE, REWRITE1, ENVEPS_1;
+ registrations XBOOLE_0, SUBSET_1, RELAT_1, FUNCT_1, ORDINAL1, XREAL_0, NAT_1,
+      FINSEQ_1, FINSEQ_2, FINSET_1, CARD_1, STRUCT_0, LANG1, TREES_1, TREES_2,
+      TREES_3, TREES_4, DTCONSTR, XTUPLE_0, VALUED_0, FUNCOP_1, XCMPLX_0,
+      XXREAL_0, NUMBERS, MEMBERED, PBOOLE, REWRITE1, ENVEPS_1;
+ requirements NUMERALS, REAL, BOOLE, SUBSET, ARITHM;
+ definitions TARSKI, XBOOLE_0, DTCONSTR, TREES_3, TREES_4, RELAT_1, FUNCT_1,
+      FINSEQ_1, FUNCOP_1, SUBSET_1, REWRITE1, ENVEPS_1;
+ theorems TARSKI, XBOOLE_0, XBOOLE_1, ZFMISC_1, FINSEQ_1, FINSEQ_2, FINSEQ_3,
+      MCART_1, LANG1, ENUMSET1, TREES_1, TREES_3, TREES_4, DTCONSTR, XTUPLE_0,
+      FUNCT_1, RELAT_1, FUNCOP_1, NAT_1, XCMPLX_1, SUBSET_1, FUNCT_2, XREAL_1,
+      REWRITE1, XXREAL_0, ENVEPS_1, ENVEPS_2, ENVEPS_3;
+ schemes DTCONSTR, NAT_1, ENVEPS_1, ENVEPS_2;
+
+begin :: Symmetry of convergence
+
+theorem Th1:
+  for R being Relation, a,b being object st a,b are_convergent_wrt R
+  holds b,a are_convergent_wrt R
+proof
+  let R be Relation, a,b be object;
+  assume a,b are_convergent_wrt R;
+  then consider c being object such that
+  A1: R reduces a,c & R reduces b,c by REWRITE1:def 7;
+  take c;
+  thus thesis by A1;
+end;
+
+begin :: The EpsEps reduct converges with any other reduct
+
+theorem Th2:
+  for V being non empty set, M0,B,W being EnvEpsTerm of V
+  st [eComp(eEps M0,B),W] in SigmaRed(V)
+  holds eEps M0, W are_convergent_wrt SigmaRed(V)
+proof
+  let V be non empty set, M0,B,W be EnvEpsTerm of V;
+  assume A1: [eComp(eEps M0,B),W] in SigmaRed(V);
+  A2:
+    ( ex M2,N2,L2 being EnvEpsTerm of V st
+      eComp(eEps M0,B) = eComp(eComp(M2,N2),L2) &
+      W = eComp(M2,eComp(N2,L2)) ) or
+    ( ex M2 being EnvEpsTerm of V st
+      eComp(eEps M0,B) = eComp(eId V,M2) & W = M2 ) or
+    ( ex M2 being EnvEpsTerm of V st
+      eComp(eEps M0,B) = eComp(M2,eId V) & W = M2 ) or
+    ( ex L2,M2,N2 being EnvEpsTerm of V, x2 being Element of V st
+      eComp(eEps M0,B) = eComp(eExt(L2,x2,M2),N2) &
+      W = eExt(eComp(L2,N2),x2,eComp(M2,N2)) ) or
+    ( ex M2,N2 being EnvEpsTerm of V, x2 being Element of V st
+      eComp(eEps M0,B) = eComp(eVar x2, eExt(M2,x2,N2)) & W = M2 ) or
+    ( ex M2,N2 being EnvEpsTerm of V, x2,y2 being Element of V st
+      x2 <> y2 & eComp(eEps M0,B) = eComp(eVar x2, eExt(M2,y2,N2)) &
+      W = eComp(eVar x2, N2) ) or
+    ( ex M2,N2,L2 being EnvEpsTerm of V st
+      eComp(eEps M0,B) = eComp(eApp(M2,N2),L2) &
+      W = eApp(eComp(M2,L2),eComp(N2,L2)) ) or
+    ( ex M2,N2 being EnvEpsTerm of V st
+      eComp(eEps M0,B) = eComp(eEps M2,N2) & W = eEps M2 ) or
+    ( ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in SigmaRed(V) &
+      eComp(eEps M0,B) = eComp(M2,N2) & W = eComp(M3,N2) ) or
+    ( ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in SigmaRed(V) &
+      eComp(eEps M0,B) = eComp(M2,N2) & W = eComp(M2,N3) ) by A1,ENVEPS_3:8;
+  per cases by A2;
+  suppose ex M2,N2,L2 being EnvEpsTerm of V st
+      eComp(eEps M0,B) = eComp(eComp(M2,N2),L2) &
+      W = eComp(M2,eComp(N2,L2));
+    then consider M2,N2,L2 being EnvEpsTerm of V such that
+    B1: eComp(eEps M0,B) = eComp(eComp(M2,N2),L2) &
+      W = eComp(M2,eComp(N2,L2));
+    eEps M0 = eComp(M2,N2) by B1,ENVEPS_1:14;
+    hence thesis by ENVEPS_1:44;
+  end;
+  suppose ex M2 being EnvEpsTerm of V st
+      eComp(eEps M0,B) = eComp(eId V,M2) & W = M2;
+    then consider M2 being EnvEpsTerm of V such that
+    B1: eComp(eEps M0,B) = eComp(eId V,M2) & W = M2;
+    eEps M0 = eId V by B1,ENVEPS_1:14;
+    hence thesis by ENVEPS_1:44;
+  end;
+  suppose ex M2 being EnvEpsTerm of V st
+      eComp(eEps M0,B) = eComp(M2,eId V) & W = M2;
+    then consider M2 being EnvEpsTerm of V such that
+    B1: eComp(eEps M0,B) = eComp(M2,eId V) & W = M2;
+    B2: eEps M0 = M2 by B1,ENVEPS_1:14;
+    SigmaRed(V) reduces eEps M0, eEps M0 by REWRITE1:12;
+    hence thesis by B1,B2,ENVEPS_2:26;
+  end;
+  suppose ex L2,M2,N2 being EnvEpsTerm of V, x2 being Element of V st
+      eComp(eEps M0,B) = eComp(eExt(L2,x2,M2),N2) &
+      W = eExt(eComp(L2,N2),x2,eComp(M2,N2));
+    then consider L2,M2,N2 being EnvEpsTerm of V, x2 being Element of V
+    such that
+    B1: eComp(eEps M0,B) = eComp(eExt(L2,x2,M2),N2) &
+      W = eExt(eComp(L2,N2),x2,eComp(M2,N2));
+    eEps M0 = eExt(L2,x2,M2) by B1,ENVEPS_1:14;
+    hence thesis by ENVEPS_1:44;
+  end;
+  suppose ex M2,N2 being EnvEpsTerm of V, x2 being Element of V st
+      eComp(eEps M0,B) = eComp(eVar x2, eExt(M2,x2,N2)) & W = M2;
+    then consider M2,N2 being EnvEpsTerm of V, x2 being Element of V
+    such that
+    B1: eComp(eEps M0,B) = eComp(eVar x2, eExt(M2,x2,N2)) & W = M2;
+    eEps M0 = eVar x2 by B1,ENVEPS_1:14;
+    hence thesis by ENVEPS_1:44;
+  end;
+  suppose ex M2,N2 being EnvEpsTerm of V, x2,y2 being Element of V st
+      x2 <> y2 & eComp(eEps M0,B) = eComp(eVar x2, eExt(M2,y2,N2)) &
+      W = eComp(eVar x2, N2);
+    then consider M2,N2 being EnvEpsTerm of V, x2,y2 being Element of V
+    such that
+    B1: x2 <> y2 & eComp(eEps M0,B) = eComp(eVar x2, eExt(M2,y2,N2)) &
+      W = eComp(eVar x2, N2);
+    eEps M0 = eVar x2 by B1,ENVEPS_1:14;
+    hence thesis by ENVEPS_1:44;
+  end;
+  suppose ex M2,N2,L2 being EnvEpsTerm of V st
+      eComp(eEps M0,B) = eComp(eApp(M2,N2),L2) &
+      W = eApp(eComp(M2,L2),eComp(N2,L2));
+    then consider M2,N2,L2 being EnvEpsTerm of V such that
+    B1: eComp(eEps M0,B) = eComp(eApp(M2,N2),L2) &
+      W = eApp(eComp(M2,L2),eComp(N2,L2));
+    eEps M0 = eApp(M2,N2) by B1,ENVEPS_1:14;
+    hence thesis by ENVEPS_1:44;
+  end;
+  suppose ex M2,N2 being EnvEpsTerm of V st
+      eComp(eEps M0,B) = eComp(eEps M2,N2) & W = eEps M2;
+    then consider M2,N2 being EnvEpsTerm of V such that
+    B1: eComp(eEps M0,B) = eComp(eEps M2,N2) & W = eEps M2;
+    eEps M0 = eEps M2 by B1,ENVEPS_1:14;
+    then B2: M0 = M2 by ENVEPS_1:12;
+    SigmaRed(V) reduces eEps M0, eEps M0 by REWRITE1:12;
+    hence thesis by B1,B2,ENVEPS_2:26;
+  end;
+  suppose ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in SigmaRed(V) &
+      eComp(eEps M0,B) = eComp(M2,N2) & W = eComp(M3,N2);
+    then consider M2,M3,N2 being EnvEpsTerm of V such that
+    B1: [M2,M3] in SigmaRed(V) & eComp(eEps M0,B) = eComp(M2,N2) &
+      W = eComp(M3,N2);
+    B2: eEps M0 = M2 & B = N2 by B1,ENVEPS_1:14;
+    then consider P2,P3 being EnvEpsTerm of V such that
+    B3: [P2,P3] in SigmaRed(V) & eEps M0 = eEps P2 & M3 = eEps P3
+      by B1,ENVEPS_3:5;
+    B4: M0 = P2 by B3,ENVEPS_1:12;
+    [eEps M0, eEps P3] in SigmaRed(V) by B3,B4,ENVEPS_2:25;
+    then C1: SigmaRed(V) reduces eEps M0, eEps P3 by REWRITE1:15;
+    [eComp(eEps P3,B), eEps P3] in SigmaRed(V) by ENVEPS_2:17;
+    then SigmaRed(V) reduces W, eEps P3 by B1,B2,B3,REWRITE1:15;
+    hence thesis by C1,ENVEPS_2:26;
+  end;
+  suppose ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in SigmaRed(V) &
+      eComp(eEps M0,B) = eComp(M2,N2) & W = eComp(M2,N3);
+    then consider M2,N2,N3 being EnvEpsTerm of V such that
+    B1: [N2,N3] in SigmaRed(V) & eComp(eEps M0,B) = eComp(M2,N2) &
+      W = eComp(M2,N3);
+    B2: eEps M0 = M2 & B = N2 by B1,ENVEPS_1:14;
+    C1: SigmaRed(V) reduces eEps M0, eEps M0 by REWRITE1:12;
+    [eComp(eEps M0,N3), eEps M0] in SigmaRed(V) by ENVEPS_2:17;
+    then SigmaRed(V) reduces W, eEps M0 by B1,B2,REWRITE1:15;
+    hence thesis by C1,ENVEPS_2:26;
+  end;
+end;
+begin :: The IdL reduct converges with any other reduct
+
+theorem Th3:
+  for V being non empty set, B,W being EnvEpsTerm of V
+  st [eComp(eId V,B),W] in SigmaRed(V) holds
+  B, W are_convergent_wrt SigmaRed(V)
+proof
+  let V be non empty set, B,W be EnvEpsTerm of V;
+  assume A1: [eComp(eId V,B),W] in SigmaRed(V);
+  A2:
+    ( ex M2,N2,L2 being EnvEpsTerm of V st eComp(eId V,B) =
+      eComp(eComp(M2,N2),L2) & W = eComp(M2,eComp(N2,L2)) ) or
+    ( ex M2 being EnvEpsTerm of V st eComp(eId V,B) = eComp(eId V,M2) & W = M2
+      ) or
+    ( ex M2 being EnvEpsTerm of V st eComp(eId V,B) = eComp(M2,eId V) & W = M2
+      ) or
+    ( ex L2,M2,N2 being EnvEpsTerm of V, x2 being Element of V st eComp(eId
+      V,B) = eComp(eExt(L2,x2,M2),N2) & W = eExt(eComp(L2,N2),x2,eComp(M2,N2))
+      ) or
+    ( ex M2,N2 being EnvEpsTerm of V, x2 being Element of V st eComp(eId V,B)
+      = eComp(eVar x2,eExt(M2,x2,N2)) & W = M2 ) or
+    ( ex M2,N2 being EnvEpsTerm of V, x2,y2 being Element of V st x2 <> y2 &
+      eComp(eId V,B) = eComp(eVar x2,eExt(M2,y2,N2)) & W = eComp(eVar x2, N2)
+      ) or
+    ( ex M2,N2,L2 being EnvEpsTerm of V st eComp(eId V,B) =
+      eComp(eApp(M2,N2),L2) & W = eApp(eComp(M2,L2),eComp(N2,L2)) ) or
+    ( ex M2,N2 being EnvEpsTerm of V st eComp(eId V,B) = eComp(eEps M2,N2) & W
+      = eEps M2 ) or
+    ( ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in SigmaRed(V) & eComp(eId
+      V,B) = eComp(M2,N2) & W = eComp(M3,N2) ) or
+    ( ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in SigmaRed(V) & eComp(eId
+      V,B) = eComp(M2,N2) & W = eComp(M2,N3) ) by A1,ENVEPS_3:8;
+  per cases by A2;
+  suppose ex M2,N2,L2 being EnvEpsTerm of V st eComp(eId V,B) =
+      eComp(eComp(M2,N2),L2) & W = eComp(M2,eComp(N2,L2));
+    then consider M2,N2,L2 being EnvEpsTerm of V such that
+    B1: eComp(eId V,B) = eComp(eComp(M2,N2),L2) & W = eComp(M2,eComp(N2,L2));
+    B2: eId V = eComp(M2,N2) & B = L2 by B1,ENVEPS_1:14;
+    thus thesis by B2,ENVEPS_1:44;
+  end;
+  suppose ex M2 being EnvEpsTerm of V st eComp(eId V,B) = eComp(eId V,M2) & W
+      = M2;
+    then consider M2 being EnvEpsTerm of V such that
+    B1: eComp(eId V,B) = eComp(eId V,M2) & W = M2;
+    B2: eId V = eId V & B = M2 by B1,ENVEPS_1:14;
+    B3: SigmaRed(V) reduces B,B by REWRITE1:12;
+    then SigmaRed(V) reduces W,B by B1,B2;
+    hence thesis by B3,ENVEPS_2:26;
+  end;
+  suppose ex M2 being EnvEpsTerm of V st eComp(eId V,B) = eComp(M2,eId V) & W
+      = M2;
+    then consider M2 being EnvEpsTerm of V such that
+    B1: eComp(eId V,B) = eComp(M2,eId V) & W = M2;
+    B2: eId V = M2 & B = eId V by B1,ENVEPS_1:14;
+    B3: SigmaRed(V) reduces B,B by REWRITE1:12;
+    then SigmaRed(V) reduces W,B by B1,B2;
+    hence thesis by B3,ENVEPS_2:26;
+  end;
+  suppose ex L2,M2,N2 being EnvEpsTerm of V, x2 being Element of V st
+      eComp(eId V,B) = eComp(eExt(L2,x2,M2),N2) & W =
+      eExt(eComp(L2,N2),x2,eComp(M2,N2));
+    then consider L2,M2,N2 being EnvEpsTerm of V, x2 being Element of V such
+      that
+    B1: eComp(eId V,B) = eComp(eExt(L2,x2,M2),N2) & W =
+      eExt(eComp(L2,N2),x2,eComp(M2,N2));
+    B2: eId V = eExt(L2,x2,M2) & B = N2 by B1,ENVEPS_1:14;
+    thus thesis by B2,ENVEPS_1:44;
+  end;
+  suppose ex M2,N2 being EnvEpsTerm of V, x2 being Element of V st eComp(eId
+      V,B) = eComp(eVar x2,eExt(M2,x2,N2)) & W = M2;
+    then consider M2,N2 being EnvEpsTerm of V, x2 being Element of V such that
+    B1: eComp(eId V,B) = eComp(eVar x2,eExt(M2,x2,N2)) & W = M2;
+    B2: eId V = eVar x2 & B = eExt(M2,x2,N2) by B1,ENVEPS_1:14;
+    thus thesis by B2,ENVEPS_1:44;
+  end;
+  suppose ex M2,N2 being EnvEpsTerm of V, x2,y2 being Element of V st x2 <> y2
+      & eComp(eId V,B) = eComp(eVar x2,eExt(M2,y2,N2)) & W = eComp(eVar x2,
+      N2);
+    then consider M2,N2 being EnvEpsTerm of V, x2,y2 being Element of V such
+      that
+    B1: x2 <> y2 & eComp(eId V,B) = eComp(eVar x2,eExt(M2,y2,N2)) & W =
+      eComp(eVar x2, N2);
+    B2: eId V = eVar x2 & B = eExt(M2,y2,N2) by B1,ENVEPS_1:14;
+    thus thesis by B2,ENVEPS_1:44;
+  end;
+  suppose ex M2,N2,L2 being EnvEpsTerm of V st eComp(eId V,B) =
+      eComp(eApp(M2,N2),L2) & W = eApp(eComp(M2,L2),eComp(N2,L2));
+    then consider M2,N2,L2 being EnvEpsTerm of V such that
+    B1: eComp(eId V,B) = eComp(eApp(M2,N2),L2) & W =
+      eApp(eComp(M2,L2),eComp(N2,L2));
+    B2: eId V = eApp(M2,N2) & B = L2 by B1,ENVEPS_1:14;
+    thus thesis by B2,ENVEPS_1:44;
+  end;
+  suppose ex M2,N2 being EnvEpsTerm of V st eComp(eId V,B) = eComp(eEps M2,N2)
+      & W = eEps M2;
+    then consider M2,N2 being EnvEpsTerm of V such that
+    B1: eComp(eId V,B) = eComp(eEps M2,N2) & W = eEps M2;
+    B2: eId V = eEps M2 & B = N2 by B1,ENVEPS_1:14;
+    thus thesis by B2,ENVEPS_1:44;
+  end;
+  suppose ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in SigmaRed(V) &
+      eComp(eId V,B) = eComp(M2,N2) & W = eComp(M3,N2);
+    then consider M2,M3,N2 being EnvEpsTerm of V such that
+    B1: [M2,M3] in SigmaRed(V) & eComp(eId V,B) = eComp(M2,N2) & W =
+      eComp(M3,N2);
+    B2: eId V = M2 & B = N2 by B1,ENVEPS_1:14;
+    thus thesis by B1,B2,ENVEPS_3:3;
+  end;
+  suppose ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in SigmaRed(V) &
+      eComp(eId V,B) = eComp(M2,N2) & W = eComp(M2,N3);
+    then consider M2,N2,N3 being EnvEpsTerm of V such that
+    B1: [N2,N3] in SigmaRed(V) & eComp(eId V,B) = eComp(M2,N2) & W =
+      eComp(M2,N3);
+    B2: eId V = M2 & B = N2 by B1,ENVEPS_1:14;
+    B3: SigmaRed(V) reduces B,N3 by B1,B2,REWRITE1:15;
+    [eComp(eId V,N3), N3] in SigmaRed(V) by ENVEPS_2:11;
+    then SigmaRed(V) reduces W,N3 by B1,B2,REWRITE1:15;
+    hence thesis by B3,ENVEPS_2:26;
+  end;
+end;
+
+begin :: The IdR reduct converges with any other reduct
+
+theorem Th4:
+  for V being non empty set, A,W being EnvEpsTerm of V
+  st [eComp(A,eId V),W] in SigmaRed(V) holds
+  A, W are_convergent_wrt SigmaRed(V)
+proof
+  let V be non empty set, A,W be EnvEpsTerm of V;
+  assume A1: [eComp(A,eId V),W] in SigmaRed(V);
+  A2:
+    ( ex M2,N2,L2 being EnvEpsTerm of V st eComp(A,eId V) =
+      eComp(eComp(M2,N2),L2) & W = eComp(M2,eComp(N2,L2)) ) or
+    ( ex M2 being EnvEpsTerm of V st eComp(A,eId V) = eComp(eId V,M2) & W = M2
+      ) or
+    ( ex M2 being EnvEpsTerm of V st eComp(A,eId V) = eComp(M2,eId V) & W = M2
+      ) or
+    ( ex L2,M2,N2 being EnvEpsTerm of V, x2 being Element of V st eComp(A,eId
+      V) = eComp(eExt(L2,x2,M2),N2) & W = eExt(eComp(L2,N2),x2,eComp(M2,N2)) )
+      or
+    ( ex M2,N2 being EnvEpsTerm of V, x2 being Element of V st eComp(A,eId V)
+      = eComp(eVar x2,eExt(M2,x2,N2)) & W = M2 ) or
+    ( ex M2,N2 being EnvEpsTerm of V, x2,y2 being Element of V st x2 <> y2 &
+      eComp(A,eId V) = eComp(eVar x2,eExt(M2,y2,N2)) & W = eComp(eVar x2, N2)
+      ) or
+    ( ex M2,N2,L2 being EnvEpsTerm of V st eComp(A,eId V) =
+      eComp(eApp(M2,N2),L2) & W = eApp(eComp(M2,L2),eComp(N2,L2)) ) or
+    ( ex M2,N2 being EnvEpsTerm of V st eComp(A,eId V) = eComp(eEps M2,N2) & W
+      = eEps M2 ) or
+    ( ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in SigmaRed(V) &
+      eComp(A,eId V) = eComp(M2,N2) & W = eComp(M3,N2) ) or
+    ( ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in SigmaRed(V) &
+      eComp(A,eId V) = eComp(M2,N2) & W = eComp(M2,N3) ) by A1,ENVEPS_3:8;
+  per cases by A2;
+  suppose ex M2,N2,L2 being EnvEpsTerm of V st eComp(A,eId V) =
+      eComp(eComp(M2,N2),L2) & W = eComp(M2,eComp(N2,L2));
+    then consider M2,N2,L2 being EnvEpsTerm of V such that
+    B1: eComp(A,eId V) = eComp(eComp(M2,N2),L2) & W = eComp(M2,eComp(N2,L2));
+    B2: A = eComp(M2,N2) & eId V = L2 by B1,ENVEPS_1:14;
+    C1: [eComp(N2,eId V), N2] in SigmaRed(V) by ENVEPS_2:12;
+    [eComp(M2,eComp(N2,eId V)), eComp(M2,N2)] in SigmaRed(V)
+      by C1,ENVEPS_2:24;
+    then C2: SigmaRed(V) reduces W, A by B1,B2,REWRITE1:15;
+    SigmaRed(V) reduces A,A by REWRITE1:12;
+    hence thesis by C2,ENVEPS_2:26;
+  end;
+  suppose ex M2 being EnvEpsTerm of V st eComp(A,eId V) = eComp(eId V,M2) & W
+      = M2;
+    then consider M2 being EnvEpsTerm of V such that
+    B1: eComp(A,eId V) = eComp(eId V,M2) & W = M2;
+    B2: A = eId V & eId V = M2 by B1,ENVEPS_1:14;
+    B3: SigmaRed(V) reduces A,A by REWRITE1:12;
+    then SigmaRed(V) reduces W,A by B1,B2;
+    hence thesis by B3,ENVEPS_2:26;
+  end;
+  suppose ex M2 being EnvEpsTerm of V st eComp(A,eId V) = eComp(M2,eId V) & W
+      = M2;
+    then consider M2 being EnvEpsTerm of V such that
+    B1: eComp(A,eId V) = eComp(M2,eId V) & W = M2;
+    B2: A = M2 & eId V = eId V by B1,ENVEPS_1:14;
+    B3: SigmaRed(V) reduces A,A by REWRITE1:12;
+    then SigmaRed(V) reduces W,A by B1,B2;
+    hence thesis by B3,ENVEPS_2:26;
+  end;
+  suppose ex L2,M2,N2 being EnvEpsTerm of V, x2 being Element of V st
+      eComp(A,eId V) = eComp(eExt(L2,x2,M2),N2) & W =
+      eExt(eComp(L2,N2),x2,eComp(M2,N2));
+    then consider L2,M2,N2 being EnvEpsTerm of V, x2 being Element of V such
+      that
+    B1: eComp(A,eId V) = eComp(eExt(L2,x2,M2),N2) & W =
+      eExt(eComp(L2,N2),x2,eComp(M2,N2));
+    B2: A = eExt(L2,x2,M2) & eId V = N2 by B1,ENVEPS_1:14;
+    C1: [eComp(L2,eId V), L2] in SigmaRed(V) by ENVEPS_2:12;
+    [eExt(eComp(L2,eId V),x2,eComp(M2,eId V)),
+      eExt(L2,x2,eComp(M2,eId V))] in SigmaRed(V) by C1,ENVEPS_2:21;
+    then C2: SigmaRed(V) reduces W, eExt(L2,x2,eComp(M2,eId V))
+      by B1,B2,REWRITE1:15;
+    C3: [eComp(M2,eId V), M2] in SigmaRed(V) by ENVEPS_2:12;
+    [eExt(L2,x2,eComp(M2,eId V)), eExt(L2,x2,M2)] in SigmaRed(V)
+      by C3,ENVEPS_2:22;
+    then SigmaRed(V) reduces eExt(L2,x2,eComp(M2,eId V)), A
+      by B2,REWRITE1:15;
+    then C4: SigmaRed(V) reduces W, A by C2,REWRITE1:16;
+    SigmaRed(V) reduces A,A by REWRITE1:12;
+    hence thesis by C4,ENVEPS_2:26;
+  end;
+  suppose ex M2,N2 being EnvEpsTerm of V, x2 being Element of V st eComp(A,eId
+      V) = eComp(eVar x2,eExt(M2,x2,N2)) & W = M2;
+    then consider M2,N2 being EnvEpsTerm of V, x2 being Element of V such that
+    B1: eComp(A,eId V) = eComp(eVar x2,eExt(M2,x2,N2)) & W = M2;
+    B2: A = eVar x2 & eId V = eExt(M2,x2,N2) by B1,ENVEPS_1:14;
+    thus thesis by B2,ENVEPS_1:44;
+  end;
+  suppose ex M2,N2 being EnvEpsTerm of V, x2,y2 being Element of V st x2 <> y2
+      & eComp(A,eId V) = eComp(eVar x2,eExt(M2,y2,N2)) & W = eComp(eVar x2,
+      N2);
+    then consider M2,N2 being EnvEpsTerm of V, x2,y2 being Element of V such
+      that
+    B1: x2 <> y2 & eComp(A,eId V) = eComp(eVar x2,eExt(M2,y2,N2)) & W =
+      eComp(eVar x2, N2);
+    B2: A = eVar x2 & eId V = eExt(M2,y2,N2) by B1,ENVEPS_1:14;
+    thus thesis by B2,ENVEPS_1:44;
+  end;
+  suppose ex M2,N2,L2 being EnvEpsTerm of V st eComp(A,eId V) =
+      eComp(eApp(M2,N2),L2) & W = eApp(eComp(M2,L2),eComp(N2,L2));
+    then consider M2,N2,L2 being EnvEpsTerm of V such that
+    B1: eComp(A,eId V) = eComp(eApp(M2,N2),L2) & W =
+      eApp(eComp(M2,L2),eComp(N2,L2));
+    B2: A = eApp(M2,N2) & eId V = L2 by B1,ENVEPS_1:14;
+    C1: [eComp(M2,eId V), M2] in SigmaRed(V) by ENVEPS_2:12;
+    [eApp(eComp(M2,eId V),eComp(N2,eId V)),
+      eApp(M2,eComp(N2,eId V))] in SigmaRed(V) by C1,ENVEPS_2:18;
+    then C2: SigmaRed(V) reduces W, eApp(M2,eComp(N2,eId V))
+      by B1,B2,REWRITE1:15;
+    C3: [eComp(N2,eId V), N2] in SigmaRed(V) by ENVEPS_2:12;
+    [eApp(M2,eComp(N2,eId V)), eApp(M2,N2)] in SigmaRed(V)
+      by C3,ENVEPS_2:19;
+    then SigmaRed(V) reduces eApp(M2,eComp(N2,eId V)), A
+      by B2,REWRITE1:15;
+    then C4: SigmaRed(V) reduces W, A by C2,REWRITE1:16;
+    SigmaRed(V) reduces A,A by REWRITE1:12;
+    hence thesis by C4,ENVEPS_2:26;
+  end;
+  suppose ex M2,N2 being EnvEpsTerm of V st eComp(A,eId V) = eComp(eEps M2,N2)
+      & W = eEps M2;
+    then consider M2,N2 being EnvEpsTerm of V such that
+    B1: eComp(A,eId V) = eComp(eEps M2,N2) & W = eEps M2;
+    B2: A = eEps M2 & eId V = N2 by B1,ENVEPS_1:14;
+    B3: SigmaRed(V) reduces A,A by REWRITE1:12;
+    then SigmaRed(V) reduces W,A by B1,B2;
+    hence thesis by B3,ENVEPS_2:26;
+  end;
+  suppose ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in SigmaRed(V) &
+      eComp(A,eId V) = eComp(M2,N2) & W = eComp(M3,N2);
+    then consider M2,M3,N2 being EnvEpsTerm of V such that
+    B1: [M2,M3] in SigmaRed(V) & eComp(A,eId V) = eComp(M2,N2) & W =
+      eComp(M3,N2);
+    B2: A = M2 & eId V = N2 by B1,ENVEPS_1:14;
+    C1: SigmaRed(V) reduces A,M3 by B1,B2,REWRITE1:15;
+    [eComp(M3,eId V), M3] in SigmaRed(V) by ENVEPS_2:12;
+    then SigmaRed(V) reduces W,M3 by B1,B2,REWRITE1:15;
+    hence thesis by C1,ENVEPS_2:26;
+  end;
+  suppose ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in SigmaRed(V) &
+      eComp(A,eId V) = eComp(M2,N2) & W = eComp(M2,N3);
+    then consider M2,N2,N3 being EnvEpsTerm of V such that
+    B1: [N2,N3] in SigmaRed(V) & eComp(A,eId V) = eComp(M2,N2) & W =
+      eComp(M2,N3);
+    B2: A = M2 & eId V = N2 by B1,ENVEPS_1:14;
+    thus thesis by B1,B2,ENVEPS_3:3;
+  end;
+end;
+
+begin :: The DApp reduct converges with any other reduct
+
+theorem Th5:
+  for V being non empty set, M0,N0,B,W being EnvEpsTerm of V
+  st [eComp(eApp(M0,N0),B),W] in SigmaRed(V) holds
+  eApp(eComp(M0,B),eComp(N0,B)), W are_convergent_wrt SigmaRed(V)
+proof
+  let V be non empty set, M0,N0,B,W be EnvEpsTerm of V;
+  assume A1: [eComp(eApp(M0,N0),B),W] in SigmaRed(V);
+  A2:
+    ( ex M2,N2,L2 being EnvEpsTerm of V st eComp(eApp(M0,N0),B) =
+      eComp(eComp(M2,N2),L2) & W = eComp(M2,eComp(N2,L2)) ) or
+    ( ex M2 being EnvEpsTerm of V st eComp(eApp(M0,N0),B) = eComp(eId V,M2) &
+      W = M2 ) or
+    ( ex M2 being EnvEpsTerm of V st eComp(eApp(M0,N0),B) = eComp(M2,eId V) &
+      W = M2 ) or
+    ( ex L2,M2,N2 being EnvEpsTerm of V, x2 being Element of V st
+      eComp(eApp(M0,N0),B) = eComp(eExt(L2,x2,M2),N2) & W =
+      eExt(eComp(L2,N2),x2,eComp(M2,N2)) ) or
+    ( ex M2,N2 being EnvEpsTerm of V, x2 being Element of V st
+      eComp(eApp(M0,N0),B) = eComp(eVar x2,eExt(M2,x2,N2)) & W = M2 ) or
+    ( ex M2,N2 being EnvEpsTerm of V, x2,y2 being Element of V st x2 <> y2 &
+      eComp(eApp(M0,N0),B) = eComp(eVar x2,eExt(M2,y2,N2)) & W = eComp(eVar
+      x2, N2) ) or
+    ( ex M2,N2,L2 being EnvEpsTerm of V st eComp(eApp(M0,N0),B) =
+      eComp(eApp(M2,N2),L2) & W = eApp(eComp(M2,L2),eComp(N2,L2)) ) or
+    ( ex M2,N2 being EnvEpsTerm of V st eComp(eApp(M0,N0),B) = eComp(eEps
+      M2,N2) & W = eEps M2 ) or
+    ( ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in SigmaRed(V) &
+      eComp(eApp(M0,N0),B) = eComp(M2,N2) & W = eComp(M3,N2) ) or
+    ( ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in SigmaRed(V) &
+      eComp(eApp(M0,N0),B) = eComp(M2,N2) & W = eComp(M2,N3) )
+      by A1,ENVEPS_3:8;
+  per cases by A2;
+  suppose ex M2,N2,L2 being EnvEpsTerm of V st eComp(eApp(M0,N0),B) =
+      eComp(eComp(M2,N2),L2) & W = eComp(M2,eComp(N2,L2));
+    then consider M2,N2,L2 being EnvEpsTerm of V such that
+    B1: eComp(eApp(M0,N0),B) = eComp(eComp(M2,N2),L2) & W =
+      eComp(M2,eComp(N2,L2));
+    B2: eApp(M0,N0) = eComp(M2,N2) & B = L2 by B1,ENVEPS_1:14;
+    thus thesis by B2,ENVEPS_1:44;
+  end;
+  suppose ex M2 being EnvEpsTerm of V st eComp(eApp(M0,N0),B) = eComp(eId
+      V,M2) & W = M2;
+    then consider M2 being EnvEpsTerm of V such that
+    B1: eComp(eApp(M0,N0),B) = eComp(eId V,M2) & W = M2;
+    B2: eApp(M0,N0) = eId V & B = M2 by B1,ENVEPS_1:14;
+    thus thesis by B2,ENVEPS_1:44;
+  end;
+  suppose ex M2 being EnvEpsTerm of V st eComp(eApp(M0,N0),B) = eComp(M2,eId
+      V) & W = M2;
+    then consider M2 being EnvEpsTerm of V such that
+    B1: eComp(eApp(M0,N0),B) = eComp(M2,eId V) & W = M2;
+    B2: eApp(M0,N0) = M2 & B = eId V by B1,ENVEPS_1:14;
+    C1: [eComp(M0,eId V), M0] in SigmaRed(V) by ENVEPS_2:12;
+    [eApp(eComp(M0,eId V),eComp(N0,eId V)),
+      eApp(M0,eComp(N0,eId V))] in SigmaRed(V) by C1,ENVEPS_2:18;
+    then C2: SigmaRed(V) reduces eApp(eComp(M0,B),eComp(N0,B)),
+      eApp(M0,eComp(N0,eId V)) by B2,REWRITE1:15;
+    C3: [eComp(N0,eId V), N0] in SigmaRed(V) by ENVEPS_2:12;
+    [eApp(M0,eComp(N0,eId V)), eApp(M0,N0)] in SigmaRed(V)
+      by C3,ENVEPS_2:19;
+    then SigmaRed(V) reduces eApp(M0,eComp(N0,eId V)), W
+      by B1,B2,REWRITE1:15;
+    then C4: SigmaRed(V) reduces eApp(eComp(M0,B),eComp(N0,B)), W
+      by C2,REWRITE1:16;
+    SigmaRed(V) reduces W,W by REWRITE1:12;
+    hence thesis by C4,ENVEPS_2:26;
+  end;
+  suppose ex L2,M2,N2 being EnvEpsTerm of V, x2 being Element of V st
+      eComp(eApp(M0,N0),B) = eComp(eExt(L2,x2,M2),N2) & W =
+      eExt(eComp(L2,N2),x2,eComp(M2,N2));
+    then consider L2,M2,N2 being EnvEpsTerm of V, x2 being Element of V such
+      that
+    B1: eComp(eApp(M0,N0),B) = eComp(eExt(L2,x2,M2),N2) & W =
+      eExt(eComp(L2,N2),x2,eComp(M2,N2));
+    B2: eApp(M0,N0) = eExt(L2,x2,M2) & B = N2 by B1,ENVEPS_1:14;
+    thus thesis by B2,ENVEPS_1:44;
+  end;
+  suppose ex M2,N2 being EnvEpsTerm of V, x2 being Element of V st
+      eComp(eApp(M0,N0),B) = eComp(eVar x2,eExt(M2,x2,N2)) & W = M2;
+    then consider M2,N2 being EnvEpsTerm of V, x2 being Element of V such that
+    B1: eComp(eApp(M0,N0),B) = eComp(eVar x2,eExt(M2,x2,N2)) & W = M2;
+    B2: eApp(M0,N0) = eVar x2 & B = eExt(M2,x2,N2) by B1,ENVEPS_1:14;
+    thus thesis by B2,ENVEPS_1:44;
+  end;
+  suppose ex M2,N2 being EnvEpsTerm of V, x2,y2 being Element of V st x2 <> y2
+      & eComp(eApp(M0,N0),B) = eComp(eVar x2,eExt(M2,y2,N2)) & W = eComp(eVar
+      x2, N2);
+    then consider M2,N2 being EnvEpsTerm of V, x2,y2 being Element of V such
+      that
+    B1: x2 <> y2 & eComp(eApp(M0,N0),B) = eComp(eVar x2,eExt(M2,y2,N2)) & W =
+      eComp(eVar x2, N2);
+    B2: eApp(M0,N0) = eVar x2 & B = eExt(M2,y2,N2) by B1,ENVEPS_1:14;
+    thus thesis by B2,ENVEPS_1:44;
+  end;
+  suppose ex M2,N2,L2 being EnvEpsTerm of V st eComp(eApp(M0,N0),B) =
+      eComp(eApp(M2,N2),L2) & W = eApp(eComp(M2,L2),eComp(N2,L2));
+    then consider M2,N2,L2 being EnvEpsTerm of V such that
+    B1: eComp(eApp(M0,N0),B) = eComp(eApp(M2,N2),L2) & W =
+      eApp(eComp(M2,L2),eComp(N2,L2));
+    B2: eApp(M0,N0) = eApp(M2,N2) & B = L2 by B1,ENVEPS_1:14;
+    C1: M0 = M2 & N0 = N2 by B2,ENVEPS_1:13;
+    SigmaRed(V) reduces W,W by REWRITE1:12;
+    hence thesis by B1,B2,C1,ENVEPS_2:26;
+  end;
+  suppose ex M2,N2 being EnvEpsTerm of V st eComp(eApp(M0,N0),B) = eComp(eEps
+      M2,N2) & W = eEps M2;
+    then consider M2,N2 being EnvEpsTerm of V such that
+    B1: eComp(eApp(M0,N0),B) = eComp(eEps M2,N2) & W = eEps M2;
+    B2: eApp(M0,N0) = eEps M2 & B = N2 by B1,ENVEPS_1:14;
+    thus thesis by B2,ENVEPS_1:44;
+  end;
+  suppose ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in SigmaRed(V) &
+      eComp(eApp(M0,N0),B) = eComp(M2,N2) & W = eComp(M3,N2);
+    then consider M2,M3,N2 being EnvEpsTerm of V such that
+    B1: [M2,M3] in SigmaRed(V) & eComp(eApp(M0,N0),B) = eComp(M2,N2) & W =
+      eComp(M3,N2);
+    B2: eApp(M0,N0) = M2 & B = N2 by B1,ENVEPS_1:14;
+    C0: [eApp(M0,N0),M3] in SigmaRed(V) by B1,B2;
+    C1: ( ex P2,P3,Q2 being EnvEpsTerm of V st
+          [P2,P3] in SigmaRed(V) & eApp(M0,N0) = eApp(P2,Q2) &
+          M3 = eApp(P3,Q2) ) or
+        ( ex P2,Q2,Q3 being EnvEpsTerm of V st
+          [Q2,Q3] in SigmaRed(V) & eApp(M0,N0) = eApp(P2,Q2) &
+          M3 = eApp(P2,Q3) ) by C0,ENVEPS_3:6;
+    per cases by C1;
+    suppose ex P2,P3,Q2 being EnvEpsTerm of V st
+        [P2,P3] in SigmaRed(V) & eApp(M0,N0) = eApp(P2,Q2) &
+        M3 = eApp(P3,Q2);
+      then consider P2,P3,Q2 being EnvEpsTerm of V such that
+      D1: [P2,P3] in SigmaRed(V) & eApp(M0,N0) = eApp(P2,Q2) &
+        M3 = eApp(P3,Q2);
+      D2: M0 = P2 & N0 = Q2 by D1,ENVEPS_1:13;
+      D3: [eComp(eApp(P3,Q2),B), eApp(eComp(P3,B),eComp(Q2,B))]
+        in SigmaRed(V) by ENVEPS_2:16;
+      [eComp(M0,B), eComp(P3,B)] in SigmaRed(V) by D1,D2,ENVEPS_2:23;
+      then [eApp(eComp(M0,B),eComp(N0,B)),
+        eApp(eComp(P3,B),eComp(Q2,B))] in SigmaRed(V)
+        by D2,ENVEPS_2:18;
+      then D4: SigmaRed(V) reduces eApp(eComp(M0,B),eComp(N0,B)),
+        eApp(eComp(P3,B),eComp(Q2,B)) by REWRITE1:15;
+      SigmaRed(V) reduces W, eApp(eComp(P3,B),eComp(Q2,B))
+        by B1,B2,D1,D3,REWRITE1:15;
+      hence thesis by D4,ENVEPS_2:26;
+    end;
+    suppose ex P2,Q2,Q3 being EnvEpsTerm of V st
+        [Q2,Q3] in SigmaRed(V) & eApp(M0,N0) = eApp(P2,Q2) &
+        M3 = eApp(P2,Q3);
+      then consider P2,Q2,Q3 being EnvEpsTerm of V such that
+      D1: [Q2,Q3] in SigmaRed(V) & eApp(M0,N0) = eApp(P2,Q2) &
+        M3 = eApp(P2,Q3);
+      D2: M0 = P2 & N0 = Q2 by D1,ENVEPS_1:13;
+      D3: [eComp(eApp(P2,Q3),B), eApp(eComp(P2,B),eComp(Q3,B))]
+        in SigmaRed(V) by ENVEPS_2:16;
+      [eComp(N0,B), eComp(Q3,B)] in SigmaRed(V) by D1,D2,ENVEPS_2:23;
+      then [eApp(eComp(M0,B),eComp(N0,B)),
+        eApp(eComp(P2,B),eComp(Q3,B))] in SigmaRed(V)
+        by D2,ENVEPS_2:19;
+      then D4: SigmaRed(V) reduces eApp(eComp(M0,B),eComp(N0,B)),
+        eApp(eComp(P2,B),eComp(Q3,B)) by REWRITE1:15;
+      SigmaRed(V) reduces W, eApp(eComp(P2,B),eComp(Q3,B))
+        by B1,B2,D1,D3,REWRITE1:15;
+      hence thesis by D4,ENVEPS_2:26;
+    end;
+  end;
+  suppose ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in SigmaRed(V) &
+      eComp(eApp(M0,N0),B) = eComp(M2,N2) & W = eComp(M2,N3);
+    then consider M2,N2,N3 being EnvEpsTerm of V such that
+    B1: [N2,N3] in SigmaRed(V) & eComp(eApp(M0,N0),B) = eComp(M2,N2) & W =
+      eComp(M2,N3);
+    B2: eApp(M0,N0) = M2 & B = N2 by B1,ENVEPS_1:14;
+    C1: [eComp(eApp(M0,N0),N3), eApp(eComp(M0,N3),eComp(N0,N3))]
+      in SigmaRed(V) by ENVEPS_2:16;
+    C2: SigmaRed(V) reduces W, eApp(eComp(M0,N3),eComp(N0,N3))
+      by B1,B2,C1,REWRITE1:15;
+    [eComp(M0,B), eComp(M0,N3)] in SigmaRed(V) by B1,B2,ENVEPS_2:24;
+    then [eApp(eComp(M0,B),eComp(N0,B)),
+      eApp(eComp(M0,N3),eComp(N0,B))] in SigmaRed(V) by ENVEPS_2:18;
+    then C3: SigmaRed(V) reduces eApp(eComp(M0,B),eComp(N0,B)),
+      eApp(eComp(M0,N3),eComp(N0,B)) by REWRITE1:15;
+    [eComp(N0,B), eComp(N0,N3)] in SigmaRed(V) by B1,B2,ENVEPS_2:24;
+    then [eApp(eComp(M0,N3),eComp(N0,B)),
+      eApp(eComp(M0,N3),eComp(N0,N3))] in SigmaRed(V) by ENVEPS_2:19;
+    then SigmaRed(V) reduces eApp(eComp(M0,N3),eComp(N0,B)),
+      eApp(eComp(M0,N3),eComp(N0,N3)) by REWRITE1:15;
+    then SigmaRed(V) reduces eApp(eComp(M0,B),eComp(N0,B)),
+      eApp(eComp(M0,N3),eComp(N0,N3)) by C3,REWRITE1:16;
+    hence thesis by C2,ENVEPS_2:26;
+  end;
+end;
+
+begin :: The DExtn reduct converges with any other reduct
+
+theorem Th6:
+  for V being non empty set, L0,M0,B,W being EnvEpsTerm of V, x being Element
+    of V
+  st [eComp(eExt(L0,x,M0),B),W] in SigmaRed(V) holds
+  eExt(eComp(L0,B),x,eComp(M0,B)), W are_convergent_wrt SigmaRed(V)
+proof
+  let V be non empty set, L0,M0,B,W be EnvEpsTerm of V, x be Element of V;
+  assume A1: [eComp(eExt(L0,x,M0),B),W] in SigmaRed(V);
+  A2:
+    ( ex M2,N2,L2 being EnvEpsTerm of V st eComp(eExt(L0,x,M0),B) =
+      eComp(eComp(M2,N2),L2) & W = eComp(M2,eComp(N2,L2)) ) or
+    ( ex M2 being EnvEpsTerm of V st eComp(eExt(L0,x,M0),B) = eComp(eId V,M2)
+      & W = M2 ) or
+    ( ex M2 being EnvEpsTerm of V st eComp(eExt(L0,x,M0),B) = eComp(M2,eId V)
+      & W = M2 ) or
+    ( ex L2,M2,N2 being EnvEpsTerm of V, x2 being Element of V st
+      eComp(eExt(L0,x,M0),B) = eComp(eExt(L2,x2,M2),N2) & W =
+      eExt(eComp(L2,N2),x2,eComp(M2,N2)) ) or
+    ( ex M2,N2 being EnvEpsTerm of V, x2 being Element of V st
+      eComp(eExt(L0,x,M0),B) = eComp(eVar x2,eExt(M2,x2,N2)) & W = M2 ) or
+    ( ex M2,N2 being EnvEpsTerm of V, x2,y2 being Element of V st x2 <> y2 &
+      eComp(eExt(L0,x,M0),B) = eComp(eVar x2,eExt(M2,y2,N2)) & W = eComp(eVar
+      x2, N2) ) or
+    ( ex M2,N2,L2 being EnvEpsTerm of V st eComp(eExt(L0,x,M0),B) =
+      eComp(eApp(M2,N2),L2) & W = eApp(eComp(M2,L2),eComp(N2,L2)) ) or
+    ( ex M2,N2 being EnvEpsTerm of V st eComp(eExt(L0,x,M0),B) = eComp(eEps
+      M2,N2) & W = eEps M2 ) or
+    ( ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in SigmaRed(V) &
+      eComp(eExt(L0,x,M0),B) = eComp(M2,N2) & W = eComp(M3,N2) ) or
+    ( ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in SigmaRed(V) &
+      eComp(eExt(L0,x,M0),B) = eComp(M2,N2) & W = eComp(M2,N3) )
+      by A1,ENVEPS_3:8;
+  per cases by A2;
+  suppose ex M2,N2,L2 being EnvEpsTerm of V st eComp(eExt(L0,x,M0),B) =
+      eComp(eComp(M2,N2),L2) & W = eComp(M2,eComp(N2,L2));
+    then consider M2,N2,L2 being EnvEpsTerm of V such that
+    B1: eComp(eExt(L0,x,M0),B) = eComp(eComp(M2,N2),L2) & W =
+      eComp(M2,eComp(N2,L2));
+    B2: eExt(L0,x,M0) = eComp(M2,N2) & B = L2 by B1,ENVEPS_1:14;
+    thus thesis by B2,ENVEPS_1:44;
+  end;
+  suppose ex M2 being EnvEpsTerm of V st eComp(eExt(L0,x,M0),B) = eComp(eId
+      V,M2) & W = M2;
+    then consider M2 being EnvEpsTerm of V such that
+    B1: eComp(eExt(L0,x,M0),B) = eComp(eId V,M2) & W = M2;
+    B2: eExt(L0,x,M0) = eId V & B = M2 by B1,ENVEPS_1:14;
+    thus thesis by B2,ENVEPS_1:44;
+  end;
+  suppose ex M2 being EnvEpsTerm of V st eComp(eExt(L0,x,M0),B) = eComp(M2,eId
+      V) & W = M2;
+    then consider M2 being EnvEpsTerm of V such that
+    B1: eComp(eExt(L0,x,M0),B) = eComp(M2,eId V) & W = M2;
+    B2: eExt(L0,x,M0) = M2 & B = eId V by B1,ENVEPS_1:14;
+    C1: [eComp(L0,eId V), L0] in SigmaRed(V) by ENVEPS_2:12;
+    [eExt(eComp(L0,eId V),x,eComp(M0,eId V)),
+      eExt(L0,x,eComp(M0,eId V))] in SigmaRed(V) by C1,ENVEPS_2:21;
+    then C2: SigmaRed(V) reduces eExt(eComp(L0,B),x,eComp(M0,B)),
+      eExt(L0,x,eComp(M0,eId V)) by B2,REWRITE1:15;
+    C3: [eComp(M0,eId V), M0] in SigmaRed(V) by ENVEPS_2:12;
+    [eExt(L0,x,eComp(M0,eId V)), eExt(L0,x,M0)] in SigmaRed(V)
+      by C3,ENVEPS_2:22;
+    then SigmaRed(V) reduces eExt(L0,x,eComp(M0,eId V)), W
+      by B1,B2,REWRITE1:15;
+    then C4: SigmaRed(V) reduces eExt(eComp(L0,B),x,eComp(M0,B)), W
+      by C2,REWRITE1:16;
+    SigmaRed(V) reduces W,W by REWRITE1:12;
+    hence thesis by C4,ENVEPS_2:26;
+  end;
+  suppose ex L2,M2,N2 being EnvEpsTerm of V, x2 being Element of V st
+      eComp(eExt(L0,x,M0),B) = eComp(eExt(L2,x2,M2),N2) & W =
+      eExt(eComp(L2,N2),x2,eComp(M2,N2));
+    then consider L2,M2,N2 being EnvEpsTerm of V, x2 being Element of V such
+      that
+    B1: eComp(eExt(L0,x,M0),B) = eComp(eExt(L2,x2,M2),N2) & W =
+      eExt(eComp(L2,N2),x2,eComp(M2,N2));
+    B2: eExt(L0,x,M0) = eExt(L2,x2,M2) & B = N2 by B1,ENVEPS_1:14;
+    C1: L0 = L2 & x = x2 & M0 = M2 by B2,ENVEPS_1:15;
+    SigmaRed(V) reduces W,W by REWRITE1:12;
+    hence thesis by B1,B2,C1,ENVEPS_2:26;
+  end;
+  suppose ex M2,N2 being EnvEpsTerm of V, x2 being Element of V st
+      eComp(eExt(L0,x,M0),B) = eComp(eVar x2,eExt(M2,x2,N2)) & W = M2;
+    then consider M2,N2 being EnvEpsTerm of V, x2 being Element of V such that
+    B1: eComp(eExt(L0,x,M0),B) = eComp(eVar x2,eExt(M2,x2,N2)) & W = M2;
+    B2: eExt(L0,x,M0) = eVar x2 & B = eExt(M2,x2,N2) by B1,ENVEPS_1:14;
+    thus thesis by B2,ENVEPS_1:44;
+  end;
+  suppose ex M2,N2 being EnvEpsTerm of V, x2,y2 being Element of V st x2 <> y2
+      & eComp(eExt(L0,x,M0),B) = eComp(eVar x2,eExt(M2,y2,N2)) & W =
+      eComp(eVar x2, N2);
+    then consider M2,N2 being EnvEpsTerm of V, x2,y2 being Element of V such
+      that
+    B1: x2 <> y2 & eComp(eExt(L0,x,M0),B) = eComp(eVar x2,eExt(M2,y2,N2)) & W
+      = eComp(eVar x2, N2);
+    B2: eExt(L0,x,M0) = eVar x2 & B = eExt(M2,y2,N2) by B1,ENVEPS_1:14;
+    thus thesis by B2,ENVEPS_1:44;
+  end;
+  suppose ex M2,N2,L2 being EnvEpsTerm of V st eComp(eExt(L0,x,M0),B) =
+      eComp(eApp(M2,N2),L2) & W = eApp(eComp(M2,L2),eComp(N2,L2));
+    then consider M2,N2,L2 being EnvEpsTerm of V such that
+    B1: eComp(eExt(L0,x,M0),B) = eComp(eApp(M2,N2),L2) & W =
+      eApp(eComp(M2,L2),eComp(N2,L2));
+    B2: eExt(L0,x,M0) = eApp(M2,N2) & B = L2 by B1,ENVEPS_1:14;
+    thus thesis by B2,ENVEPS_1:44;
+  end;
+  suppose ex M2,N2 being EnvEpsTerm of V st eComp(eExt(L0,x,M0),B) =
+      eComp(eEps M2,N2) & W = eEps M2;
+    then consider M2,N2 being EnvEpsTerm of V such that
+    B1: eComp(eExt(L0,x,M0),B) = eComp(eEps M2,N2) & W = eEps M2;
+    B2: eExt(L0,x,M0) = eEps M2 & B = N2 by B1,ENVEPS_1:14;
+    thus thesis by B2,ENVEPS_1:44;
+  end;
+  suppose ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in SigmaRed(V) &
+      eComp(eExt(L0,x,M0),B) = eComp(M2,N2) & W = eComp(M3,N2);
+    then consider M2,M3,N2 being EnvEpsTerm of V such that
+    B1: [M2,M3] in SigmaRed(V) & eComp(eExt(L0,x,M0),B) = eComp(M2,N2) & W =
+      eComp(M3,N2);
+    B2: eExt(L0,x,M0) = M2 & B = N2 by B1,ENVEPS_1:14;
+    C0: [eExt(L0,x,M0),M3] in SigmaRed(V) by B1,B2;
+    C1: ( ex P2,P3,Q2 being EnvEpsTerm of V, z2 being Element of V st
+          [P2,P3] in SigmaRed(V) & eExt(L0,x,M0) = eExt(P2,z2,Q2) &
+          M3 = eExt(P3,z2,Q2) ) or
+        ( ex P2,Q2,Q3 being EnvEpsTerm of V, z2 being Element of V st
+          [Q2,Q3] in SigmaRed(V) & eExt(L0,x,M0) = eExt(P2,z2,Q2) &
+          M3 = eExt(P2,z2,Q3) ) by C0,ENVEPS_3:7;
+    per cases by C1;
+    suppose ex P2,P3,Q2 being EnvEpsTerm of V, z2 being Element of V st
+        [P2,P3] in SigmaRed(V) & eExt(L0,x,M0) = eExt(P2,z2,Q2) &
+        M3 = eExt(P3,z2,Q2);
+      then consider P2,P3,Q2 being EnvEpsTerm of V,
+      z2 being Element of V such that
+      D1: [P2,P3] in SigmaRed(V) & eExt(L0,x,M0) = eExt(P2,z2,Q2) &
+        M3 = eExt(P3,z2,Q2);
+      D2: L0 = P2 & x = z2 & M0 = Q2 by D1,ENVEPS_1:15;
+      D3: [eComp(eExt(P3,z2,Q2),B),
+        eExt(eComp(P3,B),z2,eComp(Q2,B))] in SigmaRed(V)
+        by ENVEPS_2:13;
+      [eComp(L0,B), eComp(P3,B)] in SigmaRed(V) by D1,D2,ENVEPS_2:23;
+      then [eExt(eComp(L0,B),x,eComp(M0,B)),
+        eExt(eComp(P3,B),x,eComp(M0,B))] in SigmaRed(V)
+        by ENVEPS_2:21;
+      then D4: SigmaRed(V) reduces eExt(eComp(L0,B),x,eComp(M0,B)),
+        eExt(eComp(P3,B),z2,eComp(Q2,B)) by D2,REWRITE1:15;
+      SigmaRed(V) reduces W, eExt(eComp(P3,B),z2,eComp(Q2,B))
+        by B1,B2,D1,D3,REWRITE1:15;
+      hence thesis by D4,ENVEPS_2:26;
+    end;
+    suppose ex P2,Q2,Q3 being EnvEpsTerm of V, z2 being Element of V st
+        [Q2,Q3] in SigmaRed(V) & eExt(L0,x,M0) = eExt(P2,z2,Q2) &
+        M3 = eExt(P2,z2,Q3);
+      then consider P2,Q2,Q3 being EnvEpsTerm of V,
+      z2 being Element of V such that
+      D1: [Q2,Q3] in SigmaRed(V) & eExt(L0,x,M0) = eExt(P2,z2,Q2) &
+        M3 = eExt(P2,z2,Q3);
+      D2: L0 = P2 & x = z2 & M0 = Q2 by D1,ENVEPS_1:15;
+      D3: [eComp(eExt(P2,z2,Q3),B),
+        eExt(eComp(P2,B),z2,eComp(Q3,B))] in SigmaRed(V)
+        by ENVEPS_2:13;
+      [eComp(M0,B), eComp(Q3,B)] in SigmaRed(V) by D1,D2,ENVEPS_2:23;
+      then [eExt(eComp(L0,B),x,eComp(M0,B)),
+        eExt(eComp(L0,B),x,eComp(Q3,B))] in SigmaRed(V)
+        by ENVEPS_2:22;
+      then D4: SigmaRed(V) reduces eExt(eComp(L0,B),x,eComp(M0,B)),
+        eExt(eComp(P2,B),z2,eComp(Q3,B)) by D2,REWRITE1:15;
+      SigmaRed(V) reduces W, eExt(eComp(P2,B),z2,eComp(Q3,B))
+        by B1,B2,D1,D3,REWRITE1:15;
+      hence thesis by D4,ENVEPS_2:26;
+    end;
+  end;
+  suppose ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in SigmaRed(V) &
+      eComp(eExt(L0,x,M0),B) = eComp(M2,N2) & W = eComp(M2,N3);
+    then consider M2,N2,N3 being EnvEpsTerm of V such that
+    B1: [N2,N3] in SigmaRed(V) & eComp(eExt(L0,x,M0),B) = eComp(M2,N2) & W =
+      eComp(M2,N3);
+    B2: eExt(L0,x,M0) = M2 & B = N2 by B1,ENVEPS_1:14;
+    C1: [eComp(eExt(L0,x,M0),N3),
+      eExt(eComp(L0,N3),x,eComp(M0,N3))] in SigmaRed(V)
+      by ENVEPS_2:13;
+    C2: SigmaRed(V) reduces W, eExt(eComp(L0,N3),x,eComp(M0,N3))
+      by B1,B2,C1,REWRITE1:15;
+    [eComp(L0,B), eComp(L0,N3)] in SigmaRed(V) by B1,B2,ENVEPS_2:24;
+    then [eExt(eComp(L0,B),x,eComp(M0,B)),
+      eExt(eComp(L0,N3),x,eComp(M0,B))] in SigmaRed(V) by ENVEPS_2:21;
+    then C3: SigmaRed(V) reduces eExt(eComp(L0,B),x,eComp(M0,B)),
+      eExt(eComp(L0,N3),x,eComp(M0,B)) by REWRITE1:15;
+    [eComp(M0,B), eComp(M0,N3)] in SigmaRed(V) by B1,B2,ENVEPS_2:24;
+    then [eExt(eComp(L0,N3),x,eComp(M0,B)),
+      eExt(eComp(L0,N3),x,eComp(M0,N3))] in SigmaRed(V)
+      by ENVEPS_2:22;
+    then SigmaRed(V) reduces eExt(eComp(L0,N3),x,eComp(M0,B)),
+      eExt(eComp(L0,N3),x,eComp(M0,N3)) by REWRITE1:15;
+    then SigmaRed(V) reduces eExt(eComp(L0,B),x,eComp(M0,B)),
+      eExt(eComp(L0,N3),x,eComp(M0,N3)) by C3,REWRITE1:16;
+    hence thesis by C2,ENVEPS_2:26;
+  end;
+end;
+
+begin :: The VarRef reduct converges with any other reduct
+
+theorem Th7:
+  for V being non empty set, M0,N0,W being EnvEpsTerm of V, x being Element of
+    V
+  st [eComp(eVar x,eExt(M0,x,N0)),W] in SigmaRed(V) holds
+  M0, W are_convergent_wrt SigmaRed(V)
+proof
+  let V be non empty set, M0,N0,W be EnvEpsTerm of V, x be Element of V;
+  assume A1: [eComp(eVar x,eExt(M0,x,N0)),W] in SigmaRed(V);
+  A2:
+    ( ex M2,N2,L2 being EnvEpsTerm of V st eComp(eVar x,eExt(M0,x,N0)) =
+      eComp(eComp(M2,N2),L2) & W = eComp(M2,eComp(N2,L2)) ) or
+    ( ex M2 being EnvEpsTerm of V st eComp(eVar x,eExt(M0,x,N0)) = eComp(eId
+      V,M2) & W = M2 ) or
+    ( ex M2 being EnvEpsTerm of V st eComp(eVar x,eExt(M0,x,N0)) =
+      eComp(M2,eId V) & W = M2 ) or
+    ( ex L2,M2,N2 being EnvEpsTerm of V, x2 being Element of V st eComp(eVar
+      x,eExt(M0,x,N0)) = eComp(eExt(L2,x2,M2),N2) & W =
+      eExt(eComp(L2,N2),x2,eComp(M2,N2)) ) or
+    ( ex M2,N2 being EnvEpsTerm of V, x2 being Element of V st eComp(eVar
+      x,eExt(M0,x,N0)) = eComp(eVar x2,eExt(M2,x2,N2)) & W = M2 ) or
+    ( ex M2,N2 being EnvEpsTerm of V, x2,y2 being Element of V st x2 <> y2 &
+      eComp(eVar x,eExt(M0,x,N0)) = eComp(eVar x2,eExt(M2,y2,N2)) & W =
+      eComp(eVar x2, N2) ) or
+    ( ex M2,N2,L2 being EnvEpsTerm of V st eComp(eVar x,eExt(M0,x,N0)) =
+      eComp(eApp(M2,N2),L2) & W = eApp(eComp(M2,L2),eComp(N2,L2)) ) or
+    ( ex M2,N2 being EnvEpsTerm of V st eComp(eVar x,eExt(M0,x,N0)) =
+      eComp(eEps M2,N2) & W = eEps M2 ) or
+    ( ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in SigmaRed(V) & eComp(eVar
+      x,eExt(M0,x,N0)) = eComp(M2,N2) & W = eComp(M3,N2) ) or
+    ( ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in SigmaRed(V) & eComp(eVar
+      x,eExt(M0,x,N0)) = eComp(M2,N2) & W = eComp(M2,N3) )
+      by A1,ENVEPS_3:8;
+  per cases by A2;
+  suppose ex M2,N2,L2 being EnvEpsTerm of V st eComp(eVar x,eExt(M0,x,N0)) =
+      eComp(eComp(M2,N2),L2) & W = eComp(M2,eComp(N2,L2));
+    then consider M2,N2,L2 being EnvEpsTerm of V such that
+    B1: eComp(eVar x,eExt(M0,x,N0)) = eComp(eComp(M2,N2),L2) & W =
+      eComp(M2,eComp(N2,L2));
+    B2: eVar x = eComp(M2,N2) & eExt(M0,x,N0) = L2 by B1,ENVEPS_1:14;
+    thus thesis by B2,ENVEPS_1:44;
+  end;
+  suppose ex M2 being EnvEpsTerm of V st eComp(eVar x,eExt(M0,x,N0)) =
+      eComp(eId V,M2) & W = M2;
+    then consider M2 being EnvEpsTerm of V such that
+    B1: eComp(eVar x,eExt(M0,x,N0)) = eComp(eId V,M2) & W = M2;
+    B2: eVar x = eId V & eExt(M0,x,N0) = M2 by B1,ENVEPS_1:14;
+    thus thesis by B2,ENVEPS_1:44;
+  end;
+  suppose ex M2 being EnvEpsTerm of V st eComp(eVar x,eExt(M0,x,N0)) =
+      eComp(M2,eId V) & W = M2;
+    then consider M2 being EnvEpsTerm of V such that
+    B1: eComp(eVar x,eExt(M0,x,N0)) = eComp(M2,eId V) & W = M2;
+    B2: eVar x = M2 & eExt(M0,x,N0) = eId V by B1,ENVEPS_1:14;
+    thus thesis by B2,ENVEPS_1:44;
+  end;
+  suppose ex L2,M2,N2 being EnvEpsTerm of V, x2 being Element of V st
+      eComp(eVar x,eExt(M0,x,N0)) = eComp(eExt(L2,x2,M2),N2) & W =
+      eExt(eComp(L2,N2),x2,eComp(M2,N2));
+    then consider L2,M2,N2 being EnvEpsTerm of V, x2 being Element of V such
+      that
+    B1: eComp(eVar x,eExt(M0,x,N0)) = eComp(eExt(L2,x2,M2),N2) & W =
+      eExt(eComp(L2,N2),x2,eComp(M2,N2));
+    B2: eVar x = eExt(L2,x2,M2) & eExt(M0,x,N0) = N2 by B1,ENVEPS_1:14;
+    thus thesis by B2,ENVEPS_1:44;
+  end;
+  suppose ex M2,N2 being EnvEpsTerm of V, x2 being Element of V st eComp(eVar
+      x,eExt(M0,x,N0)) = eComp(eVar x2,eExt(M2,x2,N2)) & W = M2;
+    then consider M2,N2 being EnvEpsTerm of V, x2 being Element of V such that
+    B1: eComp(eVar x,eExt(M0,x,N0)) = eComp(eVar x2,eExt(M2,x2,N2)) & W = M2;
+    B2: eVar x = eVar x2 & eExt(M0,x,N0) = eExt(M2,x2,N2) by B1,ENVEPS_1:14;
+    C1: M0 = M2 & x = x2 & N0 = N2 by B2,ENVEPS_1:15;
+    SigmaRed(V) reduces M0,M0 by REWRITE1:12;
+    hence thesis by B1,C1,ENVEPS_2:26;
+  end;
+  suppose ex M2,N2 being EnvEpsTerm of V, x2,y2 being Element of V st x2 <> y2
+      & eComp(eVar x,eExt(M0,x,N0)) = eComp(eVar x2,eExt(M2,y2,N2)) & W =
+      eComp(eVar x2, N2);
+    then consider M2,N2 being EnvEpsTerm of V, x2,y2 being Element of V such
+      that
+    B1: x2 <> y2 & eComp(eVar x,eExt(M0,x,N0)) = eComp(eVar x2,eExt(M2,y2,N2))
+      & W = eComp(eVar x2, N2);
+    B2: eVar x = eVar x2 & eExt(M0,x,N0) = eExt(M2,y2,N2) by B1,ENVEPS_1:14;
+    C1: x = x2 by B2,ENVEPS_1:16;
+    x = y2 by B2,ENVEPS_1:15;
+    hence thesis by B1,C1;
+  end;
+  suppose ex M2,N2,L2 being EnvEpsTerm of V st eComp(eVar x,eExt(M0,x,N0)) =
+      eComp(eApp(M2,N2),L2) & W = eApp(eComp(M2,L2),eComp(N2,L2));
+    then consider M2,N2,L2 being EnvEpsTerm of V such that
+    B1: eComp(eVar x,eExt(M0,x,N0)) = eComp(eApp(M2,N2),L2) & W =
+      eApp(eComp(M2,L2),eComp(N2,L2));
+    B2: eVar x = eApp(M2,N2) & eExt(M0,x,N0) = L2 by B1,ENVEPS_1:14;
+    thus thesis by B2,ENVEPS_1:44;
+  end;
+  suppose ex M2,N2 being EnvEpsTerm of V st eComp(eVar x,eExt(M0,x,N0)) =
+      eComp(eEps M2,N2) & W = eEps M2;
+    then consider M2,N2 being EnvEpsTerm of V such that
+    B1: eComp(eVar x,eExt(M0,x,N0)) = eComp(eEps M2,N2) & W = eEps M2;
+    B2: eVar x = eEps M2 & eExt(M0,x,N0) = N2 by B1,ENVEPS_1:14;
+    thus thesis by B2,ENVEPS_1:44;
+  end;
+  suppose ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in SigmaRed(V) &
+      eComp(eVar x,eExt(M0,x,N0)) = eComp(M2,N2) & W = eComp(M3,N2);
+    then consider M2,M3,N2 being EnvEpsTerm of V such that
+    B1: [M2,M3] in SigmaRed(V) & eComp(eVar x,eExt(M0,x,N0)) = eComp(M2,N2) &
+      W = eComp(M3,N2);
+    B2: eVar x = M2 & eExt(M0,x,N0) = N2 by B1,ENVEPS_1:14;
+    thus thesis by B1,B2,ENVEPS_3:2;
+  end;
+  suppose ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in SigmaRed(V) &
+      eComp(eVar x,eExt(M0,x,N0)) = eComp(M2,N2) & W = eComp(M2,N3);
+    then consider M2,N2,N3 being EnvEpsTerm of V such that
+    B1: [N2,N3] in SigmaRed(V) & eComp(eVar x,eExt(M0,x,N0)) = eComp(M2,N2) &
+      W = eComp(M2,N3);
+    B2: eVar x = M2 & eExt(M0,x,N0) = N2 by B1,ENVEPS_1:14;
+    C0: [eExt(M0,x,N0),N3] in SigmaRed(V) by B1,B2;
+    C1: ( ex P2,P3,Q2 being EnvEpsTerm of V, z2 being Element of V st
+          [P2,P3] in SigmaRed(V) & eExt(M0,x,N0) = eExt(P2,z2,Q2) &
+          N3 = eExt(P3,z2,Q2) ) or
+        ( ex P2,Q2,Q3 being EnvEpsTerm of V, z2 being Element of V st
+          [Q2,Q3] in SigmaRed(V) & eExt(M0,x,N0) = eExt(P2,z2,Q2) &
+          N3 = eExt(P2,z2,Q3) ) by C0,ENVEPS_3:7;
+    per cases by C1;
+    suppose ex P2,P3,Q2 being EnvEpsTerm of V, z2 being Element of V st
+        [P2,P3] in SigmaRed(V) & eExt(M0,x,N0) = eExt(P2,z2,Q2) &
+        N3 = eExt(P3,z2,Q2);
+      then consider P2,P3,Q2 being EnvEpsTerm of V,
+      z2 being Element of V such that
+      D1: [P2,P3] in SigmaRed(V) & eExt(M0,x,N0) = eExt(P2,z2,Q2) &
+        N3 = eExt(P3,z2,Q2);
+      D2: M0 = P2 & x = z2 & N0 = Q2 by D1,ENVEPS_1:15;
+      D3: SigmaRed(V) reduces M0,P3 by D1,D2,REWRITE1:15;
+      [eComp(eVar z2, eExt(P3,z2,Q2)), P3] in SigmaRed(V)
+        by ENVEPS_2:14;
+      then SigmaRed(V) reduces W,P3 by B1,B2,D1,D2,REWRITE1:15;
+      hence thesis by D3,ENVEPS_2:26;
+    end;
+    suppose ex P2,Q2,Q3 being EnvEpsTerm of V, z2 being Element of V st
+        [Q2,Q3] in SigmaRed(V) & eExt(M0,x,N0) = eExt(P2,z2,Q2) &
+        N3 = eExt(P2,z2,Q3);
+      then consider P2,Q2,Q3 being EnvEpsTerm of V,
+      z2 being Element of V such that
+      D1: [Q2,Q3] in SigmaRed(V) & eExt(M0,x,N0) = eExt(P2,z2,Q2) &
+        N3 = eExt(P2,z2,Q3);
+      D2: M0 = P2 & x = z2 & N0 = Q2 by D1,ENVEPS_1:15;
+      D3: SigmaRed(V) reduces M0,M0 by REWRITE1:12;
+      [eComp(eVar z2, eExt(P2,z2,Q3)), P2] in SigmaRed(V)
+        by ENVEPS_2:14;
+      then SigmaRed(V) reduces W,M0 by B1,B2,D1,D2,REWRITE1:15;
+      hence thesis by D3,ENVEPS_2:26;
+    end;
+  end;
+end;
+
+begin :: The VarSkip reduct converges with any other reduct
+
+theorem Th8:
+  for V being non empty set, M0,N0,W being EnvEpsTerm of V, x,y being Element
+    of V
+  st x <> y & [eComp(eVar x,eExt(M0,y,N0)),W] in SigmaRed(V) holds
+  eComp(eVar x, N0), W are_convergent_wrt SigmaRed(V)
+proof
+  let V be non empty set, M0,N0,W be EnvEpsTerm of V, x,y be Element of V;
+  assume A0: x <> y;
+  assume A1: [eComp(eVar x,eExt(M0,y,N0)),W] in SigmaRed(V);
+  A2:
+    ( ex M2,N2,L2 being EnvEpsTerm of V st eComp(eVar x,eExt(M0,y,N0)) =
+      eComp(eComp(M2,N2),L2) & W = eComp(M2,eComp(N2,L2)) ) or
+    ( ex M2 being EnvEpsTerm of V st eComp(eVar x,eExt(M0,y,N0)) = eComp(eId
+      V,M2) & W = M2 ) or
+    ( ex M2 being EnvEpsTerm of V st eComp(eVar x,eExt(M0,y,N0)) =
+      eComp(M2,eId V) & W = M2 ) or
+    ( ex L2,M2,N2 being EnvEpsTerm of V, x2 being Element of V st eComp(eVar
+      x,eExt(M0,y,N0)) = eComp(eExt(L2,x2,M2),N2) & W =
+      eExt(eComp(L2,N2),x2,eComp(M2,N2)) ) or
+    ( ex M2,N2 being EnvEpsTerm of V, x2 being Element of V st eComp(eVar
+      x,eExt(M0,y,N0)) = eComp(eVar x2,eExt(M2,x2,N2)) & W = M2 ) or
+    ( ex M2,N2 being EnvEpsTerm of V, x2,y2 being Element of V st x2 <> y2 &
+      eComp(eVar x,eExt(M0,y,N0)) = eComp(eVar x2,eExt(M2,y2,N2)) & W =
+      eComp(eVar x2, N2) ) or
+    ( ex M2,N2,L2 being EnvEpsTerm of V st eComp(eVar x,eExt(M0,y,N0)) =
+      eComp(eApp(M2,N2),L2) & W = eApp(eComp(M2,L2),eComp(N2,L2)) ) or
+    ( ex M2,N2 being EnvEpsTerm of V st eComp(eVar x,eExt(M0,y,N0)) =
+      eComp(eEps M2,N2) & W = eEps M2 ) or
+    ( ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in SigmaRed(V) & eComp(eVar
+      x,eExt(M0,y,N0)) = eComp(M2,N2) & W = eComp(M3,N2) ) or
+    ( ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in SigmaRed(V) & eComp(eVar
+      x,eExt(M0,y,N0)) = eComp(M2,N2) & W = eComp(M2,N3) )
+      by A1,ENVEPS_3:8;
+  per cases by A2;
+  suppose ex M2,N2,L2 being EnvEpsTerm of V st eComp(eVar x,eExt(M0,y,N0)) =
+      eComp(eComp(M2,N2),L2) & W = eComp(M2,eComp(N2,L2));
+    then consider M2,N2,L2 being EnvEpsTerm of V such that
+    B1: eComp(eVar x,eExt(M0,y,N0)) = eComp(eComp(M2,N2),L2) & W =
+      eComp(M2,eComp(N2,L2));
+    B2: eVar x = eComp(M2,N2) & eExt(M0,y,N0) = L2 by B1,ENVEPS_1:14;
+    thus thesis by B2,ENVEPS_1:44;
+  end;
+  suppose ex M2 being EnvEpsTerm of V st eComp(eVar x,eExt(M0,y,N0)) =
+      eComp(eId V,M2) & W = M2;
+    then consider M2 being EnvEpsTerm of V such that
+    B1: eComp(eVar x,eExt(M0,y,N0)) = eComp(eId V,M2) & W = M2;
+    B2: eVar x = eId V & eExt(M0,y,N0) = M2 by B1,ENVEPS_1:14;
+    thus thesis by B2,ENVEPS_1:44;
+  end;
+  suppose ex M2 being EnvEpsTerm of V st eComp(eVar x,eExt(M0,y,N0)) =
+      eComp(M2,eId V) & W = M2;
+    then consider M2 being EnvEpsTerm of V such that
+    B1: eComp(eVar x,eExt(M0,y,N0)) = eComp(M2,eId V) & W = M2;
+    B2: eVar x = M2 & eExt(M0,y,N0) = eId V by B1,ENVEPS_1:14;
+    thus thesis by B2,ENVEPS_1:44;
+  end;
+  suppose ex L2,M2,N2 being EnvEpsTerm of V, x2 being Element of V st
+      eComp(eVar x,eExt(M0,y,N0)) = eComp(eExt(L2,x2,M2),N2) & W =
+      eExt(eComp(L2,N2),x2,eComp(M2,N2));
+    then consider L2,M2,N2 being EnvEpsTerm of V, x2 being Element of V such
+      that
+    B1: eComp(eVar x,eExt(M0,y,N0)) = eComp(eExt(L2,x2,M2),N2) & W =
+      eExt(eComp(L2,N2),x2,eComp(M2,N2));
+    B2: eVar x = eExt(L2,x2,M2) & eExt(M0,y,N0) = N2 by B1,ENVEPS_1:14;
+    thus thesis by B2,ENVEPS_1:44;
+  end;
+  suppose ex M2,N2 being EnvEpsTerm of V, x2 being Element of V st eComp(eVar
+      x,eExt(M0,y,N0)) = eComp(eVar x2,eExt(M2,x2,N2)) & W = M2;
+    then consider M2,N2 being EnvEpsTerm of V, x2 being Element of V such that
+    B1: eComp(eVar x,eExt(M0,y,N0)) = eComp(eVar x2,eExt(M2,x2,N2)) & W = M2;
+    B2: eVar x = eVar x2 & eExt(M0,y,N0) = eExt(M2,x2,N2) by B1,ENVEPS_1:14;
+    C1: x = x2 by B2,ENVEPS_1:16;
+    y = x2 by B2,ENVEPS_1:15;
+    hence thesis by A0,C1;
+  end;
+  suppose ex M2,N2 being EnvEpsTerm of V, x2,y2 being Element of V st x2 <> y2
+      & eComp(eVar x,eExt(M0,y,N0)) = eComp(eVar x2,eExt(M2,y2,N2)) & W =
+      eComp(eVar x2, N2);
+    then consider M2,N2 being EnvEpsTerm of V, x2,y2 being Element of V such
+      that
+    B1: x2 <> y2 & eComp(eVar x,eExt(M0,y,N0)) = eComp(eVar x2,eExt(M2,y2,N2))
+      & W = eComp(eVar x2, N2);
+    B2: eVar x = eVar x2 & eExt(M0,y,N0) = eExt(M2,y2,N2) by B1,ENVEPS_1:14;
+    C1: x = x2 by B2,ENVEPS_1:16;
+    C2: M0 = M2 & y = y2 & N0 = N2 by B2,ENVEPS_1:15;
+    SigmaRed(V) reduces eComp(eVar x, N0),eComp(eVar x, N0) by REWRITE1:12;
+    hence thesis by B1,C1,C2,ENVEPS_2:26;
+  end;
+  suppose ex M2,N2,L2 being EnvEpsTerm of V st eComp(eVar x,eExt(M0,y,N0)) =
+      eComp(eApp(M2,N2),L2) & W = eApp(eComp(M2,L2),eComp(N2,L2));
+    then consider M2,N2,L2 being EnvEpsTerm of V such that
+    B1: eComp(eVar x,eExt(M0,y,N0)) = eComp(eApp(M2,N2),L2) & W =
+      eApp(eComp(M2,L2),eComp(N2,L2));
+    B2: eVar x = eApp(M2,N2) & eExt(M0,y,N0) = L2 by B1,ENVEPS_1:14;
+    thus thesis by B2,ENVEPS_1:44;
+  end;
+  suppose ex M2,N2 being EnvEpsTerm of V st eComp(eVar x,eExt(M0,y,N0)) =
+      eComp(eEps M2,N2) & W = eEps M2;
+    then consider M2,N2 being EnvEpsTerm of V such that
+    B1: eComp(eVar x,eExt(M0,y,N0)) = eComp(eEps M2,N2) & W = eEps M2;
+    B2: eVar x = eEps M2 & eExt(M0,y,N0) = N2 by B1,ENVEPS_1:14;
+    thus thesis by B2,ENVEPS_1:44;
+  end;
+  suppose ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in SigmaRed(V) &
+      eComp(eVar x,eExt(M0,y,N0)) = eComp(M2,N2) & W = eComp(M3,N2);
+    then consider M2,M3,N2 being EnvEpsTerm of V such that
+    B1: [M2,M3] in SigmaRed(V) & eComp(eVar x,eExt(M0,y,N0)) = eComp(M2,N2) &
+      W = eComp(M3,N2);
+    B2: eVar x = M2 & eExt(M0,y,N0) = N2 by B1,ENVEPS_1:14;
+    thus thesis by B1,B2,ENVEPS_3:2;
+  end;
+  suppose ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in SigmaRed(V) &
+      eComp(eVar x,eExt(M0,y,N0)) = eComp(M2,N2) & W = eComp(M2,N3);
+    then consider M2,N2,N3 being EnvEpsTerm of V such that
+    B1: [N2,N3] in SigmaRed(V) & eComp(eVar x,eExt(M0,y,N0)) = eComp(M2,N2) &
+      W = eComp(M2,N3);
+    B2: eVar x = M2 & eExt(M0,y,N0) = N2 by B1,ENVEPS_1:14;
+    C0: [eExt(M0,y,N0),N3] in SigmaRed(V) by B1,B2;
+    C1: ( ex P2,P3,Q2 being EnvEpsTerm of V, z2 being Element of V st
+          [P2,P3] in SigmaRed(V) & eExt(M0,y,N0) = eExt(P2,z2,Q2) &
+          N3 = eExt(P3,z2,Q2) ) or
+        ( ex P2,Q2,Q3 being EnvEpsTerm of V, z2 being Element of V st
+          [Q2,Q3] in SigmaRed(V) & eExt(M0,y,N0) = eExt(P2,z2,Q2) &
+          N3 = eExt(P2,z2,Q3) ) by C0,ENVEPS_3:7;
+    per cases by C1;
+    suppose ex P2,P3,Q2 being EnvEpsTerm of V, z2 being Element of V st
+        [P2,P3] in SigmaRed(V) & eExt(M0,y,N0) = eExt(P2,z2,Q2) &
+        N3 = eExt(P3,z2,Q2);
+      then consider P2,P3,Q2 being EnvEpsTerm of V,
+      z2 being Element of V such that
+      D1: [P2,P3] in SigmaRed(V) & eExt(M0,y,N0) = eExt(P2,z2,Q2) &
+        N3 = eExt(P3,z2,Q2);
+      D2: M0 = P2 & y = z2 & N0 = Q2 by D1,ENVEPS_1:15;
+      D3: SigmaRed(V) reduces eComp(eVar x, N0),eComp(eVar x, N0)
+        by REWRITE1:12;
+      [eComp(eVar x, eExt(P3,z2,Q2)), eComp(eVar x, Q2)]
+        in SigmaRed(V) by A0,D2,ENVEPS_2:15;
+      then SigmaRed(V) reduces W, eComp(eVar x, N0) by B1,B2,D1,D2,REWRITE1:15;
+      hence thesis by D3,ENVEPS_2:26;
+    end;
+    suppose ex P2,Q2,Q3 being EnvEpsTerm of V, z2 being Element of V st
+        [Q2,Q3] in SigmaRed(V) & eExt(M0,y,N0) = eExt(P2,z2,Q2) &
+        N3 = eExt(P2,z2,Q3);
+      then consider P2,Q2,Q3 being EnvEpsTerm of V,
+      z2 being Element of V such that
+      D1: [Q2,Q3] in SigmaRed(V) & eExt(M0,y,N0) = eExt(P2,z2,Q2) &
+        N3 = eExt(P2,z2,Q3);
+      D2: M0 = P2 & y = z2 & N0 = Q2 by D1,ENVEPS_1:15;
+      [eComp(eVar x, N0), eComp(eVar x, Q3)] in SigmaRed(V)
+        by D1,D2,ENVEPS_2:24;
+      then D3: SigmaRed(V) reduces eComp(eVar x, N0), eComp(eVar x, Q3)
+        by REWRITE1:15;
+      [eComp(eVar x, eExt(P2,z2,Q3)), eComp(eVar x, Q3)]
+        in SigmaRed(V) by A0,D2,ENVEPS_2:15;
+      then SigmaRed(V) reduces W, eComp(eVar x, Q3)
+        by B1,B2,D1,D2,REWRITE1:15;
+      hence thesis by D3,ENVEPS_2:26;
+    end;
+  end;
+end;
+
+begin :: The Assoc reduct converges with any other reduct
+
+theorem Th9:
+  for V being non empty set, M0,N0,B,W being EnvEpsTerm of V
+  st [eComp(eComp(M0,N0),B),W] in SigmaRed(V) holds
+  eComp(M0,eComp(N0,B)), W are_convergent_wrt SigmaRed(V)
+proof
+  let V be non empty set, M0,N0,B,W be EnvEpsTerm of V;
+  assume A1: [eComp(eComp(M0,N0),B),W] in SigmaRed(V);
+  A2:
+    ( ex M2,N2,L2 being EnvEpsTerm of V st eComp(eComp(M0,N0),B) =
+      eComp(eComp(M2,N2),L2) & W = eComp(M2,eComp(N2,L2)) ) or
+    ( ex M2 being EnvEpsTerm of V st eComp(eComp(M0,N0),B) = eComp(eId V,M2) &
+      W = M2 ) or
+    ( ex M2 being EnvEpsTerm of V st eComp(eComp(M0,N0),B) = eComp(M2,eId V) &
+      W = M2 ) or
+    ( ex L2,M2,N2 being EnvEpsTerm of V, x2 being Element of V st
+      eComp(eComp(M0,N0),B) = eComp(eExt(L2,x2,M2),N2) & W =
+      eExt(eComp(L2,N2),x2,eComp(M2,N2)) ) or
+    ( ex M2,N2 being EnvEpsTerm of V, x2 being Element of V st
+      eComp(eComp(M0,N0),B) = eComp(eVar x2,eExt(M2,x2,N2)) & W = M2 ) or
+    ( ex M2,N2 being EnvEpsTerm of V, x2,y2 being Element of V st x2 <> y2 &
+      eComp(eComp(M0,N0),B) = eComp(eVar x2,eExt(M2,y2,N2)) & W = eComp(eVar
+      x2, N2) ) or
+    ( ex M2,N2,L2 being EnvEpsTerm of V st eComp(eComp(M0,N0),B) =
+      eComp(eApp(M2,N2),L2) & W = eApp(eComp(M2,L2),eComp(N2,L2)) ) or
+    ( ex M2,N2 being EnvEpsTerm of V st eComp(eComp(M0,N0),B) = eComp(eEps
+      M2,N2) & W = eEps M2 ) or
+    ( ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in SigmaRed(V) &
+      eComp(eComp(M0,N0),B) = eComp(M2,N2) & W = eComp(M3,N2) ) or
+    ( ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in SigmaRed(V) &
+      eComp(eComp(M0,N0),B) = eComp(M2,N2) & W = eComp(M2,N3) )
+      by A1,ENVEPS_3:8;
+  per cases by A2;
+  suppose ex M2,N2,L2 being EnvEpsTerm of V st eComp(eComp(M0,N0),B) =
+      eComp(eComp(M2,N2),L2) & W = eComp(M2,eComp(N2,L2));
+    then consider M2,N2,L2 being EnvEpsTerm of V such that
+    B1: eComp(eComp(M0,N0),B) = eComp(eComp(M2,N2),L2) & W =
+      eComp(M2,eComp(N2,L2));
+    B2: eComp(M0,N0) = eComp(M2,N2) & B = L2 by B1,ENVEPS_1:14;
+    C1: M0 = M2 & N0 = N2 by B2,ENVEPS_1:14;
+    SigmaRed(V) reduces eComp(M0,eComp(N0,B)),eComp(M0,eComp(N0,B))
+      by REWRITE1:12;
+    hence thesis by B1,B2,C1,ENVEPS_2:26;
+  end;
+  suppose ex M2 being EnvEpsTerm of V st eComp(eComp(M0,N0),B) = eComp(eId
+      V,M2) & W = M2;
+    then consider M2 being EnvEpsTerm of V such that
+    B1: eComp(eComp(M0,N0),B) = eComp(eId V,M2) & W = M2;
+    B2: eComp(M0,N0) = eId V & B = M2 by B1,ENVEPS_1:14;
+    thus thesis by B2,ENVEPS_1:44;
+  end;
+  suppose ex M2 being EnvEpsTerm of V st eComp(eComp(M0,N0),B) = eComp(M2,eId
+      V) & W = M2;
+    then consider M2 being EnvEpsTerm of V such that
+    B1: eComp(eComp(M0,N0),B) = eComp(M2,eId V) & W = M2;
+    B2: eComp(M0,N0) = M2 & B = eId V by B1,ENVEPS_1:14;
+    C1: [eComp(N0,eId V), N0] in SigmaRed(V) by ENVEPS_2:12;
+    [eComp(M0,eComp(N0,eId V)), eComp(M0,N0)] in SigmaRed(V)
+      by C1,ENVEPS_2:24;
+    then C2: SigmaRed(V) reduces eComp(M0,eComp(N0,B)), eComp(M0,N0)
+      by B2,REWRITE1:15;
+    SigmaRed(V) reduces W, eComp(M0,N0) by B1,B2,REWRITE1:12;
+    hence thesis by C2,ENVEPS_2:26;
+  end;
+  suppose ex L2,M2,N2 being EnvEpsTerm of V, x2 being Element of V st
+      eComp(eComp(M0,N0),B) = eComp(eExt(L2,x2,M2),N2) & W =
+      eExt(eComp(L2,N2),x2,eComp(M2,N2));
+    then consider L2,M2,N2 being EnvEpsTerm of V, x2 being Element of V such
+      that
+    B1: eComp(eComp(M0,N0),B) = eComp(eExt(L2,x2,M2),N2) & W =
+      eExt(eComp(L2,N2),x2,eComp(M2,N2));
+    B2: eComp(M0,N0) = eExt(L2,x2,M2) & B = N2 by B1,ENVEPS_1:14;
+    thus thesis by B2,ENVEPS_1:44;
+  end;
+  suppose ex M2,N2 being EnvEpsTerm of V, x2 being Element of V st
+      eComp(eComp(M0,N0),B) = eComp(eVar x2,eExt(M2,x2,N2)) & W = M2;
+    then consider M2,N2 being EnvEpsTerm of V, x2 being Element of V such that
+    B1: eComp(eComp(M0,N0),B) = eComp(eVar x2,eExt(M2,x2,N2)) & W = M2;
+    B2: eComp(M0,N0) = eVar x2 & B = eExt(M2,x2,N2) by B1,ENVEPS_1:14;
+    thus thesis by B2,ENVEPS_1:44;
+  end;
+  suppose ex M2,N2 being EnvEpsTerm of V, x2,y2 being Element of V st x2 <> y2
+      & eComp(eComp(M0,N0),B) = eComp(eVar x2,eExt(M2,y2,N2)) & W = eComp(eVar
+      x2, N2);
+    then consider M2,N2 being EnvEpsTerm of V, x2,y2 being Element of V such
+      that
+    B1: x2 <> y2 & eComp(eComp(M0,N0),B) = eComp(eVar x2,eExt(M2,y2,N2)) & W =
+      eComp(eVar x2, N2);
+    B2: eComp(M0,N0) = eVar x2 & B = eExt(M2,y2,N2) by B1,ENVEPS_1:14;
+    thus thesis by B2,ENVEPS_1:44;
+  end;
+  suppose ex M2,N2,L2 being EnvEpsTerm of V st eComp(eComp(M0,N0),B) =
+      eComp(eApp(M2,N2),L2) & W = eApp(eComp(M2,L2),eComp(N2,L2));
+    then consider M2,N2,L2 being EnvEpsTerm of V such that
+    B1: eComp(eComp(M0,N0),B) = eComp(eApp(M2,N2),L2) & W =
+      eApp(eComp(M2,L2),eComp(N2,L2));
+    B2: eComp(M0,N0) = eApp(M2,N2) & B = L2 by B1,ENVEPS_1:14;
+    thus thesis by B2,ENVEPS_1:44;
+  end;
+  suppose ex M2,N2 being EnvEpsTerm of V st eComp(eComp(M0,N0),B) = eComp(eEps
+      M2,N2) & W = eEps M2;
+    then consider M2,N2 being EnvEpsTerm of V such that
+    B1: eComp(eComp(M0,N0),B) = eComp(eEps M2,N2) & W = eEps M2;
+    B2: eComp(M0,N0) = eEps M2 & B = N2 by B1,ENVEPS_1:14;
+    thus thesis by B2,ENVEPS_1:44;
+  end;
+  suppose ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in SigmaRed(V) &
+      eComp(eComp(M0,N0),B) = eComp(M2,N2) & W = eComp(M3,N2);
+    then consider M2,M3,N2 being EnvEpsTerm of V such that
+    B1: [M2,M3] in SigmaRed(V) & eComp(eComp(M0,N0),B) = eComp(M2,N2) & W =
+      eComp(M3,N2);
+    B2: eComp(M0,N0) = M2 & B = N2 by B1,ENVEPS_1:14;
+    C0: [eComp(M0,N0),M3] in SigmaRed(V) by B1,B2;
+    C1:
+      ( ex P2,Q2,R2 being EnvEpsTerm of V st eComp(M0,N0) =
+        eComp(eComp(P2,Q2),R2) & M3 = eComp(P2,eComp(Q2,R2)) ) or
+      ( ex P2 being EnvEpsTerm of V st eComp(M0,N0) = eComp(eId V,P2) & M3 =
+        P2 ) or
+      ( ex P2 being EnvEpsTerm of V st eComp(M0,N0) = eComp(P2,eId V) & M3 =
+        P2 ) or
+      ( ex R2,P2,Q2 being EnvEpsTerm of V, z2 being Element of V st
+        eComp(M0,N0) = eComp(eExt(R2,z2,P2),Q2) & M3 =
+        eExt(eComp(R2,Q2),z2,eComp(P2,Q2)) ) or
+      ( ex P2,Q2 being EnvEpsTerm of V, z2 being Element of V st eComp(M0,N0)
+        = eComp(eVar z2,eExt(P2,z2,Q2)) & M3 = P2 ) or
+      ( ex P2,Q2 being EnvEpsTerm of V, z2,w2 being Element of V st z2 <> w2 &
+        eComp(M0,N0) = eComp(eVar z2,eExt(P2,w2,Q2)) & M3 = eComp(eVar z2, Q2)
+        ) or
+      ( ex P2,Q2,R2 being EnvEpsTerm of V st eComp(M0,N0) =
+        eComp(eApp(P2,Q2),R2) & M3 = eApp(eComp(P2,R2),eComp(Q2,R2)) ) or
+      ( ex P2,Q2 being EnvEpsTerm of V st eComp(M0,N0) = eComp(eEps P2,Q2) &
+        M3 = eEps P2 ) or
+      ( ex P2,P3,Q2 being EnvEpsTerm of V st [P2,P3] in SigmaRed(V) &
+        eComp(M0,N0) = eComp(P2,Q2) & M3 = eComp(P3,Q2) ) or
+      ( ex P2,Q2,Q3 being EnvEpsTerm of V st [Q2,Q3] in SigmaRed(V) &
+        eComp(M0,N0) = eComp(P2,Q2) & M3 = eComp(P2,Q3) )
+      by C0,ENVEPS_3:8;
+    per cases by C1;
+    suppose ex P2,Q2,R2 being EnvEpsTerm of V st eComp(M0,N0) =
+        eComp(eComp(P2,Q2),R2) & M3 = eComp(P2,eComp(Q2,R2));
+      then consider P2,Q2,R2 being EnvEpsTerm of V such that
+      D1: eComp(M0,N0) = eComp(eComp(P2,Q2),R2) & M3 = eComp(P2,eComp(Q2,R2));
+      D2: M0 = eComp(P2,Q2) & N0 = R2 by D1,ENVEPS_1:14;
+      E1: [eComp(eComp(P2,Q2),eComp(R2,B)),
+        eComp(P2,eComp(Q2,eComp(R2,B)))] in SigmaRed(V) by ENVEPS_2:10;
+      E2: SigmaRed(V) reduces eComp(M0,eComp(N0,B)),
+        eComp(P2,eComp(Q2,eComp(R2,B))) by D2,E1,REWRITE1:15;
+      E3: [eComp(eComp(P2,eComp(Q2,R2)),B),
+        eComp(P2,eComp(eComp(Q2,R2),B))] in SigmaRed(V) by ENVEPS_2:10;
+      E4: [eComp(eComp(Q2,R2),B), eComp(Q2,eComp(R2,B))] in SigmaRed(V)
+        by ENVEPS_2:10;
+      E5: SigmaRed(V) reduces W, eComp(P2,eComp(eComp(Q2,R2),B))
+        by B1,B2,D1,E3,REWRITE1:15;
+      [eComp(P2,eComp(eComp(Q2,R2),B)),
+        eComp(P2,eComp(Q2,eComp(R2,B)))] in SigmaRed(V)
+        by E4,ENVEPS_2:24;
+      then SigmaRed(V) reduces eComp(P2,eComp(eComp(Q2,R2),B)),
+        eComp(P2,eComp(Q2,eComp(R2,B))) by REWRITE1:15;
+      then SigmaRed(V) reduces W, eComp(P2,eComp(Q2,eComp(R2,B)))
+        by E5,REWRITE1:16;
+      hence thesis by E2,ENVEPS_2:26;
+    end;
+    suppose ex P2 being EnvEpsTerm of V st eComp(M0,N0) = eComp(eId V,P2) & M3
+        = P2;
+      then consider P2 being EnvEpsTerm of V such that
+      D1: eComp(M0,N0) = eComp(eId V,P2) & M3 = P2;
+      D2: M0 = eId V & N0 = P2 by D1,ENVEPS_1:14;
+      E1: [eComp(eId V,eComp(P2,B)), eComp(P2,B)] in SigmaRed(V)
+        by ENVEPS_2:11;
+      E2: SigmaRed(V) reduces eComp(M0,eComp(N0,B)), eComp(P2,B)
+        by D2,E1,REWRITE1:15;
+      SigmaRed(V) reduces W, eComp(P2,B) by B1,B2,D1,REWRITE1:12;
+      hence thesis by E2,ENVEPS_2:26;
+    end;
+    suppose ex P2 being EnvEpsTerm of V st eComp(M0,N0) = eComp(P2,eId V) & M3
+        = P2;
+      then consider P2 being EnvEpsTerm of V such that
+      D1: eComp(M0,N0) = eComp(P2,eId V) & M3 = P2;
+      D2: M0 = P2 & N0 = eId V by D1,ENVEPS_1:14;
+      E1: [eComp(eId V,B), B] in SigmaRed(V) by ENVEPS_2:11;
+      [eComp(P2,eComp(eId V,B)), eComp(P2,B)] in SigmaRed(V)
+        by E1,ENVEPS_2:24;
+      then E2: SigmaRed(V) reduces eComp(M0,eComp(N0,B)), eComp(P2,B)
+        by D2,REWRITE1:15;
+      SigmaRed(V) reduces W, eComp(P2,B) by B1,B2,D1,REWRITE1:12;
+      hence thesis by E2,ENVEPS_2:26;
+    end;
+    suppose ex R2,P2,Q2 being EnvEpsTerm of V, z2 being Element of V st
+        eComp(M0,N0) = eComp(eExt(R2,z2,P2),Q2) & M3 =
+        eExt(eComp(R2,Q2),z2,eComp(P2,Q2));
+      then consider R2,P2,Q2 being EnvEpsTerm of V, z2 being Element of V such
+        that
+      D1: eComp(M0,N0) = eComp(eExt(R2,z2,P2),Q2) & M3 =
+        eExt(eComp(R2,Q2),z2,eComp(P2,Q2));
+      D2: M0 = eExt(R2,z2,P2) & N0 = Q2 by D1,ENVEPS_1:14;
+      set T = eExt(eComp(R2,eComp(Q2,B)),z2,eComp(P2,eComp(Q2,B)));
+      E1: [eComp(eExt(R2,z2,P2),eComp(Q2,B)), T] in SigmaRed(V)
+        by ENVEPS_2:13;
+      E2: SigmaRed(V) reduces eComp(M0,eComp(N0,B)), T
+        by D2,E1,REWRITE1:15;
+      E3: [eComp(eExt(eComp(R2,Q2),z2,eComp(P2,Q2)),B),
+        eExt(eComp(eComp(R2,Q2),B),z2,eComp(eComp(P2,Q2),B))]
+        in SigmaRed(V) by ENVEPS_2:13;
+      E4: SigmaRed(V) reduces W,
+        eExt(eComp(eComp(R2,Q2),B),z2,eComp(eComp(P2,Q2),B))
+        by B1,B2,D1,E3,REWRITE1:15;
+      E5: [eComp(eComp(R2,Q2),B), eComp(R2,eComp(Q2,B))] in SigmaRed(V)
+        by ENVEPS_2:10;
+      [eExt(eComp(eComp(R2,Q2),B),z2,eComp(eComp(P2,Q2),B)),
+        eExt(eComp(R2,eComp(Q2,B)),z2,eComp(eComp(P2,Q2),B))]
+        in SigmaRed(V) by E5,ENVEPS_2:21;
+      then E6: SigmaRed(V) reduces W,
+        eExt(eComp(R2,eComp(Q2,B)),z2,eComp(eComp(P2,Q2),B))
+        by E4,ENVEPS_3:9;
+      E7: [eComp(eComp(P2,Q2),B), eComp(P2,eComp(Q2,B))] in SigmaRed(V)
+        by ENVEPS_2:10;
+      [eExt(eComp(R2,eComp(Q2,B)),z2,eComp(eComp(P2,Q2),B)), T]
+        in SigmaRed(V) by E7,ENVEPS_2:22;
+      then SigmaRed(V) reduces W, T by E6,ENVEPS_3:9;
+      hence thesis by E2,ENVEPS_2:26;
+    end;
+    suppose ex P2,Q2 being EnvEpsTerm of V, z2 being Element of V st
+        eComp(M0,N0) = eComp(eVar z2,eExt(P2,z2,Q2)) & M3 = P2;
+      then consider P2,Q2 being EnvEpsTerm of V, z2 being Element of V such
+        that
+      D1: eComp(M0,N0) = eComp(eVar z2,eExt(P2,z2,Q2)) & M3 = P2;
+      D2: M0 = eVar z2 & N0 = eExt(P2,z2,Q2) by D1,ENVEPS_1:14;
+      E1: [eComp(eExt(P2,z2,Q2),B),
+        eExt(eComp(P2,B),z2,eComp(Q2,B))] in SigmaRed(V) by ENVEPS_2:13;
+      [eComp(eVar z2,eComp(eExt(P2,z2,Q2),B)),
+        eComp(eVar z2,eExt(eComp(P2,B),z2,eComp(Q2,B)))] in SigmaRed(V)
+        by E1,ENVEPS_2:24;
+      then E2: SigmaRed(V) reduces eComp(M0,eComp(N0,B)),
+        eComp(eVar z2,eExt(eComp(P2,B),z2,eComp(Q2,B)))
+        by D2,REWRITE1:15;
+      [eComp(eVar z2,eExt(eComp(P2,B),z2,eComp(Q2,B))), eComp(P2,B)]
+        in SigmaRed(V) by ENVEPS_2:14;
+      then SigmaRed(V) reduces eComp(M0,eComp(N0,B)), eComp(P2,B)
+        by E2,ENVEPS_3:9;
+      then E3: SigmaRed(V) reduces eComp(M0,eComp(N0,B)), eComp(P2,B);
+      SigmaRed(V) reduces W, eComp(P2,B) by B1,B2,D1,REWRITE1:12;
+      hence thesis by E3,ENVEPS_2:26;
+    end;
+    suppose ex P2,Q2 being EnvEpsTerm of V, z2,w2 being Element of V st z2 <>
+        w2 & eComp(M0,N0) = eComp(eVar z2,eExt(P2,w2,Q2)) & M3 = eComp(eVar
+        z2, Q2);
+      then consider P2,Q2 being EnvEpsTerm of V, z2,w2 being Element of V such
+        that
+      D1: z2 <> w2 & eComp(M0,N0) = eComp(eVar z2,eExt(P2,w2,Q2)) & M3 =
+        eComp(eVar z2, Q2);
+      D2: M0 = eVar z2 & N0 = eExt(P2,w2,Q2) by D1,ENVEPS_1:14;
+      E1: [eComp(eExt(P2,w2,Q2),B),
+        eExt(eComp(P2,B),w2,eComp(Q2,B))] in SigmaRed(V) by ENVEPS_2:13;
+      [eComp(eVar z2,eComp(eExt(P2,w2,Q2),B)),
+        eComp(eVar z2,eExt(eComp(P2,B),w2,eComp(Q2,B)))] in SigmaRed(V)
+        by E1,ENVEPS_2:24;
+      then E2: SigmaRed(V) reduces eComp(M0,eComp(N0,B)),
+        eComp(eVar z2,eExt(eComp(P2,B),w2,eComp(Q2,B)))
+        by D2,REWRITE1:15;
+      [eComp(eVar z2,eExt(eComp(P2,B),w2,eComp(Q2,B))),
+        eComp(eVar z2,eComp(Q2,B))] in SigmaRed(V) by D1,ENVEPS_2:15;
+      then E3: SigmaRed(V) reduces eComp(M0,eComp(N0,B)),
+        eComp(eVar z2,eComp(Q2,B)) by E2,ENVEPS_3:9;
+      [eComp(eComp(eVar z2,Q2),B), eComp(eVar z2,eComp(Q2,B))]
+        in SigmaRed(V) by ENVEPS_2:10;
+      then SigmaRed(V) reduces W, eComp(eVar z2,eComp(Q2,B))
+        by B1,B2,D1,REWRITE1:15;
+      hence thesis by E3,ENVEPS_2:26;
+    end;
+    suppose ex P2,Q2,R2 being EnvEpsTerm of V st eComp(M0,N0) =
+        eComp(eApp(P2,Q2),R2) & M3 = eApp(eComp(P2,R2),eComp(Q2,R2));
+      then consider P2,Q2,R2 being EnvEpsTerm of V such that
+      D1: eComp(M0,N0) = eComp(eApp(P2,Q2),R2) & M3 =
+        eApp(eComp(P2,R2),eComp(Q2,R2));
+      D2: M0 = eApp(P2,Q2) & N0 = R2 by D1,ENVEPS_1:14;
+      set T = eApp(eComp(P2,eComp(R2,B)),eComp(Q2,eComp(R2,B)));
+      E1: [eComp(eApp(P2,Q2),eComp(R2,B)), T] in SigmaRed(V)
+        by ENVEPS_2:16;
+      E2: SigmaRed(V) reduces eComp(M0,eComp(N0,B)), T
+        by D2,E1,REWRITE1:15;
+      E3: [eComp(eApp(eComp(P2,R2),eComp(Q2,R2)),B),
+        eApp(eComp(eComp(P2,R2),B),eComp(eComp(Q2,R2),B))]
+        in SigmaRed(V) by ENVEPS_2:16;
+      E4: SigmaRed(V) reduces W,
+        eApp(eComp(eComp(P2,R2),B),eComp(eComp(Q2,R2),B))
+        by B1,B2,D1,E3,REWRITE1:15;
+      E5: [eComp(eComp(P2,R2),B), eComp(P2,eComp(R2,B))] in SigmaRed(V)
+        by ENVEPS_2:10;
+      [eApp(eComp(eComp(P2,R2),B),eComp(eComp(Q2,R2),B)),
+        eApp(eComp(P2,eComp(R2,B)),eComp(eComp(Q2,R2),B))]
+        in SigmaRed(V) by E5,ENVEPS_2:18;
+      then E6: SigmaRed(V) reduces W,
+        eApp(eComp(P2,eComp(R2,B)),eComp(eComp(Q2,R2),B))
+        by E4,ENVEPS_3:9;
+      E7: [eComp(eComp(Q2,R2),B), eComp(Q2,eComp(R2,B))] in SigmaRed(V)
+        by ENVEPS_2:10;
+      [eApp(eComp(P2,eComp(R2,B)),eComp(eComp(Q2,R2),B)), T]
+        in SigmaRed(V) by E7,ENVEPS_2:19;
+      then SigmaRed(V) reduces W, T by E6,ENVEPS_3:9;
+      hence thesis by E2,ENVEPS_2:26;
+    end;
+    suppose ex P2,Q2 being EnvEpsTerm of V st eComp(M0,N0) = eComp(eEps P2,Q2)
+        & M3 = eEps P2;
+      then consider P2,Q2 being EnvEpsTerm of V such that
+      D1: eComp(M0,N0) = eComp(eEps P2,Q2) & M3 = eEps P2;
+      D2: M0 = eEps P2 & N0 = Q2 by D1,ENVEPS_1:14;
+      E1: [eComp(eEps P2,eComp(Q2,B)), eEps P2] in SigmaRed(V)
+        by ENVEPS_2:17;
+      E2: SigmaRed(V) reduces eComp(M0,eComp(N0,B)), eEps P2
+        by D2,E1,REWRITE1:15;
+      [eComp(eEps P2,B), eEps P2] in SigmaRed(V) by ENVEPS_2:17;
+      then SigmaRed(V) reduces W, eEps P2 by B1,B2,D1,REWRITE1:15;
+      hence thesis by E2,ENVEPS_2:26;
+    end;
+    suppose ex P2,P3,Q2 being EnvEpsTerm of V st [P2,P3] in SigmaRed(V) &
+        eComp(M0,N0) = eComp(P2,Q2) & M3 = eComp(P3,Q2);
+      then consider P2,P3,Q2 being EnvEpsTerm of V such that
+      D1: [P2,P3] in SigmaRed(V) & eComp(M0,N0) = eComp(P2,Q2) & M3 =
+        eComp(P3,Q2);
+      D2: M0 = P2 & N0 = Q2 by D1,ENVEPS_1:14;
+      E1: [eComp(P2,eComp(Q2,B)), eComp(P3,eComp(Q2,B))] in SigmaRed(V)
+        by D1,ENVEPS_2:23;
+      E2: SigmaRed(V) reduces eComp(M0,eComp(N0,B)),
+        eComp(P3,eComp(Q2,B)) by D2,E1,REWRITE1:15;
+      [eComp(eComp(P3,Q2),B), eComp(P3,eComp(Q2,B))] in SigmaRed(V)
+        by ENVEPS_2:10;
+      then SigmaRed(V) reduces W, eComp(P3,eComp(Q2,B))
+        by B1,B2,D1,REWRITE1:15;
+      hence thesis by E2,ENVEPS_2:26;
+    end;
+    suppose ex P2,Q2,Q3 being EnvEpsTerm of V st [Q2,Q3] in SigmaRed(V) &
+        eComp(M0,N0) = eComp(P2,Q2) & M3 = eComp(P2,Q3);
+      then consider P2,Q2,Q3 being EnvEpsTerm of V such that
+      D1: [Q2,Q3] in SigmaRed(V) & eComp(M0,N0) = eComp(P2,Q2) & M3 =
+        eComp(P2,Q3);
+      D2: M0 = P2 & N0 = Q2 by D1,ENVEPS_1:14;
+      E0: [eComp(Q2,B), eComp(Q3,B)] in SigmaRed(V) by D1,ENVEPS_2:23;
+      E1: [eComp(P2,eComp(Q2,B)), eComp(P2,eComp(Q3,B))] in SigmaRed(V)
+        by E0,ENVEPS_2:24;
+      E2: SigmaRed(V) reduces eComp(M0,eComp(N0,B)),
+        eComp(P2,eComp(Q3,B)) by D2,E1,REWRITE1:15;
+      [eComp(eComp(P2,Q3),B), eComp(P2,eComp(Q3,B))] in SigmaRed(V)
+        by ENVEPS_2:10;
+      then SigmaRed(V) reduces W, eComp(P2,eComp(Q3,B))
+        by B1,B2,D1,REWRITE1:15;
+      hence thesis by E2,ENVEPS_2:26;
+    end;
+  end;
+  suppose ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in SigmaRed(V) &
+      eComp(eComp(M0,N0),B) = eComp(M2,N2) & W = eComp(M2,N3);
+    then consider M2,N2,N3 being EnvEpsTerm of V such that
+    B1: [N2,N3] in SigmaRed(V) & eComp(eComp(M0,N0),B) = eComp(M2,N2) & W =
+      eComp(M2,N3);
+    B2: eComp(M0,N0) = M2 & B = N2 by B1,ENVEPS_1:14;
+    C1: [eComp(eComp(M0,N0),N3), eComp(M0,eComp(N0,N3))] in SigmaRed(V)
+      by ENVEPS_2:10;
+    C2: SigmaRed(V) reduces W, eComp(M0,eComp(N0,N3))
+      by B1,B2,C1,REWRITE1:15;
+    [eComp(N0,B), eComp(N0,N3)] in SigmaRed(V) by B1,B2,ENVEPS_2:24;
+    then [eComp(M0,eComp(N0,B)), eComp(M0,eComp(N0,N3))]
+      in SigmaRed(V) by ENVEPS_2:24;
+    then SigmaRed(V) reduces eComp(M0,eComp(N0,B)),
+      eComp(M0,eComp(N0,N3)) by REWRITE1:15;
+    hence thesis by C2,ENVEPS_2:26;
+  end;
+end;
+
+begin :: Peaks below a composition
+
+theorem Th10:
+  for V being non empty set, A,B being EnvEpsTerm of V
+  st (for U1,U2 being EnvEpsTerm of V
+        st [A,U1] in SigmaRed(V) & [A,U2] in SigmaRed(V)
+        holds U1,U2 are_convergent_wrt SigmaRed(V)) &
+     (for U1,U2 being EnvEpsTerm of V
+        st [B,U1] in SigmaRed(V) & [B,U2] in SigmaRed(V)
+        holds U1,U2 are_convergent_wrt SigmaRed(V))
+  for W1,W2 being EnvEpsTerm of V
+  st [eComp(A,B),W1] in SigmaRed(V) & [eComp(A,B),W2] in SigmaRed(V)
+  holds W1,W2 are_convergent_wrt SigmaRed(V)
+proof
+  let V be non empty set, A,B be EnvEpsTerm of V;
+  assume B0: (for U1,U2 being EnvEpsTerm of V
+        st [A,U1] in SigmaRed(V) & [A,U2] in SigmaRed(V)
+        holds U1,U2 are_convergent_wrt SigmaRed(V)) &
+     (for U1,U2 being EnvEpsTerm of V
+        st [B,U1] in SigmaRed(V) & [B,U2] in SigmaRed(V)
+        holds U1,U2 are_convergent_wrt SigmaRed(V));
+  let W1,W2 be EnvEpsTerm of V;
+  assume B1: [eComp(A,B),W1] in SigmaRed(V) &
+    [eComp(A,B),W2] in SigmaRed(V);
+  C1:
+    ( ex M2,N2,L2 being EnvEpsTerm of V st eComp(A,B) = eComp(eComp(M2,N2),L2)
+      & W1 = eComp(M2,eComp(N2,L2)) ) or
+    ( ex M2 being EnvEpsTerm of V st eComp(A,B) = eComp(eId V,M2) & W1 = M2 )
+      or
+    ( ex M2 being EnvEpsTerm of V st eComp(A,B) = eComp(M2,eId V) & W1 = M2 )
+      or
+    ( ex L2,M2,N2 being EnvEpsTerm of V, x2 being Element of V st eComp(A,B) =
+      eComp(eExt(L2,x2,M2),N2) & W1 = eExt(eComp(L2,N2),x2,eComp(M2,N2)) ) or
+    ( ex M2,N2 being EnvEpsTerm of V, x2 being Element of V st eComp(A,B) =
+      eComp(eVar x2,eExt(M2,x2,N2)) & W1 = M2 ) or
+    ( ex M2,N2 being EnvEpsTerm of V, x2,y2 being Element of V st x2 <> y2 &
+      eComp(A,B) = eComp(eVar x2,eExt(M2,y2,N2)) & W1 = eComp(eVar x2, N2) )
+      or
+    ( ex M2,N2,L2 being EnvEpsTerm of V st eComp(A,B) = eComp(eApp(M2,N2),L2)
+      & W1 = eApp(eComp(M2,L2),eComp(N2,L2)) ) or
+    ( ex M2,N2 being EnvEpsTerm of V st eComp(A,B) = eComp(eEps M2,N2) & W1 =
+      eEps M2 ) or
+    ( ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in SigmaRed(V) & eComp(A,B)
+      = eComp(M2,N2) & W1 = eComp(M3,N2) ) or
+    ( ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in SigmaRed(V) & eComp(A,B)
+      = eComp(M2,N2) & W1 = eComp(M2,N3) )
+    by B1,ENVEPS_3:8;
+  per cases by C1;
+  suppose ex M2,N2,L2 being EnvEpsTerm of V st eComp(A,B) =
+      eComp(eComp(M2,N2),L2) & W1 = eComp(M2,eComp(N2,L2));
+    then consider M2,N2,L2 being EnvEpsTerm of V such that
+    D1: eComp(A,B) = eComp(eComp(M2,N2),L2) & W1 = eComp(M2,eComp(N2,L2));
+    D2: A = eComp(M2,N2) & B = L2 by D1,ENVEPS_1:14;
+    D3: [eComp(eComp(M2,N2),L2),W2] in SigmaRed(V) by B1,D2;
+    thus thesis by D1,D3,Th9;
+  end;
+  suppose ex M2 being EnvEpsTerm of V st eComp(A,B) = eComp(eId V,M2) & W1 =
+      M2;
+    then consider M2 being EnvEpsTerm of V such that
+    D1: eComp(A,B) = eComp(eId V,M2) & W1 = M2;
+    D2: A = eId V & B = M2 by D1,ENVEPS_1:14;
+    D3: [eComp(eId V,M2),W2] in SigmaRed(V) by B1,D2;
+    thus thesis by D1,D3,Th3;
+  end;
+  suppose ex M2 being EnvEpsTerm of V st eComp(A,B) = eComp(M2,eId V) & W1 =
+      M2;
+    then consider M2 being EnvEpsTerm of V such that
+    D1: eComp(A,B) = eComp(M2,eId V) & W1 = M2;
+    D2: A = M2 & B = eId V by D1,ENVEPS_1:14;
+    D3: [eComp(M2,eId V),W2] in SigmaRed(V) by B1,D2;
+    thus thesis by D1,D3,Th4;
+  end;
+  suppose ex L2,M2,N2 being EnvEpsTerm of V, x2 being Element of V st
+      eComp(A,B) = eComp(eExt(L2,x2,M2),N2) & W1 =
+      eExt(eComp(L2,N2),x2,eComp(M2,N2));
+    then consider L2,M2,N2 being EnvEpsTerm of V, x2 being Element of V such
+      that
+    D1: eComp(A,B) = eComp(eExt(L2,x2,M2),N2) & W1 =
+      eExt(eComp(L2,N2),x2,eComp(M2,N2));
+    D2: A = eExt(L2,x2,M2) & B = N2 by D1,ENVEPS_1:14;
+    D3: [eComp(eExt(L2,x2,M2),N2),W2] in SigmaRed(V) by B1,D2;
+    thus thesis by D1,D3,Th6;
+  end;
+  suppose ex M2,N2 being EnvEpsTerm of V, x2 being Element of V st eComp(A,B)
+      = eComp(eVar x2,eExt(M2,x2,N2)) & W1 = M2;
+    then consider M2,N2 being EnvEpsTerm of V, x2 being Element of V such that
+    D1: eComp(A,B) = eComp(eVar x2,eExt(M2,x2,N2)) & W1 = M2;
+    D2: A = eVar x2 & B = eExt(M2,x2,N2) by D1,ENVEPS_1:14;
+    D3: [eComp(eVar x2,eExt(M2,x2,N2)),W2] in SigmaRed(V) by B1,D2;
+    thus thesis by D1,D3,Th7;
+  end;
+  suppose ex M2,N2 being EnvEpsTerm of V, x2,y2 being Element of V st x2 <> y2
+      & eComp(A,B) = eComp(eVar x2,eExt(M2,y2,N2)) & W1 = eComp(eVar x2, N2);
+    then consider M2,N2 being EnvEpsTerm of V, x2,y2 being Element of V such
+      that
+    D1: x2 <> y2 & eComp(A,B) = eComp(eVar x2,eExt(M2,y2,N2)) & W1 =
+      eComp(eVar x2, N2);
+    D2: A = eVar x2 & B = eExt(M2,y2,N2) by D1,ENVEPS_1:14;
+    D3: [eComp(eVar x2,eExt(M2,y2,N2)),W2] in SigmaRed(V) by B1,D2;
+    thus thesis by D1,D3,Th8,D1;
+  end;
+  suppose ex M2,N2,L2 being EnvEpsTerm of V st eComp(A,B) =
+      eComp(eApp(M2,N2),L2) & W1 = eApp(eComp(M2,L2),eComp(N2,L2));
+    then consider M2,N2,L2 being EnvEpsTerm of V such that
+    D1: eComp(A,B) = eComp(eApp(M2,N2),L2) & W1 =
+      eApp(eComp(M2,L2),eComp(N2,L2));
+    D2: A = eApp(M2,N2) & B = L2 by D1,ENVEPS_1:14;
+    D3: [eComp(eApp(M2,N2),L2),W2] in SigmaRed(V) by B1,D2;
+    thus thesis by D1,D3,Th5;
+  end;
+  suppose ex M2,N2 being EnvEpsTerm of V st eComp(A,B) = eComp(eEps M2,N2) &
+      W1 = eEps M2;
+    then consider M2,N2 being EnvEpsTerm of V such that
+    D1: eComp(A,B) = eComp(eEps M2,N2) & W1 = eEps M2;
+    D2: A = eEps M2 & B = N2 by D1,ENVEPS_1:14;
+    D3: [eComp(eEps M2,N2),W2] in SigmaRed(V) by B1,D2;
+    thus thesis by D1,D3,Th2;
+  end;
+  suppose ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in SigmaRed(V) &
+      eComp(A,B) = eComp(M2,N2) & W1 = eComp(M3,N2);
+    then consider M2,M3,N2 being EnvEpsTerm of V such that
+    D1: [M2,M3] in SigmaRed(V) & eComp(A,B) = eComp(M2,N2) & W1 =
+      eComp(M3,N2);
+    D2: A = M2 & B = N2 by D1,ENVEPS_1:14;
+    E1:
+      ( ex U2,V2,K2 being EnvEpsTerm of V st eComp(A,B) =
+        eComp(eComp(U2,V2),K2) & W2 = eComp(U2,eComp(V2,K2)) ) or
+      ( ex U2 being EnvEpsTerm of V st eComp(A,B) = eComp(eId V,U2) & W2 = U2
+        ) or
+      ( ex U2 being EnvEpsTerm of V st eComp(A,B) = eComp(U2,eId V) & W2 = U2
+        ) or
+      ( ex K2,U2,V2 being EnvEpsTerm of V, s2 being Element of V st eComp(A,B)
+        = eComp(eExt(K2,s2,U2),V2) & W2 = eExt(eComp(K2,V2),s2,eComp(U2,V2)) )
+        or
+      ( ex U2,V2 being EnvEpsTerm of V, s2 being Element of V st eComp(A,B) =
+        eComp(eVar s2,eExt(U2,s2,V2)) & W2 = U2 ) or
+      ( ex U2,V2 being EnvEpsTerm of V, s2,t2 being Element of V st s2 <> t2 &
+        eComp(A,B) = eComp(eVar s2,eExt(U2,t2,V2)) & W2 = eComp(eVar s2, V2) )
+        or
+      ( ex U2,V2,K2 being EnvEpsTerm of V st eComp(A,B) =
+        eComp(eApp(U2,V2),K2) & W2 = eApp(eComp(U2,K2),eComp(V2,K2)) ) or
+      ( ex U2,V2 being EnvEpsTerm of V st eComp(A,B) = eComp(eEps U2,V2) & W2
+        = eEps U2 ) or
+      ( ex U2,U3,V2 being EnvEpsTerm of V st [U2,U3] in SigmaRed(V) &
+        eComp(A,B) = eComp(U2,V2) & W2 = eComp(U3,V2) ) or
+      ( ex U2,V2,V3 being EnvEpsTerm of V st [V2,V3] in SigmaRed(V) &
+        eComp(A,B) = eComp(U2,V2) & W2 = eComp(U2,V3) )
+      by B1,ENVEPS_3:8;
+    per cases by E1;
+    suppose ex U2,V2,K2 being EnvEpsTerm of V st eComp(A,B) =
+        eComp(eComp(U2,V2),K2) & W2 = eComp(U2,eComp(V2,K2));
+      then consider U2,V2,K2 being EnvEpsTerm of V such that
+      F1: eComp(A,B) = eComp(eComp(U2,V2),K2) & W2 = eComp(U2,eComp(V2,K2));
+      F2: A = eComp(U2,V2) & B = K2 by F1,ENVEPS_1:14;
+      F3: [eComp(eComp(U2,V2),K2),W1] in SigmaRed(V) by B1,F2;
+      W2,W1 are_convergent_wrt SigmaRed(V) by F1,F3,Th9;
+      hence thesis by Th1;
+    end;
+    suppose ex U2 being EnvEpsTerm of V st eComp(A,B) = eComp(eId V,U2) & W2 =
+        U2;
+      then consider U2 being EnvEpsTerm of V such that
+      F1: eComp(A,B) = eComp(eId V,U2) & W2 = U2;
+      F2: A = eId V & B = U2 by F1,ENVEPS_1:14;
+      F3: [eComp(eId V,U2),W1] in SigmaRed(V) by B1,F2;
+      W2,W1 are_convergent_wrt SigmaRed(V) by F1,F3,Th3;
+      hence thesis by Th1;
+    end;
+    suppose ex U2 being EnvEpsTerm of V st eComp(A,B) = eComp(U2,eId V) & W2 =
+        U2;
+      then consider U2 being EnvEpsTerm of V such that
+      F1: eComp(A,B) = eComp(U2,eId V) & W2 = U2;
+      F2: A = U2 & B = eId V by F1,ENVEPS_1:14;
+      F3: [eComp(U2,eId V),W1] in SigmaRed(V) by B1,F2;
+      W2,W1 are_convergent_wrt SigmaRed(V) by F1,F3,Th4;
+      hence thesis by Th1;
+    end;
+    suppose ex K2,U2,V2 being EnvEpsTerm of V, s2 being Element of V st
+        eComp(A,B) = eComp(eExt(K2,s2,U2),V2) & W2 =
+        eExt(eComp(K2,V2),s2,eComp(U2,V2));
+      then consider K2,U2,V2 being EnvEpsTerm of V, s2 being Element of V such
+        that
+      F1: eComp(A,B) = eComp(eExt(K2,s2,U2),V2) & W2 =
+        eExt(eComp(K2,V2),s2,eComp(U2,V2));
+      F2: A = eExt(K2,s2,U2) & B = V2 by F1,ENVEPS_1:14;
+      F3: [eComp(eExt(K2,s2,U2),V2),W1] in SigmaRed(V) by B1,F2;
+      W2,W1 are_convergent_wrt SigmaRed(V) by F1,F3,Th6;
+      hence thesis by Th1;
+    end;
+    suppose ex U2,V2 being EnvEpsTerm of V, s2 being Element of V st
+        eComp(A,B) = eComp(eVar s2,eExt(U2,s2,V2)) & W2 = U2;
+      then consider U2,V2 being EnvEpsTerm of V, s2 being Element of V such
+        that
+      F1: eComp(A,B) = eComp(eVar s2,eExt(U2,s2,V2)) & W2 = U2;
+      F2: A = eVar s2 & B = eExt(U2,s2,V2) by F1,ENVEPS_1:14;
+      F3: [eComp(eVar s2,eExt(U2,s2,V2)),W1] in SigmaRed(V) by B1,F2;
+      W2,W1 are_convergent_wrt SigmaRed(V) by F1,F3,Th7;
+      hence thesis by Th1;
+    end;
+    suppose ex U2,V2 being EnvEpsTerm of V, s2,t2 being Element of V st s2 <>
+        t2 & eComp(A,B) = eComp(eVar s2,eExt(U2,t2,V2)) & W2 = eComp(eVar s2,
+        V2);
+      then consider U2,V2 being EnvEpsTerm of V, s2,t2 being Element of V such
+        that
+      F1: s2 <> t2 & eComp(A,B) = eComp(eVar s2,eExt(U2,t2,V2)) & W2 =
+        eComp(eVar s2, V2);
+      F2: A = eVar s2 & B = eExt(U2,t2,V2) by F1,ENVEPS_1:14;
+      F3: [eComp(eVar s2,eExt(U2,t2,V2)),W1] in SigmaRed(V) by B1,F2;
+      W2,W1 are_convergent_wrt SigmaRed(V) by F1,F3,Th8,F1;
+      hence thesis by Th1;
+    end;
+    suppose ex U2,V2,K2 being EnvEpsTerm of V st eComp(A,B) =
+        eComp(eApp(U2,V2),K2) & W2 = eApp(eComp(U2,K2),eComp(V2,K2));
+      then consider U2,V2,K2 being EnvEpsTerm of V such that
+      F1: eComp(A,B) = eComp(eApp(U2,V2),K2) & W2 =
+        eApp(eComp(U2,K2),eComp(V2,K2));
+      F2: A = eApp(U2,V2) & B = K2 by F1,ENVEPS_1:14;
+      F3: [eComp(eApp(U2,V2),K2),W1] in SigmaRed(V) by B1,F2;
+      W2,W1 are_convergent_wrt SigmaRed(V) by F1,F3,Th5;
+      hence thesis by Th1;
+    end;
+    suppose ex U2,V2 being EnvEpsTerm of V st eComp(A,B) = eComp(eEps U2,V2) &
+        W2 = eEps U2;
+      then consider U2,V2 being EnvEpsTerm of V such that
+      F1: eComp(A,B) = eComp(eEps U2,V2) & W2 = eEps U2;
+      F2: A = eEps U2 & B = V2 by F1,ENVEPS_1:14;
+      F3: [eComp(eEps U2,V2),W1] in SigmaRed(V) by B1,F2;
+      W2,W1 are_convergent_wrt SigmaRed(V) by F1,F3,Th2;
+      hence thesis by Th1;
+    end;
+    suppose ex U2,U3,V2 being EnvEpsTerm of V st [U2,U3] in SigmaRed(V) &
+        eComp(A,B) = eComp(U2,V2) & W2 = eComp(U3,V2);
+      then consider U2,U3,V2 being EnvEpsTerm of V such that
+      F1: [U2,U3] in SigmaRed(V) & eComp(A,B) = eComp(U2,V2) & W2 =
+        eComp(U3,V2);
+      F2: A = U2 & B = V2 by F1,ENVEPS_1:14;
+      F4: U3,M3 are_convergent_wrt SigmaRed(V)
+        by B0,D1,D2,F1,F2;
+      consider T being EnvEpsTerm of V such that
+      F5: SigmaRed(V) reduces U3,T & SigmaRed(V) reduces M3,T
+        by F4,ENVEPS_3:1;
+      F6: SigmaRed(V) reduces eComp(M3,B), eComp(T,B)
+        by F5,ENVEPS_2:6;
+      SigmaRed(V) reduces eComp(U3,B), eComp(T,B)
+        by F5,ENVEPS_2:6;
+      hence thesis by D1,D2,F1,F2,F6,ENVEPS_2:26;
+    end;
+    suppose ex U2,V2,V3 being EnvEpsTerm of V st [V2,V3] in SigmaRed(V) &
+        eComp(A,B) = eComp(U2,V2) & W2 = eComp(U2,V3);
+      then consider U2,V2,V3 being EnvEpsTerm of V such that
+      F1: [V2,V3] in SigmaRed(V) & eComp(A,B) = eComp(U2,V2) & W2 =
+        eComp(U2,V3);
+      F2: A = U2 & B = V2 by F1,ENVEPS_1:14;
+      F3: [eComp(M3,B), eComp(M3,V3)] in SigmaRed(V)
+        by F1,F2,ENVEPS_2:24;
+      F4: SigmaRed(V) reduces W1, eComp(M3,V3)
+        by D1,D2,F3,REWRITE1:15;
+      [eComp(A,V3), eComp(M3,V3)] in SigmaRed(V)
+        by D1,D2,ENVEPS_2:23;
+      then SigmaRed(V) reduces W2, eComp(M3,V3)
+        by F1,F2,REWRITE1:15;
+      hence thesis by F4,ENVEPS_2:26;
+    end;
+  end;
+  suppose ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in SigmaRed(V) &
+      eComp(A,B) = eComp(M2,N2) & W1 = eComp(M2,N3);
+    then consider M2,N2,N3 being EnvEpsTerm of V such that
+    D1: [N2,N3] in SigmaRed(V) & eComp(A,B) = eComp(M2,N2) & W1 =
+      eComp(M2,N3);
+    D2: A = M2 & B = N2 by D1,ENVEPS_1:14;
+    E1:
+      ( ex U2,V2,K2 being EnvEpsTerm of V st eComp(A,B) =
+        eComp(eComp(U2,V2),K2) & W2 = eComp(U2,eComp(V2,K2)) ) or
+      ( ex U2 being EnvEpsTerm of V st eComp(A,B) = eComp(eId V,U2) & W2 = U2
+        ) or
+      ( ex U2 being EnvEpsTerm of V st eComp(A,B) = eComp(U2,eId V) & W2 = U2
+        ) or
+      ( ex K2,U2,V2 being EnvEpsTerm of V, s2 being Element of V st eComp(A,B)
+        = eComp(eExt(K2,s2,U2),V2) & W2 = eExt(eComp(K2,V2),s2,eComp(U2,V2)) )
+        or
+      ( ex U2,V2 being EnvEpsTerm of V, s2 being Element of V st eComp(A,B) =
+        eComp(eVar s2,eExt(U2,s2,V2)) & W2 = U2 ) or
+      ( ex U2,V2 being EnvEpsTerm of V, s2,t2 being Element of V st s2 <> t2 &
+        eComp(A,B) = eComp(eVar s2,eExt(U2,t2,V2)) & W2 = eComp(eVar s2, V2) )
+        or
+      ( ex U2,V2,K2 being EnvEpsTerm of V st eComp(A,B) =
+        eComp(eApp(U2,V2),K2) & W2 = eApp(eComp(U2,K2),eComp(V2,K2)) ) or
+      ( ex U2,V2 being EnvEpsTerm of V st eComp(A,B) = eComp(eEps U2,V2) & W2
+        = eEps U2 ) or
+      ( ex U2,U3,V2 being EnvEpsTerm of V st [U2,U3] in SigmaRed(V) &
+        eComp(A,B) = eComp(U2,V2) & W2 = eComp(U3,V2) ) or
+      ( ex U2,V2,V3 being EnvEpsTerm of V st [V2,V3] in SigmaRed(V) &
+        eComp(A,B) = eComp(U2,V2) & W2 = eComp(U2,V3) )
+      by B1,ENVEPS_3:8;
+    per cases by E1;
+    suppose ex U2,V2,K2 being EnvEpsTerm of V st eComp(A,B) =
+        eComp(eComp(U2,V2),K2) & W2 = eComp(U2,eComp(V2,K2));
+      then consider U2,V2,K2 being EnvEpsTerm of V such that
+      F1: eComp(A,B) = eComp(eComp(U2,V2),K2) & W2 = eComp(U2,eComp(V2,K2));
+      F2: A = eComp(U2,V2) & B = K2 by F1,ENVEPS_1:14;
+      F3: [eComp(eComp(U2,V2),K2),W1] in SigmaRed(V) by B1,F2;
+      W2,W1 are_convergent_wrt SigmaRed(V) by F1,F3,Th9;
+      hence thesis by Th1;
+    end;
+    suppose ex U2 being EnvEpsTerm of V st eComp(A,B) = eComp(eId V,U2) & W2 =
+        U2;
+      then consider U2 being EnvEpsTerm of V such that
+      F1: eComp(A,B) = eComp(eId V,U2) & W2 = U2;
+      F2: A = eId V & B = U2 by F1,ENVEPS_1:14;
+      F3: [eComp(eId V,U2),W1] in SigmaRed(V) by B1,F2;
+      W2,W1 are_convergent_wrt SigmaRed(V) by F1,F3,Th3;
+      hence thesis by Th1;
+    end;
+    suppose ex U2 being EnvEpsTerm of V st eComp(A,B) = eComp(U2,eId V) & W2 =
+        U2;
+      then consider U2 being EnvEpsTerm of V such that
+      F1: eComp(A,B) = eComp(U2,eId V) & W2 = U2;
+      F2: A = U2 & B = eId V by F1,ENVEPS_1:14;
+      F3: [eComp(U2,eId V),W1] in SigmaRed(V) by B1,F2;
+      W2,W1 are_convergent_wrt SigmaRed(V) by F1,F3,Th4;
+      hence thesis by Th1;
+    end;
+    suppose ex K2,U2,V2 being EnvEpsTerm of V, s2 being Element of V st
+        eComp(A,B) = eComp(eExt(K2,s2,U2),V2) & W2 =
+        eExt(eComp(K2,V2),s2,eComp(U2,V2));
+      then consider K2,U2,V2 being EnvEpsTerm of V, s2 being Element of V such
+        that
+      F1: eComp(A,B) = eComp(eExt(K2,s2,U2),V2) & W2 =
+        eExt(eComp(K2,V2),s2,eComp(U2,V2));
+      F2: A = eExt(K2,s2,U2) & B = V2 by F1,ENVEPS_1:14;
+      F3: [eComp(eExt(K2,s2,U2),V2),W1] in SigmaRed(V) by B1,F2;
+      W2,W1 are_convergent_wrt SigmaRed(V) by F1,F3,Th6;
+      hence thesis by Th1;
+    end;
+    suppose ex U2,V2 being EnvEpsTerm of V, s2 being Element of V st
+        eComp(A,B) = eComp(eVar s2,eExt(U2,s2,V2)) & W2 = U2;
+      then consider U2,V2 being EnvEpsTerm of V, s2 being Element of V such
+        that
+      F1: eComp(A,B) = eComp(eVar s2,eExt(U2,s2,V2)) & W2 = U2;
+      F2: A = eVar s2 & B = eExt(U2,s2,V2) by F1,ENVEPS_1:14;
+      F3: [eComp(eVar s2,eExt(U2,s2,V2)),W1] in SigmaRed(V) by B1,F2;
+      W2,W1 are_convergent_wrt SigmaRed(V) by F1,F3,Th7;
+      hence thesis by Th1;
+    end;
+    suppose ex U2,V2 being EnvEpsTerm of V, s2,t2 being Element of V st s2 <>
+        t2 & eComp(A,B) = eComp(eVar s2,eExt(U2,t2,V2)) & W2 = eComp(eVar s2,
+        V2);
+      then consider U2,V2 being EnvEpsTerm of V, s2,t2 being Element of V such
+        that
+      F1: s2 <> t2 & eComp(A,B) = eComp(eVar s2,eExt(U2,t2,V2)) & W2 =
+        eComp(eVar s2, V2);
+      F2: A = eVar s2 & B = eExt(U2,t2,V2) by F1,ENVEPS_1:14;
+      F3: [eComp(eVar s2,eExt(U2,t2,V2)),W1] in SigmaRed(V) by B1,F2;
+      W2,W1 are_convergent_wrt SigmaRed(V) by F1,F3,Th8,F1;
+      hence thesis by Th1;
+    end;
+    suppose ex U2,V2,K2 being EnvEpsTerm of V st eComp(A,B) =
+        eComp(eApp(U2,V2),K2) & W2 = eApp(eComp(U2,K2),eComp(V2,K2));
+      then consider U2,V2,K2 being EnvEpsTerm of V such that
+      F1: eComp(A,B) = eComp(eApp(U2,V2),K2) & W2 =
+        eApp(eComp(U2,K2),eComp(V2,K2));
+      F2: A = eApp(U2,V2) & B = K2 by F1,ENVEPS_1:14;
+      F3: [eComp(eApp(U2,V2),K2),W1] in SigmaRed(V) by B1,F2;
+      W2,W1 are_convergent_wrt SigmaRed(V) by F1,F3,Th5;
+      hence thesis by Th1;
+    end;
+    suppose ex U2,V2 being EnvEpsTerm of V st eComp(A,B) = eComp(eEps U2,V2) &
+        W2 = eEps U2;
+      then consider U2,V2 being EnvEpsTerm of V such that
+      F1: eComp(A,B) = eComp(eEps U2,V2) & W2 = eEps U2;
+      F2: A = eEps U2 & B = V2 by F1,ENVEPS_1:14;
+      F3: [eComp(eEps U2,V2),W1] in SigmaRed(V) by B1,F2;
+      W2,W1 are_convergent_wrt SigmaRed(V) by F1,F3,Th2;
+      hence thesis by Th1;
+    end;
+    suppose ex U2,U3,V2 being EnvEpsTerm of V st [U2,U3] in SigmaRed(V) &
+        eComp(A,B) = eComp(U2,V2) & W2 = eComp(U3,V2);
+      then consider U2,U3,V2 being EnvEpsTerm of V such that
+      F1: [U2,U3] in SigmaRed(V) & eComp(A,B) = eComp(U2,V2) & W2 =
+        eComp(U3,V2);
+      F2: A = U2 & B = V2 by F1,ENVEPS_1:14;
+      F3: [eComp(A,N3), eComp(U3,N3)] in SigmaRed(V)
+        by F1,F2,ENVEPS_2:23;
+      F4: SigmaRed(V) reduces W1, eComp(U3,N3)
+        by D1,D2,F3,REWRITE1:15;
+      [eComp(U3,B), eComp(U3,N3)] in SigmaRed(V)
+        by D1,D2,ENVEPS_2:24;
+      then SigmaRed(V) reduces W2, eComp(U3,N3)
+        by F1,F2,REWRITE1:15;
+      hence thesis by F4,ENVEPS_2:26;
+    end;
+    suppose ex U2,V2,V3 being EnvEpsTerm of V st [V2,V3] in SigmaRed(V) &
+        eComp(A,B) = eComp(U2,V2) & W2 = eComp(U2,V3);
+      then consider U2,V2,V3 being EnvEpsTerm of V such that
+      F1: [V2,V3] in SigmaRed(V) & eComp(A,B) = eComp(U2,V2) & W2 =
+        eComp(U2,V3);
+      F2: A = U2 & B = V2 by F1,ENVEPS_1:14;
+      F4: V3,N3 are_convergent_wrt SigmaRed(V)
+        by B0,D1,D2,F1,F2;
+      consider T being EnvEpsTerm of V such that
+      F5: SigmaRed(V) reduces V3,T & SigmaRed(V) reduces N3,T
+        by F4,ENVEPS_3:1;
+      F6: SigmaRed(V) reduces eComp(A,N3), eComp(A,T)
+        by F5,ENVEPS_2:7;
+      SigmaRed(V) reduces eComp(A,V3), eComp(A,T)
+        by F5,ENVEPS_2:7;
+      hence thesis by D1,D2,F1,F2,F6,ENVEPS_2:26;
+    end;
+  end;
+end;
+
+
+begin :: Local confluence and confluence of the sigma reduction
+
+theorem Th11:
+  for V being non empty set holds SigmaRed(V) is locally-confluent
+proof
+  let V be non empty set;
+  set G = EnvEpsGram(V);
+  defpred P[set] means for U1,U2 being EnvEpsTerm of V
+    st [$1,U1] in SigmaRed(V) & [$1,U2] in SigmaRed(V)
+      holds U1,U2 are_convergent_wrt SigmaRed(V);
+  A1: for v being Element of V holds P[eVar v]
+  proof
+    let v be Element of V;
+    let U1,U2 be EnvEpsTerm of V;
+    assume [eVar v,U1] in SigmaRed(V) & [eVar v,U2] in SigmaRed(V);
+    hence thesis by ENVEPS_3:2;
+  end;
+  A2: P[eId V]
+  proof
+    let U1,U2 be EnvEpsTerm of V;
+    assume [eId V,U1] in SigmaRed(V) & [eId V,U2] in SigmaRed(V);
+    hence thesis by ENVEPS_3:3;
+  end;
+  A3: for v being Element of V, A being EnvEpsTerm of V st P[A]
+    holds P[eLam(v,A)]
+  proof
+    let v be Element of V, A be EnvEpsTerm of V;
+    assume C0: P[A];
+    let U1,U2 be EnvEpsTerm of V;
+    assume C1: [eLam(v,A),U1] in SigmaRed(V) &
+      [eLam(v,A),U2] in SigmaRed(V);
+    consider P1,Q1 being EnvEpsTerm of V, y1 being Element of V such that
+    C2: [P1,Q1] in SigmaRed(V) & eLam(v,A) = eLam(y1,P1) & U1 = eLam(y1,Q1)
+      by C1,ENVEPS_3:4;
+    consider P2,Q2 being EnvEpsTerm of V, y2 being Element of V such that
+    C3: [P2,Q2] in SigmaRed(V) & eLam(v,A) = eLam(y2,P2) & U2 = eLam(y2,Q2)
+      by C1,ENVEPS_3:4;
+    C4: v = y1 & A = P1 by C2,ENVEPS_1:11;
+    C5: v = y2 & A = P2 by C3,ENVEPS_1:11;
+    Q1,Q2 are_convergent_wrt SigmaRed(V) by C0,C2,C3,C4,C5;
+    then consider T being EnvEpsTerm of V such that
+    C6: SigmaRed(V) reduces Q1,T & SigmaRed(V) reduces Q2,T by ENVEPS_3:1;
+    C7: SigmaRed(V) reduces eLam(v,Q1), eLam(v,T) by C6,ENVEPS_2:3;
+    SigmaRed(V) reduces eLam(v,Q2), eLam(v,T) by C6,ENVEPS_2:3;
+    hence thesis by C2,C3,C4,C5,C7,ENVEPS_2:26;
+  end;
+  A4: for A being EnvEpsTerm of V st P[A] holds P[eEps A]
+  proof
+    let A be EnvEpsTerm of V;
+    assume C0: P[A];
+    let U1,U2 be EnvEpsTerm of V;
+    assume C1: [eEps A,U1] in SigmaRed(V) & [eEps A,U2] in SigmaRed(V);
+    consider P1,Q1 being EnvEpsTerm of V such that
+    C2: [P1,Q1] in SigmaRed(V) & eEps A = eEps P1 & U1 = eEps Q1
+      by C1,ENVEPS_3:5;
+    consider P2,Q2 being EnvEpsTerm of V such that
+    C3: [P2,Q2] in SigmaRed(V) & eEps A = eEps P2 & U2 = eEps Q2
+      by C1,ENVEPS_3:5;
+    C4: A = P1 by C2,ENVEPS_1:12;
+    C5: A = P2 by C3,ENVEPS_1:12;
+    Q1,Q2 are_convergent_wrt SigmaRed(V) by C0,C2,C3,C4,C5;
+    then consider T being EnvEpsTerm of V such that
+    C6: SigmaRed(V) reduces Q1,T & SigmaRed(V) reduces Q2,T by ENVEPS_3:1;
+    C7: SigmaRed(V) reduces eEps Q1, eEps T by C6,ENVEPS_2:8;
+    SigmaRed(V) reduces eEps Q2, eEps T by C6,ENVEPS_2:8;
+    hence thesis by C2,C3,C7,ENVEPS_2:26;
+  end;
+  A5: for A,B being EnvEpsTerm of V st P[A] & P[B] holds P[eApp(A,B)]
+  proof
+    let A,B be EnvEpsTerm of V;
+    assume C0: P[A] & P[B];
+    let U1,U2 be EnvEpsTerm of V;
+    assume C1: [eApp(A,B),U1] in SigmaRed(V) &
+      [eApp(A,B),U2] in SigmaRed(V);
+    C2: ( ex P1,Q1,R1 being EnvEpsTerm of V st [P1,Q1] in SigmaRed(V) &
+          eApp(A,B) = eApp(P1,R1) & U1 = eApp(Q1,R1) ) or
+        ( ex P1,R1,S1 being EnvEpsTerm of V st [R1,S1] in SigmaRed(V) &
+          eApp(A,B) = eApp(P1,R1) & U1 = eApp(P1,S1) ) by C1,ENVEPS_3:6;
+    C3: ( ex P2,Q2,R2 being EnvEpsTerm of V st [P2,Q2] in SigmaRed(V) &
+          eApp(A,B) = eApp(P2,R2) & U2 = eApp(Q2,R2) ) or
+        ( ex P2,R2,S2 being EnvEpsTerm of V st [R2,S2] in SigmaRed(V) &
+          eApp(A,B) = eApp(P2,R2) & U2 = eApp(P2,S2) ) by C1,ENVEPS_3:6;
+    per cases by C2;
+    suppose ex P1,Q1,R1 being EnvEpsTerm of V st [P1,Q1] in SigmaRed(V) &
+        eApp(A,B) = eApp(P1,R1) & U1 = eApp(Q1,R1);
+      then consider P1,Q1,R1 being EnvEpsTerm of V such that
+      D1: [P1,Q1] in SigmaRed(V) & eApp(A,B) = eApp(P1,R1) &
+        U1 = eApp(Q1,R1);
+      D2: A = P1 & B = R1 by D1,ENVEPS_1:13;
+      per cases by C3;
+      suppose ex P2,Q2,R2 being EnvEpsTerm of V st [P2,Q2] in SigmaRed(V) &
+          eApp(A,B) = eApp(P2,R2) & U2 = eApp(Q2,R2);
+        then consider P2,Q2,R2 being EnvEpsTerm of V such that
+        E1: [P2,Q2] in SigmaRed(V) & eApp(A,B) = eApp(P2,R2) &
+          U2 = eApp(Q2,R2);
+        E2: A = P2 & B = R2 by E1,ENVEPS_1:13;
+        Q1,Q2 are_convergent_wrt SigmaRed(V) by C0,D1,D2,E1,E2;
+        then consider T being EnvEpsTerm of V such that
+        E3: SigmaRed(V) reduces Q1,T & SigmaRed(V) reduces Q2,T
+          by ENVEPS_3:1;
+        E4: SigmaRed(V) reduces eApp(Q1,B), eApp(T,B) by E3,ENVEPS_2:1;
+        SigmaRed(V) reduces eApp(Q2,B), eApp(T,B) by E3,ENVEPS_2:1;
+        hence thesis by D1,D2,E1,E2,E4,ENVEPS_2:26;
+      end;
+      suppose ex P2,R2,S2 being EnvEpsTerm of V st [R2,S2] in SigmaRed(V) &
+          eApp(A,B) = eApp(P2,R2) & U2 = eApp(P2,S2);
+        then consider P2,R2,S2 being EnvEpsTerm of V such that
+        E1: [R2,S2] in SigmaRed(V) & eApp(A,B) = eApp(P2,R2) &
+          U2 = eApp(P2,S2);
+        E2: A = P2 & B = R2 by E1,ENVEPS_1:13;
+        [eApp(Q1,B), eApp(Q1,S2)] in SigmaRed(V) by E1,E2,ENVEPS_2:19;
+        then E3: SigmaRed(V) reduces U1, eApp(Q1,S2)
+          by D1,D2,REWRITE1:15;
+        [eApp(A,S2), eApp(Q1,S2)] in SigmaRed(V) by D1,D2,ENVEPS_2:18;
+        then SigmaRed(V) reduces U2, eApp(Q1,S2) by E1,E2,REWRITE1:15;
+        hence thesis by E3,ENVEPS_2:26;
+      end;
+    end;
+    suppose ex P1,R1,S1 being EnvEpsTerm of V st [R1,S1] in SigmaRed(V) &
+        eApp(A,B) = eApp(P1,R1) & U1 = eApp(P1,S1);
+      then consider P1,R1,S1 being EnvEpsTerm of V such that
+      D1: [R1,S1] in SigmaRed(V) & eApp(A,B) = eApp(P1,R1) &
+        U1 = eApp(P1,S1);
+      D2: A = P1 & B = R1 by D1,ENVEPS_1:13;
+      per cases by C3;
+      suppose ex P2,Q2,R2 being EnvEpsTerm of V st [P2,Q2] in SigmaRed(V) &
+          eApp(A,B) = eApp(P2,R2) & U2 = eApp(Q2,R2);
+        then consider P2,Q2,R2 being EnvEpsTerm of V such that
+        E1: [P2,Q2] in SigmaRed(V) & eApp(A,B) = eApp(P2,R2) &
+          U2 = eApp(Q2,R2);
+        E2: A = P2 & B = R2 by E1,ENVEPS_1:13;
+        [eApp(A,S1), eApp(Q2,S1)] in SigmaRed(V) by E1,E2,ENVEPS_2:18;
+        then E3: SigmaRed(V) reduces U1, eApp(Q2,S1)
+          by D1,D2,REWRITE1:15;
+        [eApp(Q2,B), eApp(Q2,S1)] in SigmaRed(V) by D1,D2,ENVEPS_2:19;
+        then SigmaRed(V) reduces U2, eApp(Q2,S1) by E1,E2,REWRITE1:15;
+        hence thesis by E3,ENVEPS_2:26;
+      end;
+      suppose ex P2,R2,S2 being EnvEpsTerm of V st [R2,S2] in SigmaRed(V) &
+          eApp(A,B) = eApp(P2,R2) & U2 = eApp(P2,S2);
+        then consider P2,R2,S2 being EnvEpsTerm of V such that
+        E1: [R2,S2] in SigmaRed(V) & eApp(A,B) = eApp(P2,R2) &
+          U2 = eApp(P2,S2);
+        E2: A = P2 & B = R2 by E1,ENVEPS_1:13;
+        S1,S2 are_convergent_wrt SigmaRed(V) by C0,D1,D2,E1,E2;
+        then consider T being EnvEpsTerm of V such that
+        E3: SigmaRed(V) reduces S1,T & SigmaRed(V) reduces S2,T
+          by ENVEPS_3:1;
+        E4: SigmaRed(V) reduces eApp(A,S1), eApp(A,T) by E3,ENVEPS_2:2;
+        SigmaRed(V) reduces eApp(A,S2), eApp(A,T) by E3,ENVEPS_2:2;
+        hence thesis by D1,D2,E1,E2,E4,ENVEPS_2:26;
+      end;
+    end;
+  end;
+  A6: for A,B being EnvEpsTerm of V st P[A] & P[B] holds P[eComp(A,B)]
+  proof
+    let A,B be EnvEpsTerm of V;
+    assume P[A] & P[B];
+    hence thesis by Th10;
+  end;
+  A7: for A,B being EnvEpsTerm of V, v being Element of V st P[A] & P[B]
+    holds P[eExt(A,v,B)]
+  proof
+    let A,B be EnvEpsTerm of V, v be Element of V;
+    assume C0: P[A] & P[B];
+    let U1,U2 be EnvEpsTerm of V;
+    assume C1: [eExt(A,v,B),U1] in SigmaRed(V) &
+      [eExt(A,v,B),U2] in SigmaRed(V);
+    C2: ( ex P1,Q1,R1 being EnvEpsTerm of V, y1 being Element of V st
+          [P1,Q1] in SigmaRed(V) & eExt(A,v,B) = eExt(P1,y1,R1) &
+          U1 = eExt(Q1,y1,R1) ) or
+        ( ex P1,R1,S1 being EnvEpsTerm of V, y1 being Element of V st
+          [R1,S1] in SigmaRed(V) & eExt(A,v,B) = eExt(P1,y1,R1) &
+          U1 = eExt(P1,y1,S1) ) by C1,ENVEPS_3:7;
+    C3: ( ex P2,Q2,R2 being EnvEpsTerm of V, y2 being Element of V st
+          [P2,Q2] in SigmaRed(V) & eExt(A,v,B) = eExt(P2,y2,R2) &
+          U2 = eExt(Q2,y2,R2) ) or
+        ( ex P2,R2,S2 being EnvEpsTerm of V, y2 being Element of V st
+          [R2,S2] in SigmaRed(V) & eExt(A,v,B) = eExt(P2,y2,R2) &
+          U2 = eExt(P2,y2,S2) ) by C1,ENVEPS_3:7;
+    per cases by C2;
+    suppose ex P1,Q1,R1 being EnvEpsTerm of V, y1 being Element of V st
+        [P1,Q1] in SigmaRed(V) & eExt(A,v,B) = eExt(P1,y1,R1) &
+        U1 = eExt(Q1,y1,R1);
+      then consider P1,Q1,R1 being EnvEpsTerm of V, y1 being Element of V
+      such that
+      D1: [P1,Q1] in SigmaRed(V) & eExt(A,v,B) = eExt(P1,y1,R1) &
+        U1 = eExt(Q1,y1,R1);
+      D2: v = y1 & A = P1 & B = R1 by D1,ENVEPS_1:15;
+      per cases by C3;
+      suppose ex P2,Q2,R2 being EnvEpsTerm of V, y2 being Element of V st
+          [P2,Q2] in SigmaRed(V) & eExt(A,v,B) = eExt(P2,y2,R2) &
+          U2 = eExt(Q2,y2,R2);
+        then consider P2,Q2,R2 being EnvEpsTerm of V,
+        y2 being Element of V such that
+        E1: [P2,Q2] in SigmaRed(V) & eExt(A,v,B) = eExt(P2,y2,R2) &
+          U2 = eExt(Q2,y2,R2);
+        E2: v = y2 & A = P2 & B = R2 by E1,ENVEPS_1:15;
+        Q1,Q2 are_convergent_wrt SigmaRed(V) by C0,D1,D2,E1,E2;
+        then consider T being EnvEpsTerm of V such that
+        E3: SigmaRed(V) reduces Q1,T & SigmaRed(V) reduces Q2,T
+          by ENVEPS_3:1;
+        E4: SigmaRed(V) reduces eExt(Q1,v,B), eExt(T,v,B)
+          by E3,ENVEPS_2:4;
+        SigmaRed(V) reduces eExt(Q2,v,B), eExt(T,v,B) by E3,ENVEPS_2:4;
+        hence thesis by D1,D2,E1,E2,E4,ENVEPS_2:26;
+      end;
+      suppose ex P2,R2,S2 being EnvEpsTerm of V, y2 being Element of V st
+          [R2,S2] in SigmaRed(V) & eExt(A,v,B) = eExt(P2,y2,R2) &
+          U2 = eExt(P2,y2,S2);
+        then consider P2,R2,S2 being EnvEpsTerm of V,
+        y2 being Element of V such that
+        E1: [R2,S2] in SigmaRed(V) & eExt(A,v,B) = eExt(P2,y2,R2) &
+          U2 = eExt(P2,y2,S2);
+        E2: v = y2 & A = P2 & B = R2 by E1,ENVEPS_1:15;
+        [eExt(Q1,v,B), eExt(Q1,v,S2)] in SigmaRed(V) by E1,E2,ENVEPS_2:22;
+        then E3: SigmaRed(V) reduces U1, eExt(Q1,v,S2)
+          by D1,D2,REWRITE1:15;
+        [eExt(A,v,S2), eExt(Q1,v,S2)] in SigmaRed(V) by D1,D2,ENVEPS_2:21;
+        then SigmaRed(V) reduces U2, eExt(Q1,v,S2) by E1,E2,REWRITE1:15;
+        hence thesis by E3,ENVEPS_2:26;
+      end;
+    end;
+    suppose ex P1,R1,S1 being EnvEpsTerm of V, y1 being Element of V st
+        [R1,S1] in SigmaRed(V) & eExt(A,v,B) = eExt(P1,y1,R1) &
+        U1 = eExt(P1,y1,S1);
+      then consider P1,R1,S1 being EnvEpsTerm of V, y1 being Element of V
+      such that
+      D1: [R1,S1] in SigmaRed(V) & eExt(A,v,B) = eExt(P1,y1,R1) &
+        U1 = eExt(P1,y1,S1);
+      D2: v = y1 & A = P1 & B = R1 by D1,ENVEPS_1:15;
+      per cases by C3;
+      suppose ex P2,Q2,R2 being EnvEpsTerm of V, y2 being Element of V st
+          [P2,Q2] in SigmaRed(V) & eExt(A,v,B) = eExt(P2,y2,R2) &
+          U2 = eExt(Q2,y2,R2);
+        then consider P2,Q2,R2 being EnvEpsTerm of V,
+        y2 being Element of V such that
+        E1: [P2,Q2] in SigmaRed(V) & eExt(A,v,B) = eExt(P2,y2,R2) &
+          U2 = eExt(Q2,y2,R2);
+        E2: v = y2 & A = P2 & B = R2 by E1,ENVEPS_1:15;
+        [eExt(A,v,S1), eExt(Q2,v,S1)] in SigmaRed(V) by E1,E2,ENVEPS_2:21;
+        then E3: SigmaRed(V) reduces U1, eExt(Q2,v,S1)
+          by D1,D2,REWRITE1:15;
+        [eExt(Q2,v,B), eExt(Q2,v,S1)] in SigmaRed(V) by D1,D2,ENVEPS_2:22;
+        then SigmaRed(V) reduces U2, eExt(Q2,v,S1) by E1,E2,REWRITE1:15;
+        hence thesis by E3,ENVEPS_2:26;
+      end;
+      suppose ex P2,R2,S2 being EnvEpsTerm of V, y2 being Element of V st
+          [R2,S2] in SigmaRed(V) & eExt(A,v,B) = eExt(P2,y2,R2) &
+          U2 = eExt(P2,y2,S2);
+        then consider P2,R2,S2 being EnvEpsTerm of V,
+        y2 being Element of V such that
+        E1: [R2,S2] in SigmaRed(V) & eExt(A,v,B) = eExt(P2,y2,R2) &
+          U2 = eExt(P2,y2,S2);
+        E2: v = y2 & A = P2 & B = R2 by E1,ENVEPS_1:15;
+        S1,S2 are_convergent_wrt SigmaRed(V) by C0,D1,D2,E1,E2;
+        then consider T being EnvEpsTerm of V such that
+        E3: SigmaRed(V) reduces S1,T & SigmaRed(V) reduces S2,T
+          by ENVEPS_3:1;
+        E4: SigmaRed(V) reduces eExt(A,v,S1), eExt(A,v,T)
+          by E3,ENVEPS_2:5;
+        SigmaRed(V) reduces eExt(A,v,S2), eExt(A,v,T) by E3,ENVEPS_2:5;
+        hence thesis by D1,D2,E1,E2,E4,ENVEPS_2:26;
+      end;
+    end;
+  end;
+  A8: for M being EnvEpsTerm of V holds P[M]
+    from ENVEPS_1:sch 1(A1,A2,A3,A4,A5,A6,A7);
+  let a,b,c be object;
+  assume B1: [a,b] in SigmaRed(V) & [a,c] in SigmaRed(V);
+  SigmaRed(V) c= [:TS G, TS G:];
+  then [a,b] in [:TS G, TS G:] & [a,c] in [:TS G, TS G:] by B1;
+  then a in TS G & b in TS G & c in TS G by ZFMISC_1:87;
+  then reconsider a1 = a, b1 = b, c1 = c as EnvEpsTerm of V;
+  C9: P[a1] by A8;
+  C10: [a1,b1] in SigmaRed(V) & [a1,c1] in SigmaRed(V) by B1;
+  b1,c1 are_convergent_wrt SigmaRed(V) by C9,C10;
+  hence thesis;
+end;
+
+registration
+  let V be non empty set;
+  cluster SigmaRed(V) -> locally-confluent;
+  coherence by Th11;
+end;
+
+theorem Th12:
+  for V being non empty set holds SigmaRed(V) is confluent;

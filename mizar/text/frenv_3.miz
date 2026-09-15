@@ -1,0 +1,799 @@
+:: Translation of lambda_EnvEps into lambda_FREnv
+
+environ
+
+ vocabularies NUMBERS, XBOOLE_0, SUBSET_1, TARSKI, ZFMISC_1, FINSEQ_1,
+      RELAT_1, FUNCT_1, ORDINAL1, CARD_1, ARYTM_3, XXREAL_0, NAT_1, TREES_1,
+      TREES_2, TREES_3, TREES_4, LANG1, STRUCT_0, DTCONSTR, MCART_1, XTUPLE_0,
+      FINSET_1, TDGROUP, FUNCOP_1, ARYTM_1, FUNCT_7, XREAL_0, XCMPLX_0,
+      REWRITE1, PBOOLE, ENVEPS_1, FRENV_1, FRENV_3;
+ notations TARSKI, XBOOLE_0, ZFMISC_1, SUBSET_1, ORDINAL1, NUMBERS, XCMPLX_0,
+      XXREAL_0, NAT_1, RELAT_1, RELSET_1, FUNCT_1, FUNCT_2, FINSEQ_1, FINSEQ_2,
+      MCART_1, XTUPLE_0, DOMAIN_1, STRUCT_0, LANG1, TREES_1, TREES_2, TREES_3,
+      TREES_4, DTCONSTR, FUNCOP_1, XREAL_0, PBOOLE, REWRITE1, ENVEPS_1,
+      FRENV_1;
+ constructors NUMBERS, XCMPLX_0, XXREAL_0, NAT_1, RELSET_1, FUNCT_2, FINSEQ_1,
+      FINSEQ_2, MCART_1, XTUPLE_0, DOMAIN_1, STRUCT_0, LANG1, TREES_1, TREES_2,
+      TREES_3, TREES_4, DTCONSTR, PARTFUN1, BINOP_1, SETWISEO, XREAL_0,
+      FUNCOP_1, SUBSET_1, CARD_3, FINSEQOP, FINSEQ_4, FINSOP_1, PRE_POLY,
+      FUNCT_1, RELAT_1, PBOOLE, REWRITE1, ENVEPS_1, FRENV_1;
+ registrations XBOOLE_0, SUBSET_1, RELAT_1, FUNCT_1, ORDINAL1, XREAL_0, NAT_1,
+      FINSEQ_1, FINSEQ_2, FINSET_1, CARD_1, STRUCT_0, LANG1, TREES_1, TREES_2,
+      TREES_3, TREES_4, DTCONSTR, XTUPLE_0, VALUED_0, FUNCOP_1, XCMPLX_0,
+      XXREAL_0, NUMBERS, MEMBERED, PBOOLE, REWRITE1, ENVEPS_1, FRENV_1;
+ requirements NUMERALS, REAL, BOOLE, SUBSET, ARITHM;
+ definitions TARSKI, XBOOLE_0, DTCONSTR, TREES_3, TREES_4, RELAT_1, FUNCT_1,
+      FINSEQ_1, FUNCOP_1, SUBSET_1, REWRITE1, ENVEPS_1, FRENV_1;
+ theorems TARSKI, XBOOLE_0, ZFMISC_1, FINSEQ_1, FINSEQ_2, MCART_1, TREES_4,
+      DTCONSTR, XTUPLE_0, FUNCT_1, FUNCT_2, FUNCOP_1, SUBSET_1, ENVEPS_1,
+      FRENV_1;
+ schemes DTCONSTR, FRENV_1;
+
+begin :: Selectors
+
+reserve V for non empty set;
+
+registration
+  let V be non empty set;
+  cluster TS(FrEnvGram(V)) -> non empty;
+  coherence
+  proof
+    fId V in TS(FrEnvGram(V));
+    hence thesis;
+  end;
+end;
+
+definition
+  let V be non empty set, x be object;
+  func fsel(V,x) -> FrEnvTerm of V equals
+  :Def1:
+  In(x, TS(FrEnvGram(V)));
+  coherence;
+end;
+
+theorem Th1:
+  for T being FrEnvTerm of V holds fsel(V,T) = T
+proof
+  let T be FrEnvTerm of V;
+  fsel(V,T) = In(T, TS(FrEnvGram(V))) by Def1;
+  hence thesis by SUBSET_1:def 8;
+end;
+
+definition
+  let V be non empty set, x be object;
+  func vsel(V,x) -> Element of V equals
+  :Def2:
+  In(x, V);
+  coherence;
+end;
+
+theorem Th2:
+  for v being Element of V holds vsel(V,v) = v
+proof
+  let v be Element of V;
+  vsel(V,v) = In(v,V) by Def2;
+  hence thesis by SUBSET_1:def 8;
+end;
+
+definition
+  let V be non empty set, x be object, i be Nat;
+  func fseq(V,x,i) -> FrEnvTerm of V means
+  :Def3:
+  (x is Function implies
+     for f being Function st x = f holds it = fsel(V,f.i)) &
+  (not x is Function implies it = fId V);
+  existence
+  proof
+    per cases;
+    suppose A1: x is Function;
+      then reconsider f = x as Function;
+      take fsel(V,f.i);
+      hereby
+        assume x is Function;
+        let g be Function;
+        assume x = g;
+        hence fsel(V,f.i) = fsel(V,g.i);
+      end;
+      thus thesis by A1;
+    end;
+    suppose A2: not x is Function;
+      take fId V;
+      thus thesis by A2;
+    end;
+  end;
+  uniqueness
+  proof
+    let a,b be FrEnvTerm of V;
+    assume A1: (x is Function implies
+        for f being Function st x = f holds a = fsel(V,f.i)) &
+      (not x is Function implies a = fId V);
+    assume A2: (x is Function implies
+        for f being Function st x = f holds b = fsel(V,f.i)) &
+      (not x is Function implies b = fId V);
+    per cases;
+    suppose A3: x is Function;
+      then reconsider f = x as Function;
+      a = fsel(V,f.i) by A1,A3;
+      hence a = b by A2,A3;
+    end;
+    suppose A4: not x is Function;
+      a = fId V by A1,A4;
+      hence a = b by A2,A4;
+    end;
+  end;
+end;
+
+theorem Th3:
+  for f being Function, i being Nat holds fseq(V,f,i) = fsel(V,f.i)
+proof
+  let f be Function, i be Nat;
+  f is Function;
+  hence thesis by Def3;
+end;
+
+theorem Th4:
+  for f being Function, i being Nat st f.i in TS(FrEnvGram(V))
+  holds fseq(V,f,i) = f.i
+proof
+  let f be Function, i be Nat;
+  assume A1: f.i in TS(FrEnvGram(V));
+  then reconsider T = f.i as FrEnvTerm of V;
+  fseq(V,f,i) = fsel(V,T) by Th3
+    .= T by Th1;
+  hence thesis;
+end;
+
+begin :: The translation function
+
+definition
+  let V be non empty set;
+  func TrF(V) -> Function of TS(EnvEpsGram(V)), TS(FrEnvGram(V)) means
+  :Def4:
+  (for t being Symbol of EnvEpsGram(V) st t in Terminals EnvEpsGram(V)
+     holds it.(root-tree t) = fsel(V, root-tree t)) &
+  (for nt being Symbol of EnvEpsGram(V),
+       ts being FinSequence of TS(EnvEpsGram(V)) st nt ==> roots ts
+     holds it.(nt-tree ts) = fsel(V,
+       IFEQ(nt`1, 2, fLam(vsel(V,nt`2), fseq(V,it*ts,1)),
+       IFEQ(nt`1, 5, fEps (fseq(V,it*ts,1)),
+       IFEQ(nt`1, 3, fApp(fseq(V,it*ts,1), fseq(V,it*ts,2)),
+       IFEQ(nt`1, 4, fExt(fseq(V,it*ts,1), vsel(V,nt`2), fseq(V,it*ts,2)),
+             fApp(fEps (fseq(V,it*ts,1)), fseq(V,it*ts,2))))))));
+  existence
+  proof
+    deffunc TV(set) = fsel(V, root-tree $1);
+    deffunc NTV(set,set,set) = fsel(V,
+      IFEQ($1`1, 2, fLam(vsel(V,$1`2), fseq(V,$3,1)),
+      IFEQ($1`1, 5, fEps (fseq(V,$3,1)),
+      IFEQ($1`1, 3, fApp(fseq(V,$3,1), fseq(V,$3,2)),
+      IFEQ($1`1, 4, fExt(fseq(V,$3,1), vsel(V,$1`2), fseq(V,$3,2)),
+            fApp(fEps (fseq(V,$3,1)), fseq(V,$3,2)))))));
+    consider f being Function of TS(EnvEpsGram(V)), TS(FrEnvGram(V)) such that
+    A1: (for t being Symbol of EnvEpsGram(V)
+          st t in Terminals EnvEpsGram(V) holds f.(root-tree t) = TV(t)) and
+    A2: for nt being Symbol of EnvEpsGram(V),
+          ts being FinSequence of TS(EnvEpsGram(V)) st nt ==> roots ts
+        holds f.(nt-tree ts) = NTV(nt, roots ts, f * ts)
+      from DTCONSTR:sch 8;
+    take f;
+    thus thesis by A1,A2;
+  end;
+  uniqueness
+  proof
+    deffunc TV(set) = fsel(V, root-tree $1);
+    deffunc NTV(set,set,set) = fsel(V,
+      IFEQ($1`1, 2, fLam(vsel(V,$1`2), fseq(V,$3,1)),
+      IFEQ($1`1, 5, fEps (fseq(V,$3,1)),
+      IFEQ($1`1, 3, fApp(fseq(V,$3,1), fseq(V,$3,2)),
+      IFEQ($1`1, 4, fExt(fseq(V,$3,1), vsel(V,$1`2), fseq(V,$3,2)),
+            fApp(fEps (fseq(V,$3,1)), fseq(V,$3,2)))))));
+    let f1,f2 be Function of TS(EnvEpsGram(V)), TS(FrEnvGram(V));
+    assume that
+    B1: (for t being Symbol of EnvEpsGram(V)
+           st t in Terminals EnvEpsGram(V)
+           holds f1.(root-tree t) = fsel(V, root-tree t)) &
+        (for nt being Symbol of EnvEpsGram(V),
+             ts being FinSequence of TS(EnvEpsGram(V)) st nt ==> roots ts
+           holds f1.(nt-tree ts) = fsel(V,
+             IFEQ(nt`1, 2, fLam(vsel(V,nt`2), fseq(V,f1*ts,1)),
+             IFEQ(nt`1, 5, fEps (fseq(V,f1*ts,1)),
+             IFEQ(nt`1, 3, fApp(fseq(V,f1*ts,1), fseq(V,f1*ts,2)),
+             IFEQ(nt`1, 4,
+                  fExt(fseq(V,f1*ts,1), vsel(V,nt`2), fseq(V,f1*ts,2)),
+                   fApp(fEps (fseq(V,f1*ts,1)), fseq(V,f1*ts,2)))))))) and
+    B2: (for t being Symbol of EnvEpsGram(V)
+           st t in Terminals EnvEpsGram(V)
+           holds f2.(root-tree t) = fsel(V, root-tree t)) &
+        (for nt being Symbol of EnvEpsGram(V),
+             ts being FinSequence of TS(EnvEpsGram(V)) st nt ==> roots ts
+           holds f2.(nt-tree ts) = fsel(V,
+             IFEQ(nt`1, 2, fLam(vsel(V,nt`2), fseq(V,f2*ts,1)),
+             IFEQ(nt`1, 5, fEps (fseq(V,f2*ts,1)),
+             IFEQ(nt`1, 3, fApp(fseq(V,f2*ts,1), fseq(V,f2*ts,2)),
+             IFEQ(nt`1, 4,
+                  fExt(fseq(V,f2*ts,1), vsel(V,nt`2), fseq(V,f2*ts,2)),
+                   fApp(fEps (fseq(V,f2*ts,1)), fseq(V,f2*ts,2))))))));
+    C1: (for t being Symbol of EnvEpsGram(V)
+           st t in Terminals EnvEpsGram(V) holds f1.(root-tree t) = TV(t)) &
+        (for nt being Symbol of EnvEpsGram(V),
+             ts being FinSequence of TS(EnvEpsGram(V)) st nt ==> roots ts
+           holds f1.(nt-tree ts) = NTV(nt, roots ts, f1 * ts)) by B1;
+    C2: (for t being Symbol of EnvEpsGram(V)
+           st t in Terminals EnvEpsGram(V) holds f2.(root-tree t) = TV(t)) &
+        (for nt being Symbol of EnvEpsGram(V),
+             ts being FinSequence of TS(EnvEpsGram(V)) st nt ==> roots ts
+           holds f2.(nt-tree ts) = NTV(nt, roots ts, f2 * ts)) by B2;
+    thus f1 = f2 from DTCONSTR:sch 9(C1,C2);
+  end;
+end;
+
+definition
+  let V be non empty set, M be EnvEpsTerm of V;
+  func tr M -> FrEnvTerm of V equals
+  :Def5:
+  (TrF(V)).M;
+  coherence;
+end;
+
+theorem Th5:
+  for M being EnvEpsTerm of V holds fseq(V, TrF(V)*<*M*>, 1) = tr M
+proof
+  let M be EnvEpsTerm of V;
+  set f = TrF(V);
+  dom f = TS(EnvEpsGram(V)) by FUNCT_2:def 1;
+  then M in dom f;
+  then A1: f * <*M*> = <*f.M*> by FINSEQ_2:34
+    .= <*tr M*> by Def5;
+  A2: <*tr M*>.1 = tr M by FINSEQ_1:40;
+  tr M in TS(FrEnvGram(V));
+  hence thesis by A1,A2,Th4;
+end;
+
+theorem Th6:
+  for M,N being EnvEpsTerm of V holds
+  fseq(V, TrF(V)*<*M,N*>, 1) = tr M & fseq(V, TrF(V)*<*M,N*>, 2) = tr N
+proof
+  let M,N be EnvEpsTerm of V;
+  set f = TrF(V);
+  A0: dom f = TS(EnvEpsGram(V)) by FUNCT_2:def 1;
+  then M in dom f;
+  then A1: f * <*M,N*> = <*f.M, f.N*> by A0,FINSEQ_2:125
+    .= <*tr M, f.N*> by Def5
+    .= <*tr M, tr N*> by Def5;
+  A2: <*tr M, tr N*>.1 = tr M & <*tr M, tr N*>.2 = tr N by FINSEQ_1:44;
+  tr M in TS(FrEnvGram(V)) & tr N in TS(FrEnvGram(V));
+  hence thesis by A1,A2,Th4;
+end;
+
+theorem Th7:
+  for x being object, a,b,c,d,e being FrEnvTerm of V holds
+  ( x = 2 implies
+    IFEQ(x,2,a,IFEQ(x,5,b,IFEQ(x,3,c,IFEQ(x,4,d,e)))) = a ) &
+  ( x = 5 implies
+    IFEQ(x,2,a,IFEQ(x,5,b,IFEQ(x,3,c,IFEQ(x,4,d,e)))) = b ) &
+  ( x = 3 implies
+    IFEQ(x,2,a,IFEQ(x,5,b,IFEQ(x,3,c,IFEQ(x,4,d,e)))) = c ) &
+  ( x = 4 implies
+    IFEQ(x,2,a,IFEQ(x,5,b,IFEQ(x,3,c,IFEQ(x,4,d,e)))) = d ) &
+  ( x = 6 implies
+    IFEQ(x,2,a,IFEQ(x,5,b,IFEQ(x,3,c,IFEQ(x,4,d,e)))) = e )
+proof
+  let x be object, a,b,c,d,e be FrEnvTerm of V;
+  set T4 = IFEQ(x,4,d,e);
+  set T3 = IFEQ(x,3,c,T4);
+  set T5 = IFEQ(x,5,b,T3);
+  hereby
+    assume A: x = 2;
+    thus IFEQ(x,2,a,T5) = a by A,FUNCOP_1:def 8;
+  end;
+  hereby
+    assume A: x = 5;
+    A1: IFEQ(x,2,a,T5) = T5 by A,FUNCOP_1:def 8;
+    thus IFEQ(x,2,a,T5) = b by A,A1,FUNCOP_1:def 8;
+  end;
+  hereby
+    assume A: x = 3;
+    A1: IFEQ(x,2,a,T5) = T5 by A,FUNCOP_1:def 8;
+    A2: T5 = T3 by A,FUNCOP_1:def 8;
+    thus IFEQ(x,2,a,T5) = c by A,A1,A2,FUNCOP_1:def 8;
+  end;
+  hereby
+    assume A: x = 4;
+    A1: IFEQ(x,2,a,T5) = T5 by A,FUNCOP_1:def 8;
+    A2: T5 = T3 by A,FUNCOP_1:def 8;
+    A3: T3 = T4 by A,FUNCOP_1:def 8;
+    thus IFEQ(x,2,a,T5) = d by A,A1,A2,A3,FUNCOP_1:def 8;
+  end;
+  assume A: x = 6;
+  A1: IFEQ(x,2,a,T5) = T5 by A,FUNCOP_1:def 8;
+  A2: T5 = T3 by A,FUNCOP_1:def 8;
+  A3: T3 = T4 by A,FUNCOP_1:def 8;
+  thus IFEQ(x,2,a,T5) = e by A,A1,A2,A3,FUNCOP_1:def 8;
+end;
+
+begin :: The recursion equations for the translation
+
+theorem Th8:
+  for v being Element of V holds tr (eVar v) = fVar v & tr (eId V) = fId V
+proof
+  let v be Element of V;
+  set G = EnvEpsGram(V);
+  A0: the carrier of G = EnvEpsSym(V) by ENVEPS_1:def 2;
+  then reconsider x = [0,v] as Symbol of G by ENVEPS_1:1;
+  reconsider y = [1,0] as Symbol of G by A0,ENVEPS_1:2;
+  A1: x in Terminals G & y in Terminals G by ENVEPS_1:5;
+  A2: root-tree [0,v] = fVar v by FRENV_1:def 3;
+  A3: root-tree [1,0] = fId V by FRENV_1:def 4;
+  thus tr (eVar v) = (TrF(V)).(eVar v) by Def5
+    .= (TrF(V)).(root-tree x) by ENVEPS_1:def 3
+    .= fsel(V, fVar v) by A1,A2,Def4
+    .= fVar v by Th1;
+  thus tr (eId V) = (TrF(V)).(eId V) by Def5
+    .= (TrF(V)).(root-tree y) by ENVEPS_1:def 4
+    .= fsel(V, fId V) by A1,A3,Def4
+    .= fId V by Th1;
+end;
+
+theorem Th9:
+  for v being Element of V, M being EnvEpsTerm of V holds
+  tr (eLam(v,M)) = fLam(v, tr M)
+proof
+  let v be Element of V, M be EnvEpsTerm of V;
+  set G = EnvEpsGram(V);
+  set f = TrF(V);
+  A0: the carrier of G = EnvEpsSym(V) by ENVEPS_1:def 2;
+  then reconsider x = [2,v] as Symbol of G by ENVEPS_1:1;
+  A1: x ==> roots <*M*> by ENVEPS_1:20;
+  set a1 = fseq(V,f*<*M*>,1);
+  set a2 = fseq(V,f*<*M*>,2);
+  A2: a1 = tr M by Th5;
+  A3: x`1 = 2 & x`2 = v;
+  A4: vsel(V,x`2) = v by A3,Th2;
+  thus tr (eLam(v,M)) = f.(eLam(v,M)) by Def5
+    .= f.(x-tree <*M*>) by ENVEPS_1:def 5
+    .= fsel(V, IFEQ(x`1,2,fLam(vsel(V,x`2),a1),
+         IFEQ(x`1,5,fEps a1,IFEQ(x`1,3,fApp(a1,a2),
+         IFEQ(x`1,4,fExt(a1,vsel(V,x`2),a2),fApp(fEps a1,a2))))))
+         by A1,Def4
+    .= fsel(V, fLam(v, tr M)) by A2,A3,A4,Th7
+    .= fLam(v, tr M) by Th1;
+end;
+
+theorem Th10:
+  for M being EnvEpsTerm of V holds tr (eEps M) = fEps (tr M)
+proof
+  let M be EnvEpsTerm of V;
+  set G = EnvEpsGram(V);
+  set f = TrF(V);
+  A0: the carrier of G = EnvEpsSym(V) by ENVEPS_1:def 2;
+  then reconsider x = [5,0] as Symbol of G by ENVEPS_1:2;
+  A1: x ==> roots <*M*> by ENVEPS_1:20;
+  set a1 = fseq(V,f*<*M*>,1);
+  set a2 = fseq(V,f*<*M*>,2);
+  A2: a1 = tr M by Th5;
+  A3: x`1 = 5;
+  thus tr (eEps M) = f.(eEps M) by Def5
+    .= f.(x-tree <*M*>) by ENVEPS_1:def 6
+    .= fsel(V, IFEQ(x`1,2,fLam(vsel(V,x`2),a1),
+         IFEQ(x`1,5,fEps a1,IFEQ(x`1,3,fApp(a1,a2),
+         IFEQ(x`1,4,fExt(a1,vsel(V,x`2),a2),fApp(fEps a1,a2))))))
+         by A1,Def4
+    .= fsel(V, fEps (tr M)) by A2,A3,Th7
+    .= fEps (tr M) by Th1;
+end;
+
+theorem Th11:
+  for M,N being EnvEpsTerm of V holds tr (eApp(M,N)) = fApp(tr M, tr N)
+proof
+  let M,N be EnvEpsTerm of V;
+  set G = EnvEpsGram(V);
+  set f = TrF(V);
+  A0: the carrier of G = EnvEpsSym(V) by ENVEPS_1:def 2;
+  then reconsider x = [3,0] as Symbol of G by ENVEPS_1:2;
+  reconsider ts = <*M,N*> as FinSequence of TS(EnvEpsGram(V)) by FINSEQ_2:13;
+  A1: x ==> roots ts by ENVEPS_1:21;
+  set a1 = fseq(V,f*ts,1);
+  set a2 = fseq(V,f*ts,2);
+  A2: a1 = tr M & a2 = tr N by Th6;
+  A3: x`1 = 3;
+  thus tr (eApp(M,N)) = f.(eApp(M,N)) by Def5
+    .= f.(x-tree <*M,N*>) by ENVEPS_1:def 7
+    .= fsel(V, IFEQ(x`1,2,fLam(vsel(V,x`2),a1),
+         IFEQ(x`1,5,fEps a1,IFEQ(x`1,3,fApp(a1,a2),
+         IFEQ(x`1,4,fExt(a1,vsel(V,x`2),a2),fApp(fEps a1,a2))))))
+         by A1,Def4
+    .= fsel(V, fApp(tr M, tr N)) by A2,A3,Th7
+    .= fApp(tr M, tr N) by Th1;
+end;
+
+theorem Th12:
+  for M,N being EnvEpsTerm of V, v being Element of V holds
+  tr (eExt(M,v,N)) = fExt(tr M, v, tr N)
+proof
+  let M,N be EnvEpsTerm of V, v be Element of V;
+  set G = EnvEpsGram(V);
+  set f = TrF(V);
+  A0: the carrier of G = EnvEpsSym(V) by ENVEPS_1:def 2;
+  then reconsider x = [4,v] as Symbol of G by ENVEPS_1:1;
+  reconsider ts = <*M,N*> as FinSequence of TS(EnvEpsGram(V)) by FINSEQ_2:13;
+  A1: x ==> roots ts by ENVEPS_1:21;
+  set a1 = fseq(V,f*ts,1);
+  set a2 = fseq(V,f*ts,2);
+  A2: a1 = tr M & a2 = tr N by Th6;
+  A3: x`1 = 4 & x`2 = v;
+  A4: vsel(V,x`2) = v by A3,Th2;
+  thus tr (eExt(M,v,N)) = f.(eExt(M,v,N)) by Def5
+    .= f.(x-tree <*M,N*>) by ENVEPS_1:def 9
+    .= fsel(V, IFEQ(x`1,2,fLam(vsel(V,x`2),a1),
+         IFEQ(x`1,5,fEps a1,IFEQ(x`1,3,fApp(a1,a2),
+         IFEQ(x`1,4,fExt(a1,vsel(V,x`2),a2),fApp(fEps a1,a2))))))
+         by A1,Def4
+    .= fsel(V, fExt(tr M, v, tr N)) by A2,A3,A4,Th7
+    .= fExt(tr M, v, tr N) by Th1;
+end;
+
+theorem Th13:
+  for M,N being EnvEpsTerm of V holds
+  tr (eComp(M,N)) = fApp(fEps (tr M), tr N)
+proof
+  let M,N be EnvEpsTerm of V;
+  set G = EnvEpsGram(V);
+  set f = TrF(V);
+  A0: the carrier of G = EnvEpsSym(V) by ENVEPS_1:def 2;
+  then reconsider x = [6,0] as Symbol of G by ENVEPS_1:2;
+  reconsider ts = <*M,N*> as FinSequence of TS(EnvEpsGram(V)) by FINSEQ_2:13;
+  A1: x ==> roots ts by ENVEPS_1:21;
+  set a1 = fseq(V,f*ts,1);
+  set a2 = fseq(V,f*ts,2);
+  A2: a1 = tr M & a2 = tr N by Th6;
+  A3: x`1 = 6;
+  thus tr (eComp(M,N)) = f.(eComp(M,N)) by Def5
+    .= f.(x-tree <*M,N*>) by ENVEPS_1:def 8
+    .= fsel(V, IFEQ(x`1,2,fLam(vsel(V,x`2),a1),
+         IFEQ(x`1,5,fEps a1,IFEQ(x`1,3,fApp(a1,a2),
+         IFEQ(x`1,4,fExt(a1,vsel(V,x`2),a2),fApp(fEps a1,a2))))))
+         by A1,Def4
+    .= fsel(V, fApp(fEps (tr M), tr N)) by A2,A3,Th7
+    .= fApp(fEps (tr M), tr N) by Th1;
+end;
+
+begin :: The translation is surjective
+
+theorem Th14:
+  for T being FrEnvTerm of V ex M being EnvEpsTerm of V st tr M = T
+proof
+  let T be FrEnvTerm of V;
+  defpred P[set] means ex M being EnvEpsTerm of V st tr M = $1;
+  A1: for v being Element of V holds P[fVar v]
+  proof
+    let v be Element of V;
+    tr (eVar v) = fVar v by Th8;
+    hence thesis;
+  end;
+  A2: P[fId V]
+  proof
+    tr (eId V) = fId V by Th8;
+    hence thesis;
+  end;
+  A3: for v being Element of V, A being FrEnvTerm of V st P[A]
+    holds P[fLam(v,A)]
+  proof
+    let v be Element of V, A be FrEnvTerm of V;
+    given M being EnvEpsTerm of V such that B1: tr M = A;
+    tr (eLam(v,M)) = fLam(v,A) by B1,Th9;
+    hence thesis;
+  end;
+  A4: for A being FrEnvTerm of V st P[A] holds P[fEps A]
+  proof
+    let A be FrEnvTerm of V;
+    given M being EnvEpsTerm of V such that B1: tr M = A;
+    tr (eEps M) = fEps A by B1,Th10;
+    hence thesis;
+  end;
+  A5: for A,B being FrEnvTerm of V st P[A] & P[B] holds P[fApp(A,B)]
+  proof
+    let A,B be FrEnvTerm of V;
+    given M being EnvEpsTerm of V such that B1: tr M = A;
+    given N being EnvEpsTerm of V such that B2: tr N = B;
+    tr (eApp(M,N)) = fApp(A,B) by B1,B2,Th11;
+    hence thesis;
+  end;
+  A6: for A,B being FrEnvTerm of V, v being Element of V st P[A] & P[B]
+    holds P[fExt(A,v,B)]
+  proof
+    let A,B be FrEnvTerm of V, v be Element of V;
+    given M being EnvEpsTerm of V such that B1: tr M = A;
+    given N being EnvEpsTerm of V such that B2: tr N = B;
+    tr (eExt(M,v,N)) = fExt(A,v,B) by B1,B2,Th12;
+    hence thesis;
+  end;
+  for A being FrEnvTerm of V holds P[A] from FRENV_1:sch 1(A1,A2,A3,A4,A5,A6);
+  hence thesis;
+end;
+
+begin :: Inverting the translation
+
+theorem Th15:
+  for M being EnvEpsTerm of V, x being Element of V st tr M = fVar x
+  holds M = eVar x
+proof
+  let M be EnvEpsTerm of V, x be Element of V;
+  assume A0: tr M = fVar x;
+  per cases by ENVEPS_1:17;
+  suppose ex v being Element of V st M = eVar v;
+    then consider v being Element of V such that B1: M = eVar v;
+    tr M = fVar v by B1,Th8;
+    then v = x by A0,FRENV_1:15;
+    hence thesis by B1;
+  end;
+  suppose B1: M = eId V;
+    then tr M = fId V by Th8;
+    hence thesis by A0,B1,FRENV_1:17;
+  end;
+  suppose ex v being Element of V, A being EnvEpsTerm of V st M = eLam(v,A);
+    then consider v being Element of V, A being EnvEpsTerm of V such that
+    B1: M = eLam(v,A);
+    tr M = fLam(v, tr A) by B1,Th9;
+    hence thesis by A0,FRENV_1:17;
+  end;
+  suppose ex A being EnvEpsTerm of V st M = eEps A;
+    then consider A being EnvEpsTerm of V such that B1: M = eEps A;
+    tr M = fEps (tr A) by B1,Th10;
+    hence thesis by A0,FRENV_1:17;
+  end;
+  suppose ex A,B being EnvEpsTerm of V st M = eApp(A,B);
+    then consider A,B being EnvEpsTerm of V such that B1: M = eApp(A,B);
+    tr M = fApp(tr A, tr B) by B1,Th11;
+    hence thesis by A0,FRENV_1:17;
+  end;
+  suppose ex A,B being EnvEpsTerm of V st M = eComp(A,B);
+    then consider A,B being EnvEpsTerm of V such that B1: M = eComp(A,B);
+    tr M = fApp(fEps (tr A), tr B) by B1,Th13;
+    hence thesis by A0,FRENV_1:17;
+  end;
+  suppose ex A,B being EnvEpsTerm of V, v being Element of V st
+      M = eExt(A,v,B);
+    then consider A,B being EnvEpsTerm of V, v being Element of V such that
+    B1: M = eExt(A,v,B);
+    tr M = fExt(tr A, v, tr B) by B1,Th12;
+    hence thesis by A0,FRENV_1:17;
+  end;
+end;
+
+theorem Th16:
+  for M being EnvEpsTerm of V st tr M = fId V holds M = eId V
+proof
+  let M be EnvEpsTerm of V;
+  assume A0: tr M = fId V;
+  per cases by ENVEPS_1:17;
+  suppose ex v being Element of V st M = eVar v;
+    then consider v being Element of V such that B1: M = eVar v;
+    tr M = fVar v by B1,Th8;
+    hence thesis by A0,FRENV_1:17;
+  end;
+  suppose M = eId V;
+    hence thesis;
+  end;
+  suppose ex v being Element of V, A being EnvEpsTerm of V st M = eLam(v,A);
+    then consider v being Element of V, A being EnvEpsTerm of V such that
+    B1: M = eLam(v,A);
+    tr M = fLam(v, tr A) by B1,Th9;
+    hence thesis by A0,FRENV_1:17;
+  end;
+  suppose ex A being EnvEpsTerm of V st M = eEps A;
+    then consider A being EnvEpsTerm of V such that B1: M = eEps A;
+    tr M = fEps (tr A) by B1,Th10;
+    hence thesis by A0,FRENV_1:17;
+  end;
+  suppose ex A,B being EnvEpsTerm of V st M = eApp(A,B);
+    then consider A,B being EnvEpsTerm of V such that B1: M = eApp(A,B);
+    tr M = fApp(tr A, tr B) by B1,Th11;
+    hence thesis by A0,FRENV_1:17;
+  end;
+  suppose ex A,B being EnvEpsTerm of V st M = eComp(A,B);
+    then consider A,B being EnvEpsTerm of V such that B1: M = eComp(A,B);
+    tr M = fApp(fEps (tr A), tr B) by B1,Th13;
+    hence thesis by A0,FRENV_1:17;
+  end;
+  suppose ex A,B being EnvEpsTerm of V, v being Element of V st
+      M = eExt(A,v,B);
+    then consider A,B being EnvEpsTerm of V, v being Element of V such that
+    B1: M = eExt(A,v,B);
+    tr M = fExt(tr A, v, tr B) by B1,Th12;
+    hence thesis by A0,FRENV_1:17;
+  end;
+end;
+
+theorem Th17:
+  for M being EnvEpsTerm of V, x being Element of V, a being FrEnvTerm of V
+  st tr M = fLam(x,a)
+  ex A being EnvEpsTerm of V st M = eLam(x,A) & tr A = a
+proof
+  let M be EnvEpsTerm of V, x be Element of V, a be FrEnvTerm of V;
+  assume A0: tr M = fLam(x,a);
+  per cases by ENVEPS_1:17;
+  suppose ex v being Element of V st M = eVar v;
+    then consider v being Element of V such that B1: M = eVar v;
+    tr M = fVar v by B1,Th8;
+    hence thesis by A0,FRENV_1:17;
+  end;
+  suppose B1: M = eId V;
+    then tr M = fId V by Th8;
+    hence thesis by A0,FRENV_1:17;
+  end;
+  suppose ex v being Element of V, A being EnvEpsTerm of V st M = eLam(v,A);
+    then consider v being Element of V, A being EnvEpsTerm of V such that
+    B1: M = eLam(v,A);
+    tr M = fLam(v, tr A) by B1,Th9;
+    then v = x & tr A = a by A0,FRENV_1:11;
+    hence thesis by B1;
+  end;
+  suppose ex A being EnvEpsTerm of V st M = eEps A;
+    then consider A being EnvEpsTerm of V such that B1: M = eEps A;
+    tr M = fEps (tr A) by B1,Th10;
+    hence thesis by A0,FRENV_1:17;
+  end;
+  suppose ex A,B being EnvEpsTerm of V st M = eApp(A,B);
+    then consider A,B being EnvEpsTerm of V such that B1: M = eApp(A,B);
+    tr M = fApp(tr A, tr B) by B1,Th11;
+    hence thesis by A0,FRENV_1:17;
+  end;
+  suppose ex A,B being EnvEpsTerm of V st M = eComp(A,B);
+    then consider A,B being EnvEpsTerm of V such that B1: M = eComp(A,B);
+    tr M = fApp(fEps (tr A), tr B) by B1,Th13;
+    hence thesis by A0,FRENV_1:17;
+  end;
+  suppose ex A,B being EnvEpsTerm of V, v being Element of V st
+      M = eExt(A,v,B);
+    then consider A,B being EnvEpsTerm of V, v being Element of V such that
+    B1: M = eExt(A,v,B);
+    tr M = fExt(tr A, v, tr B) by B1,Th12;
+    hence thesis by A0,FRENV_1:17;
+  end;
+end;
+
+theorem Th18:
+  for M being EnvEpsTerm of V, a being FrEnvTerm of V st tr M = fEps a
+  ex A being EnvEpsTerm of V st M = eEps A & tr A = a
+proof
+  let M be EnvEpsTerm of V, a be FrEnvTerm of V;
+  assume A0: tr M = fEps a;
+  per cases by ENVEPS_1:17;
+  suppose ex v being Element of V st M = eVar v;
+    then consider v being Element of V such that B1: M = eVar v;
+    tr M = fVar v by B1,Th8;
+    hence thesis by A0,FRENV_1:17;
+  end;
+  suppose B1: M = eId V;
+    then tr M = fId V by Th8;
+    hence thesis by A0,FRENV_1:17;
+  end;
+  suppose ex v being Element of V, A being EnvEpsTerm of V st M = eLam(v,A);
+    then consider v being Element of V, A being EnvEpsTerm of V such that
+    B1: M = eLam(v,A);
+    tr M = fLam(v, tr A) by B1,Th9;
+    hence thesis by A0,FRENV_1:17;
+  end;
+  suppose ex A being EnvEpsTerm of V st M = eEps A;
+    then consider A being EnvEpsTerm of V such that B1: M = eEps A;
+    tr M = fEps (tr A) by B1,Th10;
+    then tr A = a by A0,FRENV_1:12;
+    hence thesis by B1;
+  end;
+  suppose ex A,B being EnvEpsTerm of V st M = eApp(A,B);
+    then consider A,B being EnvEpsTerm of V such that B1: M = eApp(A,B);
+    tr M = fApp(tr A, tr B) by B1,Th11;
+    hence thesis by A0,FRENV_1:17;
+  end;
+  suppose ex A,B being EnvEpsTerm of V st M = eComp(A,B);
+    then consider A,B being EnvEpsTerm of V such that B1: M = eComp(A,B);
+    tr M = fApp(fEps (tr A), tr B) by B1,Th13;
+    hence thesis by A0,FRENV_1:17;
+  end;
+  suppose ex A,B being EnvEpsTerm of V, v being Element of V st
+      M = eExt(A,v,B);
+    then consider A,B being EnvEpsTerm of V, v being Element of V such that
+    B1: M = eExt(A,v,B);
+    tr M = fExt(tr A, v, tr B) by B1,Th12;
+    hence thesis by A0,FRENV_1:17;
+  end;
+end;
+
+theorem Th19:
+  for M being EnvEpsTerm of V, x being Element of V,
+      a,b being FrEnvTerm of V st tr M = fExt(a,x,b)
+  ex A,B being EnvEpsTerm of V st M = eExt(A,x,B) & tr A = a & tr B = b
+proof
+  let M be EnvEpsTerm of V, x be Element of V, a,b be FrEnvTerm of V;
+  assume A0: tr M = fExt(a,x,b);
+  per cases by ENVEPS_1:17;
+  suppose ex v being Element of V st M = eVar v;
+    then consider v being Element of V such that B1: M = eVar v;
+    tr M = fVar v by B1,Th8;
+    hence thesis by A0,FRENV_1:17;
+  end;
+  suppose B1: M = eId V;
+    then tr M = fId V by Th8;
+    hence thesis by A0,FRENV_1:17;
+  end;
+  suppose ex v being Element of V, A being EnvEpsTerm of V st M = eLam(v,A);
+    then consider v being Element of V, A being EnvEpsTerm of V such that
+    B1: M = eLam(v,A);
+    tr M = fLam(v, tr A) by B1,Th9;
+    hence thesis by A0,FRENV_1:17;
+  end;
+  suppose ex A being EnvEpsTerm of V st M = eEps A;
+    then consider A being EnvEpsTerm of V such that B1: M = eEps A;
+    tr M = fEps (tr A) by B1,Th10;
+    hence thesis by A0,FRENV_1:17;
+  end;
+  suppose ex A,B being EnvEpsTerm of V st M = eApp(A,B);
+    then consider A,B being EnvEpsTerm of V such that B1: M = eApp(A,B);
+    tr M = fApp(tr A, tr B) by B1,Th11;
+    hence thesis by A0,FRENV_1:17;
+  end;
+  suppose ex A,B being EnvEpsTerm of V st M = eComp(A,B);
+    then consider A,B being EnvEpsTerm of V such that B1: M = eComp(A,B);
+    tr M = fApp(fEps (tr A), tr B) by B1,Th13;
+    hence thesis by A0,FRENV_1:17;
+  end;
+  suppose ex A,B being EnvEpsTerm of V, v being Element of V st
+      M = eExt(A,v,B);
+    then consider A,B being EnvEpsTerm of V, v being Element of V such that
+    B1: M = eExt(A,v,B);
+    tr M = fExt(tr A, v, tr B) by B1,Th12;
+    then v = x & tr A = a & tr B = b by A0,FRENV_1:14;
+    hence thesis by B1;
+  end;
+end;
+
+theorem Th20:
+  for M being EnvEpsTerm of V, a,b being FrEnvTerm of V st tr M = fApp(a,b)
+  holds
+  ( ex A,B being EnvEpsTerm of V st M = eApp(A,B) & tr A = a & tr B = b ) or
+  ( ex A,B being EnvEpsTerm of V st M = eComp(A,B) & fEps (tr A) = a &
+    tr B = b )
+proof
+  let M be EnvEpsTerm of V, a,b be FrEnvTerm of V;
+  assume A0: tr M = fApp(a,b);
+  per cases by ENVEPS_1:17;
+  suppose ex v being Element of V st M = eVar v;
+    then consider v being Element of V such that B1: M = eVar v;
+    tr M = fVar v by B1,Th8;
+    hence thesis by A0,FRENV_1:17;
+  end;
+  suppose B1: M = eId V;
+    then tr M = fId V by Th8;
+    hence thesis by A0,FRENV_1:17;
+  end;
+  suppose ex v being Element of V, A being EnvEpsTerm of V st M = eLam(v,A);
+    then consider v being Element of V, A being EnvEpsTerm of V such that
+    B1: M = eLam(v,A);
+    tr M = fLam(v, tr A) by B1,Th9;
+    hence thesis by A0,FRENV_1:17;
+  end;
+  suppose ex A being EnvEpsTerm of V st M = eEps A;
+    then consider A being EnvEpsTerm of V such that B1: M = eEps A;
+    tr M = fEps (tr A) by B1,Th10;
+    hence thesis by A0,FRENV_1:17;
+  end;
+  suppose ex A,B being EnvEpsTerm of V st M = eApp(A,B);
+    then consider A,B being EnvEpsTerm of V such that B1: M = eApp(A,B);
+    tr M = fApp(tr A, tr B) by B1,Th11;
+    then tr A = a & tr B = b by A0,FRENV_1:13;
+    hence thesis by B1;
+  end;
+  suppose ex A,B being EnvEpsTerm of V st M = eComp(A,B);
+    then consider A,B being EnvEpsTerm of V such that B1: M = eComp(A,B);
+    tr M = fApp(fEps (tr A), tr B) by B1,Th13;
+    then fEps (tr A) = a & tr B = b by A0,FRENV_1:13;
+    hence thesis by B1;
+  end;
+  suppose ex A,B being EnvEpsTerm of V, v being Element of V st
+      M = eExt(A,v,B);
+    then consider A,B being EnvEpsTerm of V, v being Element of V such that
+    B1: M = eExt(A,v,B);
+    tr M = fExt(tr A, v, tr B) by B1,Th12;
+    hence thesis by A0,FRENV_1:17;
+  end;
+end;

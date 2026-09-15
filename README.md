@@ -2,11 +2,11 @@
 
 English | [日本語](README-ja.md) | [Tagalog](README-tl.md) | [简体中文](README-zh.md)
 
-This repository collects the Isabelle/HOL development of full beta/sigma confluence of FREnv and the associated Lean 4 development. It is intended to accompany a paper submitted to WCTP 2026.
+This repository collects the Isabelle/HOL development of full beta/sigma confluence of FREnv and the associated Lean 4 and Mizar developments. It is intended to accompany a paper submitted to WCTP 2026.
 
 **Verification:** both the Isabelle2025-2 build and the Lean 4.33.0 build/audit passed on clean GitHub Actions runners on 2026-09-13, at commit `725b0b6`, which is the revision that contains the Lean confluence proof. See [the verification record](docs/verification.md) for the exact checked commits and logs.
 
-**Both developments now prove full confluence, by independent routes.** Isabelle contains the full-confluence theorem and its dependencies. The Lean development proves the same statement for its own encoding, as `LambdaFrenv.frenv_beta_sigma_confluent`, following the same mathematical route (auxiliary calculus, sigma normalization, beta over sigma, translation) but with its own definitions and proofs. The two encodings still differ — Lean has a primitive constants type — and this artifact does not claim a proved equivalence between them.
+**All three developments now prove full confluence, by independent routes.** Isabelle contains the full-confluence theorem and its dependencies. The Lean development proves the same statement for its own encoding, as `LambdaFrenv.frenv_beta_sigma_confluent`, and the Mizar development proves it as `FRENV_5:8`. All three follow the same mathematical route (auxiliary calculus, sigma normalization, beta over sigma, translation) but with their own definitions and proofs. The encodings still differ — Lean has a primitive constants type, and the three treat variables differently — and this artifact does not claim a proved equivalence between them.
 
 ## Layout
 
@@ -28,6 +28,13 @@ lean/
   Audit.lean            Checks declarations and prints theorem axioms
   docs/                 English specifications of the syntax and reductions
   README.md             Lean build instructions, layout, and proof route
+mizar/
+  text/                 The fourteen articles, plus the audit article
+  dict/                 Private vocabularies for the symbols introduced here
+  verify.sh             Verifies every article in dependency order
+  check.sh              Verifies one article
+  docs/                 Verification instructions and records of the work
+  README.md             Mizar requirements, layout, and proof route
 docs/
   proof-map.md          Main results, dependency route, and differences
   verification.md       Verification record
@@ -82,14 +89,44 @@ LambdaFrenv.frenv_beta_sigma_confluent
 
 the Lean counterpart of the Isabelle theorem. See [the Lean instructions](lean/README.md) for the module layout and the proof route.
 
+## Verify Mizar
+
+Install **Mizar Ver. 8.1.15** with its MML from the
+[Mizar download page](https://mizar.uwb.edu.pl/system/), put its executables on
+your `PATH`, and set `MIZFILES` to the Mizar library directory. Then run:
+
+```sh
+cd mizar
+export MIZFILES=/usr/local/share/mizar   # if not already set by the installer
+./verify.sh
+```
+
+This verifies the fourteen articles in dependency order, exporting each to a
+local `prel/` database so the next one can import it, and finally checks an
+audit article that restates each main result and justifies it by its citation
+alone. Nothing outside the standard MML is used and nothing is downloaded. The
+build establishes
+
+```text
+FRENV_5:8   for V being non empty set holds FrRed(V) is confluent
+```
+
+the Mizar counterpart of the Isabelle and Lean theorems. Mizar has no `sorry`
+and no way for an article to introduce an axiom, so an empty `.err` file means
+every inference was checked. See [the Mizar instructions](mizar/README.md) for
+the layout and the proof route, and
+[the verification guide](mizar/docs/verification.md) for what the output means
+and how to inspect individual results.
+
 ## Results and scope
 
 | Development | Main checked content | Full FREnv confluence |
 |---|---|---|
 | Isabelle/HOL | Auxiliary-calculus confluence, translation, surjectivity, simulation, lifting, and the final confluence theorem | Verified by the recorded strict session build |
 | Lean 4 | Abstract rewriting and Newman's lemma, the auxiliary calculus, sigma termination and confluence, sigma-normal forms, the parallel-beta diamond property, composition compatibility, translation and lifting | Verified by the recorded Lean build |
+| Mizar | Parse-tree syntax of both calculi, sigma termination and confluence via the MML's Newman's lemma, sigma-normal forms, the parallel-beta triangle property, composition compatibility, Hardin's interpretation method, translation and lifting | Verified by `mizar/verify.sh` |
 
-The languages also differ: Isabelle uses string names and has no primitive constants; Lean parameterizes variables and constants by types. This artifact does not claim a proved equivalence of the two encodings. The [proof map](docs/proof-map.md) explains these differences.
+The languages also differ: Isabelle uses string names and has no primitive constants; Lean parameterizes variables and constants by types; Mizar parameterizes the development by an arbitrary non-empty set of variables and, like Isabelle, has no constants. This artifact does not claim a proved equivalence of the three encodings. The [proof map](docs/proof-map.md) explains these differences.
 
 The mathematical Markdown files explain the proof route but are not themselves machine-checked. Historical thesis and roadmap references are retained for traceability; the thesis PDF is not needed to run either proof assistant.
 

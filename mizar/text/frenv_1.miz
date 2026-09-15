@@ -1,0 +1,818 @@
+:: Syntax of lambda_FREnv: terms as parse trees
+
+environ
+
+ vocabularies NUMBERS, XBOOLE_0, SUBSET_1, TARSKI, ZFMISC_1, FINSEQ_1,
+      RELAT_1, FUNCT_1, ORDINAL1, CARD_1, ARYTM_3, XXREAL_0, NAT_1, TREES_1,
+      TREES_2, TREES_3, TREES_4, LANG1, STRUCT_0, DTCONSTR, MCART_1, XTUPLE_0,
+      FINSET_1, TDGROUP, FUNCOP_1, ARYTM_1, FUNCT_7, XREAL_0, XCMPLX_0,
+      REWRITE1, PBOOLE, FRENV_1;
+ notations TARSKI, XBOOLE_0, ZFMISC_1, SUBSET_1, ORDINAL1, NUMBERS, XCMPLX_0,
+      XXREAL_0, NAT_1, RELAT_1, RELSET_1, FUNCT_1, FUNCT_2, FINSEQ_1, FINSEQ_2,
+      MCART_1, XTUPLE_0, DOMAIN_1, STRUCT_0, LANG1, TREES_1, TREES_2, TREES_3,
+      TREES_4, DTCONSTR, FUNCOP_1, XREAL_0, PBOOLE, REWRITE1;
+ constructors NUMBERS, XCMPLX_0, XXREAL_0, NAT_1, RELSET_1, FUNCT_2, FINSEQ_1,
+      FINSEQ_2, MCART_1, XTUPLE_0, DOMAIN_1, STRUCT_0, LANG1, TREES_1, TREES_2,
+      TREES_3, TREES_4, DTCONSTR, PARTFUN1, BINOP_1, SETWISEO, XREAL_0,
+      FUNCOP_1, SUBSET_1, CARD_3, FINSEQOP, FINSEQ_4, FINSOP_1, PRE_POLY,
+      FUNCT_1, RELAT_1, PBOOLE, REWRITE1;
+ registrations XBOOLE_0, SUBSET_1, RELAT_1, FUNCT_1, ORDINAL1, XREAL_0, NAT_1,
+      FINSEQ_1, FINSEQ_2, FINSET_1, CARD_1, STRUCT_0, LANG1, TREES_1, TREES_2,
+      TREES_3, TREES_4, DTCONSTR, XTUPLE_0, VALUED_0, FUNCOP_1, XCMPLX_0,
+      XXREAL_0, NUMBERS, MEMBERED, PBOOLE, REWRITE1;
+ requirements NUMERALS, REAL, BOOLE, SUBSET, ARITHM;
+ definitions TARSKI, XBOOLE_0, DTCONSTR, TREES_3, TREES_4, RELAT_1, FUNCT_1,
+      FINSEQ_1, FUNCOP_1, SUBSET_1, REWRITE1;
+ theorems TARSKI, XBOOLE_0, XBOOLE_1, ZFMISC_1, FINSEQ_1, FINSEQ_2, FINSEQ_3,
+      MCART_1, LANG1, ENUMSET1, TREES_1, TREES_3, TREES_4, DTCONSTR, XTUPLE_0,
+      FUNCT_1, RELAT_1, FUNCOP_1, NAT_1, XCMPLX_1, SUBSET_1, FUNCT_2, XREAL_1;
+ schemes DTCONSTR, NAT_1;
+
+begin :: The alphabet of symbols
+
+definition
+  let V be non empty set;
+  func FrEnvSym(V) -> non empty set equals
+  [:{0,2,4}, V:] \/ [:{1,3,5}, {0}:];
+  coherence
+  proof
+    [:{0,2,4}, V:] c= [:{0,2,4}, V:] \/ [:{1,3,5}, {0}:] by XBOOLE_1:7;
+    hence thesis;
+  end;
+end;
+
+begin :: The grammar
+
+definition
+  let V be non empty set;
+  func FrEnvGram(V) -> strict non empty DTConstrStr means
+  :Def2:
+  the carrier of it = FrEnvSym(V) &
+  for x being Symbol of it, p being FinSequence of the carrier of it holds
+    x ==> p iff
+      ( ( (ex v being Element of V st x = [2,v]) or x = [5,0] )
+        & ex a being object st p = <*a*> )
+      or
+      ( ( x = [3,0] or (ex v being Element of V st x = [4,v]) )
+        & ex a,b being object st p = <*a,b*> );
+  existence
+  proof
+    defpred P[object,object] means
+      ( ( (ex v being Element of V st $1 = [2,v]) or $1 = [5,0] )
+        & ex a being object st $2 = <*a*> )
+      or
+      ( ( $1 = [3,0] or (ex v being Element of V st $1 = [4,v]) )
+        & ex a,b being object st $2 = <*a,b*> );
+    consider G being strict non empty DTConstrStr such that
+    A1: the carrier of G = FrEnvSym(V) and
+    A2: for x being Symbol of G, p being FinSequence of the carrier of G
+      holds x ==> p iff P[x,p] from DTCONSTR:sch 1;
+    take G;
+    thus the carrier of G = FrEnvSym(V) by A1;
+    let x be Symbol of G, p be FinSequence of the carrier of G;
+    thus thesis by A2;
+  end;
+  uniqueness
+  proof
+    defpred P[set,set] means
+      ( ( (ex v being Element of V st $1 = [2,v]) or $1 = [5,0] )
+        & ex a being object st $2 = <*a*> )
+      or
+      ( ( $1 = [3,0] or (ex v being Element of V st $1 = [4,v]) )
+        & ex a,b being object st $2 = <*a,b*> );
+    let G1,G2 be strict non empty DTConstrStr;
+    assume that
+    B1: the carrier of G1 = FrEnvSym(V) and
+    B2: for x being Symbol of G1, p being FinSequence of the carrier of G1
+      holds x ==> p iff
+      ( ( (ex v being Element of V st x = [2,v]) or x = [5,0] )
+        & ex a being object st p = <*a*> )
+      or
+      ( ( x = [3,0] or (ex v being Element of V st x = [4,v]) )
+        & ex a,b being object st p = <*a,b*> ) and
+    B3: the carrier of G2 = FrEnvSym(V) and
+    B4: for x being Symbol of G2, p being FinSequence of the carrier of G2
+      holds x ==> p iff
+      ( ( (ex v being Element of V st x = [2,v]) or x = [5,0] )
+        & ex a being object st p = <*a*> )
+      or
+      ( ( x = [3,0] or (ex v being Element of V st x = [4,v]) )
+        & ex a,b being object st p = <*a,b*> );
+    C1: the carrier of G1 = FrEnvSym(V) &
+      for x being Symbol of G1, p being FinSequence of the carrier of G1
+      holds x ==> p iff P[x,p] by B1,B2;
+    C2: the carrier of G2 = FrEnvSym(V) &
+      for x being Symbol of G2, p being FinSequence of the carrier of G2
+      holds x ==> p iff P[x,p] by B3,B4;
+    D: for H1,H2 being strict non empty DTConstrStr st
+      ( the carrier of H1 = FrEnvSym(V) &
+        for x being Symbol of H1, p being FinSequence of the carrier of H1
+        holds x ==> p iff P[x,p] ) &
+      ( the carrier of H2 = FrEnvSym(V) &
+        for x being Symbol of H2, p being FinSequence of the carrier of H2
+        holds x ==> p iff P[x,p] )
+      holds H1 = H2 from DTCONSTR:sch 2;
+    thus G1 = G2 by D,C1,C2;
+  end;
+end;
+
+begin :: Membership of the symbols
+
+reserve V for non empty set;
+
+theorem Th1:
+  for v being Element of V holds
+  [0,v] in FrEnvSym(V) & [2,v] in FrEnvSym(V) & [4,v] in FrEnvSym(V)
+proof
+  let v be Element of V;
+  A1: 0 in {0,2,4} & 2 in {0,2,4} & 4 in {0,2,4} by ENUMSET1:def 1;
+  then A2: [0,v] in [:{0,2,4},V:] & [2,v] in [:{0,2,4},V:] &
+    [4,v] in [:{0,2,4},V:] by ZFMISC_1:87;
+  FrEnvSym(V) = [:{0,2,4}, V:] \/ [:{1,3,5}, {0}:];
+  hence thesis by A2,XBOOLE_0:def 3;
+end;
+
+theorem Th2:
+  [1,0] in FrEnvSym(V) & [3,0] in FrEnvSym(V) & [5,0] in FrEnvSym(V)
+proof
+  A1: 1 in {1,3,5} & 3 in {1,3,5} & 5 in {1,3,5} by ENUMSET1:def 1;
+  0 in {0} by TARSKI:def 1;
+  then A2: [1,0] in [:{1,3,5},{0}:] & [3,0] in [:{1,3,5},{0}:] &
+    [5,0] in [:{1,3,5},{0}:] by A1,ZFMISC_1:87;
+  FrEnvSym(V) = [:{0,2,4}, V:] \/ [:{1,3,5}, {0}:];
+  hence thesis by A2,XBOOLE_0:def 3;
+end;
+
+theorem Th3:
+  for x being Symbol of FrEnvGram(V), p being FinSequence st x ==> p
+  holds p is FinSequence of the carrier of FrEnvGram(V)
+proof
+  let x be Symbol of FrEnvGram(V), p be FinSequence;
+  assume x ==> p;
+  then A1: [x,p] in the Rules of FrEnvGram(V) by LANG1:def 1;
+  the Rules of FrEnvGram(V) c=
+    [:the carrier of FrEnvGram(V), (the carrier of FrEnvGram(V))*:];
+  then [x,p] in
+    [:the carrier of FrEnvGram(V), (the carrier of FrEnvGram(V))*:] by A1;
+  then p in (the carrier of FrEnvGram(V))* by ZFMISC_1:87;
+  hence thesis by FINSEQ_1:def 11;
+end;
+
+theorem Th4:
+  for G being non empty DTConstrStr, x being Symbol of G holds
+  ( x in Terminals G iff not ex n being FinSequence st x ==> n ) &
+  ( x in NonTerminals G iff ex n being FinSequence st x ==> n )
+proof
+  let G be non empty DTConstrStr, x be Symbol of G;
+  hereby
+    assume x in Terminals G;
+    then x in { s where s is Symbol of G :
+      not ex n being FinSequence st s ==> n } by LANG1:def 2;
+    then ex s being Symbol of G st x = s &
+      not ex n being FinSequence st s ==> n;
+    hence not ex n being FinSequence st x ==> n;
+  end;
+  hereby
+    assume not ex n being FinSequence st x ==> n;
+    then x in { s where s is Symbol of G :
+      not ex n being FinSequence st s ==> n };
+    hence x in Terminals G by LANG1:def 2;
+  end;
+  hereby
+    assume x in NonTerminals G;
+    then x in { s where s is Symbol of G :
+      ex n being FinSequence st s ==> n } by LANG1:def 3;
+    then ex s being Symbol of G st x = s & ex n being FinSequence st s ==> n;
+    hence ex n being FinSequence st x ==> n;
+  end;
+  assume ex n being FinSequence st x ==> n;
+  then x in { s where s is Symbol of G : ex n being FinSequence st s ==> n };
+  hence thesis by LANG1:def 3;
+end;
+
+begin :: Terminal and nonterminal symbols
+
+theorem Th5:
+  for x being Symbol of FrEnvGram(V) holds
+  x in Terminals FrEnvGram(V) iff
+    ( (ex v being Element of V st x = [0,v]) or x = [1,0] )
+proof
+  let x be Symbol of FrEnvGram(V);
+  set G = FrEnvGram(V);
+  A0: the carrier of G = FrEnvSym(V) by Def2;
+  then reconsider e = [1,0] as Element of the carrier of G by Th2;
+  reconsider q1 = <*e*> as FinSequence of the carrier of G by FINSEQ_1:74;
+  reconsider q2 = <*e,e*> as FinSequence of the carrier of G by FINSEQ_2:13;
+  E1: ex a being object st q1 = <*a*>;
+  E2: ex a,b being object st q2 = <*a,b*>;
+  hereby
+    assume x in Terminals G;
+    then A2a: not ex n being FinSequence st x ==> n by Th4;
+    x in [:{0,2,4}, V:] \/ [:{1,3,5}, {0}:] by A0;
+    then A8: x in [:{0,2,4}, V:] or x in [:{1,3,5}, {0}:] by XBOOLE_0:def 3;
+    per cases by A8;
+    suppose x in [:{0,2,4}, V:];
+      then consider i,v being object such that
+      B1: i in {0,2,4} & v in V & x = [i,v] by ZFMISC_1:84;
+      reconsider v as Element of V by B1;
+      per cases by B1,ENUMSET1:def 1;
+      suppose i = 0;
+        hence (ex v being Element of V st x = [0,v]) or x = [1,0] by B1;
+      end;
+      suppose i = 2;
+        then x = [2,v] by B1;
+        then x ==> q1 by E1,Def2;
+        hence (ex v being Element of V st x = [0,v]) or x = [1,0] by A2a;
+      end;
+      suppose i = 4;
+        then x = [4,v] by B1;
+        then x ==> q2 by E2,Def2;
+        hence (ex v being Element of V st x = [0,v]) or x = [1,0] by A2a;
+      end;
+    end;
+    suppose x in [:{1,3,5}, {0}:];
+      then consider j,u being object such that
+      B2: j in {1,3,5} & u in {0} & x = [j,u] by ZFMISC_1:84;
+      B3: u = 0 by B2,TARSKI:def 1;
+      per cases by B2,ENUMSET1:def 1;
+      suppose j = 1;
+        hence (ex v being Element of V st x = [0,v]) or x = [1,0] by B2,B3;
+      end;
+      suppose j = 3;
+        then x = [3,0] by B2,B3;
+        then x ==> q2 by E2,Def2;
+        hence (ex v being Element of V st x = [0,v]) or x = [1,0] by A2a;
+      end;
+      suppose j = 5;
+        then x = [5,0] by B2,B3;
+        then x ==> q1 by E1,Def2;
+        hence (ex v being Element of V st x = [0,v]) or x = [1,0] by A2a;
+      end;
+    end;
+  end;
+  assume A9: (ex v being Element of V st x = [0,v]) or x = [1,0];
+  then F1: x`1 = 0 or x`1 = 1;
+  now
+    assume ex n being FinSequence st x ==> n;
+    then consider n being FinSequence such that C1: x ==> n;
+    n is FinSequence of the carrier of G by C1,Th3;
+    then reconsider m = n as FinSequence of the carrier of G;
+    C1a: x ==> m by C1;
+    C2: ( ( (ex v being Element of V st x = [2,v]) or x = [5,0] )
+        & ex a being object st m = <*a*> )
+      or
+      ( ( x = [3,0] or (ex v being Element of V st x = [4,v]) )
+        & ex a,b being object st m = <*a,b*> ) by C1a,Def2;
+    C3: (ex v being Element of V st x = [2,v]) or x = [5,0] or x = [3,0] or
+      (ex v being Element of V st x = [4,v]) by C2;
+    x`1 = 2 or x`1 = 5 or x`1 = 3 or x`1 = 4 by C3;
+    hence contradiction by F1;
+  end;
+  hence thesis by A9,Th4;
+end;
+
+begin :: The grammar is well-formed
+
+registration
+  let V be non empty set;
+  cluster FrEnvGram(V) -> with_terminals with_nonterminals
+    with_useful_nonterminals;
+  coherence
+  proof
+    set G = FrEnvGram(V);
+    A0: the carrier of G = FrEnvSym(V) by Def2;
+    then reconsider e = [1,0] as Symbol of G by Th2;
+    A1: e in Terminals G by Th5;
+    Terminals G <> {} by A1;
+    hence FrEnvGram(V) is with_terminals by DTCONSTR:def 3;
+    reconsider f = [5,0] as Symbol of G by A0,Th2;
+    A2: root-tree e in TS G by A1,DTCONSTR:def 1;
+    then reconsider rt = root-tree e as Element of TS G;
+    rng <*rt*> = {rt} by FINSEQ_1:39;
+    then rng <*rt*> c= TS G by A2,ZFMISC_1:31;
+    then reconsider p1 = <*rt*> as FinSequence of TS G by FINSEQ_1:def 4;
+    rng <*rt,rt*> = {rt,rt} by FINSEQ_2:127
+      .= {rt} by ENUMSET1:29;
+    then rng <*rt,rt*> c= TS G by A2,ZFMISC_1:31;
+    then reconsider p2 = <*rt,rt*> as FinSequence of TS G by FINSEQ_1:def 4;
+    BB: rt.{} = e by TREES_4:3;
+    B1: roots p1 = <*rt.{}*> by DTCONSTR:4
+      .= <*e*> by BB;
+    B2: roots p2 = <*rt.{}, rt.{}*> by DTCONSTR:6
+      .= <*e,e*> by BB;
+    C1: ex a being object st roots p1 = <*a*> by B1;
+    C2: ex a,b being object st roots p2 = <*a,b*> by B2;
+    reconsider r1 = roots p1 as FinSequence of the carrier of G by B1,
+      FINSEQ_1:74;
+    reconsider r2 = roots p2 as FinSequence of the carrier of G by B2,
+      FINSEQ_2:13;
+    D1: f ==> r1 by C1,Def2;
+    then f in NonTerminals G by Th4;
+    then NonTerminals G <> {};
+    hence FrEnvGram(V) is with_nonterminals by DTCONSTR:def 4;
+    thus FrEnvGram(V) is with_useful_nonterminals
+    proof
+    let nt be Symbol of FrEnvGram(V);
+    assume nt in NonTerminals FrEnvGram(V);
+    then consider n being FinSequence such that E1: nt ==> n by Th4;
+    n is FinSequence of the carrier of G by E1,Th3;
+    then reconsider m = n as FinSequence of the carrier of G;
+    E2: nt ==> m by E1;
+    E3: ( ( (ex v being Element of V st nt = [2,v]) or nt = [5,0] )
+        & ex a being object st m = <*a*> )
+      or
+      ( ( nt = [3,0] or (ex v being Element of V st nt = [4,v]) )
+        & ex a,b being object st m = <*a,b*> ) by E2,Def2;
+    per cases by E3;
+    suppose (ex v being Element of V st nt = [2,v]) or nt = [5,0];
+      then nt ==> r1 by C1,Def2;
+      hence ex p being FinSequence of TS(G) st nt ==> roots p;
+    end;
+    suppose nt = [3,0] or (ex v being Element of V st nt = [4,v]);
+      then nt ==> r2 by C2,Def2;
+      hence ex p being FinSequence of TS(G) st nt ==> roots p;
+    end;
+    end;
+  end;
+end;
+
+definition
+  let V be non empty set;
+  mode FrEnvTerm of V is Element of TS(FrEnvGram(V));
+end;
+
+begin :: Building terms
+
+theorem Th6:
+  TS(FrEnvGram(V)) is DTree-set of the carrier of FrEnvGram(V)
+proof
+  set G = FrEnvGram(V);
+  now
+    let x be object;
+    assume x in TS G;
+    then x in FinTrees(the carrier of G);
+    hence x is DecoratedTree of the carrier of G by TREES_3:def 6;
+  end;
+  hence thesis by TREES_3:def 6;
+end;
+
+theorem Th7:
+  for x being Symbol of FrEnvGram(V), M being FrEnvTerm of V
+  st (ex v being Element of V st x = [2,v]) or x = [5,0]
+  holds x-tree <*M*> in TS(FrEnvGram(V))
+proof
+  let x be Symbol of FrEnvGram(V), M be FrEnvTerm of V;
+  assume A1: (ex v being Element of V st x = [2,v]) or x = [5,0];
+  set G = FrEnvGram(V);
+  reconsider T = TS G as DTree-set of the carrier of G by Th6;
+  reconsider N = M as Element of T;
+  reconsider p = <*N*> as FinSequence of T by FINSEQ_1:74;
+  A2: roots p = <*M.{}*> by DTCONSTR:4;
+  reconsider q = roots p as FinSequence of the carrier of G;
+  A3: ex a being object st q = <*a*> by A2;
+  A4: x ==> q by A1,A3,Def2;
+  reconsider p2 = p as FinSequence of TS G;
+  x-tree p2 in TS G by A4,DTCONSTR:def 1;
+  hence thesis;
+end;
+
+theorem Th8:
+  for x being Symbol of FrEnvGram(V), M,N being FrEnvTerm of V
+  st x = [3,0] or (ex v being Element of V st x = [4,v])
+  holds x-tree <*M,N*> in TS(FrEnvGram(V))
+proof
+  let x be Symbol of FrEnvGram(V), M,N be FrEnvTerm of V;
+  assume A1: x = [3,0] or (ex v being Element of V st x = [4,v]);
+  set G = FrEnvGram(V);
+  reconsider T = TS G as DTree-set of the carrier of G by Th6;
+  reconsider M1 = M, N1 = N as Element of T;
+  reconsider p = <*M1,N1*> as FinSequence of T by FINSEQ_2:13;
+  A2: roots p = <*M.{}, N.{}*> by DTCONSTR:6;
+  reconsider q = roots p as FinSequence of the carrier of G;
+  A3: ex a,b being object st q = <*a,b*> by A2;
+  A4: x ==> q by A1,A3,Def2;
+  reconsider p2 = p as FinSequence of TS G;
+  x-tree p2 in TS G by A4,DTCONSTR:def 1;
+  hence thesis;
+end;
+
+begin :: The six constructors
+
+definition
+  let V be non empty set, v be Element of V;
+  func fVar(v) -> FrEnvTerm of V equals
+  :Def3:
+  root-tree [0,v];
+  coherence
+  proof
+    set G = FrEnvGram(V);
+    A0: the carrier of G = FrEnvSym(V) by Def2;
+    then reconsider x = [0,v] as Symbol of G by Th1;
+    x in Terminals G by Th5;
+    then root-tree x in TS G by DTCONSTR:def 1;
+    hence thesis;
+  end;
+end;
+
+definition
+  let V be non empty set;
+  func fId(V) -> FrEnvTerm of V equals
+  :Def4:
+  root-tree [1,0];
+  coherence
+  proof
+    set G = FrEnvGram(V);
+    A0: the carrier of G = FrEnvSym(V) by Def2;
+    then reconsider x = [1,0] as Symbol of G by Th2;
+    x in Terminals G by Th5;
+    then root-tree x in TS G by DTCONSTR:def 1;
+    hence thesis;
+  end;
+end;
+
+definition
+  let V be non empty set, v be Element of V, M be FrEnvTerm of V;
+  func fLam(v,M) -> FrEnvTerm of V equals
+  :Def5:
+  [2,v]-tree <*M*>;
+  coherence
+  proof
+    set G = FrEnvGram(V);
+    A0: the carrier of G = FrEnvSym(V) by Def2;
+    then reconsider x = [2,v] as Symbol of G by Th1;
+    x-tree <*M*> in TS G by Th7;
+    hence thesis;
+  end;
+end;
+
+definition
+  let V be non empty set, M be FrEnvTerm of V;
+  func fEps(M) -> FrEnvTerm of V equals
+  :Def6:
+  [5,0]-tree <*M*>;
+  coherence
+  proof
+    set G = FrEnvGram(V);
+    A0: the carrier of G = FrEnvSym(V) by Def2;
+    then reconsider x = [5,0] as Symbol of G by Th2;
+    x-tree <*M*> in TS G by Th7;
+    hence thesis;
+  end;
+end;
+
+definition
+  let V be non empty set, M,N be FrEnvTerm of V;
+  func fApp(M,N) -> FrEnvTerm of V equals
+  :Def7:
+  [3,0]-tree <*M,N*>;
+  coherence
+  proof
+    set G = FrEnvGram(V);
+    A0: the carrier of G = FrEnvSym(V) by Def2;
+    then reconsider x = [3,0] as Symbol of G by Th2;
+    x-tree <*M,N*> in TS G by Th8;
+    hence thesis;
+  end;
+end;
+
+definition
+  let V be non empty set, M be FrEnvTerm of V, v be Element of V,
+    N be FrEnvTerm of V;
+  func fExt(M,v,N) -> FrEnvTerm of V equals
+  :Def8:
+  [4,v]-tree <*M,N*>;
+  coherence
+  proof
+    set G = FrEnvGram(V);
+    A0: the carrier of G = FrEnvSym(V) by Def2;
+    then reconsider x = [4,v] as Symbol of G by Th1;
+    x-tree <*M,N*> in TS G by Th8;
+    hence thesis;
+  end;
+end;
+
+begin :: Root symbols, distinctness and injectivity
+
+theorem Th9:
+  for v being Element of V, M,N being FrEnvTerm of V holds
+  (fVar v).{} = [0,v] & (fId V).{} = [1,0] & (fLam(v,M)).{} = [2,v] &
+  (fEps M).{} = [5,0] & (fApp(M,N)).{} = [3,0] & (fExt(M,v,N)).{} = [4,v]
+proof
+  let v be Element of V, M,N be FrEnvTerm of V;
+  thus (fVar v).{} = (root-tree [0,v]).{} by Def3
+    .= [0,v] by TREES_4:3;
+  thus (fId V).{} = (root-tree [1,0]).{} by Def4
+    .= [1,0] by TREES_4:3;
+  thus (fLam(v,M)).{} = ([2,v]-tree <*M*>).{} by Def5
+    .= [2,v] by TREES_4:def 4;
+  thus (fEps M).{} = ([5,0]-tree <*M*>).{} by Def6
+    .= [5,0] by TREES_4:def 4;
+  thus (fApp(M,N)).{} = ([3,0]-tree <*M,N*>).{} by Def7
+    .= [3,0] by TREES_4:def 4;
+  thus (fExt(M,v,N)).{} = ([4,v]-tree <*M,N*>).{} by Def8
+    .= [4,v] by TREES_4:def 4;
+end;
+
+theorem Th10:
+  for v,w being Element of V, M,M1,N,N1 being FrEnvTerm of V holds
+  fVar v <> fId V & fVar v <> fLam(w,M) & fVar v <> fEps M &
+  fVar v <> fApp(M,N) & fVar v <> fExt(M,w,N) &
+  fId V <> fLam(w,M) & fId V <> fEps M & fId V <> fApp(M,N) &
+  fId V <> fExt(M,w,N) &
+  fLam(w,M) <> fEps M1 & fLam(w,M) <> fApp(M1,N1) &
+  fLam(w,M) <> fExt(M1,w,N1) &
+  fEps M <> fApp(M1,N1) & fEps M <> fExt(M1,w,N1) &
+  fApp(M,N) <> fExt(M1,w,N1)
+proof
+  let v,w be Element of V, M,M1,N,N1 be FrEnvTerm of V;
+  A1: (fVar v).{} = [0,v] & (fId V).{} = [1,0] & (fLam(w,M)).{} = [2,w] &
+    (fEps M).{} = [5,0] & (fApp(M,N)).{} = [3,0] &
+    (fExt(M,w,N)).{} = [4,w] by Th9;
+  A2: (fEps M1).{} = [5,0] & (fApp(M1,N1)).{} = [3,0] &
+    (fExt(M1,w,N1)).{} = [4,w] by Th9;
+  thus thesis by A1,A2,XTUPLE_0:1;
+end;
+
+theorem Th11:
+  for v,w being Element of V, M,M1 being FrEnvTerm of V
+  st fLam(v,M) = fLam(w,M1) holds v = w & M = M1
+proof
+  let v,w be Element of V, M,M1 be FrEnvTerm of V;
+  assume fLam(v,M) = fLam(w,M1);
+  then [2,v]-tree <*M*> = [2,w]-tree <*M1*> by Def5;
+  then A1: [2,v] = [2,w] & <*M*> = <*M1*> by TREES_4:15;
+  hence v = w by XTUPLE_0:1;
+  thus thesis by A1,FINSEQ_1:76;
+end;
+
+theorem Th12:
+  for M,M1 being FrEnvTerm of V st fEps M = fEps M1 holds M = M1
+proof
+  let M,M1 be FrEnvTerm of V;
+  assume fEps M = fEps M1;
+  then [5,0]-tree <*M*> = [5,0]-tree <*M1*> by Def6;
+  then <*M*> = <*M1*> by TREES_4:15;
+  hence thesis by FINSEQ_1:76;
+end;
+
+theorem Th13:
+  for M,M1,N,N1 being FrEnvTerm of V st fApp(M,N) = fApp(M1,N1)
+  holds M = M1 & N = N1
+proof
+  let M,M1,N,N1 be FrEnvTerm of V;
+  assume fApp(M,N) = fApp(M1,N1);
+  then [3,0]-tree <*M,N*> = [3,0]-tree <*M1,N1*> by Def7;
+  then A1: <*M,N*> = <*M1,N1*> by TREES_4:15;
+  A2: len <*M,N*> = 2 & <*M,N*>.1 = M & <*M,N*>.2 = N by FINSEQ_1:44;
+  len <*M1,N1*> = 2 & <*M1,N1*>.1 = M1 & <*M1,N1*>.2 = N1 by FINSEQ_1:44;
+  hence thesis by A1,A2;
+end;
+
+theorem Th14:
+  for v,w being Element of V, M,M1,N,N1 being FrEnvTerm of V
+  st fExt(M,v,N) = fExt(M1,w,N1) holds v = w & M = M1 & N = N1
+proof
+  let v,w be Element of V, M,M1,N,N1 be FrEnvTerm of V;
+  assume fExt(M,v,N) = fExt(M1,w,N1);
+  then [4,v]-tree <*M,N*> = [4,w]-tree <*M1,N1*> by Def8;
+  then A1: [4,v] = [4,w] & <*M,N*> = <*M1,N1*> by TREES_4:15;
+  hence v = w by XTUPLE_0:1;
+  A2: len <*M,N*> = 2 & <*M,N*>.1 = M & <*M,N*>.2 = N by FINSEQ_1:44;
+  len <*M1,N1*> = 2 & <*M1,N1*>.1 = M1 & <*M1,N1*>.2 = N1 by FINSEQ_1:44;
+  hence thesis by A1,A2;
+end;
+
+theorem Th15:
+  for v,w being Element of V st fVar v = fVar w holds v = w
+proof
+  let v,w be Element of V;
+  assume fVar v = fVar w;
+  then root-tree [0,v] = root-tree [0,w] by Def3;
+  then [0,v] = [0,w] by TREES_4:4;
+  hence thesis by XTUPLE_0:1;
+end;
+
+begin :: Case analysis on terms
+
+theorem Th16:
+  for M being FrEnvTerm of V holds
+  (ex v being Element of V st M = fVar v) or M = fId V or
+  (ex v being Element of V, A being FrEnvTerm of V st M = fLam(v,A)) or
+  (ex A being FrEnvTerm of V st M = fEps A) or
+  (ex A,B being FrEnvTerm of V st M = fApp(A,B)) or
+  (ex A,B being FrEnvTerm of V, v being Element of V st M = fExt(A,v,B))
+proof
+  let M be FrEnvTerm of V;
+  set G = FrEnvGram(V);
+  reconsider T = TS G as DTree-set of the carrier of G by Th6;
+  reconsider M1 = M as Element of T;
+  {} in dom M1 by TREES_1:22;
+  then A1: M.{} in rng M1 by FUNCT_1:def 3;
+  rng M1 c= the carrier of G by RELAT_1:def 19;
+  then reconsider s = M.{} as Symbol of G by A1;
+  per cases;
+  suppose A2: s in Terminals G;
+    then reconsider s1 = s as Terminal of G;
+    A3: M = root-tree s1 by DTCONSTR:9;
+    A4: (ex v being Element of V st s = [0,v]) or s = [1,0] by A2,Th5;
+    per cases by A4;
+    suppose ex v being Element of V st s = [0,v];
+      then consider v being Element of V such that A5: s = [0,v];
+      M = fVar v by A3,A5,Def3;
+      hence thesis;
+    end;
+    suppose s = [1,0];
+      then M = fId V by A3,Def4;
+      hence thesis;
+    end;
+  end;
+  suppose B1: not s in Terminals G;
+    Terminals G \/ NonTerminals G = the carrier of G by LANG1:1;
+    then s in Terminals G \/ NonTerminals G;
+    then s in NonTerminals G by B1,XBOOLE_0:def 3;
+    then reconsider s2 = s as NonTerminal of G;
+    consider ts being FinSequence of TS G such that
+    B2: M = s2-tree ts and B3: s2 ==> roots ts by DTCONSTR:10;
+    reconsider ts1 = ts as FinSequence of T;
+    B4: dom roots ts1 = dom ts1 by TREES_3:def 18;
+    reconsider rt = roots ts1 as FinSequence of the carrier of G;
+    B5: s ==> rt by B3;
+    B6: rng ts c= TS G by FINSEQ_1:def 4;
+    B7: ( ( (ex v being Element of V st s = [2,v]) or s = [5,0] )
+        & ex a being object st rt = <*a*> )
+      or
+      ( ( s = [3,0] or (ex v being Element of V st s = [4,v]) )
+        & ex a,b being object st rt = <*a,b*> ) by B5,Def2;
+    per cases by B7;
+    suppose C1: ( (ex v being Element of V st s = [2,v]) or s = [5,0] )
+        & ex a being object st rt = <*a*>;
+      then consider a being object such that C2: rt = <*a*>;
+      len rt = 1 by C2,FINSEQ_1:40;
+      then C3: len ts = 1 by B4,FINSEQ_3:29;
+      then C4: ts = <*ts.1*> by FINSEQ_1:40;
+      1 in dom ts by C3,FINSEQ_3:25;
+      then ts.1 in rng ts by FUNCT_1:def 3;
+      then reconsider A = ts.1 as FrEnvTerm of V by B6;
+      C5: M = s-tree <*A*> by B2,C4;
+      per cases by C1;
+      suppose ex v being Element of V st s = [2,v];
+        then consider v being Element of V such that C6: s = [2,v];
+        M = fLam(v,A) by C5,C6,Def5;
+        hence thesis;
+      end;
+      suppose s = [5,0];
+        then M = fEps A by C5,Def6;
+        hence thesis;
+      end;
+    end;
+    suppose D1: ( s = [3,0] or (ex v being Element of V st s = [4,v]) )
+        & ex a,b being object st rt = <*a,b*>;
+      then consider a,b being object such that D2: rt = <*a,b*>;
+      len rt = 2 by D2,FINSEQ_1:44;
+      then D3: len ts = 2 by B4,FINSEQ_3:29;
+      then D4: ts = <*ts.1, ts.2*> by FINSEQ_1:44;
+      D5: 1 in dom ts & 2 in dom ts by D3,FINSEQ_3:25;
+      then ts.1 in rng ts & ts.2 in rng ts by FUNCT_1:def 3;
+      then reconsider A = ts.1, B = ts.2 as FrEnvTerm of V by B6;
+      D6: M = s-tree <*A,B*> by B2,D4;
+      per cases by D1;
+      suppose s = [3,0];
+        then M = fApp(A,B) by D6,Def7;
+        hence thesis;
+      end;
+      suppose ex v being Element of V st s = [4,v];
+        then consider v being Element of V such that D7: s = [4,v];
+        M = fExt(A,v,B) by D6,D7,Def8;
+        hence thesis;
+      end;
+    end;
+  end;
+end;
+
+begin :: Structural induction
+
+scheme
+  FrEnvInd { V() -> non empty set, P[set] }:
+  for M being FrEnvTerm of V() holds P[M]
+provided
+A1: for v being Element of V() holds P[fVar v] and
+A2: P[fId V()] and
+A3: for v being Element of V(), A being FrEnvTerm of V() st P[A]
+      holds P[fLam(v,A)] and
+A4: for A being FrEnvTerm of V() st P[A] holds P[fEps A] and
+A5: for A,B being FrEnvTerm of V() st P[A] & P[B] holds P[fApp(A,B)] and
+A6: for A,B being FrEnvTerm of V(), v being Element of V() st P[A] & P[B]
+      holds P[fExt(A,v,B)]
+proof
+  set G = FrEnvGram(V());
+  reconsider T = TS G as DTree-set of the carrier of G by Th6;
+  B1: for s being Symbol of G st s in Terminals G holds P[root-tree s]
+  proof
+    let s be Symbol of G;
+    assume s in Terminals G;
+    then B2: (ex v being Element of V() st s = [0,v]) or s = [1,0] by Th5;
+    per cases by B2;
+    suppose ex v being Element of V() st s = [0,v];
+      then consider v being Element of V() such that B3: s = [0,v];
+      root-tree s = fVar v by B3,Def3;
+      hence thesis by A1;
+    end;
+    suppose s = [1,0];
+      then root-tree s = fId V() by Def4;
+      hence thesis by A2;
+    end;
+  end;
+  B4: for nt being Symbol of G, ts being FinSequence of TS(G)
+    st nt ==> roots ts &
+      for t being DecoratedTree of the carrier of G st t in rng ts holds P[t]
+    holds P[nt-tree ts]
+  proof
+    let nt be Symbol of G, ts be FinSequence of TS(G);
+    assume that C0: nt ==> roots ts and
+    C00: for t being DecoratedTree of the carrier of G st t in rng ts
+      holds P[t];
+    reconsider ts1 = ts as FinSequence of T;
+    C1: dom roots ts1 = dom ts1 by TREES_3:def 18;
+    reconsider rt = roots ts1 as FinSequence of the carrier of G;
+    C2: nt ==> rt by C0;
+    C3: rng ts c= TS G by FINSEQ_1:def 4;
+    C4: ( ( (ex v being Element of V() st nt = [2,v]) or nt = [5,0] )
+        & ex a being object st rt = <*a*> )
+      or
+      ( ( nt = [3,0] or (ex v being Element of V() st nt = [4,v]) )
+        & ex a,b being object st rt = <*a,b*> ) by C2,Def2;
+    per cases by C4;
+    suppose D0: ( (ex v being Element of V() st nt = [2,v]) or nt = [5,0] )
+        & ex a being object st rt = <*a*>;
+      then consider a being object such that D1: rt = <*a*>;
+      len rt = 1 by D1,FINSEQ_1:40;
+      then D2: len ts = 1 by C1,FINSEQ_3:29;
+      then D3: ts = <*ts.1*> by FINSEQ_1:40;
+      1 in dom ts by D2,FINSEQ_3:25;
+      then D4: ts.1 in rng ts by FUNCT_1:def 3;
+      then reconsider A = ts.1 as FrEnvTerm of V() by C3;
+      reconsider A1a = A as Element of T;
+      D5: P[A] by C00,D4;
+      per cases by D0;
+      suppose ex v being Element of V() st nt = [2,v];
+        then consider v being Element of V() such that D6: nt = [2,v];
+        nt-tree ts = fLam(v,A) by D3,D6,Def5;
+        hence thesis by A3,D5;
+      end;
+      suppose nt = [5,0];
+        then nt-tree ts = fEps A by D3,Def6;
+        hence thesis by A4,D5;
+      end;
+    end;
+    suppose E0: ( nt = [3,0] or (ex v being Element of V() st nt = [4,v]) )
+        & ex a,b being object st rt = <*a,b*>;
+      then consider a,b being object such that E1: rt = <*a,b*>;
+      len rt = 2 by E1,FINSEQ_1:44;
+      then E2: len ts = 2 by C1,FINSEQ_3:29;
+      then E3: ts = <*ts.1, ts.2*> by FINSEQ_1:44;
+      E4: 1 in dom ts & 2 in dom ts by E2,FINSEQ_3:25;
+      then E5: ts.1 in rng ts & ts.2 in rng ts by FUNCT_1:def 3;
+      then reconsider A = ts.1, B = ts.2 as FrEnvTerm of V() by C3;
+      reconsider A2a = A, B2a = B as Element of T;
+      E6: P[A] & P[B] by C00,E5;
+      per cases by E0;
+      suppose nt = [3,0];
+        then nt-tree ts = fApp(A,B) by E3,Def7;
+        hence thesis by A5,E6;
+      end;
+      suppose ex v being Element of V() st nt = [4,v];
+        then consider v being Element of V() such that E7: nt = [4,v];
+        nt-tree ts = fExt(A,v,B) by E3,E7,Def8;
+        hence thesis by A6,E6;
+      end;
+    end;
+  end;
+  F1: for t being DecoratedTree of the carrier of G st t in TS(G) holds P[t]
+    from DTCONSTR:sch 7(B1,B4);
+  let M be FrEnvTerm of V();
+  reconsider M1 = M as Element of T;
+  M1 is DecoratedTree of the carrier of G;
+  hence thesis by F1;
+end;
+
+theorem Th17:
+  for v,w being Element of V, A,B,C,D being FrEnvTerm of V holds
+  fVar v <> fId V & fVar v <> fLam(w,A) & fVar v <> fEps A &
+  fVar v <> fApp(A,B) & fVar v <> fExt(A,w,B) &
+  fId V <> fLam(w,A) & fId V <> fEps A & fId V <> fApp(A,B) &
+  fId V <> fExt(A,w,B) &
+  fLam(v,A) <> fEps B & fLam(v,A) <> fApp(B,C) &
+  fLam(v,A) <> fExt(B,w,C) &
+  fEps A <> fApp(B,C) & fEps A <> fExt(B,w,C) &
+  fApp(A,B) <> fExt(C,w,D)
+proof
+  let v,w be Element of V, A,B,C,D be FrEnvTerm of V;
+  A1: (fVar v).{} = [0,v] & (fId V).{} = [1,0] & (fLam(w,A)).{} = [2,w] &
+    (fEps A).{} = [5,0] & (fApp(A,B)).{} = [3,0] &
+    (fExt(A,w,B)).{} = [4,w] by Th9;
+  A2: (fLam(v,A)).{} = [2,v] & (fEps B).{} = [5,0] & (fApp(B,C)).{} = [3,0] &
+    (fExt(B,w,C)).{} = [4,w] by Th9;
+  A3: (fExt(C,w,D)).{} = [4,w] by Th9;
+  thus thesis by A1,A2,A3,XTUPLE_0:1;
+end;
+

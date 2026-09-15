@@ -1,0 +1,2104 @@
+:: Syntax of lambda_EnvEps: terms as parse trees
+
+environ
+
+ vocabularies NUMBERS, XBOOLE_0, SUBSET_1, TARSKI, ZFMISC_1, FINSEQ_1,
+      RELAT_1, FUNCT_1, ORDINAL1, CARD_1, ARYTM_3, XXREAL_0, NAT_1, TREES_1,
+      TREES_2, TREES_3, TREES_4, LANG1, STRUCT_0, DTCONSTR, MCART_1, XTUPLE_0,
+      FINSET_1, TDGROUP, FUNCOP_1, ARYTM_1, FUNCT_7, XREAL_0, XCMPLX_0,
+      REWRITE1, PBOOLE, ENVEPS_1;
+ notations TARSKI, XBOOLE_0, ZFMISC_1, SUBSET_1, ORDINAL1, NUMBERS, XCMPLX_0,
+      XXREAL_0, NAT_1, RELAT_1, RELSET_1, FUNCT_1, FUNCT_2, FINSEQ_1, FINSEQ_2,
+      MCART_1, XTUPLE_0, DOMAIN_1, STRUCT_0, LANG1, TREES_1, TREES_2, TREES_3,
+      TREES_4, DTCONSTR, FUNCOP_1, XREAL_0, PBOOLE, REWRITE1;
+ constructors NUMBERS, XCMPLX_0, XXREAL_0, NAT_1, RELSET_1, FUNCT_2, FINSEQ_1,
+      FINSEQ_2, MCART_1, XTUPLE_0, DOMAIN_1, STRUCT_0, LANG1, TREES_1, TREES_2,
+      TREES_3, TREES_4, DTCONSTR, PARTFUN1, BINOP_1, SETWISEO, XREAL_0,
+      FUNCOP_1, SUBSET_1, CARD_3, FINSEQOP, FINSEQ_4, FINSOP_1, PRE_POLY,
+      FUNCT_1, RELAT_1, PBOOLE, REWRITE1;
+ registrations XBOOLE_0, SUBSET_1, RELAT_1, FUNCT_1, ORDINAL1, XREAL_0, NAT_1,
+      FINSEQ_1, FINSEQ_2, FINSET_1, CARD_1, STRUCT_0, LANG1, TREES_1, TREES_2,
+      TREES_3, TREES_4, DTCONSTR, XTUPLE_0, VALUED_0, FUNCOP_1, XCMPLX_0,
+      XXREAL_0, NUMBERS, MEMBERED, PBOOLE, REWRITE1;
+ requirements NUMERALS, REAL, BOOLE, SUBSET, ARITHM;
+ definitions TARSKI, XBOOLE_0, DTCONSTR, TREES_3, TREES_4, RELAT_1, FUNCT_1,
+      FINSEQ_1, FUNCOP_1, SUBSET_1, REWRITE1;
+ theorems TARSKI, XBOOLE_0, XBOOLE_1, ZFMISC_1, FINSEQ_1, FINSEQ_2, FINSEQ_3,
+      MCART_1, LANG1, ENUMSET1, TREES_1, TREES_3, TREES_4, DTCONSTR, XTUPLE_0,
+      FUNCT_1, RELAT_1, FUNCOP_1, NAT_1, XCMPLX_1, SUBSET_1, FUNCT_2, XREAL_1;
+ schemes DTCONSTR, NAT_1;
+
+begin :: The alphabet of symbols
+
+definition
+  let V be non empty set;
+  func EnvEpsSym(V) -> non empty set equals
+  [:{0,2,4}, V:] \/ [:{1,3,5,6}, {0}:];
+  coherence
+  proof
+    [:{0,2,4}, V:] c= [:{0,2,4}, V:] \/ [:{1,3,5,6}, {0}:] by XBOOLE_1:7;
+    hence thesis;
+  end;
+end;
+
+begin :: The grammar
+
+definition
+  let V be non empty set;
+  func EnvEpsGram(V) -> strict non empty DTConstrStr means
+  :Def2:
+  the carrier of it = EnvEpsSym(V) &
+  for x being Symbol of it, p being FinSequence of the carrier of it holds
+    x ==> p iff
+      ( ( (ex v being Element of V st x = [2,v]) or x = [5,0] )
+        & ex a being object st p = <*a*> )
+      or
+      ( ( x = [3,0] or x = [6,0] or (ex v being Element of V st x = [4,v]) )
+        & ex a,b being object st p = <*a,b*> );
+  existence
+  proof
+    defpred P[object,object] means
+      ( ( (ex v being Element of V st $1 = [2,v]) or $1 = [5,0] )
+        & ex a being object st $2 = <*a*> )
+      or
+      ( ( $1 = [3,0] or $1 = [6,0] or (ex v being Element of V st $1 = [4,v]) )
+        & ex a,b being object st $2 = <*a,b*> );
+    consider G being strict non empty DTConstrStr such that
+    A1: the carrier of G = EnvEpsSym(V) and
+    A2: for x being Symbol of G, p being FinSequence of the carrier of G
+      holds x ==> p iff P[x,p] from DTCONSTR:sch 1;
+    take G;
+    thus the carrier of G = EnvEpsSym(V) by A1;
+    let x be Symbol of G, p be FinSequence of the carrier of G;
+    thus thesis by A2;
+  end;
+  uniqueness
+  proof
+    defpred P[set,set] means
+      ( ( (ex v being Element of V st $1 = [2,v]) or $1 = [5,0] )
+        & ex a being object st $2 = <*a*> )
+      or
+      ( ( $1 = [3,0] or $1 = [6,0] or (ex v being Element of V st $1 = [4,v]) )
+        & ex a,b being object st $2 = <*a,b*> );
+    let G1,G2 be strict non empty DTConstrStr;
+    assume that
+    B1: the carrier of G1 = EnvEpsSym(V) and
+    B2: for x being Symbol of G1, p being FinSequence of the carrier of G1
+      holds x ==> p iff
+      ( ( (ex v being Element of V st x = [2,v]) or x = [5,0] )
+        & ex a being object st p = <*a*> )
+      or
+      ( ( x = [3,0] or x = [6,0] or (ex v being Element of V st x = [4,v]) )
+        & ex a,b being object st p = <*a,b*> ) and
+    B3: the carrier of G2 = EnvEpsSym(V) and
+    B4: for x being Symbol of G2, p being FinSequence of the carrier of G2
+      holds x ==> p iff
+      ( ( (ex v being Element of V st x = [2,v]) or x = [5,0] )
+        & ex a being object st p = <*a*> )
+      or
+      ( ( x = [3,0] or x = [6,0] or (ex v being Element of V st x = [4,v]) )
+        & ex a,b being object st p = <*a,b*> );
+    C1: the carrier of G1 = EnvEpsSym(V) &
+      for x being Symbol of G1, p being FinSequence of the carrier of G1
+      holds x ==> p iff P[x,p] by B1,B2;
+    C2: the carrier of G2 = EnvEpsSym(V) &
+      for x being Symbol of G2, p being FinSequence of the carrier of G2
+      holds x ==> p iff P[x,p] by B3,B4;
+    D: for H1,H2 being strict non empty DTConstrStr st
+      ( the carrier of H1 = EnvEpsSym(V) &
+        for x being Symbol of H1, p being FinSequence of the carrier of H1
+        holds x ==> p iff P[x,p] ) &
+      ( the carrier of H2 = EnvEpsSym(V) &
+        for x being Symbol of H2, p being FinSequence of the carrier of H2
+        holds x ==> p iff P[x,p] )
+      holds H1 = H2 from DTCONSTR:sch 2;
+    thus G1 = G2 by D,C1,C2;
+  end;
+end;
+
+begin :: Membership of the symbols
+
+reserve V for non empty set;
+
+theorem Th1:
+  for v being Element of V holds
+  [0,v] in EnvEpsSym(V) & [2,v] in EnvEpsSym(V) & [4,v] in EnvEpsSym(V)
+proof
+  let v be Element of V;
+  A1: 0 in {0,2,4} & 2 in {0,2,4} & 4 in {0,2,4} by ENUMSET1:def 1;
+  then A2: [0,v] in [:{0,2,4},V:] & [2,v] in [:{0,2,4},V:] &
+    [4,v] in [:{0,2,4},V:] by ZFMISC_1:87;
+  EnvEpsSym(V) = [:{0,2,4}, V:] \/ [:{1,3,5,6}, {0}:];
+  hence thesis by A2,XBOOLE_0:def 3;
+end;
+
+theorem Th2:
+  [1,0] in EnvEpsSym(V) & [3,0] in EnvEpsSym(V) & [5,0] in EnvEpsSym(V) &
+  [6,0] in EnvEpsSym(V)
+proof
+  A1: 1 in {1,3,5,6} & 3 in {1,3,5,6} & 5 in {1,3,5,6} & 6 in {1,3,5,6}
+    by ENUMSET1:def 2;
+  0 in {0} by TARSKI:def 1;
+  then A2: [1,0] in [:{1,3,5,6},{0}:] & [3,0] in [:{1,3,5,6},{0}:] &
+    [5,0] in [:{1,3,5,6},{0}:] & [6,0] in [:{1,3,5,6},{0}:] by A1,ZFMISC_1:87;
+  EnvEpsSym(V) = [:{0,2,4}, V:] \/ [:{1,3,5,6}, {0}:];
+  hence thesis by A2,XBOOLE_0:def 3;
+end;
+
+theorem Th3:
+  for x being Symbol of EnvEpsGram(V), p being FinSequence st x ==> p
+  holds p is FinSequence of the carrier of EnvEpsGram(V)
+proof
+  let x be Symbol of EnvEpsGram(V), p be FinSequence;
+  assume x ==> p;
+  then A1: [x,p] in the Rules of EnvEpsGram(V) by LANG1:def 1;
+  the Rules of EnvEpsGram(V) c=
+    [:the carrier of EnvEpsGram(V), (the carrier of EnvEpsGram(V))*:];
+  then [x,p] in
+    [:the carrier of EnvEpsGram(V), (the carrier of EnvEpsGram(V))*:] by A1;
+  then p in (the carrier of EnvEpsGram(V))* by ZFMISC_1:87;
+  hence thesis by FINSEQ_1:def 11;
+end;
+
+theorem Th4:
+  for G being non empty DTConstrStr, x being Symbol of G holds
+  ( x in Terminals G iff not ex n being FinSequence st x ==> n ) &
+  ( x in NonTerminals G iff ex n being FinSequence st x ==> n )
+proof
+  let G be non empty DTConstrStr, x be Symbol of G;
+  hereby
+    assume x in Terminals G;
+    then x in { s where s is Symbol of G :
+      not ex n being FinSequence st s ==> n } by LANG1:def 2;
+    then ex s being Symbol of G st x = s &
+      not ex n being FinSequence st s ==> n;
+    hence not ex n being FinSequence st x ==> n;
+  end;
+  hereby
+    assume not ex n being FinSequence st x ==> n;
+    then x in { s where s is Symbol of G :
+      not ex n being FinSequence st s ==> n };
+    hence x in Terminals G by LANG1:def 2;
+  end;
+  hereby
+    assume x in NonTerminals G;
+    then x in { s where s is Symbol of G :
+      ex n being FinSequence st s ==> n } by LANG1:def 3;
+    then ex s being Symbol of G st x = s & ex n being FinSequence st s ==> n;
+    hence ex n being FinSequence st x ==> n;
+  end;
+  assume ex n being FinSequence st x ==> n;
+  then x in { s where s is Symbol of G : ex n being FinSequence st s ==> n };
+  hence thesis by LANG1:def 3;
+end;
+
+begin :: Terminal and nonterminal symbols
+
+theorem Th5:
+  for x being Symbol of EnvEpsGram(V) holds
+  x in Terminals EnvEpsGram(V) iff
+    ( (ex v being Element of V st x = [0,v]) or x = [1,0] )
+proof
+  let x be Symbol of EnvEpsGram(V);
+  set G = EnvEpsGram(V);
+  A0: the carrier of G = EnvEpsSym(V) by Def2;
+  then reconsider e = [1,0] as Element of the carrier of G by Th2;
+  reconsider q1 = <*e*> as FinSequence of the carrier of G by FINSEQ_1:74;
+  reconsider q2 = <*e,e*> as FinSequence of the carrier of G by FINSEQ_2:13;
+  E1: ex a being object st q1 = <*a*>;
+  E2: ex a,b being object st q2 = <*a,b*>;
+  hereby
+    assume x in Terminals G;
+    then A2a: not ex n being FinSequence st x ==> n by Th4;
+    x in [:{0,2,4}, V:] \/ [:{1,3,5,6}, {0}:] by A0;
+    then A8: x in [:{0,2,4}, V:] or x in [:{1,3,5,6}, {0}:] by XBOOLE_0:def 3;
+    per cases by A8;
+    suppose x in [:{0,2,4}, V:];
+      then consider i,v being object such that
+      B1: i in {0,2,4} & v in V & x = [i,v] by ZFMISC_1:84;
+      reconsider v as Element of V by B1;
+      per cases by B1,ENUMSET1:def 1;
+      suppose i = 0;
+        hence (ex v being Element of V st x = [0,v]) or x = [1,0] by B1;
+      end;
+      suppose i = 2;
+        then x = [2,v] by B1;
+        then x ==> q1 by E1,Def2;
+        hence (ex v being Element of V st x = [0,v]) or x = [1,0] by A2a;
+      end;
+      suppose i = 4;
+        then x = [4,v] by B1;
+        then x ==> q2 by E2,Def2;
+        hence (ex v being Element of V st x = [0,v]) or x = [1,0] by A2a;
+      end;
+    end;
+    suppose x in [:{1,3,5,6}, {0}:];
+      then consider j,u being object such that
+      B2: j in {1,3,5,6} & u in {0} & x = [j,u] by ZFMISC_1:84;
+      B3: u = 0 by B2,TARSKI:def 1;
+      per cases by B2,ENUMSET1:def 2;
+      suppose j = 1;
+        hence (ex v being Element of V st x = [0,v]) or x = [1,0] by B2,B3;
+      end;
+      suppose j = 3;
+        then x = [3,0] by B2,B3;
+        then x ==> q2 by E2,Def2;
+        hence (ex v being Element of V st x = [0,v]) or x = [1,0] by A2a;
+      end;
+      suppose j = 5;
+        then x = [5,0] by B2,B3;
+        then x ==> q1 by E1,Def2;
+        hence (ex v being Element of V st x = [0,v]) or x = [1,0] by A2a;
+      end;
+      suppose j = 6;
+        then x = [6,0] by B2,B3;
+        then x ==> q2 by E2,Def2;
+        hence (ex v being Element of V st x = [0,v]) or x = [1,0] by A2a;
+      end;
+    end;
+  end;
+  assume A9: (ex v being Element of V st x = [0,v]) or x = [1,0];
+  then F1: x`1 = 0 or x`1 = 1;
+  now
+    assume ex n being FinSequence st x ==> n;
+    then consider n being FinSequence such that C1: x ==> n;
+    n is FinSequence of the carrier of G by C1,Th3;
+    then reconsider m = n as FinSequence of the carrier of G;
+    C1a: x ==> m by C1;
+    C2: ( ( (ex v being Element of V st x = [2,v]) or x = [5,0] )
+        & ex a being object st m = <*a*> )
+      or
+      ( ( x = [3,0] or x = [6,0] or (ex v being Element of V st x = [4,v]) )
+        & ex a,b being object st m = <*a,b*> ) by C1a,Def2;
+    C3: (ex v being Element of V st x = [2,v]) or x = [5,0] or x = [3,0] or
+      x = [6,0] or (ex v being Element of V st x = [4,v]) by C2;
+    x`1 = 2 or x`1 = 5 or x`1 = 3 or x`1 = 6 or x`1 = 4 by C3;
+    hence contradiction by F1;
+  end;
+  hence thesis by A9,Th4;
+end;
+
+begin :: The grammar is well-formed
+
+registration
+  let V be non empty set;
+  cluster EnvEpsGram(V) -> with_terminals with_nonterminals
+    with_useful_nonterminals;
+  coherence
+  proof
+    set G = EnvEpsGram(V);
+    A0: the carrier of G = EnvEpsSym(V) by Def2;
+    then reconsider e = [1,0] as Symbol of G by Th2;
+    A1: e in Terminals G by Th5;
+    Terminals G <> {} by A1;
+    hence EnvEpsGram(V) is with_terminals by DTCONSTR:def 3;
+    reconsider f = [5,0] as Symbol of G by A0,Th2;
+    A2: root-tree e in TS G by A1,DTCONSTR:def 1;
+    then reconsider rt = root-tree e as Element of TS G;
+    rng <*rt*> = {rt} by FINSEQ_1:39;
+    then rng <*rt*> c= TS G by A2,ZFMISC_1:31;
+    then reconsider p1 = <*rt*> as FinSequence of TS G by FINSEQ_1:def 4;
+    rng <*rt,rt*> = {rt,rt} by FINSEQ_2:127
+      .= {rt} by ENUMSET1:29;
+    then rng <*rt,rt*> c= TS G by A2,ZFMISC_1:31;
+    then reconsider p2 = <*rt,rt*> as FinSequence of TS G by FINSEQ_1:def 4;
+    BB: rt.{} = e by TREES_4:3;
+    B1: roots p1 = <*rt.{}*> by DTCONSTR:4
+      .= <*e*> by BB;
+    B2: roots p2 = <*rt.{}, rt.{}*> by DTCONSTR:6
+      .= <*e,e*> by BB;
+    C1: ex a being object st roots p1 = <*a*> by B1;
+    C2: ex a,b being object st roots p2 = <*a,b*> by B2;
+    reconsider r1 = roots p1 as FinSequence of the carrier of G by B1,
+      FINSEQ_1:74;
+    reconsider r2 = roots p2 as FinSequence of the carrier of G by B2,
+      FINSEQ_2:13;
+    D1: f ==> r1 by C1,Def2;
+    then f in NonTerminals G by Th4;
+    then NonTerminals G <> {};
+    hence EnvEpsGram(V) is with_nonterminals by DTCONSTR:def 4;
+    thus EnvEpsGram(V) is with_useful_nonterminals
+    proof
+    let nt be Symbol of EnvEpsGram(V);
+    assume nt in NonTerminals EnvEpsGram(V);
+    then consider n being FinSequence such that E1: nt ==> n by Th4;
+    n is FinSequence of the carrier of G by E1,Th3;
+    then reconsider m = n as FinSequence of the carrier of G;
+    E2: nt ==> m by E1;
+    E3: ( ( (ex v being Element of V st nt = [2,v]) or nt = [5,0] )
+        & ex a being object st m = <*a*> )
+      or
+      ( ( nt = [3,0] or nt = [6,0] or (ex v being Element of V st nt = [4,v]) )
+        & ex a,b being object st m = <*a,b*> ) by E2,Def2;
+    per cases by E3;
+    suppose (ex v being Element of V st nt = [2,v]) or nt = [5,0];
+      then nt ==> r1 by C1,Def2;
+      hence ex p being FinSequence of TS(G) st nt ==> roots p;
+    end;
+    suppose nt = [3,0] or nt = [6,0] or
+      (ex v being Element of V st nt = [4,v]);
+      then nt ==> r2 by C2,Def2;
+      hence ex p being FinSequence of TS(G) st nt ==> roots p;
+    end;
+    end;
+  end;
+end;
+
+definition
+  let V be non empty set;
+  mode EnvEpsTerm of V is Element of TS(EnvEpsGram(V));
+end;
+
+begin :: Building terms
+
+theorem Th6:
+  TS(EnvEpsGram(V)) is DTree-set of the carrier of EnvEpsGram(V)
+proof
+  set G = EnvEpsGram(V);
+  now
+    let x be object;
+    assume x in TS G;
+    then x in FinTrees(the carrier of G);
+    hence x is DecoratedTree of the carrier of G by TREES_3:def 6;
+  end;
+  hence thesis by TREES_3:def 6;
+end;
+
+theorem Th7:
+  for x being Symbol of EnvEpsGram(V), M being EnvEpsTerm of V
+  st (ex v being Element of V st x = [2,v]) or x = [5,0]
+  holds x-tree <*M*> in TS(EnvEpsGram(V))
+proof
+  let x be Symbol of EnvEpsGram(V), M be EnvEpsTerm of V;
+  assume A1: (ex v being Element of V st x = [2,v]) or x = [5,0];
+  set G = EnvEpsGram(V);
+  reconsider T = TS G as DTree-set of the carrier of G by Th6;
+  reconsider N = M as Element of T;
+  reconsider p = <*N*> as FinSequence of T by FINSEQ_1:74;
+  A2: roots p = <*M.{}*> by DTCONSTR:4;
+  reconsider q = roots p as FinSequence of the carrier of G;
+  A3: ex a being object st q = <*a*> by A2;
+  A4: x ==> q by A1,A3,Def2;
+  reconsider p2 = p as FinSequence of TS G;
+  x-tree p2 in TS G by A4,DTCONSTR:def 1;
+  hence thesis;
+end;
+
+theorem Th8:
+  for x being Symbol of EnvEpsGram(V), M,N being EnvEpsTerm of V
+  st x = [3,0] or x = [6,0] or (ex v being Element of V st x = [4,v])
+  holds x-tree <*M,N*> in TS(EnvEpsGram(V))
+proof
+  let x be Symbol of EnvEpsGram(V), M,N be EnvEpsTerm of V;
+  assume A1: x = [3,0] or x = [6,0] or (ex v being Element of V st x = [4,v]);
+  set G = EnvEpsGram(V);
+  reconsider T = TS G as DTree-set of the carrier of G by Th6;
+  reconsider M1 = M, N1 = N as Element of T;
+  reconsider p = <*M1,N1*> as FinSequence of T by FINSEQ_2:13;
+  A2: roots p = <*M.{}, N.{}*> by DTCONSTR:6;
+  reconsider q = roots p as FinSequence of the carrier of G;
+  A3: ex a,b being object st q = <*a,b*> by A2;
+  A4: x ==> q by A1,A3,Def2;
+  reconsider p2 = p as FinSequence of TS G;
+  x-tree p2 in TS G by A4,DTCONSTR:def 1;
+  hence thesis;
+end;
+
+begin :: The seven constructors
+
+definition
+  let V be non empty set, v be Element of V;
+  func eVar(v) -> EnvEpsTerm of V equals
+  :Def3:
+  root-tree [0,v];
+  coherence
+  proof
+    set G = EnvEpsGram(V);
+    A0: the carrier of G = EnvEpsSym(V) by Def2;
+    then reconsider x = [0,v] as Symbol of G by Th1;
+    x in Terminals G by Th5;
+    then root-tree x in TS G by DTCONSTR:def 1;
+    hence thesis;
+  end;
+end;
+
+definition
+  let V be non empty set;
+  func eId(V) -> EnvEpsTerm of V equals
+  :Def4:
+  root-tree [1,0];
+  coherence
+  proof
+    set G = EnvEpsGram(V);
+    A0: the carrier of G = EnvEpsSym(V) by Def2;
+    then reconsider x = [1,0] as Symbol of G by Th2;
+    x in Terminals G by Th5;
+    then root-tree x in TS G by DTCONSTR:def 1;
+    hence thesis;
+  end;
+end;
+
+definition
+  let V be non empty set, v be Element of V, M be EnvEpsTerm of V;
+  func eLam(v,M) -> EnvEpsTerm of V equals
+  :Def5:
+  [2,v]-tree <*M*>;
+  coherence
+  proof
+    set G = EnvEpsGram(V);
+    A0: the carrier of G = EnvEpsSym(V) by Def2;
+    then reconsider x = [2,v] as Symbol of G by Th1;
+    x-tree <*M*> in TS G by Th7;
+    hence thesis;
+  end;
+end;
+
+definition
+  let V be non empty set, M be EnvEpsTerm of V;
+  func eEps(M) -> EnvEpsTerm of V equals
+  :Def6:
+  [5,0]-tree <*M*>;
+  coherence
+  proof
+    set G = EnvEpsGram(V);
+    A0: the carrier of G = EnvEpsSym(V) by Def2;
+    then reconsider x = [5,0] as Symbol of G by Th2;
+    x-tree <*M*> in TS G by Th7;
+    hence thesis;
+  end;
+end;
+
+definition
+  let V be non empty set, M,N be EnvEpsTerm of V;
+  func eApp(M,N) -> EnvEpsTerm of V equals
+  :Def7:
+  [3,0]-tree <*M,N*>;
+  coherence
+  proof
+    set G = EnvEpsGram(V);
+    A0: the carrier of G = EnvEpsSym(V) by Def2;
+    then reconsider x = [3,0] as Symbol of G by Th2;
+    x-tree <*M,N*> in TS G by Th8;
+    hence thesis;
+  end;
+end;
+
+definition
+  let V be non empty set, M,N be EnvEpsTerm of V;
+  func eComp(M,N) -> EnvEpsTerm of V equals
+  :Def8:
+  [6,0]-tree <*M,N*>;
+  coherence
+  proof
+    set G = EnvEpsGram(V);
+    A0: the carrier of G = EnvEpsSym(V) by Def2;
+    then reconsider x = [6,0] as Symbol of G by Th2;
+    x-tree <*M,N*> in TS G by Th8;
+    hence thesis;
+  end;
+end;
+
+definition
+  let V be non empty set, M be EnvEpsTerm of V, v be Element of V,
+    N be EnvEpsTerm of V;
+  func eExt(M,v,N) -> EnvEpsTerm of V equals
+  :Def9:
+  [4,v]-tree <*M,N*>;
+  coherence
+  proof
+    set G = EnvEpsGram(V);
+    A0: the carrier of G = EnvEpsSym(V) by Def2;
+    then reconsider x = [4,v] as Symbol of G by Th1;
+    x-tree <*M,N*> in TS G by Th8;
+    hence thesis;
+  end;
+end;
+
+begin :: Root symbols, distinctness and injectivity
+
+theorem Th9:
+  for v being Element of V, M,N being EnvEpsTerm of V holds
+  (eVar v).{} = [0,v] & (eId V).{} = [1,0] & (eLam(v,M)).{} = [2,v] &
+  (eEps M).{} = [5,0] & (eApp(M,N)).{} = [3,0] & (eComp(M,N)).{} = [6,0] &
+  (eExt(M,v,N)).{} = [4,v]
+proof
+  let v be Element of V, M,N be EnvEpsTerm of V;
+  thus (eVar v).{} = (root-tree [0,v]).{} by Def3
+    .= [0,v] by TREES_4:3;
+  thus (eId V).{} = (root-tree [1,0]).{} by Def4
+    .= [1,0] by TREES_4:3;
+  thus (eLam(v,M)).{} = ([2,v]-tree <*M*>).{} by Def5
+    .= [2,v] by TREES_4:def 4;
+  thus (eEps M).{} = ([5,0]-tree <*M*>).{} by Def6
+    .= [5,0] by TREES_4:def 4;
+  thus (eApp(M,N)).{} = ([3,0]-tree <*M,N*>).{} by Def7
+    .= [3,0] by TREES_4:def 4;
+  thus (eComp(M,N)).{} = ([6,0]-tree <*M,N*>).{} by Def8
+    .= [6,0] by TREES_4:def 4;
+  thus (eExt(M,v,N)).{} = ([4,v]-tree <*M,N*>).{} by Def9
+    .= [4,v] by TREES_4:def 4;
+end;
+
+theorem Th10:
+  for v,w being Element of V, M,M1,N,N1 being EnvEpsTerm of V holds
+  eVar v <> eId V & eVar v <> eLam(w,M) & eVar v <> eEps M &
+  eVar v <> eApp(M,N) & eVar v <> eComp(M,N) & eVar v <> eExt(M,w,N) &
+  eId V <> eLam(w,M) & eId V <> eEps M & eId V <> eApp(M,N) &
+  eId V <> eComp(M,N) & eId V <> eExt(M,w,N) &
+  eLam(w,M) <> eEps M1 & eLam(w,M) <> eApp(M1,N1) & eLam(w,M) <> eComp(M1,N1) &
+  eLam(w,M) <> eExt(M1,w,N1) &
+  eEps M <> eApp(M1,N1) & eEps M <> eComp(M1,N1) & eEps M <> eExt(M1,w,N1) &
+  eApp(M,N) <> eComp(M1,N1) & eApp(M,N) <> eExt(M1,w,N1) &
+  eComp(M,N) <> eExt(M1,w,N1)
+proof
+  let v,w be Element of V, M,M1,N,N1 be EnvEpsTerm of V;
+  A1: (eVar v).{} = [0,v] & (eId V).{} = [1,0] & (eLam(w,M)).{} = [2,w] &
+    (eEps M).{} = [5,0] & (eApp(M,N)).{} = [3,0] & (eComp(M,N)).{} = [6,0] &
+    (eExt(M,w,N)).{} = [4,w] by Th9;
+  A2: (eEps M1).{} = [5,0] & (eApp(M1,N1)).{} = [3,0] &
+    (eComp(M1,N1)).{} = [6,0] & (eExt(M1,w,N1)).{} = [4,w] by Th9;
+  thus thesis by A1,A2,XTUPLE_0:1;
+end;
+
+theorem Th11:
+  for v,w being Element of V, M,M1 being EnvEpsTerm of V
+  st eLam(v,M) = eLam(w,M1) holds v = w & M = M1
+proof
+  let v,w be Element of V, M,M1 be EnvEpsTerm of V;
+  assume eLam(v,M) = eLam(w,M1);
+  then [2,v]-tree <*M*> = [2,w]-tree <*M1*> by Def5;
+  then A1: [2,v] = [2,w] & <*M*> = <*M1*> by TREES_4:15;
+  hence v = w by XTUPLE_0:1;
+  thus thesis by A1,FINSEQ_1:76;
+end;
+
+theorem Th12:
+  for M,M1 being EnvEpsTerm of V st eEps M = eEps M1 holds M = M1
+proof
+  let M,M1 be EnvEpsTerm of V;
+  assume eEps M = eEps M1;
+  then [5,0]-tree <*M*> = [5,0]-tree <*M1*> by Def6;
+  then <*M*> = <*M1*> by TREES_4:15;
+  hence thesis by FINSEQ_1:76;
+end;
+
+theorem Th13:
+  for M,M1,N,N1 being EnvEpsTerm of V st eApp(M,N) = eApp(M1,N1)
+  holds M = M1 & N = N1
+proof
+  let M,M1,N,N1 be EnvEpsTerm of V;
+  assume eApp(M,N) = eApp(M1,N1);
+  then [3,0]-tree <*M,N*> = [3,0]-tree <*M1,N1*> by Def7;
+  then A1: <*M,N*> = <*M1,N1*> by TREES_4:15;
+  A2: len <*M,N*> = 2 & <*M,N*>.1 = M & <*M,N*>.2 = N by FINSEQ_1:44;
+  len <*M1,N1*> = 2 & <*M1,N1*>.1 = M1 & <*M1,N1*>.2 = N1 by FINSEQ_1:44;
+  hence thesis by A1,A2;
+end;
+
+theorem Th14:
+  for M,M1,N,N1 being EnvEpsTerm of V st eComp(M,N) = eComp(M1,N1)
+  holds M = M1 & N = N1
+proof
+  let M,M1,N,N1 be EnvEpsTerm of V;
+  assume eComp(M,N) = eComp(M1,N1);
+  then [6,0]-tree <*M,N*> = [6,0]-tree <*M1,N1*> by Def8;
+  then A1: <*M,N*> = <*M1,N1*> by TREES_4:15;
+  A2: len <*M,N*> = 2 & <*M,N*>.1 = M & <*M,N*>.2 = N by FINSEQ_1:44;
+  len <*M1,N1*> = 2 & <*M1,N1*>.1 = M1 & <*M1,N1*>.2 = N1 by FINSEQ_1:44;
+  hence thesis by A1,A2;
+end;
+
+theorem Th15:
+  for v,w being Element of V, M,M1,N,N1 being EnvEpsTerm of V
+  st eExt(M,v,N) = eExt(M1,w,N1) holds v = w & M = M1 & N = N1
+proof
+  let v,w be Element of V, M,M1,N,N1 be EnvEpsTerm of V;
+  assume eExt(M,v,N) = eExt(M1,w,N1);
+  then [4,v]-tree <*M,N*> = [4,w]-tree <*M1,N1*> by Def9;
+  then A1: [4,v] = [4,w] & <*M,N*> = <*M1,N1*> by TREES_4:15;
+  hence v = w by XTUPLE_0:1;
+  A2: len <*M,N*> = 2 & <*M,N*>.1 = M & <*M,N*>.2 = N by FINSEQ_1:44;
+  len <*M1,N1*> = 2 & <*M1,N1*>.1 = M1 & <*M1,N1*>.2 = N1 by FINSEQ_1:44;
+  hence thesis by A1,A2;
+end;
+
+theorem Th16:
+  for v,w being Element of V st eVar v = eVar w holds v = w
+proof
+  let v,w be Element of V;
+  assume eVar v = eVar w;
+  then root-tree [0,v] = root-tree [0,w] by Def3;
+  then [0,v] = [0,w] by TREES_4:4;
+  hence thesis by XTUPLE_0:1;
+end;
+
+begin :: Case analysis on terms
+
+theorem Th17:
+  for M being EnvEpsTerm of V holds
+  (ex v being Element of V st M = eVar v) or M = eId V or
+  (ex v being Element of V, A being EnvEpsTerm of V st M = eLam(v,A)) or
+  (ex A being EnvEpsTerm of V st M = eEps A) or
+  (ex A,B being EnvEpsTerm of V st M = eApp(A,B)) or
+  (ex A,B being EnvEpsTerm of V st M = eComp(A,B)) or
+  (ex A,B being EnvEpsTerm of V, v being Element of V st M = eExt(A,v,B))
+proof
+  let M be EnvEpsTerm of V;
+  set G = EnvEpsGram(V);
+  reconsider T = TS G as DTree-set of the carrier of G by Th6;
+  reconsider M1 = M as Element of T;
+  {} in dom M1 by TREES_1:22;
+  then A1: M.{} in rng M1 by FUNCT_1:def 3;
+  rng M1 c= the carrier of G by RELAT_1:def 19;
+  then reconsider s = M.{} as Symbol of G by A1;
+  per cases;
+  suppose A2: s in Terminals G;
+    then reconsider s1 = s as Terminal of G;
+    A3: M = root-tree s1 by DTCONSTR:9;
+    A4: (ex v being Element of V st s = [0,v]) or s = [1,0] by A2,Th5;
+    per cases by A4;
+    suppose ex v being Element of V st s = [0,v];
+      then consider v being Element of V such that A5: s = [0,v];
+      M = eVar v by A3,A5,Def3;
+      hence thesis;
+    end;
+    suppose s = [1,0];
+      then M = eId V by A3,Def4;
+      hence thesis;
+    end;
+  end;
+  suppose B1: not s in Terminals G;
+    Terminals G \/ NonTerminals G = the carrier of G by LANG1:1;
+    then s in Terminals G \/ NonTerminals G;
+    then s in NonTerminals G by B1,XBOOLE_0:def 3;
+    then reconsider s2 = s as NonTerminal of G;
+    consider ts being FinSequence of TS G such that
+    B2: M = s2-tree ts and B3: s2 ==> roots ts by DTCONSTR:10;
+    reconsider ts1 = ts as FinSequence of T;
+    B4: dom roots ts1 = dom ts1 by TREES_3:def 18;
+    reconsider rt = roots ts1 as FinSequence of the carrier of G;
+    B5: s ==> rt by B3;
+    B6: rng ts c= TS G by FINSEQ_1:def 4;
+    B7: ( ( (ex v being Element of V st s = [2,v]) or s = [5,0] )
+        & ex a being object st rt = <*a*> )
+      or
+      ( ( s = [3,0] or s = [6,0] or (ex v being Element of V st s = [4,v]) )
+        & ex a,b being object st rt = <*a,b*> ) by B5,Def2;
+    per cases by B7;
+    suppose C1: ( (ex v being Element of V st s = [2,v]) or s = [5,0] )
+        & ex a being object st rt = <*a*>;
+      then consider a being object such that C2: rt = <*a*>;
+      len rt = 1 by C2,FINSEQ_1:40;
+      then C3: len ts = 1 by B4,FINSEQ_3:29;
+      then C4: ts = <*ts.1*> by FINSEQ_1:40;
+      1 in dom ts by C3,FINSEQ_3:25;
+      then ts.1 in rng ts by FUNCT_1:def 3;
+      then reconsider A = ts.1 as EnvEpsTerm of V by B6;
+      C5: M = s-tree <*A*> by B2,C4;
+      per cases by C1;
+      suppose ex v being Element of V st s = [2,v];
+        then consider v being Element of V such that C6: s = [2,v];
+        M = eLam(v,A) by C5,C6,Def5;
+        hence thesis;
+      end;
+      suppose s = [5,0];
+        then M = eEps A by C5,Def6;
+        hence thesis;
+      end;
+    end;
+    suppose D1: ( s = [3,0] or s = [6,0] or
+        (ex v being Element of V st s = [4,v]) )
+        & ex a,b being object st rt = <*a,b*>;
+      then consider a,b being object such that D2: rt = <*a,b*>;
+      len rt = 2 by D2,FINSEQ_1:44;
+      then D3: len ts = 2 by B4,FINSEQ_3:29;
+      then D4: ts = <*ts.1, ts.2*> by FINSEQ_1:44;
+      D5: 1 in dom ts & 2 in dom ts by D3,FINSEQ_3:25;
+      then ts.1 in rng ts & ts.2 in rng ts by FUNCT_1:def 3;
+      then reconsider A = ts.1, B = ts.2 as EnvEpsTerm of V by B6;
+      D6: M = s-tree <*A,B*> by B2,D4;
+      per cases by D1;
+      suppose s = [3,0];
+        then M = eApp(A,B) by D6,Def7;
+        hence thesis;
+      end;
+      suppose s = [6,0];
+        then M = eComp(A,B) by D6,Def8;
+        hence thesis;
+      end;
+      suppose ex v being Element of V st s = [4,v];
+        then consider v being Element of V such that D7: s = [4,v];
+        M = eExt(A,v,B) by D6,D7,Def9;
+        hence thesis;
+      end;
+    end;
+  end;
+end;
+
+begin :: Structural induction
+
+scheme
+  EnvEpsInd { V() -> non empty set, P[set] }:
+  for M being EnvEpsTerm of V() holds P[M]
+provided
+A1: for v being Element of V() holds P[eVar v] and
+A2: P[eId V()] and
+A3: for v being Element of V(), A being EnvEpsTerm of V() st P[A]
+      holds P[eLam(v,A)] and
+A4: for A being EnvEpsTerm of V() st P[A] holds P[eEps A] and
+A5: for A,B being EnvEpsTerm of V() st P[A] & P[B] holds P[eApp(A,B)] and
+A6: for A,B being EnvEpsTerm of V() st P[A] & P[B] holds P[eComp(A,B)] and
+A7: for A,B being EnvEpsTerm of V(), v being Element of V() st P[A] & P[B]
+      holds P[eExt(A,v,B)]
+proof
+  set G = EnvEpsGram(V());
+  reconsider T = TS G as DTree-set of the carrier of G by Th6;
+  B1: for s being Symbol of G st s in Terminals G holds P[root-tree s]
+  proof
+    let s be Symbol of G;
+    assume s in Terminals G;
+    then B2: (ex v being Element of V() st s = [0,v]) or s = [1,0] by Th5;
+    per cases by B2;
+    suppose ex v being Element of V() st s = [0,v];
+      then consider v being Element of V() such that B3: s = [0,v];
+      root-tree s = eVar v by B3,Def3;
+      hence thesis by A1;
+    end;
+    suppose s = [1,0];
+      then root-tree s = eId V() by Def4;
+      hence thesis by A2;
+    end;
+  end;
+  B4: for nt being Symbol of G, ts being FinSequence of TS(G)
+    st nt ==> roots ts &
+      for t being DecoratedTree of the carrier of G st t in rng ts holds P[t]
+    holds P[nt-tree ts]
+  proof
+    let nt be Symbol of G, ts be FinSequence of TS(G);
+    assume that C0: nt ==> roots ts and
+    C00: for t being DecoratedTree of the carrier of G st t in rng ts
+      holds P[t];
+    reconsider ts1 = ts as FinSequence of T;
+    C1: dom roots ts1 = dom ts1 by TREES_3:def 18;
+    reconsider rt = roots ts1 as FinSequence of the carrier of G;
+    C2: nt ==> rt by C0;
+    C3: rng ts c= TS G by FINSEQ_1:def 4;
+    C4: ( ( (ex v being Element of V() st nt = [2,v]) or nt = [5,0] )
+        & ex a being object st rt = <*a*> )
+      or
+      ( ( nt = [3,0] or nt = [6,0] or
+          (ex v being Element of V() st nt = [4,v]) )
+        & ex a,b being object st rt = <*a,b*> ) by C2,Def2;
+    per cases by C4;
+    suppose D0: ( (ex v being Element of V() st nt = [2,v]) or nt = [5,0] )
+        & ex a being object st rt = <*a*>;
+      then consider a being object such that D1: rt = <*a*>;
+      len rt = 1 by D1,FINSEQ_1:40;
+      then D2: len ts = 1 by C1,FINSEQ_3:29;
+      then D3: ts = <*ts.1*> by FINSEQ_1:40;
+      1 in dom ts by D2,FINSEQ_3:25;
+      then D4: ts.1 in rng ts by FUNCT_1:def 3;
+      then reconsider A = ts.1 as EnvEpsTerm of V() by C3;
+      reconsider A1a = A as Element of T;
+      D5: P[A] by C00,D4;
+      per cases by D0;
+      suppose ex v being Element of V() st nt = [2,v];
+        then consider v being Element of V() such that D6: nt = [2,v];
+        nt-tree ts = eLam(v,A) by D3,D6,Def5;
+        hence thesis by A3,D5;
+      end;
+      suppose nt = [5,0];
+        then nt-tree ts = eEps A by D3,Def6;
+        hence thesis by A4,D5;
+      end;
+    end;
+    suppose E0: ( nt = [3,0] or nt = [6,0] or
+        (ex v being Element of V() st nt = [4,v]) )
+        & ex a,b being object st rt = <*a,b*>;
+      then consider a,b being object such that E1: rt = <*a,b*>;
+      len rt = 2 by E1,FINSEQ_1:44;
+      then E2: len ts = 2 by C1,FINSEQ_3:29;
+      then E3: ts = <*ts.1, ts.2*> by FINSEQ_1:44;
+      E4: 1 in dom ts & 2 in dom ts by E2,FINSEQ_3:25;
+      then E5: ts.1 in rng ts & ts.2 in rng ts by FUNCT_1:def 3;
+      then reconsider A = ts.1, B = ts.2 as EnvEpsTerm of V() by C3;
+      reconsider A2a = A, B2a = B as Element of T;
+      E6: P[A] & P[B] by C00,E5;
+      per cases by E0;
+      suppose nt = [3,0];
+        then nt-tree ts = eApp(A,B) by E3,Def7;
+        hence thesis by A5,E6;
+      end;
+      suppose nt = [6,0];
+        then nt-tree ts = eComp(A,B) by E3,Def8;
+        hence thesis by A6,E6;
+      end;
+      suppose ex v being Element of V() st nt = [4,v];
+        then consider v being Element of V() such that E7: nt = [4,v];
+        nt-tree ts = eExt(A,v,B) by E3,E7,Def9;
+        hence thesis by A7,E6;
+      end;
+    end;
+  end;
+  F1: for t being DecoratedTree of the carrier of G st t in TS(G) holds P[t]
+    from DTCONSTR:sch 7(B1,B4);
+  let M be EnvEpsTerm of V();
+  reconsider M1 = M as Element of T;
+  M1 is DecoratedTree of the carrier of G;
+  hence thesis by F1;
+end;
+
+begin :: Selecting a natural number out of an arbitrary object
+
+definition
+  let x be object, i be Nat;
+  func natsel(x,i) -> Element of NAT means
+  :Def10:
+  (x is Function implies
+     for f being Function st x = f holds it = In(f.i,NAT)) &
+  (not x is Function implies it = 0);
+  existence
+  proof
+    per cases;
+    suppose A1: x is Function;
+      then reconsider f = x as Function;
+      take In(f.i,NAT);
+      hereby
+        assume x is Function;
+        let g be Function;
+        assume x = g;
+        hence In(f.i,NAT) = In(g.i,NAT);
+      end;
+      thus thesis by A1;
+    end;
+    suppose A2: not x is Function;
+      take 0;
+      thus thesis by A2;
+    end;
+  end;
+  uniqueness
+  proof
+    let a,b be Element of NAT;
+    assume A1: (x is Function implies
+        for f being Function st x = f holds a = In(f.i,NAT)) &
+      (not x is Function implies a = 0);
+    assume A2: (x is Function implies
+        for f being Function st x = f holds b = In(f.i,NAT)) &
+      (not x is Function implies b = 0);
+    per cases;
+    suppose A3: x is Function;
+      then reconsider f = x as Function;
+      a = In(f.i,NAT) by A1,A3;
+      hence a = b by A2,A3;
+    end;
+    suppose A4: not x is Function;
+      a = 0 by A1,A4;
+      hence a = b by A2,A4;
+    end;
+  end;
+end;
+
+theorem Th18:
+  for f being Function, i being Nat holds natsel(f,i) = In(f.i,NAT)
+proof
+  let f be Function, i be Nat;
+  f is Function;
+  hence thesis by Def10;
+end;
+
+theorem Th19:
+  for f being Function, i being Nat st f.i in NAT holds natsel(f,i) = f.i
+proof
+  let f be Function, i be Nat;
+  assume A1: f.i in NAT;
+  natsel(f,i) = In(f.i,NAT) by Th18;
+  hence thesis by A1,SUBSET_1:def 8;
+end;
+
+
+begin :: The length measure
+
+definition
+  let V be non empty set;
+  func EnvEpsLen(V) -> Function of TS(EnvEpsGram(V)), NAT means
+  :Def11:
+  (for t being Symbol of EnvEpsGram(V) st t in Terminals EnvEpsGram(V)
+     holds it.(root-tree t) = In(1,NAT)) &
+  (for nt being Symbol of EnvEpsGram(V),
+       ts being FinSequence of TS(EnvEpsGram(V)) st nt ==> roots ts
+     holds it.(nt-tree ts) =
+       In(IFEQ(nt`1, 2, natsel(it*ts,1)+natsel(it*ts,1),
+          IFEQ(nt`1, 5, natsel(it*ts,1)+natsel(it*ts,1),
+          IFEQ(nt`1, 3, 1+(natsel(it*ts,1)+natsel(it*ts,2)),
+          IFEQ(nt`1, 4, 1+(natsel(it*ts,1)+natsel(it*ts,2)),
+                natsel(it*ts,1)*(1+natsel(it*ts,2)))))), NAT));
+  existence
+  proof
+    deffunc TV(set) = In(1,NAT);
+    deffunc NTV(set,set,set) =
+      In(IFEQ($1`1, 2, natsel($3,1)+natsel($3,1),
+         IFEQ($1`1, 5, natsel($3,1)+natsel($3,1),
+         IFEQ($1`1, 3, 1+(natsel($3,1)+natsel($3,2)),
+         IFEQ($1`1, 4, 1+(natsel($3,1)+natsel($3,2)),
+               natsel($3,1)*(1+natsel($3,2)))))), NAT);
+    consider f being Function of TS(EnvEpsGram(V)), NAT such that
+    A1: (for t being Symbol of EnvEpsGram(V)
+          st t in Terminals EnvEpsGram(V) holds f.(root-tree t) = TV(t)) and
+    A2: for nt being Symbol of EnvEpsGram(V),
+          ts being FinSequence of TS(EnvEpsGram(V)) st nt ==> roots ts
+        holds f.(nt-tree ts) = NTV(nt, roots ts, f * ts)
+      from DTCONSTR:sch 8;
+    take f;
+    thus thesis by A1,A2;
+  end;
+  uniqueness
+  proof
+    deffunc TV(set) = In(1,NAT);
+    deffunc NTV(set,set,set) =
+      In(IFEQ($1`1, 2, natsel($3,1)+natsel($3,1),
+         IFEQ($1`1, 5, natsel($3,1)+natsel($3,1),
+         IFEQ($1`1, 3, 1+(natsel($3,1)+natsel($3,2)),
+         IFEQ($1`1, 4, 1+(natsel($3,1)+natsel($3,2)),
+               natsel($3,1)*(1+natsel($3,2)))))), NAT);
+    let f1,f2 be Function of TS(EnvEpsGram(V)), NAT;
+    assume that
+    B1: (for t being Symbol of EnvEpsGram(V)
+           st t in Terminals EnvEpsGram(V)
+           holds f1.(root-tree t) = In(1,NAT)) &
+        (for nt being Symbol of EnvEpsGram(V),
+             ts being FinSequence of TS(EnvEpsGram(V)) st nt ==> roots ts
+           holds f1.(nt-tree ts) =
+             In(IFEQ(nt`1, 2, natsel(f1*ts,1)+natsel(f1*ts,1),
+                IFEQ(nt`1, 5, natsel(f1*ts,1)+natsel(f1*ts,1),
+                IFEQ(nt`1, 3, 1+(natsel(f1*ts,1)+natsel(f1*ts,2)),
+                IFEQ(nt`1, 4, 1+(natsel(f1*ts,1)+natsel(f1*ts,2)),
+                      natsel(f1*ts,1)*(1+natsel(f1*ts,2)))))), NAT)) and
+    B2: (for t being Symbol of EnvEpsGram(V)
+           st t in Terminals EnvEpsGram(V)
+           holds f2.(root-tree t) = In(1,NAT)) &
+        (for nt being Symbol of EnvEpsGram(V),
+             ts being FinSequence of TS(EnvEpsGram(V)) st nt ==> roots ts
+           holds f2.(nt-tree ts) =
+             In(IFEQ(nt`1, 2, natsel(f2*ts,1)+natsel(f2*ts,1),
+                IFEQ(nt`1, 5, natsel(f2*ts,1)+natsel(f2*ts,1),
+                IFEQ(nt`1, 3, 1+(natsel(f2*ts,1)+natsel(f2*ts,2)),
+                IFEQ(nt`1, 4, 1+(natsel(f2*ts,1)+natsel(f2*ts,2)),
+                      natsel(f2*ts,1)*(1+natsel(f2*ts,2)))))), NAT));
+    C1: (for t being Symbol of EnvEpsGram(V)
+           st t in Terminals EnvEpsGram(V) holds f1.(root-tree t) = TV(t)) &
+        (for nt being Symbol of EnvEpsGram(V),
+             ts being FinSequence of TS(EnvEpsGram(V)) st nt ==> roots ts
+           holds f1.(nt-tree ts) = NTV(nt, roots ts, f1 * ts)) by B1;
+    C2: (for t being Symbol of EnvEpsGram(V)
+           st t in Terminals EnvEpsGram(V) holds f2.(root-tree t) = TV(t)) &
+        (for nt being Symbol of EnvEpsGram(V),
+             ts being FinSequence of TS(EnvEpsGram(V)) st nt ==> roots ts
+           holds f2.(nt-tree ts) = NTV(nt, roots ts, f2 * ts)) by B2;
+    thus f1 = f2 from DTCONSTR:sch 9(C1,C2);
+  end;
+end;
+
+definition
+  let V be non empty set, M be EnvEpsTerm of V;
+  func elen M -> Element of NAT equals
+  :Def12:
+  (EnvEpsLen(V)).M;
+  coherence;
+end;
+
+theorem Th20:
+  for x being Symbol of EnvEpsGram(V), M being EnvEpsTerm of V
+  st (ex v being Element of V st x = [2,v]) or x = [5,0]
+  holds x ==> roots <*M*>
+proof
+  let x be Symbol of EnvEpsGram(V), M be EnvEpsTerm of V;
+  assume A1: (ex v being Element of V st x = [2,v]) or x = [5,0];
+  set G = EnvEpsGram(V);
+  reconsider T = TS G as DTree-set of the carrier of G by Th6;
+  reconsider N = M as Element of T;
+  reconsider p = <*N*> as FinSequence of T by FINSEQ_1:74;
+  A2: roots p = <*M.{}*> by DTCONSTR:4;
+  reconsider q = roots p as FinSequence of the carrier of G;
+  A3: ex a being object st q = <*a*> by A2;
+  thus thesis by A1,A3,Def2;
+end;
+
+theorem Th21:
+  for x being Symbol of EnvEpsGram(V), M,N being EnvEpsTerm of V
+  st x = [3,0] or x = [6,0] or (ex v being Element of V st x = [4,v])
+  holds x ==> roots <*M,N*>
+proof
+  let x be Symbol of EnvEpsGram(V), M,N be EnvEpsTerm of V;
+  assume A1: x = [3,0] or x = [6,0] or (ex v being Element of V st x = [4,v]);
+  set G = EnvEpsGram(V);
+  reconsider T = TS G as DTree-set of the carrier of G by Th6;
+  reconsider M1 = M, N1 = N as Element of T;
+  reconsider p = <*M1,N1*> as FinSequence of T by FINSEQ_2:13;
+  A2: roots p = <*M.{}, N.{}*> by DTCONSTR:6;
+  reconsider q = roots p as FinSequence of the carrier of G;
+  A3: ex a,b being object st q = <*a,b*> by A2;
+  thus thesis by A1,A3,Def2;
+end;
+
+theorem Th22:
+  for M being EnvEpsTerm of V holds
+  natsel(EnvEpsLen(V)*<*M*>,1) = elen M
+proof
+  let M be EnvEpsTerm of V;
+  set f = EnvEpsLen(V);
+  dom f = TS(EnvEpsGram(V)) by FUNCT_2:def 1;
+  then M in dom f;
+  then A1: f * <*M*> = <*f.M*> by FINSEQ_2:34
+    .= <*elen M*> by Def12;
+  A2: <*elen M*>.1 = elen M by FINSEQ_1:40;
+  elen M in NAT;
+  hence thesis by A1,A2,Th19;
+end;
+
+theorem Th23:
+  for M,N being EnvEpsTerm of V holds
+  natsel(EnvEpsLen(V)*<*M,N*>,1) = elen M &
+  natsel(EnvEpsLen(V)*<*M,N*>,2) = elen N
+proof
+  let M,N be EnvEpsTerm of V;
+  set f = EnvEpsLen(V);
+  A0: dom f = TS(EnvEpsGram(V)) by FUNCT_2:def 1;
+  then M in dom f;
+  then A1: f * <*M,N*> = <*f.M, f.N*> by A0,FINSEQ_2:125
+    .= <*elen M, f.N*> by Def12
+    .= <*elen M, elen N*> by Def12;
+  A2: <*elen M, elen N*>.1 = elen M & <*elen M, elen N*>.2 = elen N
+    by FINSEQ_1:44;
+  elen M in NAT & elen N in NAT;
+  hence thesis by A1,A2,Th19;
+end;
+
+theorem Th24:
+  for x being object, a,b,c,d,e being Element of NAT holds
+  ( x = 2 implies
+    IFEQ(x,2,a,IFEQ(x,5,b,IFEQ(x,3,c,IFEQ(x,4,d,e)))) = a ) &
+  ( x = 5 implies
+    IFEQ(x,2,a,IFEQ(x,5,b,IFEQ(x,3,c,IFEQ(x,4,d,e)))) = b ) &
+  ( x = 3 implies
+    IFEQ(x,2,a,IFEQ(x,5,b,IFEQ(x,3,c,IFEQ(x,4,d,e)))) = c ) &
+  ( x = 4 implies
+    IFEQ(x,2,a,IFEQ(x,5,b,IFEQ(x,3,c,IFEQ(x,4,d,e)))) = d ) &
+  ( x = 6 implies
+    IFEQ(x,2,a,IFEQ(x,5,b,IFEQ(x,3,c,IFEQ(x,4,d,e)))) = e )
+proof
+  let x be object, a,b,c,d,e be Element of NAT;
+  set T4 = IFEQ(x,4,d,e);
+  set T3 = IFEQ(x,3,c,T4);
+  set T5 = IFEQ(x,5,b,T3);
+  hereby
+    assume A: x = 2;
+    thus IFEQ(x,2,a,T5) = a by A,FUNCOP_1:def 8;
+  end;
+  hereby
+    assume A: x = 5;
+    A1: IFEQ(x,2,a,T5) = T5 by A,FUNCOP_1:def 8;
+    thus IFEQ(x,2,a,T5) = b by A,A1,FUNCOP_1:def 8;
+  end;
+  hereby
+    assume A: x = 3;
+    A1: IFEQ(x,2,a,T5) = T5 by A,FUNCOP_1:def 8;
+    A2: T5 = T3 by A,FUNCOP_1:def 8;
+    thus IFEQ(x,2,a,T5) = c by A,A1,A2,FUNCOP_1:def 8;
+  end;
+  hereby
+    assume A: x = 4;
+    A1: IFEQ(x,2,a,T5) = T5 by A,FUNCOP_1:def 8;
+    A2: T5 = T3 by A,FUNCOP_1:def 8;
+    A3: T3 = T4 by A,FUNCOP_1:def 8;
+    thus IFEQ(x,2,a,T5) = d by A,A1,A2,A3,FUNCOP_1:def 8;
+  end;
+  assume A: x = 6;
+  A1: IFEQ(x,2,a,T5) = T5 by A,FUNCOP_1:def 8;
+  A2: T5 = T3 by A,FUNCOP_1:def 8;
+  A3: T3 = T4 by A,FUNCOP_1:def 8;
+  thus IFEQ(x,2,a,T5) = e by A,A1,A2,A3,FUNCOP_1:def 8;
+end;
+
+begin :: The recursion equations for the length measure
+
+theorem Th25:
+  for v being Element of V holds elen(eVar v) = 1 & elen(eId V) = 1
+proof
+  let v be Element of V;
+  set G = EnvEpsGram(V);
+  A0: the carrier of G = EnvEpsSym(V) by Def2;
+  then reconsider x = [0,v] as Symbol of G by Th1;
+  reconsider y = [1,0] as Symbol of G by A0,Th2;
+  A1: x in Terminals G & y in Terminals G by Th5;
+  thus elen(eVar v) = (EnvEpsLen(V)).(eVar v) by Def12
+    .= (EnvEpsLen(V)).(root-tree x) by Def3
+    .= In(1,NAT) by A1,Def11
+    .= 1;
+  thus elen(eId V) = (EnvEpsLen(V)).(eId V) by Def12
+    .= (EnvEpsLen(V)).(root-tree y) by Def4
+    .= In(1,NAT) by A1,Def11
+    .= 1;
+end;
+
+theorem Th26:
+  for v being Element of V, M being EnvEpsTerm of V holds
+  elen(eLam(v,M)) = 2 * elen M
+proof
+  let v be Element of V, M be EnvEpsTerm of V;
+  set G = EnvEpsGram(V);
+  set f = EnvEpsLen(V);
+  A0: the carrier of G = EnvEpsSym(V) by Def2;
+  then reconsider x = [2,v] as Symbol of G by Th1;
+  A1: x ==> roots <*M*> by Th20;
+  set a1 = natsel(f*<*M*>,1);
+  set a2 = natsel(f*<*M*>,2);
+  A2: a1 = elen M by Th22;
+  A3: x`1 = 2;
+  thus elen(eLam(v,M)) = f.(eLam(v,M)) by Def12
+    .= f.(x-tree <*M*>) by Def5
+    .= In(IFEQ(x`1,2,a1+a1,IFEQ(x`1,5,a1+a1,IFEQ(x`1,3,1+(a1+a2),
+         IFEQ(x`1,4,1+(a1+a2),a1*(1+a2))))),NAT) by A1,Def11
+    .= In(a1+a1,NAT) by A3,Th24
+    .= a1+a1
+    .= 2 * elen M by A2;
+end;
+
+theorem Th27:
+  for M being EnvEpsTerm of V holds elen(eEps M) = 2 * elen M
+proof
+  let M be EnvEpsTerm of V;
+  set G = EnvEpsGram(V);
+  set f = EnvEpsLen(V);
+  A0: the carrier of G = EnvEpsSym(V) by Def2;
+  then reconsider x = [5,0] as Symbol of G by Th2;
+  A1: x ==> roots <*M*> by Th20;
+  set a1 = natsel(f*<*M*>,1);
+  set a2 = natsel(f*<*M*>,2);
+  A2: a1 = elen M by Th22;
+  A3: x`1 = 5;
+  thus elen(eEps M) = f.(eEps M) by Def12
+    .= f.(x-tree <*M*>) by Def6
+    .= In(IFEQ(x`1,2,a1+a1,IFEQ(x`1,5,a1+a1,IFEQ(x`1,3,1+(a1+a2),
+         IFEQ(x`1,4,1+(a1+a2),a1*(1+a2))))),NAT) by A1,Def11
+    .= In(a1+a1,NAT) by A3,Th24
+    .= a1+a1
+    .= 2 * elen M by A2;
+end;
+
+theorem Th28:
+  for M,N being EnvEpsTerm of V holds elen(eApp(M,N)) = elen M + elen N + 1
+proof
+  let M,N be EnvEpsTerm of V;
+  set G = EnvEpsGram(V);
+  set f = EnvEpsLen(V);
+  A0: the carrier of G = EnvEpsSym(V) by Def2;
+  then reconsider x = [3,0] as Symbol of G by Th2;
+  reconsider ts = <*M,N*> as FinSequence of TS(EnvEpsGram(V)) by FINSEQ_2:13;
+  A1: x ==> roots ts by Th21;
+  set a1 = natsel(f*ts,1);
+  set a2 = natsel(f*ts,2);
+  A2: a1 = elen M & a2 = elen N by Th23;
+  A3: x`1 = 3;
+  thus elen(eApp(M,N)) = f.(eApp(M,N)) by Def12
+    .= f.(x-tree <*M,N*>) by Def7
+    .= In(IFEQ(x`1,2,a1+a1,IFEQ(x`1,5,a1+a1,IFEQ(x`1,3,1+(a1+a2),
+         IFEQ(x`1,4,1+(a1+a2),a1*(1+a2))))),NAT) by A1,Def11
+    .= In(1+(a1+a2),NAT) by A3,Th24
+    .= 1+(a1+a2)
+    .= elen M + elen N + 1 by A2;
+end;
+
+theorem Th29:
+  for M,N being EnvEpsTerm of V, v being Element of V holds
+  elen(eExt(M,v,N)) = elen M + elen N + 1
+proof
+  let M,N be EnvEpsTerm of V, v be Element of V;
+  set G = EnvEpsGram(V);
+  set f = EnvEpsLen(V);
+  A0: the carrier of G = EnvEpsSym(V) by Def2;
+  then reconsider x = [4,v] as Symbol of G by Th1;
+  reconsider ts = <*M,N*> as FinSequence of TS(EnvEpsGram(V)) by FINSEQ_2:13;
+  A1: x ==> roots ts by Th21;
+  set a1 = natsel(f*ts,1);
+  set a2 = natsel(f*ts,2);
+  A2: a1 = elen M & a2 = elen N by Th23;
+  A3: x`1 = 4;
+  thus elen(eExt(M,v,N)) = f.(eExt(M,v,N)) by Def12
+    .= f.(x-tree <*M,N*>) by Def9
+    .= In(IFEQ(x`1,2,a1+a1,IFEQ(x`1,5,a1+a1,IFEQ(x`1,3,1+(a1+a2),
+         IFEQ(x`1,4,1+(a1+a2),a1*(1+a2))))),NAT) by A1,Def11
+    .= In(1+(a1+a2),NAT) by A3,Th24
+    .= 1+(a1+a2)
+    .= elen M + elen N + 1 by A2;
+end;
+
+theorem Th30:
+  for M,N being EnvEpsTerm of V holds
+  elen(eComp(M,N)) = elen M * (elen N + 1)
+proof
+  let M,N be EnvEpsTerm of V;
+  set G = EnvEpsGram(V);
+  set f = EnvEpsLen(V);
+  A0: the carrier of G = EnvEpsSym(V) by Def2;
+  then reconsider x = [6,0] as Symbol of G by Th2;
+  reconsider ts = <*M,N*> as FinSequence of TS(EnvEpsGram(V)) by FINSEQ_2:13;
+  A1: x ==> roots ts by Th21;
+  set a1 = natsel(f*ts,1);
+  set a2 = natsel(f*ts,2);
+  A2: a1 = elen M & a2 = elen N by Th23;
+  A3: x`1 = 6;
+  thus elen(eComp(M,N)) = f.(eComp(M,N)) by Def12
+    .= f.(x-tree <*M,N*>) by Def8
+    .= In(IFEQ(x`1,2,a1+a1,IFEQ(x`1,5,a1+a1,IFEQ(x`1,3,1+(a1+a2),
+         IFEQ(x`1,4,1+(a1+a2),a1*(1+a2))))),NAT) by A1,Def11
+    .= In(a1*(1+a2),NAT) by A3,Th24
+    .= a1*(1+a2)
+    .= elen M * (elen N + 1) by A2;
+end;
+
+theorem Th31:
+  for M being EnvEpsTerm of V holds elen M > 0
+proof
+  let M be EnvEpsTerm of V;
+  defpred P[set] means ex A being EnvEpsTerm of V st A = $1 & elen A > 0;
+  A1: for v being Element of V holds P[eVar v]
+  proof
+    let v be Element of V;
+    elen(eVar v) = 1 by Th25;
+    hence thesis;
+  end;
+  A2: P[eId V]
+  proof
+    elen(eId V) = 1 by Th25;
+    hence thesis;
+  end;
+  A3: for v being Element of V, A being EnvEpsTerm of V st P[A]
+    holds P[eLam(v,A)]
+  proof
+    let v be Element of V, A be EnvEpsTerm of V;
+    assume P[A];
+    then consider B being EnvEpsTerm of V such that
+    B1: B = A & elen B > 0;
+    B2: elen(eLam(v,A)) = 2 * elen A by Th26;
+    0 < 2 * elen A by B1,XREAL_1:129;
+    hence thesis by B2;
+  end;
+  A4: for A being EnvEpsTerm of V st P[A] holds P[eEps A]
+  proof
+    let A be EnvEpsTerm of V;
+    assume P[A];
+    then consider B being EnvEpsTerm of V such that
+    B1: B = A & elen B > 0;
+    B2: elen(eEps A) = 2 * elen A by Th27;
+    0 < 2 * elen A by B1,XREAL_1:129;
+    hence thesis by B2;
+  end;
+  A5: for A,B being EnvEpsTerm of V st P[A] & P[B] holds P[eApp(A,B)]
+  proof
+    let A,B be EnvEpsTerm of V;
+    assume P[A] & P[B];
+    elen(eApp(A,B)) = elen A + elen B + 1 by Th28;
+    hence thesis;
+  end;
+  A6: for A,B being EnvEpsTerm of V st P[A] & P[B] holds P[eComp(A,B)]
+  proof
+    let A,B be EnvEpsTerm of V;
+    assume P[A] & P[B];
+    then consider C being EnvEpsTerm of V such that
+    B1: C = A & elen C > 0;
+    B2: elen(eComp(A,B)) = elen A * (elen B + 1) by Th30;
+    0 < elen B + 1;
+    then 0 < elen A * (elen B + 1) by B1,XREAL_1:129;
+    hence thesis by B2;
+  end;
+  A7: for A,B being EnvEpsTerm of V, v being Element of V st P[A] & P[B]
+    holds P[eExt(A,v,B)]
+  proof
+    let A,B be EnvEpsTerm of V, v be Element of V;
+    assume P[A] & P[B];
+    elen(eExt(A,v,B)) = elen A + elen B + 1 by Th29;
+    hence thesis;
+  end;
+  for A being EnvEpsTerm of V holds P[A] from EnvEpsInd(A1,A2,A3,A4,A5,A6,A7);
+  then P[M];
+  hence thesis;
+end;
+
+begin :: The sub-reduction relation of lambda_EnvEps
+
+definition
+  let V be non empty set;
+  let R be Relation of TS(EnvEpsGram(V));
+  attr R is sigma-closed means
+  :Def13:
+  (for M,N,L being EnvEpsTerm of V holds
+     [eComp(eComp(M,N),L), eComp(M,eComp(N,L))] in R) &
+  (for M being EnvEpsTerm of V holds [eComp(eId V,M), M] in R) &
+  (for M being EnvEpsTerm of V holds [eComp(M,eId V), M] in R) &
+  (for L,M,N being EnvEpsTerm of V, x being Element of V holds
+     [eComp(eExt(L,x,M),N), eExt(eComp(L,N),x,eComp(M,N))] in R) &
+  (for M,N being EnvEpsTerm of V, x being Element of V holds
+     [eComp(eVar x, eExt(M,x,N)), M] in R) &
+  (for M,N being EnvEpsTerm of V, x,y being Element of V st x <> y holds
+     [eComp(eVar x, eExt(M,y,N)), eComp(eVar x, N)] in R) &
+  (for M,N,L being EnvEpsTerm of V holds
+     [eComp(eApp(M,N),L), eApp(eComp(M,L),eComp(N,L))] in R) &
+  (for M,N being EnvEpsTerm of V holds [eComp(eEps M,N), eEps M] in R) &
+  (for M,M1,N being EnvEpsTerm of V st [M,M1] in R holds
+     [eApp(M,N), eApp(M1,N)] in R) &
+  (for M,N,N1 being EnvEpsTerm of V st [N,N1] in R holds
+     [eApp(M,N), eApp(M,N1)] in R) &
+  (for M,M1 being EnvEpsTerm of V, x being Element of V st [M,M1] in R holds
+     [eLam(x,M), eLam(x,M1)] in R) &
+  (for M,M1,N being EnvEpsTerm of V, x being Element of V st [M,M1] in R holds
+     [eExt(M,x,N), eExt(M1,x,N)] in R) &
+  (for M,N,N1 being EnvEpsTerm of V, x being Element of V st [N,N1] in R holds
+     [eExt(M,x,N), eExt(M,x,N1)] in R) &
+  (for M,M1,N being EnvEpsTerm of V st [M,M1] in R holds
+     [eComp(M,N), eComp(M1,N)] in R) &
+  (for M,N,N1 being EnvEpsTerm of V st [N,N1] in R holds
+     [eComp(M,N), eComp(M,N1)] in R) &
+  (for M,M1 being EnvEpsTerm of V st [M,M1] in R holds
+     [eEps M, eEps M1] in R);
+end;
+
+registration
+  let V be non empty set;
+  cluster sigma-closed for Relation of TS(EnvEpsGram(V));
+  existence
+  proof
+    set G = EnvEpsGram(V);
+    A0: [:TS G, TS G:] c= [:TS G, TS G:];
+    reconsider R = [:TS G, TS G:] as Relation of TS G by A0;
+    take R;
+    A1: for a,b being EnvEpsTerm of V holds [a,b] in R by ZFMISC_1:87;
+    thus for M,N,L being EnvEpsTerm of V holds
+      [eComp(eComp(M,N),L), eComp(M,eComp(N,L))] in R by A1;
+    thus for M being EnvEpsTerm of V holds [eComp(eId V,M), M] in R by A1;
+    thus for M being EnvEpsTerm of V holds [eComp(M,eId V), M] in R by A1;
+    thus for L,M,N being EnvEpsTerm of V, x being Element of V holds
+      [eComp(eExt(L,x,M),N), eExt(eComp(L,N),x,eComp(M,N))] in R by A1;
+    thus for M,N being EnvEpsTerm of V, x being Element of V holds
+      [eComp(eVar x, eExt(M,x,N)), M] in R by A1;
+    thus for M,N being EnvEpsTerm of V, x,y being Element of V st x <> y holds
+      [eComp(eVar x, eExt(M,y,N)), eComp(eVar x, N)] in R by A1;
+    thus for M,N,L being EnvEpsTerm of V holds
+      [eComp(eApp(M,N),L), eApp(eComp(M,L),eComp(N,L))] in R by A1;
+    thus for M,N being EnvEpsTerm of V holds
+      [eComp(eEps M,N), eEps M] in R by A1;
+    thus for M,M1,N being EnvEpsTerm of V st [M,M1] in R holds
+      [eApp(M,N), eApp(M1,N)] in R by A1;
+    thus for M,N,N1 being EnvEpsTerm of V st [N,N1] in R holds
+      [eApp(M,N), eApp(M,N1)] in R by A1;
+    thus for M,M1 being EnvEpsTerm of V, x being Element of V
+      st [M,M1] in R holds [eLam(x,M), eLam(x,M1)] in R by A1;
+    thus for M,M1,N being EnvEpsTerm of V, x being Element of V
+      st [M,M1] in R holds [eExt(M,x,N), eExt(M1,x,N)] in R by A1;
+    thus for M,N,N1 being EnvEpsTerm of V, x being Element of V
+      st [N,N1] in R holds [eExt(M,x,N), eExt(M,x,N1)] in R by A1;
+    thus for M,M1,N being EnvEpsTerm of V st [M,M1] in R holds
+      [eComp(M,N), eComp(M1,N)] in R by A1;
+    thus for M,N,N1 being EnvEpsTerm of V st [N,N1] in R holds
+      [eComp(M,N), eComp(M,N1)] in R by A1;
+    thus for M,M1 being EnvEpsTerm of V st [M,M1] in R holds
+      [eEps M, eEps M1] in R by A1;
+  end;
+end;
+
+definition
+  let V be non empty set;
+  func SigmaRed(V) -> Relation of TS(EnvEpsGram(V)) equals
+  :Def14:
+  { z where z is Element of [:TS(EnvEpsGram(V)),TS(EnvEpsGram(V)):] :
+      for R being Relation of TS(EnvEpsGram(V)) st R is sigma-closed
+        holds z in R };
+  coherence
+  proof
+    set G = EnvEpsGram(V);
+    set D = [:TS G, TS G:];
+    set S = { z where z is Element of D :
+      for R being Relation of TS G st R is sigma-closed holds z in R };
+    S c= D
+    proof
+      let u be object;
+      assume u in S;
+      then ex z being Element of D st u = z &
+        for R being Relation of TS G st R is sigma-closed holds z in R;
+      hence thesis;
+    end;
+    hence thesis;
+  end;
+end;
+
+theorem Th32:
+  for M,N being EnvEpsTerm of V holds
+  ( [M,N] in SigmaRed(V) iff
+    for R being Relation of TS(EnvEpsGram(V)) st R is sigma-closed
+      holds [M,N] in R )
+proof
+  let M,N be EnvEpsTerm of V;
+  set G = EnvEpsGram(V);
+  set D = [:TS G, TS G:];
+  A1: [M,N] in D by ZFMISC_1:87;
+  hereby
+    assume [M,N] in SigmaRed(V);
+    then [M,N] in { z where z is Element of D :
+      for R being Relation of TS G st R is sigma-closed holds z in R }
+      by Def14;
+    then consider z being Element of D such that
+    B1: [M,N] = z and
+    B2: for R being Relation of TS G st R is sigma-closed holds z in R;
+    thus for R being Relation of TS G st R is sigma-closed holds [M,N] in R
+      by B1,B2;
+  end;
+  assume C1: for R being Relation of TS G st R is sigma-closed
+    holds [M,N] in R;
+  reconsider z = [M,N] as Element of D by A1;
+  z in { z2 where z2 is Element of D :
+    for R being Relation of TS G st R is sigma-closed holds z2 in R } by C1;
+  hence thesis by Def14;
+end;
+
+theorem Th33:
+  for R being Relation of TS(EnvEpsGram(V)) st R is sigma-closed
+  holds SigmaRed(V) c= R
+proof
+  let R be Relation of TS(EnvEpsGram(V));
+  assume A1: R is sigma-closed;
+  set G = EnvEpsGram(V);
+  set D = [:TS G, TS G:];
+  now
+    let u be object;
+    assume u in SigmaRed(V);
+    then u in { z where z is Element of D :
+      for Q being Relation of TS G st Q is sigma-closed holds z in Q }
+      by Def14;
+    then consider z being Element of D such that
+    B1: u = z and
+    B2: for Q being Relation of TS G st Q is sigma-closed holds z in Q;
+    thus u in R by A1,B1,B2;
+  end;
+  hence thesis by TARSKI:def 3;
+end;
+
+registration
+  let V be non empty set;
+  cluster SigmaRed(V) -> sigma-closed;
+  coherence
+  proof
+    set G = EnvEpsGram(V);
+    thus for M,N,L being EnvEpsTerm of V
+      holds
+      [eComp(eComp(M,N),L),
+       eComp(M,eComp(N,L))] in SigmaRed(V)
+    proof
+      let M,N,L be EnvEpsTerm of V;
+      now
+        let R be Relation of TS G;
+        assume R is sigma-closed;
+        hence [eComp(eComp(M,N),L),
+          eComp(M,eComp(N,L))] in R by Def13;
+      end;
+      hence thesis by Th32;
+    end;
+    thus for M being EnvEpsTerm of V
+      holds
+      [eComp(eId V,M),
+       M] in SigmaRed(V)
+    proof
+      let M be EnvEpsTerm of V;
+      now
+        let R be Relation of TS G;
+        assume R is sigma-closed;
+        hence [eComp(eId V,M),
+          M] in R by Def13;
+      end;
+      hence thesis by Th32;
+    end;
+    thus for M being EnvEpsTerm of V
+      holds
+      [eComp(M,eId V),
+       M] in SigmaRed(V)
+    proof
+      let M be EnvEpsTerm of V;
+      now
+        let R be Relation of TS G;
+        assume R is sigma-closed;
+        hence [eComp(M,eId V),
+          M] in R by Def13;
+      end;
+      hence thesis by Th32;
+    end;
+    thus for L,M,N being EnvEpsTerm of V, x being Element of V
+      holds
+      [eComp(eExt(L,x,M),N),
+       eExt(eComp(L,N),x,eComp(M,N))] in SigmaRed(V)
+    proof
+      let L,M,N be EnvEpsTerm of V, x be Element of V;
+      now
+        let R be Relation of TS G;
+        assume R is sigma-closed;
+        hence [eComp(eExt(L,x,M),N),
+          eExt(eComp(L,N),x,eComp(M,N))] in R by Def13;
+      end;
+      hence thesis by Th32;
+    end;
+    thus for M,N being EnvEpsTerm of V, x being Element of V
+      holds
+      [eComp(eVar x, eExt(M,x,N)),
+       M] in SigmaRed(V)
+    proof
+      let M,N be EnvEpsTerm of V, x be Element of V;
+      now
+        let R be Relation of TS G;
+        assume R is sigma-closed;
+        hence [eComp(eVar x, eExt(M,x,N)),
+          M] in R by Def13;
+      end;
+      hence thesis by Th32;
+    end;
+    thus for M,N being EnvEpsTerm of V, x,y being Element of V
+      st x <> y holds
+      [eComp(eVar x, eExt(M,y,N)),
+       eComp(eVar x, N)] in SigmaRed(V)
+    proof
+      let M,N be EnvEpsTerm of V, x,y be Element of V;
+      assume A0: x <> y;
+      now
+        let R be Relation of TS G;
+        assume R is sigma-closed;
+        hence [eComp(eVar x, eExt(M,y,N)),
+          eComp(eVar x, N)] in R by A0,Def13;
+      end;
+      hence thesis by Th32;
+    end;
+    thus for M,N,L being EnvEpsTerm of V
+      holds
+      [eComp(eApp(M,N),L),
+       eApp(eComp(M,L),eComp(N,L))] in SigmaRed(V)
+    proof
+      let M,N,L be EnvEpsTerm of V;
+      now
+        let R be Relation of TS G;
+        assume R is sigma-closed;
+        hence [eComp(eApp(M,N),L),
+          eApp(eComp(M,L),eComp(N,L))] in R by Def13;
+      end;
+      hence thesis by Th32;
+    end;
+    thus for M,N being EnvEpsTerm of V
+      holds
+      [eComp(eEps M,N),
+       eEps M] in SigmaRed(V)
+    proof
+      let M,N be EnvEpsTerm of V;
+      now
+        let R be Relation of TS G;
+        assume R is sigma-closed;
+        hence [eComp(eEps M,N),
+          eEps M] in R by Def13;
+      end;
+      hence thesis by Th32;
+    end;
+    thus for M,M1,N being EnvEpsTerm of V
+      st [M,M1] in SigmaRed(V) holds
+      [eApp(M,N), eApp(M1,N)] in SigmaRed(V)
+    proof
+      let M,M1,N be EnvEpsTerm of V;
+      assume A0: [M,M1] in SigmaRed(V);
+      now
+        let R be Relation of TS G;
+        assume A1: R is sigma-closed;
+        then [M,M1] in R by A0,Th32;
+        hence [eApp(M,N), eApp(M1,N)] in R by A1,Def13;
+      end;
+      hence thesis by Th32;
+    end;
+    thus for M,N,N1 being EnvEpsTerm of V
+      st [N,N1] in SigmaRed(V) holds
+      [eApp(M,N), eApp(M,N1)] in SigmaRed(V)
+    proof
+      let M,N,N1 be EnvEpsTerm of V;
+      assume A0: [N,N1] in SigmaRed(V);
+      now
+        let R be Relation of TS G;
+        assume A1: R is sigma-closed;
+        then [N,N1] in R by A0,Th32;
+        hence [eApp(M,N), eApp(M,N1)] in R by A1,Def13;
+      end;
+      hence thesis by Th32;
+    end;
+    thus for M,M1 being EnvEpsTerm of V, x being Element of V
+      st [M,M1] in SigmaRed(V) holds
+      [eLam(x,M), eLam(x,M1)] in SigmaRed(V)
+    proof
+      let M,M1 be EnvEpsTerm of V, x be Element of V;
+      assume A0: [M,M1] in SigmaRed(V);
+      now
+        let R be Relation of TS G;
+        assume A1: R is sigma-closed;
+        then [M,M1] in R by A0,Th32;
+        hence [eLam(x,M), eLam(x,M1)] in R by A1,Def13;
+      end;
+      hence thesis by Th32;
+    end;
+    thus for M,M1,N being EnvEpsTerm of V, x being Element of V
+      st [M,M1] in SigmaRed(V) holds
+      [eExt(M,x,N), eExt(M1,x,N)] in SigmaRed(V)
+    proof
+      let M,M1,N be EnvEpsTerm of V, x be Element of V;
+      assume A0: [M,M1] in SigmaRed(V);
+      now
+        let R be Relation of TS G;
+        assume A1: R is sigma-closed;
+        then [M,M1] in R by A0,Th32;
+        hence [eExt(M,x,N), eExt(M1,x,N)] in R by A1,Def13;
+      end;
+      hence thesis by Th32;
+    end;
+    thus for M,N,N1 being EnvEpsTerm of V, x being Element of V
+      st [N,N1] in SigmaRed(V) holds
+      [eExt(M,x,N), eExt(M,x,N1)] in SigmaRed(V)
+    proof
+      let M,N,N1 be EnvEpsTerm of V, x be Element of V;
+      assume A0: [N,N1] in SigmaRed(V);
+      now
+        let R be Relation of TS G;
+        assume A1: R is sigma-closed;
+        then [N,N1] in R by A0,Th32;
+        hence [eExt(M,x,N), eExt(M,x,N1)] in R by A1,Def13;
+      end;
+      hence thesis by Th32;
+    end;
+    thus for M,M1,N being EnvEpsTerm of V
+      st [M,M1] in SigmaRed(V) holds
+      [eComp(M,N), eComp(M1,N)] in SigmaRed(V)
+    proof
+      let M,M1,N be EnvEpsTerm of V;
+      assume A0: [M,M1] in SigmaRed(V);
+      now
+        let R be Relation of TS G;
+        assume A1: R is sigma-closed;
+        then [M,M1] in R by A0,Th32;
+        hence [eComp(M,N), eComp(M1,N)] in R by A1,Def13;
+      end;
+      hence thesis by Th32;
+    end;
+    thus for M,N,N1 being EnvEpsTerm of V
+      st [N,N1] in SigmaRed(V) holds
+      [eComp(M,N), eComp(M,N1)] in SigmaRed(V)
+    proof
+      let M,N,N1 be EnvEpsTerm of V;
+      assume A0: [N,N1] in SigmaRed(V);
+      now
+        let R be Relation of TS G;
+        assume A1: R is sigma-closed;
+        then [N,N1] in R by A0,Th32;
+        hence [eComp(M,N), eComp(M,N1)] in R by A1,Def13;
+      end;
+      hence thesis by Th32;
+    end;
+    thus for M,M1 being EnvEpsTerm of V
+      st [M,M1] in SigmaRed(V) holds
+      [eEps M, eEps M1] in SigmaRed(V)
+    proof
+      let M,M1 be EnvEpsTerm of V;
+      assume A0: [M,M1] in SigmaRed(V);
+      now
+        let R be Relation of TS G;
+        assume A1: R is sigma-closed;
+        then [M,M1] in R by A0,Th32;
+        hence [eEps M, eEps M1] in R by A1,Def13;
+      end;
+      hence thesis by Th32;
+    end;
+  end;
+end;
+
+begin :: Arithmetic facts used for the length decrease
+
+theorem Th34:
+  for l being Nat st 0 < l holds 1 < l+1
+proof
+  let l be Nat;
+  assume 0 < l;
+  then 0+1 < l+1 by XREAL_1:8;
+  hence thesis;
+end;
+
+theorem Th35:
+  for m,n,l being Nat st 0 < m & 0 < l holds
+  m*((n*(l+1))+1) < (m*(n+1))*(l+1)
+proof
+  let m,n,l be Nat;
+  assume A1: 0 < m & 0 < l;
+  A2: (n+1)*(l+1) = n*(l+1) + (l+1);
+  B0: 1 < l+1 by A1,Th34;
+  1 + n*(l+1) < (l+1) + n*(l+1) by B0,XREAL_1:8;
+  then B2: n*(l+1) + 1 < (n+1)*(l+1) by A2;
+  (n*(l+1)+1)*m < ((n+1)*(l+1))*m by A1,B2,XREAL_1:68;
+  hence thesis;
+end;
+
+theorem Th36:
+  for m1,m2,n being Nat st 0 < n holds
+  m1*(n+1) + m2*(n+1) + 1 < (m1+m2+1)*(n+1)
+proof
+  let m1,m2,n be Nat;
+  assume A1: 0 < n;
+  A2: (m1+m2+1)*(n+1) = m1*(n+1) + m2*(n+1) + (n+1);
+  B1: 1 < n+1 by A1,Th34;
+  1 + (m1*(n+1)+m2*(n+1)) < (n+1) + (m1*(n+1)+m2*(n+1)) by B1,XREAL_1:8;
+  hence thesis by A2;
+end;
+
+theorem Th37:
+  for m,n being Nat st 0 < m & 0 < n holds 2*m < (2*m)*(n+1)
+proof
+  let m,n be Nat;
+  assume A1: 0 < m & 0 < n;
+  then A2: 0 < 2*m by XREAL_1:129;
+  B1: 1 < n+1 by A1,Th34;
+  1*(2*m) < (n+1)*(2*m) by A2,B1,XREAL_1:68;
+  hence thesis;
+end;
+
+theorem Th38:
+  for m,k being Nat st 0 < k holds m < m+k
+proof
+  let m,k be Nat;
+  assume 0 < k;
+  then 0+m < k+m by XREAL_1:8;
+  hence thesis;
+end;
+
+theorem Th39:
+  for m being Nat st 0 < m holds m < 2*m
+proof
+  let m be Nat;
+  assume 0 < m;
+  then 0+m < m+m by XREAL_1:8;
+  hence thesis;
+end;
+
+theorem Th40:
+  for a,b being Nat st a < b holds 2*a < 2*b
+proof
+  let a,b be Nat;
+  assume A1: a < b;
+  a*2 < b*2 by A1,XREAL_1:68;
+  hence thesis;
+end;
+
+theorem Th41:
+  for a,b,c being Nat st a < b & 0 < c holds c*a < c*b
+proof
+  let a,b,c be Nat;
+  assume A1: a < b & 0 < c;
+  a*c < b*c by A1,XREAL_1:68;
+  hence thesis;
+end;
+
+begin :: Sigma reduction decreases the length
+
+theorem Th42:
+  for M,N being EnvEpsTerm of V st [M,N] in SigmaRed(V) holds elen N < elen M
+proof
+  set G = EnvEpsGram(V);
+  set D = [:TS G, TS G:];
+  defpred Q[object] means
+    ex A,B being EnvEpsTerm of V st $1 = [A,B] & elen B < elen A;
+  set DR = { z where z is Element of D : Q[z] };
+  A1: DR c= D
+  proof
+    let u be object;
+    assume u in DR;
+    then ex z being Element of D st u = z & Q[z];
+    hence thesis;
+  end;
+  reconsider DR1 = DR as Relation of TS G by A1;
+  A2: for A,B being EnvEpsTerm of V holds
+    ( [A,B] in DR1 iff elen B < elen A )
+  proof
+    let A,B be EnvEpsTerm of V;
+    hereby
+      assume [A,B] in DR1;
+      then consider z being Element of D such that
+      B1: [A,B] = z and B2: Q[z];
+      consider A2a,B2a being EnvEpsTerm of V such that
+      B3: z = [A2a,B2a] & elen B2a < elen A2a by B2;
+      A = A2a & B = B2a by B1,B3,XTUPLE_0:1;
+      hence elen B < elen A by B3;
+    end;
+    assume C1: elen B < elen A;
+    C2: [A,B] in D by ZFMISC_1:87;
+    then reconsider z = [A,B] as Element of D;
+    Q[z] by C1;
+    hence thesis;
+  end;
+  A3: DR1 is sigma-closed
+  proof
+    thus for M,N,L being EnvEpsTerm of V holds
+      [eComp(eComp(M,N),L), eComp(M,eComp(N,L))] in DR1
+    proof
+      let M,N,L be EnvEpsTerm of V;
+      D1: elen(eComp(eComp(M,N),L)) = elen(eComp(M,N))*(elen L+1) by Th30
+        .= (elen M*(elen N+1))*(elen L+1) by Th30;
+      D2: elen(eComp(M,eComp(N,L))) = elen M*(elen(eComp(N,L))+1) by Th30
+        .= elen M*((elen N*(elen L+1))+1) by Th30;
+      D3: 0 < elen M & 0 < elen L by Th31;
+      elen M*((elen N*(elen L+1))+1) < (elen M*(elen N+1))*(elen L+1)
+        by D3,Th35;
+      hence thesis by A2,D1,D2;
+    end;
+    thus for M being EnvEpsTerm of V holds [eComp(eId V,M), M] in DR1
+    proof
+      let M be EnvEpsTerm of V;
+      D1: elen(eComp(eId V,M)) = elen(eId V)*(elen M+1) by Th30
+        .= 1*(elen M+1) by Th25;
+      elen M < elen M + 1 by Th38;
+      hence thesis by A2,D1;
+    end;
+    thus for M being EnvEpsTerm of V holds [eComp(M,eId V), M] in DR1
+    proof
+      let M be EnvEpsTerm of V;
+      D1: elen(eComp(M,eId V)) = elen M*(elen(eId V)+1) by Th30
+        .= elen M*(1+1) by Th25;
+      D2: 0 < elen M by Th31;
+      elen M < 2*elen M by D2,Th39;
+      hence thesis by A2,D1;
+    end;
+    thus for L,M,N being EnvEpsTerm of V, x being Element of V holds
+      [eComp(eExt(L,x,M),N), eExt(eComp(L,N),x,eComp(M,N))] in DR1
+    proof
+      let L,M,N be EnvEpsTerm of V, x be Element of V;
+      D1: elen(eComp(eExt(L,x,M),N)) = elen(eExt(L,x,M))*(elen N+1) by Th30
+        .= (elen L+elen M+1)*(elen N+1) by Th29;
+      D2: elen(eExt(eComp(L,N),x,eComp(M,N)))
+        = elen(eComp(L,N)) + elen(eComp(M,N)) + 1 by Th29
+        .= elen L*(elen N+1) + elen(eComp(M,N)) + 1 by Th30
+        .= elen L*(elen N+1) + elen M*(elen N+1) + 1 by Th30;
+      D3: 0 < elen N by Th31;
+      elen L*(elen N+1) + elen M*(elen N+1) + 1 < (elen L+elen M+1)*(elen N+1)
+        by D3,Th36;
+      hence thesis by A2,D1,D2;
+    end;
+    thus for M,N being EnvEpsTerm of V, x being Element of V holds
+      [eComp(eVar x, eExt(M,x,N)), M] in DR1
+    proof
+      let M,N be EnvEpsTerm of V, x be Element of V;
+      D1: elen(eComp(eVar x, eExt(M,x,N)))
+        = elen(eVar x)*(elen(eExt(M,x,N))+1) by Th30
+        .= 1*(elen(eExt(M,x,N))+1) by Th25
+        .= 1*((elen M+elen N+1)+1) by Th29;
+      D2: 0 < elen N + 2;
+      elen M < elen M + (elen N + 2) by D2,Th38;
+      hence thesis by A2,D1;
+    end;
+    thus for M,N being EnvEpsTerm of V, x,y being Element of V st x <> y holds
+      [eComp(eVar x, eExt(M,y,N)), eComp(eVar x, N)] in DR1
+    proof
+      let M,N be EnvEpsTerm of V, x,y be Element of V;
+      assume x <> y;
+      D1: elen(eComp(eVar x, eExt(M,y,N)))
+        = elen(eVar x)*(elen(eExt(M,y,N))+1) by Th30
+        .= 1*(elen(eExt(M,y,N))+1) by Th25
+        .= 1*((elen M+elen N+1)+1) by Th29;
+      D2: elen(eComp(eVar x, N)) = elen(eVar x)*(elen N+1) by Th30
+        .= 1*(elen N+1) by Th25;
+      D3: 0 < elen M + 1;
+      1*(elen N+1) < 1*(elen N+1) + (elen M + 1) by D3,Th38;
+      hence thesis by A2,D1,D2;
+    end;
+    thus for M,N,L being EnvEpsTerm of V holds
+      [eComp(eApp(M,N),L), eApp(eComp(M,L),eComp(N,L))] in DR1
+    proof
+      let M,N,L be EnvEpsTerm of V;
+      D1: elen(eComp(eApp(M,N),L)) = elen(eApp(M,N))*(elen L+1) by Th30
+        .= (elen M+elen N+1)*(elen L+1) by Th28;
+      D2: elen(eApp(eComp(M,L),eComp(N,L)))
+        = elen(eComp(M,L)) + elen(eComp(N,L)) + 1 by Th28
+        .= elen M*(elen L+1) + elen(eComp(N,L)) + 1 by Th30
+        .= elen M*(elen L+1) + elen N*(elen L+1) + 1 by Th30;
+      D3: 0 < elen L by Th31;
+      elen M*(elen L+1) + elen N*(elen L+1) + 1 < (elen M+elen N+1)*(elen L+1)
+        by D3,Th36;
+      hence thesis by A2,D1,D2;
+    end;
+    thus for M,N being EnvEpsTerm of V holds [eComp(eEps M,N), eEps M] in DR1
+    proof
+      let M,N be EnvEpsTerm of V;
+      D1: elen(eComp(eEps M,N)) = elen(eEps M)*(elen N+1) by Th30
+        .= (2*elen M)*(elen N+1) by Th27;
+      D2: elen(eEps M) = 2*elen M by Th27;
+      D3: 0 < elen M & 0 < elen N by Th31;
+      2*elen M < (2*elen M)*(elen N+1) by D3,Th37;
+      hence thesis by A2,D1,D2;
+    end;
+    thus for M,M1,N being EnvEpsTerm of V st [M,M1] in DR1 holds
+      [eApp(M,N), eApp(M1,N)] in DR1
+    proof
+      let M,M1,N be EnvEpsTerm of V;
+      assume [M,M1] in DR1;
+      then D0: elen M1 < elen M by A2;
+      D1: elen(eApp(M,N)) = elen M+elen N+1 by Th28;
+      D2: elen(eApp(M1,N)) = elen M1+elen N+1 by Th28;
+      elen M1+(elen N+1) < elen M+(elen N+1) by D0,XREAL_1:8;
+      hence thesis by A2,D1,D2;
+    end;
+    thus for M,N,N1 being EnvEpsTerm of V st [N,N1] in DR1 holds
+      [eApp(M,N), eApp(M,N1)] in DR1
+    proof
+      let M,N,N1 be EnvEpsTerm of V;
+      assume [N,N1] in DR1;
+      then D0: elen N1 < elen N by A2;
+      D1: elen(eApp(M,N)) = elen M+elen N+1 by Th28;
+      D2: elen(eApp(M,N1)) = elen M+elen N1+1 by Th28;
+      elen N1+(elen M+1) < elen N+(elen M+1) by D0,XREAL_1:8;
+      hence thesis by A2,D1,D2;
+    end;
+    thus for M,M1 being EnvEpsTerm of V, x being Element of V
+      st [M,M1] in DR1 holds [eLam(x,M), eLam(x,M1)] in DR1
+    proof
+      let M,M1 be EnvEpsTerm of V, x be Element of V;
+      assume [M,M1] in DR1;
+      then D0: elen M1 < elen M by A2;
+      D1: elen(eLam(x,M)) = 2*elen M by Th26;
+      D2: elen(eLam(x,M1)) = 2*elen M1 by Th26;
+      2*elen M1 < 2*elen M by D0,Th40;
+      hence thesis by A2,D1,D2;
+    end;
+    thus for M,M1,N being EnvEpsTerm of V, x being Element of V
+      st [M,M1] in DR1 holds [eExt(M,x,N), eExt(M1,x,N)] in DR1
+    proof
+      let M,M1,N be EnvEpsTerm of V, x be Element of V;
+      assume [M,M1] in DR1;
+      then D0: elen M1 < elen M by A2;
+      D1: elen(eExt(M,x,N)) = elen M+elen N+1 by Th29;
+      D2: elen(eExt(M1,x,N)) = elen M1+elen N+1 by Th29;
+      elen M1+(elen N+1) < elen M+(elen N+1) by D0,XREAL_1:8;
+      hence thesis by A2,D1,D2;
+    end;
+    thus for M,N,N1 being EnvEpsTerm of V, x being Element of V
+      st [N,N1] in DR1 holds [eExt(M,x,N), eExt(M,x,N1)] in DR1
+    proof
+      let M,N,N1 be EnvEpsTerm of V, x be Element of V;
+      assume [N,N1] in DR1;
+      then D0: elen N1 < elen N by A2;
+      D1: elen(eExt(M,x,N)) = elen M+elen N+1 by Th29;
+      D2: elen(eExt(M,x,N1)) = elen M+elen N1+1 by Th29;
+      elen N1+(elen M+1) < elen N+(elen M+1) by D0,XREAL_1:8;
+      hence thesis by A2,D1,D2;
+    end;
+    thus for M,M1,N being EnvEpsTerm of V st [M,M1] in DR1 holds
+      [eComp(M,N), eComp(M1,N)] in DR1
+    proof
+      let M,M1,N be EnvEpsTerm of V;
+      assume [M,M1] in DR1;
+      then D0: elen M1 < elen M by A2;
+      D1: elen(eComp(M,N)) = elen M*(elen N+1) by Th30;
+      D2: elen(eComp(M1,N)) = elen M1*(elen N+1) by Th30;
+      D3: 0 < elen N + 1;
+      elen M1*(elen N+1) < elen M*(elen N+1) by D0,D3,XREAL_1:68;
+      hence thesis by A2,D1,D2;
+    end;
+    thus for M,N,N1 being EnvEpsTerm of V st [N,N1] in DR1 holds
+      [eComp(M,N), eComp(M,N1)] in DR1
+    proof
+      let M,N,N1 be EnvEpsTerm of V;
+      assume [N,N1] in DR1;
+      then D0: elen N1 < elen N by A2;
+      D1: elen(eComp(M,N)) = elen M*(elen N+1) by Th30;
+      D2: elen(eComp(M,N1)) = elen M*(elen N1+1) by Th30;
+      D3: 0 < elen M by Th31;
+      D4: elen N1+1 < elen N+1 by D0,XREAL_1:8;
+      elen M*(elen N1+1) < elen M*(elen N+1) by D3,D4,Th41;
+      hence thesis by A2,D1,D2;
+    end;
+    thus for M,M1 being EnvEpsTerm of V st [M,M1] in DR1 holds
+      [eEps M, eEps M1] in DR1
+    proof
+      let M,M1 be EnvEpsTerm of V;
+      assume [M,M1] in DR1;
+      then D0: elen M1 < elen M by A2;
+      D1: elen(eEps M) = 2*elen M by Th27;
+      D2: elen(eEps M1) = 2*elen M1 by Th27;
+      2*elen M1 < 2*elen M by D0,Th40;
+      hence thesis by A2,D1,D2;
+    end;
+  end;
+  A4: SigmaRed(V) c= DR1 by A3,Th33;
+  let M,N be EnvEpsTerm of V;
+  assume [M,N] in SigmaRed(V);
+  then [M,N] in DR1 by A4;
+  hence thesis by A2;
+end;
+
+begin :: Termination of the sigma reduction
+
+registration
+  let V be non empty set;
+  cluster SigmaRed(V) -> strongly-normalizing;
+  coherence
+  proof
+    set G = EnvEpsGram(V);
+    A0: SigmaRed(V) c= [:TS G, TS G:];
+    let f be ManySortedSet of NAT;
+    assume not ex i being Nat st not [f.i,f.(i+1)] in SigmaRed(V);
+    then A1: for i being Nat holds [f.i,f.(i+1)] in SigmaRed(V);
+    A2: for i being Nat holds f.i in TS G
+    proof
+      let i be Nat;
+      [f.i,f.(i+1)] in SigmaRed(V) by A1;
+      then [f.i,f.(i+1)] in [:TS G, TS G:] by A0;
+      hence thesis by ZFMISC_1:87;
+    end;
+    defpred P[Nat] means
+      ex i being Nat, A being EnvEpsTerm of V st A = f.i & $1 = elen A;
+    B0: f.0 in TS G by A2;
+    then reconsider A0a = f.0 as EnvEpsTerm of V;
+    B1: ex k being Nat st P[k]
+    proof
+      take elen A0a;
+      take 0;
+      take A0a;
+      thus thesis;
+    end;
+    consider k being Nat such that
+    B2: P[k] and B3: for n being Nat st P[n] holds k <= n from NAT_1:sch 5(B1);
+    consider i0 being Nat, A being EnvEpsTerm of V such that
+    B4: A = f.i0 & k = elen A by B2;
+    f.(i0+1) in TS G by A2;
+    then reconsider B = f.(i0+1) as EnvEpsTerm of V;
+    C1: [A,B] in SigmaRed(V) by A1,B4;
+    C2: elen B < elen A by C1,Th42;
+    P[elen B] by B4;
+    then k <= elen B by B3;
+    hence contradiction by B4,C2;
+  end;
+end;
+
+theorem Th43:
+  for V being non empty set holds SigmaRed(V) is strongly-normalizing;
+
+theorem Th44:
+  for v,w being Element of V, A,B,C,D being EnvEpsTerm of V holds
+  eVar v <> eId V & eVar v <> eLam(w,A) & eVar v <> eEps A &
+  eVar v <> eApp(A,B) & eVar v <> eComp(A,B) & eVar v <> eExt(A,w,B) &
+  eId V <> eLam(w,A) & eId V <> eEps A & eId V <> eApp(A,B) &
+  eId V <> eComp(A,B) & eId V <> eExt(A,w,B) &
+  eLam(v,A) <> eEps B & eLam(v,A) <> eApp(B,C) & eLam(v,A) <> eComp(B,C) &
+  eLam(v,A) <> eExt(B,w,C) &
+  eEps A <> eApp(B,C) & eEps A <> eComp(B,C) & eEps A <> eExt(B,w,C) &
+  eApp(A,B) <> eComp(C,D) & eApp(A,B) <> eExt(C,w,D) &
+  eComp(A,B) <> eExt(C,w,D)
+proof
+  let v,w be Element of V, A,B,C,D be EnvEpsTerm of V;
+  A1: (eVar v).{} = [0,v] & (eId V).{} = [1,0] & (eLam(w,A)).{} = [2,w] &
+    (eEps A).{} = [5,0] & (eApp(A,B)).{} = [3,0] & (eComp(A,B)).{} = [6,0] &
+    (eExt(A,w,B)).{} = [4,w] by Th9;
+  A2: (eLam(v,A)).{} = [2,v] & (eEps B).{} = [5,0] & (eApp(B,C)).{} = [3,0] &
+    (eComp(B,C)).{} = [6,0] & (eExt(B,w,C)).{} = [4,w] by Th9;
+  A3: (eComp(C,D)).{} = [6,0] & (eExt(C,w,D)).{} = [4,w] by Th9;
+  thus thesis by A1,A2,A3,XTUPLE_0:1;
+end;

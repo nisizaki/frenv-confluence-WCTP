@@ -35,19 +35,27 @@ The Lean development now proves full confluence, `LambdaFrenv.frenv_beta_sigma_c
 
 The `ParStronglyConfluent` target stated at the end of `Par.lean` is **false**, and [ParNotStrong.lean](../lean/LambdaFrenv/ParNotStrong.lean) proves its negation: on the associativity pentagon the two `Assoc` reducts have disjoint sets of one-step parallel reducts. The `overlap...` declarations remain definitions of propositions and are not used. This is why the Lean proof, like the Isabelle one, must go through sigma normalization rather than a direct diamond property.
 
+## Mizar development
+
+The Mizar development proves the same statement as `FRENV_5:8`, following the same route again. It is laid out as fourteen articles under [mizar/text/](../mizar/text/), in dependency order: the parse-tree syntax of `λ_EnvEps` with its length measure, sigma reduction and termination (`enveps_1`); multi-step congruence and inversion (`enveps_2`, `enveps_3`); the critical-pair analysis, local confluence and sigma confluence (`enveps_4`); sigma-normal forms and the normal form operator (`enveps_5`); beta and beta/sigma reduction (`enveps_6`); parallel reduction, the triangle property and confluence of beta (`enveps_7`); composition compatibility and the key lemma (`enveps_8`); Hardin's interpretation method (`enveps_9`); the syntax and reduction of `λ_FREnv` (`frenv_1`, `frenv_2`); and the translation, simulation and lifting (`frenv_3`–`frenv_5`).
+
+Two things differ from the other two developments at the level of the proof assistant rather than the mathematics. Mizar has no inductive datatypes, so terms are parse trees over a tagged symbol alphabet built with `DTCONSTR`, and every reduction relation is defined as the least relation closed under its rules, with a separately proved inversion lemma. And Newman's lemma, the normal form operator and the confluence predicates come from the MML article `REWRITE1` rather than being developed here or vendored.
+
+The triangle property is stated in existential form — for every term there is a term absorbing all of its parallel reducts — because `DTCONSTR`'s structural recursion cannot express the complete development: the beta-closure rule inspects a grandchild of the node.
+
 ## Differences between the encodings
 
-| Aspect | Isabelle | Lean |
-|---|---|---|
-| Variable names | Strings | Parameter type `V` |
-| Primitive constants | None | Parameter type `C`, constructor `Trm.const`, and a constant reduction rule |
-| Bindings in raw syntax | Names are ordinary datatype arguments | Variable parameters are ordinary datatype arguments |
-| Auxiliary EnvEps calculus | Included | Included (`LambdaFrenv/EnvEps/`) |
-| Main route | Sigma normalization, parallel reduction on the auxiliary side, and transfer | The same route, with parallel beta on all terms and the diamond property obtained from a complete development |
-| Final confluence result | Theorem supplied | Theorem supplied |
+| Aspect | Isabelle | Lean | Mizar |
+|---|---|---|---|
+| Variable names | Strings | Parameter type `V` | Parameter set `V`, any non-empty set |
+| Primitive constants | None | Parameter type `C`, constructor `Trm.const`, and a constant reduction rule | None |
+| Bindings in raw syntax | Names are ordinary datatype arguments | Variable parameters are ordinary datatype arguments | Binder symbols are indexed by the variable, so the name is part of the node |
+| Auxiliary EnvEps calculus | Included | Included (`LambdaFrenv/EnvEps/`) | Included (`mizar/text/enveps_*.miz`) |
+| Main route | Sigma normalization, parallel reduction on the auxiliary side, and transfer | The same route, with parallel beta on all terms and the diamond property obtained from a complete development | The same route, with the triangle property stated in existential form instead of a complete-development function |
+| Final confluence result | Theorem supplied | Theorem supplied | Theorem supplied |
 
-There is no machine-checked equivalence theorem between these two encodings in this artifact. Even restricting Lean's constants type to an empty type does not by itself establish such an equivalence; the representations and relations would still need a proved correspondence.
+There is no machine-checked equivalence theorem between these encodings in this artifact. Even restricting Lean's constants type to an empty type does not by itself establish such an equivalence; the representations and relations would still need a proved correspondence.
 
 ## Interpreting verification
 
-An Isabelle build with `quick_and_dirty=false` checks the included proofs rather than accepting skipped proof commands. A Lean build checks all declarations in the default library target; the extra audit displays the axiom dependencies of its supporting theorems. Neither compiler checks the prose in Markdown files. See [verification.md](verification.md) for the actual build record.
+An Isabelle build with `quick_and_dirty=false` checks the included proofs rather than accepting skipped proof commands. A Lean build checks all declarations in the default library target; the extra audit displays the axiom dependencies of its supporting theorems. A Mizar run checks every inference of every article, and an empty `.err` file is the only success criterion: there is no `sorry` and no way for an article to introduce an axiom. None of the three checks the prose in Markdown files. See [verification.md](verification.md) for the actual build record.

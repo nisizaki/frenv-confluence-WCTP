@@ -2,11 +2,11 @@
 
 [English](README.md) | [日本語](README-ja.md) | Tagalog | [简体中文](README-zh.md)
 
-Naglalaman ang repositoryong ito ng pormalisasyon sa Isabelle/HOL ng confluence ng buong beta/sigma reduction ng FREnv, kasama ang kaugnay na pormalisasyon sa Lean 4. Inihanda ito bilang artifact na kasama ng isang papel na isusumite sa WCTP 2026.
+Naglalaman ang repositoryong ito ng pormalisasyon sa Isabelle/HOL ng confluence ng buong beta/sigma reduction ng FREnv, kasama ang kaugnay na mga pormalisasyon sa Lean 4 at Mizar. Inihanda ito bilang artifact na kasama ng isang papel na isusumite sa WCTP 2026.
 
 **Beripikasyon:** parehong matagumpay ang build sa Isabelle2025-2 at ang build at audit sa Lean 4.33.0 sa malilinis na GitHub Actions runner noong 2026-09-13, sa commit `725b0b6`, ang rebisyong naglalaman ng patunay ng confluence sa Lean. Tingnan ang [tala ng beripikasyon](docs/verification.md) para sa eksaktong mga commit na sinuri at sa mga log.
 
-**Napapatunayan na ng dalawang pormalisasyon ang buong confluence, sa magkahiwalay na paraan.** Nasa Isabelle ang teorema ng confluence para sa buong reduction at ang mga depensiya nito. Pinapatunayan din ng pormalisasyon sa Lean ang parehong pahayag para sa sarili nitong encoding, bilang `LambdaFrenv.frenv_beta_sigma_confluent`, sa pamamagitan ng parehong ruta (pantulong na calculus, sigma normalization, beta over sigma, translation) ngunit sa sarili nitong mga depinisyon at patunay. Nananatiling magkaiba ang dalawang encoding — may primitive constants type ang Lean — at hindi inaangkin ng artifact na ito na napatunayan ang equivalence ng mga ito.
+**Napapatunayan na ng tatlong pormalisasyon ang buong confluence, sa magkakahiwalay na paraan.** Nasa Isabelle ang teorema ng confluence para sa buong reduction at ang mga depensiya nito. Pinapatunayan din ng pormalisasyon sa Lean ang parehong pahayag para sa sarili nitong encoding, bilang `LambdaFrenv.frenv_beta_sigma_confluent`, at ng pormalisasyon sa Mizar bilang `FRENV_5:8`. Pareho ang ruta ng tatlo (pantulong na calculus, sigma normalization, beta over sigma, translation) ngunit may sariling mga depinisyon at patunay ang bawat isa. Nananatiling magkaiba ang mga encoding — may primitive constants type ang Lean, at magkaiba ang pagtrato nila sa mga variable — at hindi inaangkin ng artifact na ito na napatunayan ang equivalence ng mga ito.
 
 ## Estruktura ng mga direktoryo
 
@@ -28,6 +28,13 @@ lean/
   Audit.lean            Sinusuri ang mga deklarasyon at inililista ang mga axiom ng mga teorema
   docs/                 Mga espesipikasyon ng syntax at reduction sa Ingles
   README.md             Mga tagubilin sa Lean build, estruktura, at daloy ng patunay
+mizar/
+  text/                 Ang labing-apat na artikulo, at ang artikulong pang-audit
+  dict/                 Mga pribadong vocabulary para sa mga simbolong idinagdag dito
+  verify.sh             Nagbeberipika ng lahat ng artikulo ayon sa pagkakasunod
+  check.sh              Nagbeberipika ng isang artikulo
+  docs/                 Mga tagubilin sa beripikasyon at mga tala ng gawain
+  README.md             Mga kailangan sa Mizar, estruktura, at daloy ng patunay
 docs/
   proof-map.md          Pangunahing resulta, daloy ng mga depensiya, at mga pagkakaiba
   verification.md       Tala ng beripikasyon
@@ -82,14 +89,33 @@ LambdaFrenv.frenv_beta_sigma_confluent
 
 na siyang katumbas sa Lean ng teorema sa Isabelle. Tingnan ang [mga tagubilin para sa Lean](lean/README.md) para sa estruktura ng mga module at sa daloy ng patunay.
 
+## Beripikasyon sa Mizar
+
+I-install ang **Mizar Ver. 8.1.15** at ang MML nito mula sa [pahina ng pag-download ng Mizar](https://mizar.uwb.edu.pl/system/), ilagay ang mga executable nito sa `PATH`, at itakda ang `MIZFILES` sa direktoryo ng aklatan ng Mizar. Pagkatapos ay patakbuhin ang:
+
+```sh
+cd mizar
+export MIZFILES=/usr/local/share/mizar   # kung hindi pa ito itinakda ng installer
+./verify.sh
+```
+
+Binebalida nito ang labing-apat na artikulo ayon sa pagkakasunod ng depensiya, ini-export ang bawat isa sa lokal na `prel/` upang mai-import ito ng susunod, at sa huli ay sinusuri ang isang artikulong pang-audit na inuulit ang bawat pangunahing resulta at pinatutunayan ito sa pamamagitan lamang ng sipi nito. Walang ginagamit na aklatan maliban sa karaniwang MML at walang dina-download habang nagbeberipika. Itinatatag ng build ang
+
+```text
+FRENV_5:8   for V being non empty set holds FrRed(V) is confluent
+```
+
+na siyang katumbas sa Mizar ng mga teorema sa Isabelle at Lean. Walang `sorry` sa Mizar at walang paraan para magpasok ng axiom ang isang artikulo, kaya ang walang lamang `.err` na file ay nangangahulugang nasuri ang bawat inference. Tingnan ang [mga tagubilin para sa Mizar](mizar/README.md) para sa estruktura at sa daloy ng patunay, at ang [gabay sa beripikasyon](mizar/docs/verification.md) para sa kahulugan ng output at kung paano suriin ang bawat resulta.
+
 ## Mga resulta at saklaw
 
 | Pormalisasyon | Pangunahing nilalamang sinusuri | Confluence ng buong reduction ng FREnv |
 |---|---|---|
 | Isabelle/HOL | Confluence ng pantulong na calculus, translation, surjectivity, simulation, lifting, at ang panghuling teorema ng confluence | Naberipika sa naitalang session build na may aktibong pagsuri ng mga patunay |
 | Lean 4 | Abstract rewriting at lemma ni Newman, ang pantulong na calculus, termination at confluence ng sigma, mga sigma-normal form, diamond property ng parallel beta, composition compatibility, translation at lifting | Naberipika sa naitalang Lean build |
+| Mizar | Estruktura ng dalawang calculus bilang parse tree, termination at confluence ng sigma sa pamamagitan ng lemma ni Newman mula sa MML, mga sigma-normal form, triangle property ng parallel beta, composition compatibility, paraang interpretation ni Hardin, translation at lifting | Naberipika sa pamamagitan ng `mizar/verify.sh` |
 
-Magkaiba rin ang mga wikang pormal na ginagamit: string ang mga pangalan sa Isabelle at wala itong primitive constant; ginagawang mga type parameter ng Lean ang mga variable at constant. Hindi inaangkin ng artifact na ito na napatunayan ang equivalence ng dalawang encoding. Ipinaliliwanag ang mga pagkakaibang ito sa [mapa ng patunay](docs/proof-map.md).
+Magkaiba rin ang mga wikang pormal na ginagamit: string ang mga pangalan sa Isabelle at wala itong primitive constant; ginagawang mga type parameter ng Lean ang mga variable at constant; ang Mizar naman ay may parameter na isang arbitraryong hindi walang laman na set ng mga variable at, tulad ng Isabelle, walang constant. Hindi inaangkin ng artifact na ito na napatunayan ang equivalence ng tatlong encoding. Ipinaliliwanag ang mga pagkakaibang ito sa [mapa ng patunay](docs/proof-map.md).
 
 Ipinaliliwanag ng mga matematikal na Markdown file ang daloy ng patunay, ngunit ang mismong mga tekstong iyon ay hindi machine-checked. Pinanatili ang mga sanggunian sa orihinal na tesis at roadmap upang masubaybayan ang pinagmulan; hindi kailangan ang PDF ng tesis upang patakbuhin ang alinman sa dalawang proof assistant.
 

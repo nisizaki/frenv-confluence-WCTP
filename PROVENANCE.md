@@ -7,6 +7,8 @@
 | Isabelle and mathematical notes | [nisizaki/frenv-yamauchi](https://github.com/nisizaki/frenv-yamauchi) | `b5e666f51d0ad2e45e71c46ee8ace41c656dbd6c` |
 | Lean and specifications | [nisizaki/frenv-lean4](https://github.com/nisizaki/frenv-lean4) | `b9bf34a8ea306eda158a54487d9fc7a92285d2d2` |
 
+The Mizar development under `mizar/` has no upstream revision: it was written for this artifact, in [nisizaki/frenv-mizar](https://github.com/nisizaki/frenv-mizar), between 02:14 and 12:43 JST on 2026-09-15, from the mathematical Markdown files of the Isabelle development and the Lean sources. Its work record is in [mizar/docs/worklog.md](mizar/docs/worklog.md).
+
 The source snapshots were obtained on 2026-09-13. [UPSTREAM.json](UPSTREAM.json) records each imported file's original path and SHA-256 hash. Those hashes identify upstream contents before the documented packaging edits; they are not hashes of the modified artifact files.
 
 ## Included and excluded material
@@ -14,6 +16,7 @@ The source snapshots were obtained on 2026-09-13. [UPSTREAM.json](UPSTREAM.json)
 - All active `FREnv/*.thy` and `EnvEps/*.thy` files, their session definitions, and the related mathematical Markdown files are included.
 - The `Regular-Sets` and `Abstract-Rewriting` AFP snapshots required by these sessions are included with their auxiliary document files.
 - Lean's library sources, entry point, exact toolchain, Lake configuration, dependency manifest, and mathematical notes are included.
+- The Mizar articles, their private vocabularies, the verification scripts, and the records kept while writing them are included. Mizar's generated files and the local `prel/` database are not; `mizar/verify.sh` rebuilds them.
 - Historical unsuccessful proof experiments, unrelated repositories, assistant configuration, private handoff notes, PDFs, runtime installations, caches, and Git histories are not included.
 
 ## Packaging edits
@@ -25,6 +28,7 @@ The source snapshots were obtained on 2026-09-13. [UPSTREAM.json](UPSTREAM.json)
 5. A few Japanese labels in the mathematical Markdown files were translated into English. Historical thesis and roadmap numbering was preserved.
 6. `lean/Audit.lean`, platform-specific verification instructions, and independent CI jobs were added. Lean's definitions and proofs were copied without semantic changes.
 7. CI obtains Isabelle2025-2 from its official Cambridge mirror with bounded connection and transfer timeouts, avoiding a stalled connection to the main site's distribution redirect.
+8. The `mizar/` tree was added, with `verify.sh`, `check.sh`, an audit article, and verification instructions. There is no CI job for it.
 
 This packaging does not complete Lean's remaining proof obligations or change either calculus to make the encodings coincide.
 

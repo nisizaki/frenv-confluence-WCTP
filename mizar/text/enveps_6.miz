@@ -1,0 +1,2194 @@
+:: The beta reduction of lambda_EnvEps
+
+environ
+
+ vocabularies NUMBERS, XBOOLE_0, SUBSET_1, TARSKI, ZFMISC_1, FINSEQ_1,
+      RELAT_1, FUNCT_1, ORDINAL1, CARD_1, ARYTM_3, XXREAL_0, NAT_1, TREES_1,
+      TREES_2, TREES_3, TREES_4, LANG1, STRUCT_0, DTCONSTR, MCART_1, XTUPLE_0,
+      FINSET_1, TDGROUP, FUNCOP_1, ARYTM_1, FUNCT_7, XREAL_0, XCMPLX_0,
+      REWRITE1, PBOOLE, ENVEPS_1, ENVEPS_5, ENVEPS_6;
+ notations TARSKI, XBOOLE_0, ZFMISC_1, SUBSET_1, ORDINAL1, NUMBERS, XCMPLX_0,
+      XXREAL_0, NAT_1, RELAT_1, RELSET_1, FUNCT_1, FUNCT_2, FINSEQ_1, FINSEQ_2,
+      MCART_1, XTUPLE_0, DOMAIN_1, STRUCT_0, LANG1, TREES_1, TREES_2, TREES_3,
+      TREES_4, DTCONSTR, FUNCOP_1, XREAL_0, PBOOLE, REWRITE1, ENVEPS_1;
+ constructors NUMBERS, XCMPLX_0, XXREAL_0, NAT_1, RELSET_1, FUNCT_2, FINSEQ_1,
+      FINSEQ_2, MCART_1, XTUPLE_0, DOMAIN_1, STRUCT_0, LANG1, TREES_1, TREES_2,
+      TREES_3, TREES_4, DTCONSTR, PARTFUN1, BINOP_1, SETWISEO, XREAL_0,
+      FUNCOP_1, SUBSET_1, CARD_3, FINSEQOP, FINSEQ_4, FINSOP_1, PRE_POLY,
+      FUNCT_1, RELAT_1, PBOOLE, REWRITE1, ENVEPS_1;
+ registrations XBOOLE_0, SUBSET_1, RELAT_1, FUNCT_1, ORDINAL1, XREAL_0, NAT_1,
+      FINSEQ_1, FINSEQ_2, FINSET_1, CARD_1, STRUCT_0, LANG1, TREES_1, TREES_2,
+      TREES_3, TREES_4, DTCONSTR, XTUPLE_0, VALUED_0, FUNCOP_1, XCMPLX_0,
+      XXREAL_0, NUMBERS, MEMBERED, PBOOLE, REWRITE1, ENVEPS_1, ENVEPS_4;
+ requirements NUMERALS, REAL, BOOLE, SUBSET, ARITHM;
+ definitions TARSKI, XBOOLE_0, DTCONSTR, TREES_3, TREES_4, RELAT_1, FUNCT_1,
+      FINSEQ_1, FUNCOP_1, SUBSET_1, REWRITE1, ENVEPS_1;
+ theorems TARSKI, XBOOLE_0, XBOOLE_1, ZFMISC_1, FINSEQ_1, FINSEQ_2, FINSEQ_3,
+      MCART_1, LANG1, ENUMSET1, TREES_1, TREES_3, TREES_4, DTCONSTR, XTUPLE_0,
+      FUNCT_1, RELAT_1, FUNCOP_1, NAT_1, XCMPLX_1, SUBSET_1, FUNCT_2, XREAL_1,
+      REWRITE1, XXREAL_0, ENVEPS_1, ENVEPS_2, ENVEPS_3, ENVEPS_4, ENVEPS_5;
+ schemes DTCONSTR, NAT_1, ENVEPS_1, ENVEPS_2;
+
+begin :: The beta reduction of lambda_EnvEps
+
+definition
+  let V be non empty set;
+  let R be Relation of TS(EnvEpsGram(V));
+  attr R is beta-closed means
+  :Def1:
+  (for M,N being EnvEpsTerm of V, x being Element of V holds
+     [eApp(eLam(x,M),N), eComp(M,eExt(N,x,eId V))] in R) &
+  (for M,N,L being EnvEpsTerm of V, x being Element of V holds
+     [eApp(eComp(eLam(x,M),L),N), eComp(M,eExt(N,x,L))] in R) &
+  (for M,N being EnvEpsTerm of V holds
+     [eApp(eEps M,N), eComp(M,N)] in R) &
+  (for M,M1,N being EnvEpsTerm of V st [M,M1] in R holds
+     [eApp(M,N), eApp(M1,N)] in R) &
+  (for M,N,N1 being EnvEpsTerm of V st [N,N1] in R holds
+     [eApp(M,N), eApp(M,N1)] in R) &
+  (for M,M1 being EnvEpsTerm of V, x being Element of V st [M,M1] in R holds
+     [eLam(x,M), eLam(x,M1)] in R) &
+  (for M,M1,N being EnvEpsTerm of V, x being Element of V st [M,M1] in R holds
+     [eExt(M,x,N), eExt(M1,x,N)] in R) &
+  (for M,N,N1 being EnvEpsTerm of V, x being Element of V st [N,N1] in R holds
+     [eExt(M,x,N), eExt(M,x,N1)] in R) &
+  (for M,M1,N being EnvEpsTerm of V st [M,M1] in R holds
+     [eComp(M,N), eComp(M1,N)] in R) &
+  (for M,N,N1 being EnvEpsTerm of V st [N,N1] in R holds
+     [eComp(M,N), eComp(M,N1)] in R) &
+  (for M,M1 being EnvEpsTerm of V st [M,M1] in R holds
+     [eEps M, eEps M1] in R);
+end;
+
+registration
+  let V be non empty set;
+  cluster beta-closed for Relation of TS(EnvEpsGram(V));
+  existence
+  proof
+    set G = EnvEpsGram(V);
+    A0: [:TS G, TS G:] c= [:TS G, TS G:];
+    reconsider R = [:TS G, TS G:] as Relation of TS G by A0;
+    take R;
+    A1: for a,b being EnvEpsTerm of V holds [a,b] in R by ZFMISC_1:87;
+    thus for M,N being EnvEpsTerm of V, x being Element of V holds
+      [eApp(eLam(x,M),N), eComp(M,eExt(N,x,eId V))] in R by A1;
+    thus for M,N,L being EnvEpsTerm of V, x being Element of V holds
+      [eApp(eComp(eLam(x,M),L),N), eComp(M,eExt(N,x,L))] in R by A1;
+    thus for M,N being EnvEpsTerm of V holds
+      [eApp(eEps M,N), eComp(M,N)] in R by A1;
+    thus for M,M1,N being EnvEpsTerm of V st [M,M1] in R holds
+      [eApp(M,N), eApp(M1,N)] in R by A1;
+    thus for M,N,N1 being EnvEpsTerm of V st [N,N1] in R holds
+      [eApp(M,N), eApp(M,N1)] in R by A1;
+    thus for M,M1 being EnvEpsTerm of V, x being Element of V st [M,M1] in R
+      holds
+      [eLam(x,M), eLam(x,M1)] in R by A1;
+    thus for M,M1,N being EnvEpsTerm of V, x being Element of V st [M,M1] in R
+      holds
+      [eExt(M,x,N), eExt(M1,x,N)] in R by A1;
+    thus for M,N,N1 being EnvEpsTerm of V, x being Element of V st [N,N1] in R
+      holds
+      [eExt(M,x,N), eExt(M,x,N1)] in R by A1;
+    thus for M,M1,N being EnvEpsTerm of V st [M,M1] in R holds
+      [eComp(M,N), eComp(M1,N)] in R by A1;
+    thus for M,N,N1 being EnvEpsTerm of V st [N,N1] in R holds
+      [eComp(M,N), eComp(M,N1)] in R by A1;
+    thus for M,M1 being EnvEpsTerm of V st [M,M1] in R holds
+      [eEps M, eEps M1] in R by A1;
+  end;
+end;
+
+definition
+  let V be non empty set;
+  func BetaRed(V) -> Relation of TS(EnvEpsGram(V)) equals
+  :Def2:
+  { z where z is Element of [:TS(EnvEpsGram(V)),TS(EnvEpsGram(V)):] :
+      for R being Relation of TS(EnvEpsGram(V)) st R is beta-closed
+        holds z in R };
+  coherence
+  proof
+    set G = EnvEpsGram(V);
+    set D = [:TS G, TS G:];
+    set S = { z where z is Element of D :
+      for R being Relation of TS G st R is beta-closed holds z in R };
+    S c= D
+    proof
+      let u be object;
+      assume u in S;
+      then ex z being Element of D st u = z &
+        for R being Relation of TS G st R is beta-closed holds z in R;
+      hence thesis;
+    end;
+    hence thesis;
+  end;
+end;
+
+theorem Th1:
+  for V being non empty set, M,N being EnvEpsTerm of V holds
+  ( [M,N] in BetaRed(V) iff
+    for R being Relation of TS(EnvEpsGram(V)) st R is beta-closed
+      holds [M,N] in R )
+proof
+  let V be non empty set, M,N be EnvEpsTerm of V;
+  set G = EnvEpsGram(V);
+  set D = [:TS G, TS G:];
+  A1: [M,N] in D by ZFMISC_1:87;
+  hereby
+    assume [M,N] in BetaRed(V);
+    then [M,N] in { z where z is Element of D :
+      for R being Relation of TS G st R is beta-closed holds z in R }
+      by Def2;
+    then consider z being Element of D such that
+    B1: [M,N] = z and
+    B2: for R being Relation of TS G st R is beta-closed holds z in R;
+    thus for R being Relation of TS G st R is beta-closed
+      holds [M,N] in R by B1,B2;
+  end;
+  assume C1: for R being Relation of TS G st R is beta-closed
+    holds [M,N] in R;
+  reconsider z = [M,N] as Element of D by A1;
+  z in { z2 where z2 is Element of D :
+    for R being Relation of TS G st R is beta-closed holds z2 in R }
+    by C1;
+  hence thesis by Def2;
+end;
+
+theorem Th2:
+  for V being non empty set, R being Relation of TS(EnvEpsGram(V))
+  st R is beta-closed holds BetaRed(V) c= R
+proof
+  let V be non empty set, R be Relation of TS(EnvEpsGram(V));
+  assume A1: R is beta-closed;
+  set G = EnvEpsGram(V);
+  set D = [:TS G, TS G:];
+  now
+    let u be object;
+    assume u in BetaRed(V);
+    then u in { z where z is Element of D :
+      for Q being Relation of TS G st Q is beta-closed holds z in Q }
+      by Def2;
+    then consider z being Element of D such that
+    B1: u = z and
+    B2: for Q being Relation of TS G st Q is beta-closed holds z in Q;
+    thus u in R by A1,B1,B2;
+  end;
+  hence thesis by TARSKI:def 3;
+end;
+
+registration
+  let V be non empty set;
+  cluster BetaRed(V) -> beta-closed;
+  coherence
+  proof
+    set G = EnvEpsGram(V);
+    thus for M,N being EnvEpsTerm of V, x being Element of V holds
+      [eApp(eLam(x,M),N), eComp(M,eExt(N,x,eId V))] in BetaRed(V)
+    proof
+      let M,N be EnvEpsTerm of V, x be Element of V;
+      now
+        let R be Relation of TS G;
+        assume R is beta-closed;
+        hence [eApp(eLam(x,M),N), eComp(M,eExt(N,x,eId V))] in R by Def1;
+      end;
+      hence thesis by Th1;
+    end;
+    thus for M,N,L being EnvEpsTerm of V, x being Element of V holds
+      [eApp(eComp(eLam(x,M),L),N), eComp(M,eExt(N,x,L))] in BetaRed(V)
+    proof
+      let M,N,L be EnvEpsTerm of V, x be Element of V;
+      now
+        let R be Relation of TS G;
+        assume R is beta-closed;
+        hence [eApp(eComp(eLam(x,M),L),N), eComp(M,eExt(N,x,L))] in R by Def1;
+      end;
+      hence thesis by Th1;
+    end;
+    thus for M,N being EnvEpsTerm of V holds
+      [eApp(eEps M,N), eComp(M,N)] in BetaRed(V)
+    proof
+      let M,N be EnvEpsTerm of V;
+      now
+        let R be Relation of TS G;
+        assume R is beta-closed;
+        hence [eApp(eEps M,N), eComp(M,N)] in R by Def1;
+      end;
+      hence thesis by Th1;
+    end;
+    thus for M,M1,N being EnvEpsTerm of V st [M,M1] in BetaRed(V) holds
+      [eApp(M,N), eApp(M1,N)] in BetaRed(V)
+    proof
+      let M,M1,N be EnvEpsTerm of V;
+      assume A0: [M,M1] in BetaRed(V);
+      now
+        let R be Relation of TS G;
+        assume A1: R is beta-closed;
+        then [M,M1] in R by A0,Th1;
+        hence [eApp(M,N), eApp(M1,N)] in R by A1,Def1;
+      end;
+      hence thesis by Th1;
+    end;
+    thus for M,N,N1 being EnvEpsTerm of V st [N,N1] in BetaRed(V) holds
+      [eApp(M,N), eApp(M,N1)] in BetaRed(V)
+    proof
+      let M,N,N1 be EnvEpsTerm of V;
+      assume A0: [N,N1] in BetaRed(V);
+      now
+        let R be Relation of TS G;
+        assume A1: R is beta-closed;
+        then [N,N1] in R by A0,Th1;
+        hence [eApp(M,N), eApp(M,N1)] in R by A1,Def1;
+      end;
+      hence thesis by Th1;
+    end;
+    thus for M,M1 being EnvEpsTerm of V, x being Element of V st [M,M1] in
+      BetaRed(V) holds
+      [eLam(x,M), eLam(x,M1)] in BetaRed(V)
+    proof
+      let M,M1 be EnvEpsTerm of V, x be Element of V;
+      assume A0: [M,M1] in BetaRed(V);
+      now
+        let R be Relation of TS G;
+        assume A1: R is beta-closed;
+        then [M,M1] in R by A0,Th1;
+        hence [eLam(x,M), eLam(x,M1)] in R by A1,Def1;
+      end;
+      hence thesis by Th1;
+    end;
+    thus for M,M1,N being EnvEpsTerm of V, x being Element of V st [M,M1] in
+      BetaRed(V) holds
+      [eExt(M,x,N), eExt(M1,x,N)] in BetaRed(V)
+    proof
+      let M,M1,N be EnvEpsTerm of V, x be Element of V;
+      assume A0: [M,M1] in BetaRed(V);
+      now
+        let R be Relation of TS G;
+        assume A1: R is beta-closed;
+        then [M,M1] in R by A0,Th1;
+        hence [eExt(M,x,N), eExt(M1,x,N)] in R by A1,Def1;
+      end;
+      hence thesis by Th1;
+    end;
+    thus for M,N,N1 being EnvEpsTerm of V, x being Element of V st [N,N1] in
+      BetaRed(V) holds
+      [eExt(M,x,N), eExt(M,x,N1)] in BetaRed(V)
+    proof
+      let M,N,N1 be EnvEpsTerm of V, x be Element of V;
+      assume A0: [N,N1] in BetaRed(V);
+      now
+        let R be Relation of TS G;
+        assume A1: R is beta-closed;
+        then [N,N1] in R by A0,Th1;
+        hence [eExt(M,x,N), eExt(M,x,N1)] in R by A1,Def1;
+      end;
+      hence thesis by Th1;
+    end;
+    thus for M,M1,N being EnvEpsTerm of V st [M,M1] in BetaRed(V) holds
+      [eComp(M,N), eComp(M1,N)] in BetaRed(V)
+    proof
+      let M,M1,N be EnvEpsTerm of V;
+      assume A0: [M,M1] in BetaRed(V);
+      now
+        let R be Relation of TS G;
+        assume A1: R is beta-closed;
+        then [M,M1] in R by A0,Th1;
+        hence [eComp(M,N), eComp(M1,N)] in R by A1,Def1;
+      end;
+      hence thesis by Th1;
+    end;
+    thus for M,N,N1 being EnvEpsTerm of V st [N,N1] in BetaRed(V) holds
+      [eComp(M,N), eComp(M,N1)] in BetaRed(V)
+    proof
+      let M,N,N1 be EnvEpsTerm of V;
+      assume A0: [N,N1] in BetaRed(V);
+      now
+        let R be Relation of TS G;
+        assume A1: R is beta-closed;
+        then [N,N1] in R by A0,Th1;
+        hence [eComp(M,N), eComp(M,N1)] in R by A1,Def1;
+      end;
+      hence thesis by Th1;
+    end;
+    thus for M,M1 being EnvEpsTerm of V st [M,M1] in BetaRed(V) holds
+      [eEps M, eEps M1] in BetaRed(V)
+    proof
+      let M,M1 be EnvEpsTerm of V;
+      assume A0: [M,M1] in BetaRed(V);
+      now
+        let R be Relation of TS G;
+        assume A1: R is beta-closed;
+        then [M,M1] in R by A0,Th1;
+        hence [eEps M, eEps M1] in R by A1,Def1;
+      end;
+      hence thesis by Th1;
+    end;
+  end;
+end;
+
+theorem Th3:
+  for V being non empty set, P,Q being EnvEpsTerm of V
+  st [P,Q] in BetaRed(V) holds
+  ( ex M2,N2 being EnvEpsTerm of V, x2 being Element of V st P =
+    eApp(eLam(x2,M2),N2) & Q = eComp(M2,eExt(N2,x2,eId V)) ) or
+  ( ex M2,N2,L2 being EnvEpsTerm of V, x2 being Element of V st P =
+    eApp(eComp(eLam(x2,M2),L2),N2) & Q = eComp(M2,eExt(N2,x2,L2)) ) or
+  ( ex M2,N2 being EnvEpsTerm of V st P = eApp(eEps M2,N2) & Q = eComp(M2,N2)
+    ) or
+  ( ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in BetaRed(V) & P =
+    eApp(M2,N2) & Q = eApp(M3,N2) ) or
+  ( ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in BetaRed(V) & P =
+    eApp(M2,N2) & Q = eApp(M2,N3) ) or
+  ( ex M2,M3 being EnvEpsTerm of V, x2 being Element of V st [M2,M3] in
+    BetaRed(V) & P = eLam(x2,M2) & Q = eLam(x2,M3) ) or
+  ( ex M2,M3,N2 being EnvEpsTerm of V, x2 being Element of V st [M2,M3] in
+    BetaRed(V) & P = eExt(M2,x2,N2) & Q = eExt(M3,x2,N2) ) or
+  ( ex M2,N2,N3 being EnvEpsTerm of V, x2 being Element of V st [N2,N3] in
+    BetaRed(V) & P = eExt(M2,x2,N2) & Q = eExt(M2,x2,N3) ) or
+  ( ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in BetaRed(V) & P =
+    eComp(M2,N2) & Q = eComp(M3,N2) ) or
+  ( ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in BetaRed(V) & P =
+    eComp(M2,N2) & Q = eComp(M2,N3) ) or
+  ( ex M2,M3 being EnvEpsTerm of V st [M2,M3] in BetaRed(V) & P = eEps M2 & Q
+    = eEps M3 )
+proof
+  let V be non empty set;
+  set G = EnvEpsGram(V);
+  set R = BetaRed(V);
+  defpred D[object,object] means
+    ( ex M2,N2 being EnvEpsTerm of V, x2 being Element of V st $1 =
+      eApp(eLam(x2,M2),N2) & $2 = eComp(M2,eExt(N2,x2,eId V)) ) or
+    ( ex M2,N2,L2 being EnvEpsTerm of V, x2 being Element of V st $1 =
+      eApp(eComp(eLam(x2,M2),L2),N2) & $2 = eComp(M2,eExt(N2,x2,L2)) ) or
+    ( ex M2,N2 being EnvEpsTerm of V st $1 = eApp(eEps M2,N2) & $2 =
+      eComp(M2,N2) ) or
+    ( ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in BetaRed(V) & $1 =
+      eApp(M2,N2) & $2 = eApp(M3,N2) ) or
+    ( ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in BetaRed(V) & $1 =
+      eApp(M2,N2) & $2 = eApp(M2,N3) ) or
+    ( ex M2,M3 being EnvEpsTerm of V, x2 being Element of V st [M2,M3] in
+      BetaRed(V) & $1 = eLam(x2,M2) & $2 = eLam(x2,M3) ) or
+    ( ex M2,M3,N2 being EnvEpsTerm of V, x2 being Element of V st [M2,M3] in
+      BetaRed(V) & $1 = eExt(M2,x2,N2) & $2 = eExt(M3,x2,N2) ) or
+    ( ex M2,N2,N3 being EnvEpsTerm of V, x2 being Element of V st [N2,N3] in
+      BetaRed(V) & $1 = eExt(M2,x2,N2) & $2 = eExt(M2,x2,N3) ) or
+    ( ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in BetaRed(V) & $1 =
+      eComp(M2,N2) & $2 = eComp(M3,N2) ) or
+    ( ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in BetaRed(V) & $1 =
+      eComp(M2,N2) & $2 = eComp(M2,N3) ) or
+    ( ex M2,M3 being EnvEpsTerm of V st [M2,M3] in BetaRed(V) & $1 = eEps M2 &
+      $2 = eEps M3 );
+  set S = { z where z is Element of [:TS G, TS G:] :
+    z in R & ex P,Q being EnvEpsTerm of V st z = [P,Q] & D[P,Q] };
+  A1: S c= [:TS G, TS G:]
+  proof
+    let u be object;
+    assume u in S;
+    then ex z being Element of [:TS G, TS G:] st u = z &
+      ( z in R & ex P,Q being EnvEpsTerm of V st z = [P,Q] & D[P,Q] );
+    hence thesis;
+  end;
+  reconsider S1 = S as Relation of TS G by A1;
+  A2: for a,b being EnvEpsTerm of V holds
+    ( [a,b] in S1 iff ( [a,b] in R & D[a,b] ) )
+  proof
+    let a,b be EnvEpsTerm of V;
+    hereby
+      assume [a,b] in S1;
+      then consider z being Element of [:TS G, TS G:] such that
+      B1: [a,b] = z and
+      B2: z in R & ex P,Q being EnvEpsTerm of V st z = [P,Q] & D[P,Q];
+      consider P,Q being EnvEpsTerm of V such that
+      B3: z = [P,Q] & D[P,Q] by B2;
+      a = P & b = Q by B1,B3,XTUPLE_0:1;
+      hence [a,b] in R & D[a,b] by B1,B2,B3;
+    end;
+    assume C1: [a,b] in R & D[a,b];
+    C2: [a,b] in [:TS G, TS G:] by ZFMISC_1:87;
+    then reconsider z = [a,b] as Element of [:TS G, TS G:];
+    z in R & ex P,Q being EnvEpsTerm of V st z = [P,Q] & D[P,Q] by C1;
+    hence thesis;
+  end;
+  A3: S1 is beta-closed
+  proof
+    thus for M,N being EnvEpsTerm of V, x being Element of V holds
+      [eApp(eLam(x,M),N), eComp(M,eExt(N,x,eId V))] in S1
+    proof
+      let M,N be EnvEpsTerm of V, x be Element of V;
+      G2: [eApp(eLam(x,M),N), eComp(M,eExt(N,x,eId V))] in R by Def1;
+      G3: ex M2,N2 being EnvEpsTerm of V, x2 being Element of V st
+        eApp(eLam(x,M),N) = eApp(eLam(x2,M2),N2) & eComp(M,eExt(N,x,eId V)) =
+        eComp(M2,eExt(N2,x2,eId V))
+      proof
+        take M,N,x;
+        thus thesis;
+      end;
+      G4: D[eApp(eLam(x,M),N), eComp(M,eExt(N,x,eId V))] by G3;
+      thus thesis by A2,G2,G4;
+    end;
+    thus for M,N,L being EnvEpsTerm of V, x being Element of V holds
+      [eApp(eComp(eLam(x,M),L),N), eComp(M,eExt(N,x,L))] in S1
+    proof
+      let M,N,L be EnvEpsTerm of V, x be Element of V;
+      G2: [eApp(eComp(eLam(x,M),L),N), eComp(M,eExt(N,x,L))] in R by Def1;
+      G3: ex M2,N2,L2 being EnvEpsTerm of V, x2 being Element of V st
+        eApp(eComp(eLam(x,M),L),N) = eApp(eComp(eLam(x2,M2),L2),N2) &
+        eComp(M,eExt(N,x,L)) = eComp(M2,eExt(N2,x2,L2))
+      proof
+        take M,N,L,x;
+        thus thesis;
+      end;
+      G4: D[eApp(eComp(eLam(x,M),L),N), eComp(M,eExt(N,x,L))] by G3;
+      thus thesis by A2,G2,G4;
+    end;
+    thus for M,N being EnvEpsTerm of V holds
+      [eApp(eEps M,N), eComp(M,N)] in S1
+    proof
+      let M,N be EnvEpsTerm of V;
+      G2: [eApp(eEps M,N), eComp(M,N)] in R by Def1;
+      G3: ex M2,N2 being EnvEpsTerm of V st eApp(eEps M,N) = eApp(eEps M2,N2)
+        & eComp(M,N) = eComp(M2,N2)
+      proof
+        take M,N;
+        thus thesis;
+      end;
+      G4: D[eApp(eEps M,N), eComp(M,N)] by G3;
+      thus thesis by A2,G2,G4;
+    end;
+    thus for M,M1,N being EnvEpsTerm of V st [M,M1] in S1 holds
+      [eApp(M,N), eApp(M1,N)] in S1
+    proof
+      let M,M1,N be EnvEpsTerm of V;
+      assume G0: [M,M1] in S1;
+      then G1: [M,M1] in R by A2;
+      G2: [eApp(M,N), eApp(M1,N)] in R by G1,Def1;
+      G3: ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in BetaRed(V) &
+        eApp(M,N) = eApp(M2,N2) & eApp(M1,N) = eApp(M3,N2)
+      proof
+        take M,M1,N;
+        thus thesis by G1;
+      end;
+      G4: D[eApp(M,N), eApp(M1,N)] by G3;
+      thus thesis by A2,G2,G4;
+    end;
+    thus for M,N,N1 being EnvEpsTerm of V st [N,N1] in S1 holds
+      [eApp(M,N), eApp(M,N1)] in S1
+    proof
+      let M,N,N1 be EnvEpsTerm of V;
+      assume G0: [N,N1] in S1;
+      then G1: [N,N1] in R by A2;
+      G2: [eApp(M,N), eApp(M,N1)] in R by G1,Def1;
+      G3: ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in BetaRed(V) &
+        eApp(M,N) = eApp(M2,N2) & eApp(M,N1) = eApp(M2,N3)
+      proof
+        take M,N,N1;
+        thus thesis by G1;
+      end;
+      G4: D[eApp(M,N), eApp(M,N1)] by G3;
+      thus thesis by A2,G2,G4;
+    end;
+    thus for M,M1 being EnvEpsTerm of V, x being Element of V st [M,M1] in S1
+      holds
+      [eLam(x,M), eLam(x,M1)] in S1
+    proof
+      let M,M1 be EnvEpsTerm of V, x be Element of V;
+      assume G0: [M,M1] in S1;
+      then G1: [M,M1] in R by A2;
+      G2: [eLam(x,M), eLam(x,M1)] in R by G1,Def1;
+      G3: ex M2,M3 being EnvEpsTerm of V, x2 being Element of V st [M2,M3] in
+        BetaRed(V) & eLam(x,M) = eLam(x2,M2) & eLam(x,M1) = eLam(x2,M3)
+      proof
+        take M,M1,x;
+        thus thesis by G1;
+      end;
+      G4: D[eLam(x,M), eLam(x,M1)] by G3;
+      thus thesis by A2,G2,G4;
+    end;
+    thus for M,M1,N being EnvEpsTerm of V, x being Element of V st [M,M1] in
+      S1 holds
+      [eExt(M,x,N), eExt(M1,x,N)] in S1
+    proof
+      let M,M1,N be EnvEpsTerm of V, x be Element of V;
+      assume G0: [M,M1] in S1;
+      then G1: [M,M1] in R by A2;
+      G2: [eExt(M,x,N), eExt(M1,x,N)] in R by G1,Def1;
+      G3: ex M2,M3,N2 being EnvEpsTerm of V, x2 being Element of V st [M2,M3]
+        in BetaRed(V) & eExt(M,x,N) = eExt(M2,x2,N2) & eExt(M1,x,N) =
+        eExt(M3,x2,N2)
+      proof
+        take M,M1,N,x;
+        thus thesis by G1;
+      end;
+      G4: D[eExt(M,x,N), eExt(M1,x,N)] by G3;
+      thus thesis by A2,G2,G4;
+    end;
+    thus for M,N,N1 being EnvEpsTerm of V, x being Element of V st [N,N1] in
+      S1 holds
+      [eExt(M,x,N), eExt(M,x,N1)] in S1
+    proof
+      let M,N,N1 be EnvEpsTerm of V, x be Element of V;
+      assume G0: [N,N1] in S1;
+      then G1: [N,N1] in R by A2;
+      G2: [eExt(M,x,N), eExt(M,x,N1)] in R by G1,Def1;
+      G3: ex M2,N2,N3 being EnvEpsTerm of V, x2 being Element of V st [N2,N3]
+        in BetaRed(V) & eExt(M,x,N) = eExt(M2,x2,N2) & eExt(M,x,N1) =
+        eExt(M2,x2,N3)
+      proof
+        take M,N,N1,x;
+        thus thesis by G1;
+      end;
+      G4: D[eExt(M,x,N), eExt(M,x,N1)] by G3;
+      thus thesis by A2,G2,G4;
+    end;
+    thus for M,M1,N being EnvEpsTerm of V st [M,M1] in S1 holds
+      [eComp(M,N), eComp(M1,N)] in S1
+    proof
+      let M,M1,N be EnvEpsTerm of V;
+      assume G0: [M,M1] in S1;
+      then G1: [M,M1] in R by A2;
+      G2: [eComp(M,N), eComp(M1,N)] in R by G1,Def1;
+      G3: ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in BetaRed(V) &
+        eComp(M,N) = eComp(M2,N2) & eComp(M1,N) = eComp(M3,N2)
+      proof
+        take M,M1,N;
+        thus thesis by G1;
+      end;
+      G4: D[eComp(M,N), eComp(M1,N)] by G3;
+      thus thesis by A2,G2,G4;
+    end;
+    thus for M,N,N1 being EnvEpsTerm of V st [N,N1] in S1 holds
+      [eComp(M,N), eComp(M,N1)] in S1
+    proof
+      let M,N,N1 be EnvEpsTerm of V;
+      assume G0: [N,N1] in S1;
+      then G1: [N,N1] in R by A2;
+      G2: [eComp(M,N), eComp(M,N1)] in R by G1,Def1;
+      G3: ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in BetaRed(V) &
+        eComp(M,N) = eComp(M2,N2) & eComp(M,N1) = eComp(M2,N3)
+      proof
+        take M,N,N1;
+        thus thesis by G1;
+      end;
+      G4: D[eComp(M,N), eComp(M,N1)] by G3;
+      thus thesis by A2,G2,G4;
+    end;
+    thus for M,M1 being EnvEpsTerm of V st [M,M1] in S1 holds
+      [eEps M, eEps M1] in S1
+    proof
+      let M,M1 be EnvEpsTerm of V;
+      assume G0: [M,M1] in S1;
+      then G1: [M,M1] in R by A2;
+      G2: [eEps M, eEps M1] in R by G1,Def1;
+      G3: ex M2,M3 being EnvEpsTerm of V st [M2,M3] in BetaRed(V) & eEps M =
+        eEps M2 & eEps M1 = eEps M3
+      proof
+        take M,M1;
+        thus thesis by G1;
+      end;
+      G4: D[eEps M, eEps M1] by G3;
+      thus thesis by A2,G2,G4;
+    end;
+  end;
+  A4: R c= S1 by A3,Th2;
+  let P,Q be EnvEpsTerm of V;
+  assume [P,Q] in R;
+  then [P,Q] in S1 by A4;
+  hence thesis by A2;
+end;
+
+theorem Th4:
+  for V being non empty set, M,N being EnvEpsTerm of V, x being Element of V
+    holds
+  [eApp(eLam(x,M),N), eComp(M,eExt(N,x,eId V))] in BetaRed(V)
+proof
+  let V be non empty set, M,N be EnvEpsTerm of V, x be Element of V;
+  thus thesis by Def1;
+end;
+
+theorem Th5:
+  for V being non empty set, M,N,L being EnvEpsTerm of V, x being Element of V
+    holds
+  [eApp(eComp(eLam(x,M),L),N), eComp(M,eExt(N,x,L))] in BetaRed(V)
+proof
+  let V be non empty set, M,N,L be EnvEpsTerm of V, x be Element of V;
+  thus thesis by Def1;
+end;
+
+theorem Th6:
+  for V being non empty set, M,N being EnvEpsTerm of V holds
+  [eApp(eEps M,N), eComp(M,N)] in BetaRed(V)
+proof
+  let V be non empty set, M,N be EnvEpsTerm of V;
+  thus thesis by Def1;
+end;
+
+theorem Th7:
+  for V being non empty set, M,M1,N being EnvEpsTerm of V st [M,M1] in
+    BetaRed(V) holds
+  [eApp(M,N), eApp(M1,N)] in BetaRed(V)
+proof
+  let V be non empty set, M,M1,N be EnvEpsTerm of V;
+  assume A0: [M,M1] in BetaRed(V);
+  thus thesis by A0,Def1;
+end;
+
+theorem Th8:
+  for V being non empty set, M,N,N1 being EnvEpsTerm of V st [N,N1] in
+    BetaRed(V) holds
+  [eApp(M,N), eApp(M,N1)] in BetaRed(V)
+proof
+  let V be non empty set, M,N,N1 be EnvEpsTerm of V;
+  assume A0: [N,N1] in BetaRed(V);
+  thus thesis by A0,Def1;
+end;
+
+theorem Th9:
+  for V being non empty set, M,M1 being EnvEpsTerm of V, x being Element of V
+    st [M,M1] in BetaRed(V) holds
+  [eLam(x,M), eLam(x,M1)] in BetaRed(V)
+proof
+  let V be non empty set, M,M1 be EnvEpsTerm of V, x be Element of V;
+  assume A0: [M,M1] in BetaRed(V);
+  thus thesis by A0,Def1;
+end;
+
+theorem Th10:
+  for V being non empty set, M,M1,N being EnvEpsTerm of V, x being Element of
+    V st [M,M1] in BetaRed(V) holds
+  [eExt(M,x,N), eExt(M1,x,N)] in BetaRed(V)
+proof
+  let V be non empty set, M,M1,N be EnvEpsTerm of V, x be Element of V;
+  assume A0: [M,M1] in BetaRed(V);
+  thus thesis by A0,Def1;
+end;
+
+theorem Th11:
+  for V being non empty set, M,N,N1 being EnvEpsTerm of V, x being Element of
+    V st [N,N1] in BetaRed(V) holds
+  [eExt(M,x,N), eExt(M,x,N1)] in BetaRed(V)
+proof
+  let V be non empty set, M,N,N1 be EnvEpsTerm of V, x be Element of V;
+  assume A0: [N,N1] in BetaRed(V);
+  thus thesis by A0,Def1;
+end;
+
+theorem Th12:
+  for V being non empty set, M,M1,N being EnvEpsTerm of V st [M,M1] in
+    BetaRed(V) holds
+  [eComp(M,N), eComp(M1,N)] in BetaRed(V)
+proof
+  let V be non empty set, M,M1,N be EnvEpsTerm of V;
+  assume A0: [M,M1] in BetaRed(V);
+  thus thesis by A0,Def1;
+end;
+
+theorem Th13:
+  for V being non empty set, M,N,N1 being EnvEpsTerm of V st [N,N1] in
+    BetaRed(V) holds
+  [eComp(M,N), eComp(M,N1)] in BetaRed(V)
+proof
+  let V be non empty set, M,N,N1 be EnvEpsTerm of V;
+  assume A0: [N,N1] in BetaRed(V);
+  thus thesis by A0,Def1;
+end;
+
+theorem Th14:
+  for V being non empty set, M,M1 being EnvEpsTerm of V st [M,M1] in
+    BetaRed(V) holds
+  [eEps M, eEps M1] in BetaRed(V)
+proof
+  let V be non empty set, M,M1 be EnvEpsTerm of V;
+  assume A0: [M,M1] in BetaRed(V);
+  thus thesis by A0,Def1;
+end;
+
+begin :: Multi-step congruence for the beta reduction
+
+theorem Th15:
+  for V being non empty set, M,M1,N being EnvEpsTerm of V
+  st BetaRed(V) reduces M,M1
+  holds BetaRed(V) reduces eApp(M,N), eApp(M1,N)
+proof
+  let V be non empty set, M,M1,N be EnvEpsTerm of V;
+  set G = EnvEpsGram(V);
+  set R = BetaRed(V);
+  deffunc F(object) = eApp(In($1,TS G), N);
+  A1: for u,v being object st [u,v] in R holds [F(u),F(v)] in R
+  proof
+    let u,v be object;
+    assume B1: [u,v] in R;
+    R c= [:TS G,TS G:];
+    then [u,v] in [:TS G,TS G:] by B1;
+    then u in TS G & v in TS G by ZFMISC_1:87;
+    then reconsider a1 = u, b1 = v as EnvEpsTerm of V;
+    B2: In(u,TS G) = a1 & In(v,TS G) = b1;
+    [a1,b1] in R by B1;
+    then [eApp(a1,N), eApp(b1,N)] in R by Th7;
+    hence thesis by B2;
+  end;
+  A2: for u,v being object st R reduces u,v holds R reduces F(u),F(v)
+    from ENVEPS_2:sch 1(A1);
+  assume A3: R reduces M,M1;
+  A4: In(M,TS G) = M & In(M1,TS G) = M1;
+  thus thesis by A2,A3,A4;
+end;
+
+theorem Th16:
+  for V being non empty set, M,N,N1 being EnvEpsTerm of V
+  st BetaRed(V) reduces N,N1
+  holds BetaRed(V) reduces eApp(M,N), eApp(M,N1)
+proof
+  let V be non empty set, M,N,N1 be EnvEpsTerm of V;
+  set G = EnvEpsGram(V);
+  set R = BetaRed(V);
+  deffunc F(object) = eApp(M, In($1,TS G));
+  A1: for u,v being object st [u,v] in R holds [F(u),F(v)] in R
+  proof
+    let u,v be object;
+    assume B1: [u,v] in R;
+    R c= [:TS G,TS G:];
+    then [u,v] in [:TS G,TS G:] by B1;
+    then u in TS G & v in TS G by ZFMISC_1:87;
+    then reconsider a1 = u, b1 = v as EnvEpsTerm of V;
+    B2: In(u,TS G) = a1 & In(v,TS G) = b1;
+    [a1,b1] in R by B1;
+    then [eApp(M,a1), eApp(M,b1)] in R by Th8;
+    hence thesis by B2;
+  end;
+  A2: for u,v being object st R reduces u,v holds R reduces F(u),F(v)
+    from ENVEPS_2:sch 1(A1);
+  assume A3: R reduces N,N1;
+  A4: In(N,TS G) = N & In(N1,TS G) = N1;
+  thus thesis by A2,A3,A4;
+end;
+
+theorem Th17:
+  for V being non empty set, M,M1 being EnvEpsTerm of V, x0 being Element of V
+  st BetaRed(V) reduces M,M1
+  holds BetaRed(V) reduces eLam(x0,M), eLam(x0,M1)
+proof
+  let V be non empty set, M,M1 be EnvEpsTerm of V, x0 be Element of V;
+  set G = EnvEpsGram(V);
+  set R = BetaRed(V);
+  deffunc F(object) = eLam(x0, In($1,TS G));
+  A1: for u,v being object st [u,v] in R holds [F(u),F(v)] in R
+  proof
+    let u,v be object;
+    assume B1: [u,v] in R;
+    R c= [:TS G,TS G:];
+    then [u,v] in [:TS G,TS G:] by B1;
+    then u in TS G & v in TS G by ZFMISC_1:87;
+    then reconsider a1 = u, b1 = v as EnvEpsTerm of V;
+    B2: In(u,TS G) = a1 & In(v,TS G) = b1;
+    [a1,b1] in R by B1;
+    then [eLam(x0,a1), eLam(x0,b1)] in R by Th9;
+    hence thesis by B2;
+  end;
+  A2: for u,v being object st R reduces u,v holds R reduces F(u),F(v)
+    from ENVEPS_2:sch 1(A1);
+  assume A3: R reduces M,M1;
+  A4: In(M,TS G) = M & In(M1,TS G) = M1;
+  thus thesis by A2,A3,A4;
+end;
+
+theorem Th18:
+  for V being non empty set, M,M1,N being EnvEpsTerm of V, x0 being Element of
+    V
+  st BetaRed(V) reduces M,M1
+  holds BetaRed(V) reduces eExt(M,x0,N), eExt(M1,x0,N)
+proof
+  let V be non empty set, M,M1,N be EnvEpsTerm of V, x0 be Element of V;
+  set G = EnvEpsGram(V);
+  set R = BetaRed(V);
+  deffunc F(object) = eExt(In($1,TS G), x0, N);
+  A1: for u,v being object st [u,v] in R holds [F(u),F(v)] in R
+  proof
+    let u,v be object;
+    assume B1: [u,v] in R;
+    R c= [:TS G,TS G:];
+    then [u,v] in [:TS G,TS G:] by B1;
+    then u in TS G & v in TS G by ZFMISC_1:87;
+    then reconsider a1 = u, b1 = v as EnvEpsTerm of V;
+    B2: In(u,TS G) = a1 & In(v,TS G) = b1;
+    [a1,b1] in R by B1;
+    then [eExt(a1,x0,N), eExt(b1,x0,N)] in R by Th10;
+    hence thesis by B2;
+  end;
+  A2: for u,v being object st R reduces u,v holds R reduces F(u),F(v)
+    from ENVEPS_2:sch 1(A1);
+  assume A3: R reduces M,M1;
+  A4: In(M,TS G) = M & In(M1,TS G) = M1;
+  thus thesis by A2,A3,A4;
+end;
+
+theorem Th19:
+  for V being non empty set, M,N,N1 being EnvEpsTerm of V, x0 being Element of
+    V
+  st BetaRed(V) reduces N,N1
+  holds BetaRed(V) reduces eExt(M,x0,N), eExt(M,x0,N1)
+proof
+  let V be non empty set, M,N,N1 be EnvEpsTerm of V, x0 be Element of V;
+  set G = EnvEpsGram(V);
+  set R = BetaRed(V);
+  deffunc F(object) = eExt(M, x0, In($1,TS G));
+  A1: for u,v being object st [u,v] in R holds [F(u),F(v)] in R
+  proof
+    let u,v be object;
+    assume B1: [u,v] in R;
+    R c= [:TS G,TS G:];
+    then [u,v] in [:TS G,TS G:] by B1;
+    then u in TS G & v in TS G by ZFMISC_1:87;
+    then reconsider a1 = u, b1 = v as EnvEpsTerm of V;
+    B2: In(u,TS G) = a1 & In(v,TS G) = b1;
+    [a1,b1] in R by B1;
+    then [eExt(M,x0,a1), eExt(M,x0,b1)] in R by Th11;
+    hence thesis by B2;
+  end;
+  A2: for u,v being object st R reduces u,v holds R reduces F(u),F(v)
+    from ENVEPS_2:sch 1(A1);
+  assume A3: R reduces N,N1;
+  A4: In(N,TS G) = N & In(N1,TS G) = N1;
+  thus thesis by A2,A3,A4;
+end;
+
+theorem Th20:
+  for V being non empty set, M,M1,N being EnvEpsTerm of V
+  st BetaRed(V) reduces M,M1
+  holds BetaRed(V) reduces eComp(M,N), eComp(M1,N)
+proof
+  let V be non empty set, M,M1,N be EnvEpsTerm of V;
+  set G = EnvEpsGram(V);
+  set R = BetaRed(V);
+  deffunc F(object) = eComp(In($1,TS G), N);
+  A1: for u,v being object st [u,v] in R holds [F(u),F(v)] in R
+  proof
+    let u,v be object;
+    assume B1: [u,v] in R;
+    R c= [:TS G,TS G:];
+    then [u,v] in [:TS G,TS G:] by B1;
+    then u in TS G & v in TS G by ZFMISC_1:87;
+    then reconsider a1 = u, b1 = v as EnvEpsTerm of V;
+    B2: In(u,TS G) = a1 & In(v,TS G) = b1;
+    [a1,b1] in R by B1;
+    then [eComp(a1,N), eComp(b1,N)] in R by Th12;
+    hence thesis by B2;
+  end;
+  A2: for u,v being object st R reduces u,v holds R reduces F(u),F(v)
+    from ENVEPS_2:sch 1(A1);
+  assume A3: R reduces M,M1;
+  A4: In(M,TS G) = M & In(M1,TS G) = M1;
+  thus thesis by A2,A3,A4;
+end;
+
+theorem Th21:
+  for V being non empty set, M,N,N1 being EnvEpsTerm of V
+  st BetaRed(V) reduces N,N1
+  holds BetaRed(V) reduces eComp(M,N), eComp(M,N1)
+proof
+  let V be non empty set, M,N,N1 be EnvEpsTerm of V;
+  set G = EnvEpsGram(V);
+  set R = BetaRed(V);
+  deffunc F(object) = eComp(M, In($1,TS G));
+  A1: for u,v being object st [u,v] in R holds [F(u),F(v)] in R
+  proof
+    let u,v be object;
+    assume B1: [u,v] in R;
+    R c= [:TS G,TS G:];
+    then [u,v] in [:TS G,TS G:] by B1;
+    then u in TS G & v in TS G by ZFMISC_1:87;
+    then reconsider a1 = u, b1 = v as EnvEpsTerm of V;
+    B2: In(u,TS G) = a1 & In(v,TS G) = b1;
+    [a1,b1] in R by B1;
+    then [eComp(M,a1), eComp(M,b1)] in R by Th13;
+    hence thesis by B2;
+  end;
+  A2: for u,v being object st R reduces u,v holds R reduces F(u),F(v)
+    from ENVEPS_2:sch 1(A1);
+  assume A3: R reduces N,N1;
+  A4: In(N,TS G) = N & In(N1,TS G) = N1;
+  thus thesis by A2,A3,A4;
+end;
+
+theorem Th22:
+  for V being non empty set, M,M1 being EnvEpsTerm of V
+  st BetaRed(V) reduces M,M1
+  holds BetaRed(V) reduces eEps M, eEps M1
+proof
+  let V be non empty set, M,M1 be EnvEpsTerm of V;
+  set G = EnvEpsGram(V);
+  set R = BetaRed(V);
+  deffunc F(object) = eEps (In($1,TS G));
+  A1: for u,v being object st [u,v] in R holds [F(u),F(v)] in R
+  proof
+    let u,v be object;
+    assume B1: [u,v] in R;
+    R c= [:TS G,TS G:];
+    then [u,v] in [:TS G,TS G:] by B1;
+    then u in TS G & v in TS G by ZFMISC_1:87;
+    then reconsider a1 = u, b1 = v as EnvEpsTerm of V;
+    B2: In(u,TS G) = a1 & In(v,TS G) = b1;
+    [a1,b1] in R by B1;
+    then [eEps a1, eEps b1] in R by Th14;
+    hence thesis by B2;
+  end;
+  A2: for u,v being object st R reduces u,v holds R reduces F(u),F(v)
+    from ENVEPS_2:sch 1(A1);
+  assume A3: R reduces M,M1;
+  A4: In(M,TS G) = M & In(M1,TS G) = M1;
+  thus thesis by A2,A3,A4;
+end;
+
+begin :: Beta inversion by the head constructor
+
+theorem Th23:
+  for V being non empty set, x being Element of V, Q being EnvEpsTerm of V
+  holds not [eVar x, Q] in BetaRed(V)
+proof
+  let V be non empty set, x be Element of V, Q be EnvEpsTerm of V;
+  assume A1: [eVar x, Q] in BetaRed(V);
+  A2:
+    ( ex M2,N2 being EnvEpsTerm of V, x2 being Element of V st eVar x =
+      eApp(eLam(x2,M2),N2) & Q = eComp(M2,eExt(N2,x2,eId V)) ) or
+    ( ex M2,N2,L2 being EnvEpsTerm of V, x2 being Element of V st eVar x =
+      eApp(eComp(eLam(x2,M2),L2),N2) & Q = eComp(M2,eExt(N2,x2,L2)) ) or
+    ( ex M2,N2 being EnvEpsTerm of V st eVar x = eApp(eEps M2,N2) & Q =
+      eComp(M2,N2) ) or
+    ( ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in BetaRed(V) & eVar x =
+      eApp(M2,N2) & Q = eApp(M3,N2) ) or
+    ( ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in BetaRed(V) & eVar x =
+      eApp(M2,N2) & Q = eApp(M2,N3) ) or
+    ( ex M2,M3 being EnvEpsTerm of V, x2 being Element of V st [M2,M3] in
+      BetaRed(V) & eVar x = eLam(x2,M2) & Q = eLam(x2,M3) ) or
+    ( ex M2,M3,N2 being EnvEpsTerm of V, x2 being Element of V st [M2,M3] in
+      BetaRed(V) & eVar x = eExt(M2,x2,N2) & Q = eExt(M3,x2,N2) ) or
+    ( ex M2,N2,N3 being EnvEpsTerm of V, x2 being Element of V st [N2,N3] in
+      BetaRed(V) & eVar x = eExt(M2,x2,N2) & Q = eExt(M2,x2,N3) ) or
+    ( ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in BetaRed(V) & eVar x =
+      eComp(M2,N2) & Q = eComp(M3,N2) ) or
+    ( ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in BetaRed(V) & eVar x =
+      eComp(M2,N2) & Q = eComp(M2,N3) ) or
+    ( ex M2,M3 being EnvEpsTerm of V st [M2,M3] in BetaRed(V) & eVar x = eEps
+      M2 & Q = eEps M3 )
+    by A1,Th3;
+  per cases by A2;
+  suppose ex M2,N2 being EnvEpsTerm of V, x2 being Element of V st eVar x =
+      eApp(eLam(x2,M2),N2) & Q = eComp(M2,eExt(N2,x2,eId V));
+    then consider M2,N2 being EnvEpsTerm of V, x2 being Element of V such that
+    E1: eVar x = eApp(eLam(x2,M2),N2) & Q = eComp(M2,eExt(N2,x2,eId V));
+    thus thesis by E1,ENVEPS_1:44;
+  end;
+  suppose ex M2,N2,L2 being EnvEpsTerm of V, x2 being Element of V st eVar x =
+      eApp(eComp(eLam(x2,M2),L2),N2) & Q = eComp(M2,eExt(N2,x2,L2));
+    then consider M2,N2,L2 being EnvEpsTerm of V, x2 being Element of V such
+      that
+    E1: eVar x = eApp(eComp(eLam(x2,M2),L2),N2) & Q =
+      eComp(M2,eExt(N2,x2,L2));
+    thus thesis by E1,ENVEPS_1:44;
+  end;
+  suppose ex M2,N2 being EnvEpsTerm of V st eVar x = eApp(eEps M2,N2) & Q =
+      eComp(M2,N2);
+    then consider M2,N2 being EnvEpsTerm of V such that
+    E1: eVar x = eApp(eEps M2,N2) & Q = eComp(M2,N2);
+    thus thesis by E1,ENVEPS_1:44;
+  end;
+  suppose ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in BetaRed(V) & eVar x
+      = eApp(M2,N2) & Q = eApp(M3,N2);
+    then consider M2,M3,N2 being EnvEpsTerm of V such that
+    E1: [M2,M3] in BetaRed(V) & eVar x = eApp(M2,N2) & Q = eApp(M3,N2);
+    thus thesis by E1,ENVEPS_1:44;
+  end;
+  suppose ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in BetaRed(V) & eVar x
+      = eApp(M2,N2) & Q = eApp(M2,N3);
+    then consider M2,N2,N3 being EnvEpsTerm of V such that
+    E1: [N2,N3] in BetaRed(V) & eVar x = eApp(M2,N2) & Q = eApp(M2,N3);
+    thus thesis by E1,ENVEPS_1:44;
+  end;
+  suppose ex M2,M3 being EnvEpsTerm of V, x2 being Element of V st [M2,M3] in
+      BetaRed(V) & eVar x = eLam(x2,M2) & Q = eLam(x2,M3);
+    then consider M2,M3 being EnvEpsTerm of V, x2 being Element of V such that
+    E1: [M2,M3] in BetaRed(V) & eVar x = eLam(x2,M2) & Q = eLam(x2,M3);
+    thus thesis by E1,ENVEPS_1:44;
+  end;
+  suppose ex M2,M3,N2 being EnvEpsTerm of V, x2 being Element of V st [M2,M3]
+      in BetaRed(V) & eVar x = eExt(M2,x2,N2) & Q = eExt(M3,x2,N2);
+    then consider M2,M3,N2 being EnvEpsTerm of V, x2 being Element of V such
+      that
+    E1: [M2,M3] in BetaRed(V) & eVar x = eExt(M2,x2,N2) & Q = eExt(M3,x2,N2);
+    thus thesis by E1,ENVEPS_1:44;
+  end;
+  suppose ex M2,N2,N3 being EnvEpsTerm of V, x2 being Element of V st [N2,N3]
+      in BetaRed(V) & eVar x = eExt(M2,x2,N2) & Q = eExt(M2,x2,N3);
+    then consider M2,N2,N3 being EnvEpsTerm of V, x2 being Element of V such
+      that
+    E1: [N2,N3] in BetaRed(V) & eVar x = eExt(M2,x2,N2) & Q = eExt(M2,x2,N3);
+    thus thesis by E1,ENVEPS_1:44;
+  end;
+  suppose ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in BetaRed(V) & eVar x
+      = eComp(M2,N2) & Q = eComp(M3,N2);
+    then consider M2,M3,N2 being EnvEpsTerm of V such that
+    E1: [M2,M3] in BetaRed(V) & eVar x = eComp(M2,N2) & Q = eComp(M3,N2);
+    thus thesis by E1,ENVEPS_1:44;
+  end;
+  suppose ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in BetaRed(V) & eVar x
+      = eComp(M2,N2) & Q = eComp(M2,N3);
+    then consider M2,N2,N3 being EnvEpsTerm of V such that
+    E1: [N2,N3] in BetaRed(V) & eVar x = eComp(M2,N2) & Q = eComp(M2,N3);
+    thus thesis by E1,ENVEPS_1:44;
+  end;
+  suppose ex M2,M3 being EnvEpsTerm of V st [M2,M3] in BetaRed(V) & eVar x =
+      eEps M2 & Q = eEps M3;
+    then consider M2,M3 being EnvEpsTerm of V such that
+    E1: [M2,M3] in BetaRed(V) & eVar x = eEps M2 & Q = eEps M3;
+    thus thesis by E1,ENVEPS_1:44;
+  end;
+end;
+
+theorem Th24:
+  for V being non empty set, Q being EnvEpsTerm of V
+  holds not [eId V, Q] in BetaRed(V)
+proof
+  let V be non empty set, Q be EnvEpsTerm of V;
+  assume A1: [eId V, Q] in BetaRed(V);
+  A2:
+    ( ex M2,N2 being EnvEpsTerm of V, x2 being Element of V st eId V =
+      eApp(eLam(x2,M2),N2) & Q = eComp(M2,eExt(N2,x2,eId V)) ) or
+    ( ex M2,N2,L2 being EnvEpsTerm of V, x2 being Element of V st eId V =
+      eApp(eComp(eLam(x2,M2),L2),N2) & Q = eComp(M2,eExt(N2,x2,L2)) ) or
+    ( ex M2,N2 being EnvEpsTerm of V st eId V = eApp(eEps M2,N2) & Q =
+      eComp(M2,N2) ) or
+    ( ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in BetaRed(V) & eId V =
+      eApp(M2,N2) & Q = eApp(M3,N2) ) or
+    ( ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in BetaRed(V) & eId V =
+      eApp(M2,N2) & Q = eApp(M2,N3) ) or
+    ( ex M2,M3 being EnvEpsTerm of V, x2 being Element of V st [M2,M3] in
+      BetaRed(V) & eId V = eLam(x2,M2) & Q = eLam(x2,M3) ) or
+    ( ex M2,M3,N2 being EnvEpsTerm of V, x2 being Element of V st [M2,M3] in
+      BetaRed(V) & eId V = eExt(M2,x2,N2) & Q = eExt(M3,x2,N2) ) or
+    ( ex M2,N2,N3 being EnvEpsTerm of V, x2 being Element of V st [N2,N3] in
+      BetaRed(V) & eId V = eExt(M2,x2,N2) & Q = eExt(M2,x2,N3) ) or
+    ( ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in BetaRed(V) & eId V =
+      eComp(M2,N2) & Q = eComp(M3,N2) ) or
+    ( ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in BetaRed(V) & eId V =
+      eComp(M2,N2) & Q = eComp(M2,N3) ) or
+    ( ex M2,M3 being EnvEpsTerm of V st [M2,M3] in BetaRed(V) & eId V = eEps
+      M2 & Q = eEps M3 )
+    by A1,Th3;
+  per cases by A2;
+  suppose ex M2,N2 being EnvEpsTerm of V, x2 being Element of V st eId V =
+      eApp(eLam(x2,M2),N2) & Q = eComp(M2,eExt(N2,x2,eId V));
+    then consider M2,N2 being EnvEpsTerm of V, x2 being Element of V such that
+    E1: eId V = eApp(eLam(x2,M2),N2) & Q = eComp(M2,eExt(N2,x2,eId V));
+    thus thesis by E1,ENVEPS_1:44;
+  end;
+  suppose ex M2,N2,L2 being EnvEpsTerm of V, x2 being Element of V st eId V =
+      eApp(eComp(eLam(x2,M2),L2),N2) & Q = eComp(M2,eExt(N2,x2,L2));
+    then consider M2,N2,L2 being EnvEpsTerm of V, x2 being Element of V such
+      that
+    E1: eId V = eApp(eComp(eLam(x2,M2),L2),N2) & Q = eComp(M2,eExt(N2,x2,L2));
+    thus thesis by E1,ENVEPS_1:44;
+  end;
+  suppose ex M2,N2 being EnvEpsTerm of V st eId V = eApp(eEps M2,N2) & Q =
+      eComp(M2,N2);
+    then consider M2,N2 being EnvEpsTerm of V such that
+    E1: eId V = eApp(eEps M2,N2) & Q = eComp(M2,N2);
+    thus thesis by E1,ENVEPS_1:44;
+  end;
+  suppose ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in BetaRed(V) & eId V =
+      eApp(M2,N2) & Q = eApp(M3,N2);
+    then consider M2,M3,N2 being EnvEpsTerm of V such that
+    E1: [M2,M3] in BetaRed(V) & eId V = eApp(M2,N2) & Q = eApp(M3,N2);
+    thus thesis by E1,ENVEPS_1:44;
+  end;
+  suppose ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in BetaRed(V) & eId V =
+      eApp(M2,N2) & Q = eApp(M2,N3);
+    then consider M2,N2,N3 being EnvEpsTerm of V such that
+    E1: [N2,N3] in BetaRed(V) & eId V = eApp(M2,N2) & Q = eApp(M2,N3);
+    thus thesis by E1,ENVEPS_1:44;
+  end;
+  suppose ex M2,M3 being EnvEpsTerm of V, x2 being Element of V st [M2,M3] in
+      BetaRed(V) & eId V = eLam(x2,M2) & Q = eLam(x2,M3);
+    then consider M2,M3 being EnvEpsTerm of V, x2 being Element of V such that
+    E1: [M2,M3] in BetaRed(V) & eId V = eLam(x2,M2) & Q = eLam(x2,M3);
+    thus thesis by E1,ENVEPS_1:44;
+  end;
+  suppose ex M2,M3,N2 being EnvEpsTerm of V, x2 being Element of V st [M2,M3]
+      in BetaRed(V) & eId V = eExt(M2,x2,N2) & Q = eExt(M3,x2,N2);
+    then consider M2,M3,N2 being EnvEpsTerm of V, x2 being Element of V such
+      that
+    E1: [M2,M3] in BetaRed(V) & eId V = eExt(M2,x2,N2) & Q = eExt(M3,x2,N2);
+    thus thesis by E1,ENVEPS_1:44;
+  end;
+  suppose ex M2,N2,N3 being EnvEpsTerm of V, x2 being Element of V st [N2,N3]
+      in BetaRed(V) & eId V = eExt(M2,x2,N2) & Q = eExt(M2,x2,N3);
+    then consider M2,N2,N3 being EnvEpsTerm of V, x2 being Element of V such
+      that
+    E1: [N2,N3] in BetaRed(V) & eId V = eExt(M2,x2,N2) & Q = eExt(M2,x2,N3);
+    thus thesis by E1,ENVEPS_1:44;
+  end;
+  suppose ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in BetaRed(V) & eId V =
+      eComp(M2,N2) & Q = eComp(M3,N2);
+    then consider M2,M3,N2 being EnvEpsTerm of V such that
+    E1: [M2,M3] in BetaRed(V) & eId V = eComp(M2,N2) & Q = eComp(M3,N2);
+    thus thesis by E1,ENVEPS_1:44;
+  end;
+  suppose ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in BetaRed(V) & eId V =
+      eComp(M2,N2) & Q = eComp(M2,N3);
+    then consider M2,N2,N3 being EnvEpsTerm of V such that
+    E1: [N2,N3] in BetaRed(V) & eId V = eComp(M2,N2) & Q = eComp(M2,N3);
+    thus thesis by E1,ENVEPS_1:44;
+  end;
+  suppose ex M2,M3 being EnvEpsTerm of V st [M2,M3] in BetaRed(V) & eId V =
+      eEps M2 & Q = eEps M3;
+    then consider M2,M3 being EnvEpsTerm of V such that
+    E1: [M2,M3] in BetaRed(V) & eId V = eEps M2 & Q = eEps M3;
+    thus thesis by E1,ENVEPS_1:44;
+  end;
+end;
+
+theorem Th25:
+  for V being non empty set, M being EnvEpsTerm of V, x being Element of V, Q
+    being EnvEpsTerm of V
+  st [eLam(x,M), Q] in BetaRed(V) holds
+  ( ex M2,M3 being EnvEpsTerm of V, x2 being Element of V st [M2,M3] in
+    BetaRed(V) & eLam(x,M) = eLam(x2,M2) & Q = eLam(x2,M3) )
+proof
+  let V be non empty set, M be EnvEpsTerm of V, x be Element of V, Q be
+    EnvEpsTerm of V;
+  assume A1: [eLam(x,M), Q] in BetaRed(V);
+  A2:
+    ( ex M2,N2 being EnvEpsTerm of V, x2 being Element of V st eLam(x,M) =
+      eApp(eLam(x2,M2),N2) & Q = eComp(M2,eExt(N2,x2,eId V)) ) or
+    ( ex M2,N2,L2 being EnvEpsTerm of V, x2 being Element of V st eLam(x,M) =
+      eApp(eComp(eLam(x2,M2),L2),N2) & Q = eComp(M2,eExt(N2,x2,L2)) ) or
+    ( ex M2,N2 being EnvEpsTerm of V st eLam(x,M) = eApp(eEps M2,N2) & Q =
+      eComp(M2,N2) ) or
+    ( ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in BetaRed(V) & eLam(x,M) =
+      eApp(M2,N2) & Q = eApp(M3,N2) ) or
+    ( ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in BetaRed(V) & eLam(x,M) =
+      eApp(M2,N2) & Q = eApp(M2,N3) ) or
+    ( ex M2,M3 being EnvEpsTerm of V, x2 being Element of V st [M2,M3] in
+      BetaRed(V) & eLam(x,M) = eLam(x2,M2) & Q = eLam(x2,M3) ) or
+    ( ex M2,M3,N2 being EnvEpsTerm of V, x2 being Element of V st [M2,M3] in
+      BetaRed(V) & eLam(x,M) = eExt(M2,x2,N2) & Q = eExt(M3,x2,N2) ) or
+    ( ex M2,N2,N3 being EnvEpsTerm of V, x2 being Element of V st [N2,N3] in
+      BetaRed(V) & eLam(x,M) = eExt(M2,x2,N2) & Q = eExt(M2,x2,N3) ) or
+    ( ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in BetaRed(V) & eLam(x,M) =
+      eComp(M2,N2) & Q = eComp(M3,N2) ) or
+    ( ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in BetaRed(V) & eLam(x,M) =
+      eComp(M2,N2) & Q = eComp(M2,N3) ) or
+    ( ex M2,M3 being EnvEpsTerm of V st [M2,M3] in BetaRed(V) & eLam(x,M) =
+      eEps M2 & Q = eEps M3 )
+    by A1,Th3;
+  per cases by A2;
+  suppose ex M2,N2 being EnvEpsTerm of V, x2 being Element of V st eLam(x,M) =
+      eApp(eLam(x2,M2),N2) & Q = eComp(M2,eExt(N2,x2,eId V));
+    then consider M2,N2 being EnvEpsTerm of V, x2 being Element of V such that
+    E1: eLam(x,M) = eApp(eLam(x2,M2),N2) & Q = eComp(M2,eExt(N2,x2,eId V));
+    thus thesis by E1,ENVEPS_1:44;
+  end;
+  suppose ex M2,N2,L2 being EnvEpsTerm of V, x2 being Element of V st
+      eLam(x,M) = eApp(eComp(eLam(x2,M2),L2),N2) & Q =
+      eComp(M2,eExt(N2,x2,L2));
+    then consider M2,N2,L2 being EnvEpsTerm of V, x2 being Element of V such
+      that
+    E1: eLam(x,M) = eApp(eComp(eLam(x2,M2),L2),N2) & Q =
+      eComp(M2,eExt(N2,x2,L2));
+    thus thesis by E1,ENVEPS_1:44;
+  end;
+  suppose ex M2,N2 being EnvEpsTerm of V st eLam(x,M) = eApp(eEps M2,N2) & Q =
+      eComp(M2,N2);
+    then consider M2,N2 being EnvEpsTerm of V such that
+    E1: eLam(x,M) = eApp(eEps M2,N2) & Q = eComp(M2,N2);
+    thus thesis by E1,ENVEPS_1:44;
+  end;
+  suppose ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in BetaRed(V) &
+      eLam(x,M) = eApp(M2,N2) & Q = eApp(M3,N2);
+    then consider M2,M3,N2 being EnvEpsTerm of V such that
+    E1: [M2,M3] in BetaRed(V) & eLam(x,M) = eApp(M2,N2) & Q = eApp(M3,N2);
+    thus thesis by E1,ENVEPS_1:44;
+  end;
+  suppose ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in BetaRed(V) &
+      eLam(x,M) = eApp(M2,N2) & Q = eApp(M2,N3);
+    then consider M2,N2,N3 being EnvEpsTerm of V such that
+    E1: [N2,N3] in BetaRed(V) & eLam(x,M) = eApp(M2,N2) & Q = eApp(M2,N3);
+    thus thesis by E1,ENVEPS_1:44;
+  end;
+  suppose ex M2,M3 being EnvEpsTerm of V, x2 being Element of V st [M2,M3] in
+      BetaRed(V) & eLam(x,M) = eLam(x2,M2) & Q = eLam(x2,M3);
+    hence thesis;
+  end;
+  suppose ex M2,M3,N2 being EnvEpsTerm of V, x2 being Element of V st [M2,M3]
+      in BetaRed(V) & eLam(x,M) = eExt(M2,x2,N2) & Q = eExt(M3,x2,N2);
+    then consider M2,M3,N2 being EnvEpsTerm of V, x2 being Element of V such
+      that
+    E1: [M2,M3] in BetaRed(V) & eLam(x,M) = eExt(M2,x2,N2) & Q =
+      eExt(M3,x2,N2);
+    thus thesis by E1,ENVEPS_1:44;
+  end;
+  suppose ex M2,N2,N3 being EnvEpsTerm of V, x2 being Element of V st [N2,N3]
+      in BetaRed(V) & eLam(x,M) = eExt(M2,x2,N2) & Q = eExt(M2,x2,N3);
+    then consider M2,N2,N3 being EnvEpsTerm of V, x2 being Element of V such
+      that
+    E1: [N2,N3] in BetaRed(V) & eLam(x,M) = eExt(M2,x2,N2) & Q =
+      eExt(M2,x2,N3);
+    thus thesis by E1,ENVEPS_1:44;
+  end;
+  suppose ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in BetaRed(V) &
+      eLam(x,M) = eComp(M2,N2) & Q = eComp(M3,N2);
+    then consider M2,M3,N2 being EnvEpsTerm of V such that
+    E1: [M2,M3] in BetaRed(V) & eLam(x,M) = eComp(M2,N2) & Q = eComp(M3,N2);
+    thus thesis by E1,ENVEPS_1:44;
+  end;
+  suppose ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in BetaRed(V) &
+      eLam(x,M) = eComp(M2,N2) & Q = eComp(M2,N3);
+    then consider M2,N2,N3 being EnvEpsTerm of V such that
+    E1: [N2,N3] in BetaRed(V) & eLam(x,M) = eComp(M2,N2) & Q = eComp(M2,N3);
+    thus thesis by E1,ENVEPS_1:44;
+  end;
+  suppose ex M2,M3 being EnvEpsTerm of V st [M2,M3] in BetaRed(V) & eLam(x,M)
+      = eEps M2 & Q = eEps M3;
+    then consider M2,M3 being EnvEpsTerm of V such that
+    E1: [M2,M3] in BetaRed(V) & eLam(x,M) = eEps M2 & Q = eEps M3;
+    thus thesis by E1,ENVEPS_1:44;
+  end;
+end;
+
+theorem Th26:
+  for V being non empty set, M being EnvEpsTerm of V, Q being EnvEpsTerm of V
+  st [eEps M, Q] in BetaRed(V) holds
+  ( ex M2,M3 being EnvEpsTerm of V st [M2,M3] in BetaRed(V) & eEps M = eEps M2
+    & Q = eEps M3 )
+proof
+  let V be non empty set, M be EnvEpsTerm of V, Q be EnvEpsTerm of V;
+  assume A1: [eEps M, Q] in BetaRed(V);
+  A2:
+    ( ex M2,N2 being EnvEpsTerm of V, x2 being Element of V st eEps M =
+      eApp(eLam(x2,M2),N2) & Q = eComp(M2,eExt(N2,x2,eId V)) ) or
+    ( ex M2,N2,L2 being EnvEpsTerm of V, x2 being Element of V st eEps M =
+      eApp(eComp(eLam(x2,M2),L2),N2) & Q = eComp(M2,eExt(N2,x2,L2)) ) or
+    ( ex M2,N2 being EnvEpsTerm of V st eEps M = eApp(eEps M2,N2) & Q =
+      eComp(M2,N2) ) or
+    ( ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in BetaRed(V) & eEps M =
+      eApp(M2,N2) & Q = eApp(M3,N2) ) or
+    ( ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in BetaRed(V) & eEps M =
+      eApp(M2,N2) & Q = eApp(M2,N3) ) or
+    ( ex M2,M3 being EnvEpsTerm of V, x2 being Element of V st [M2,M3] in
+      BetaRed(V) & eEps M = eLam(x2,M2) & Q = eLam(x2,M3) ) or
+    ( ex M2,M3,N2 being EnvEpsTerm of V, x2 being Element of V st [M2,M3] in
+      BetaRed(V) & eEps M = eExt(M2,x2,N2) & Q = eExt(M3,x2,N2) ) or
+    ( ex M2,N2,N3 being EnvEpsTerm of V, x2 being Element of V st [N2,N3] in
+      BetaRed(V) & eEps M = eExt(M2,x2,N2) & Q = eExt(M2,x2,N3) ) or
+    ( ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in BetaRed(V) & eEps M =
+      eComp(M2,N2) & Q = eComp(M3,N2) ) or
+    ( ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in BetaRed(V) & eEps M =
+      eComp(M2,N2) & Q = eComp(M2,N3) ) or
+    ( ex M2,M3 being EnvEpsTerm of V st [M2,M3] in BetaRed(V) & eEps M = eEps
+      M2 & Q = eEps M3 )
+    by A1,Th3;
+  per cases by A2;
+  suppose ex M2,N2 being EnvEpsTerm of V, x2 being Element of V st eEps M =
+      eApp(eLam(x2,M2),N2) & Q = eComp(M2,eExt(N2,x2,eId V));
+    then consider M2,N2 being EnvEpsTerm of V, x2 being Element of V such that
+    E1: eEps M = eApp(eLam(x2,M2),N2) & Q = eComp(M2,eExt(N2,x2,eId V));
+    thus thesis by E1,ENVEPS_1:44;
+  end;
+  suppose ex M2,N2,L2 being EnvEpsTerm of V, x2 being Element of V st eEps M =
+      eApp(eComp(eLam(x2,M2),L2),N2) & Q = eComp(M2,eExt(N2,x2,L2));
+    then consider M2,N2,L2 being EnvEpsTerm of V, x2 being Element of V such
+      that
+    E1: eEps M = eApp(eComp(eLam(x2,M2),L2),N2) & Q =
+      eComp(M2,eExt(N2,x2,L2));
+    thus thesis by E1,ENVEPS_1:44;
+  end;
+  suppose ex M2,N2 being EnvEpsTerm of V st eEps M = eApp(eEps M2,N2) & Q =
+      eComp(M2,N2);
+    then consider M2,N2 being EnvEpsTerm of V such that
+    E1: eEps M = eApp(eEps M2,N2) & Q = eComp(M2,N2);
+    thus thesis by E1,ENVEPS_1:44;
+  end;
+  suppose ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in BetaRed(V) & eEps M
+      = eApp(M2,N2) & Q = eApp(M3,N2);
+    then consider M2,M3,N2 being EnvEpsTerm of V such that
+    E1: [M2,M3] in BetaRed(V) & eEps M = eApp(M2,N2) & Q = eApp(M3,N2);
+    thus thesis by E1,ENVEPS_1:44;
+  end;
+  suppose ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in BetaRed(V) & eEps M
+      = eApp(M2,N2) & Q = eApp(M2,N3);
+    then consider M2,N2,N3 being EnvEpsTerm of V such that
+    E1: [N2,N3] in BetaRed(V) & eEps M = eApp(M2,N2) & Q = eApp(M2,N3);
+    thus thesis by E1,ENVEPS_1:44;
+  end;
+  suppose ex M2,M3 being EnvEpsTerm of V, x2 being Element of V st [M2,M3] in
+      BetaRed(V) & eEps M = eLam(x2,M2) & Q = eLam(x2,M3);
+    then consider M2,M3 being EnvEpsTerm of V, x2 being Element of V such that
+    E1: [M2,M3] in BetaRed(V) & eEps M = eLam(x2,M2) & Q = eLam(x2,M3);
+    thus thesis by E1,ENVEPS_1:44;
+  end;
+  suppose ex M2,M3,N2 being EnvEpsTerm of V, x2 being Element of V st [M2,M3]
+      in BetaRed(V) & eEps M = eExt(M2,x2,N2) & Q = eExt(M3,x2,N2);
+    then consider M2,M3,N2 being EnvEpsTerm of V, x2 being Element of V such
+      that
+    E1: [M2,M3] in BetaRed(V) & eEps M = eExt(M2,x2,N2) & Q = eExt(M3,x2,N2);
+    thus thesis by E1,ENVEPS_1:44;
+  end;
+  suppose ex M2,N2,N3 being EnvEpsTerm of V, x2 being Element of V st [N2,N3]
+      in BetaRed(V) & eEps M = eExt(M2,x2,N2) & Q = eExt(M2,x2,N3);
+    then consider M2,N2,N3 being EnvEpsTerm of V, x2 being Element of V such
+      that
+    E1: [N2,N3] in BetaRed(V) & eEps M = eExt(M2,x2,N2) & Q = eExt(M2,x2,N3);
+    thus thesis by E1,ENVEPS_1:44;
+  end;
+  suppose ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in BetaRed(V) & eEps M
+      = eComp(M2,N2) & Q = eComp(M3,N2);
+    then consider M2,M3,N2 being EnvEpsTerm of V such that
+    E1: [M2,M3] in BetaRed(V) & eEps M = eComp(M2,N2) & Q = eComp(M3,N2);
+    thus thesis by E1,ENVEPS_1:44;
+  end;
+  suppose ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in BetaRed(V) & eEps M
+      = eComp(M2,N2) & Q = eComp(M2,N3);
+    then consider M2,N2,N3 being EnvEpsTerm of V such that
+    E1: [N2,N3] in BetaRed(V) & eEps M = eComp(M2,N2) & Q = eComp(M2,N3);
+    thus thesis by E1,ENVEPS_1:44;
+  end;
+  suppose ex M2,M3 being EnvEpsTerm of V st [M2,M3] in BetaRed(V) & eEps M =
+      eEps M2 & Q = eEps M3;
+    hence thesis;
+  end;
+end;
+
+theorem Th27:
+  for V being non empty set, M,N being EnvEpsTerm of V, Q being EnvEpsTerm of
+    V
+  st [eApp(M,N), Q] in BetaRed(V) holds
+  ( ex M2,N2 being EnvEpsTerm of V, x2 being Element of V st eApp(M,N) =
+    eApp(eLam(x2,M2),N2) & Q = eComp(M2,eExt(N2,x2,eId V)) ) or
+  ( ex M2,N2,L2 being EnvEpsTerm of V, x2 being Element of V st eApp(M,N) =
+    eApp(eComp(eLam(x2,M2),L2),N2) & Q = eComp(M2,eExt(N2,x2,L2)) ) or
+  ( ex M2,N2 being EnvEpsTerm of V st eApp(M,N) = eApp(eEps M2,N2) & Q =
+    eComp(M2,N2) ) or
+  ( ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in BetaRed(V) & eApp(M,N) =
+    eApp(M2,N2) & Q = eApp(M3,N2) ) or
+  ( ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in BetaRed(V) & eApp(M,N) =
+    eApp(M2,N2) & Q = eApp(M2,N3) )
+proof
+  let V be non empty set, M,N be EnvEpsTerm of V, Q be EnvEpsTerm of V;
+  assume A1: [eApp(M,N), Q] in BetaRed(V);
+  A2:
+    ( ex M2,N2 being EnvEpsTerm of V, x2 being Element of V st eApp(M,N) =
+      eApp(eLam(x2,M2),N2) & Q = eComp(M2,eExt(N2,x2,eId V)) ) or
+    ( ex M2,N2,L2 being EnvEpsTerm of V, x2 being Element of V st eApp(M,N) =
+      eApp(eComp(eLam(x2,M2),L2),N2) & Q = eComp(M2,eExt(N2,x2,L2)) ) or
+    ( ex M2,N2 being EnvEpsTerm of V st eApp(M,N) = eApp(eEps M2,N2) & Q =
+      eComp(M2,N2) ) or
+    ( ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in BetaRed(V) & eApp(M,N) =
+      eApp(M2,N2) & Q = eApp(M3,N2) ) or
+    ( ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in BetaRed(V) & eApp(M,N) =
+      eApp(M2,N2) & Q = eApp(M2,N3) ) or
+    ( ex M2,M3 being EnvEpsTerm of V, x2 being Element of V st [M2,M3] in
+      BetaRed(V) & eApp(M,N) = eLam(x2,M2) & Q = eLam(x2,M3) ) or
+    ( ex M2,M3,N2 being EnvEpsTerm of V, x2 being Element of V st [M2,M3] in
+      BetaRed(V) & eApp(M,N) = eExt(M2,x2,N2) & Q = eExt(M3,x2,N2) ) or
+    ( ex M2,N2,N3 being EnvEpsTerm of V, x2 being Element of V st [N2,N3] in
+      BetaRed(V) & eApp(M,N) = eExt(M2,x2,N2) & Q = eExt(M2,x2,N3) ) or
+    ( ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in BetaRed(V) & eApp(M,N) =
+      eComp(M2,N2) & Q = eComp(M3,N2) ) or
+    ( ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in BetaRed(V) & eApp(M,N) =
+      eComp(M2,N2) & Q = eComp(M2,N3) ) or
+    ( ex M2,M3 being EnvEpsTerm of V st [M2,M3] in BetaRed(V) & eApp(M,N) =
+      eEps M2 & Q = eEps M3 )
+    by A1,Th3;
+  per cases by A2;
+  suppose ex M2,N2 being EnvEpsTerm of V, x2 being Element of V st eApp(M,N) =
+      eApp(eLam(x2,M2),N2) & Q = eComp(M2,eExt(N2,x2,eId V));
+    hence thesis;
+  end;
+  suppose ex M2,N2,L2 being EnvEpsTerm of V, x2 being Element of V st
+      eApp(M,N) = eApp(eComp(eLam(x2,M2),L2),N2) & Q =
+      eComp(M2,eExt(N2,x2,L2));
+    hence thesis;
+  end;
+  suppose ex M2,N2 being EnvEpsTerm of V st eApp(M,N) = eApp(eEps M2,N2) & Q =
+      eComp(M2,N2);
+    hence thesis;
+  end;
+  suppose ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in BetaRed(V) &
+      eApp(M,N) = eApp(M2,N2) & Q = eApp(M3,N2);
+    hence thesis;
+  end;
+  suppose ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in BetaRed(V) &
+      eApp(M,N) = eApp(M2,N2) & Q = eApp(M2,N3);
+    hence thesis;
+  end;
+  suppose ex M2,M3 being EnvEpsTerm of V, x2 being Element of V st [M2,M3] in
+      BetaRed(V) & eApp(M,N) = eLam(x2,M2) & Q = eLam(x2,M3);
+    then consider M2,M3 being EnvEpsTerm of V, x2 being Element of V such that
+    E1: [M2,M3] in BetaRed(V) & eApp(M,N) = eLam(x2,M2) & Q = eLam(x2,M3);
+    thus thesis by E1,ENVEPS_1:44;
+  end;
+  suppose ex M2,M3,N2 being EnvEpsTerm of V, x2 being Element of V st [M2,M3]
+      in BetaRed(V) & eApp(M,N) = eExt(M2,x2,N2) & Q = eExt(M3,x2,N2);
+    then consider M2,M3,N2 being EnvEpsTerm of V, x2 being Element of V such
+      that
+    E1: [M2,M3] in BetaRed(V) & eApp(M,N) = eExt(M2,x2,N2) & Q =
+      eExt(M3,x2,N2);
+    thus thesis by E1,ENVEPS_1:44;
+  end;
+  suppose ex M2,N2,N3 being EnvEpsTerm of V, x2 being Element of V st [N2,N3]
+      in BetaRed(V) & eApp(M,N) = eExt(M2,x2,N2) & Q = eExt(M2,x2,N3);
+    then consider M2,N2,N3 being EnvEpsTerm of V, x2 being Element of V such
+      that
+    E1: [N2,N3] in BetaRed(V) & eApp(M,N) = eExt(M2,x2,N2) & Q =
+      eExt(M2,x2,N3);
+    thus thesis by E1,ENVEPS_1:44;
+  end;
+  suppose ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in BetaRed(V) &
+      eApp(M,N) = eComp(M2,N2) & Q = eComp(M3,N2);
+    then consider M2,M3,N2 being EnvEpsTerm of V such that
+    E1: [M2,M3] in BetaRed(V) & eApp(M,N) = eComp(M2,N2) & Q = eComp(M3,N2);
+    thus thesis by E1,ENVEPS_1:44;
+  end;
+  suppose ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in BetaRed(V) &
+      eApp(M,N) = eComp(M2,N2) & Q = eComp(M2,N3);
+    then consider M2,N2,N3 being EnvEpsTerm of V such that
+    E1: [N2,N3] in BetaRed(V) & eApp(M,N) = eComp(M2,N2) & Q = eComp(M2,N3);
+    thus thesis by E1,ENVEPS_1:44;
+  end;
+  suppose ex M2,M3 being EnvEpsTerm of V st [M2,M3] in BetaRed(V) & eApp(M,N)
+      = eEps M2 & Q = eEps M3;
+    then consider M2,M3 being EnvEpsTerm of V such that
+    E1: [M2,M3] in BetaRed(V) & eApp(M,N) = eEps M2 & Q = eEps M3;
+    thus thesis by E1,ENVEPS_1:44;
+  end;
+end;
+
+theorem Th28:
+  for V being non empty set, M,N being EnvEpsTerm of V, x being Element of V,
+    Q being EnvEpsTerm of V
+  st [eExt(M,x,N), Q] in BetaRed(V) holds
+  ( ex M2,M3,N2 being EnvEpsTerm of V, x2 being Element of V st [M2,M3] in
+    BetaRed(V) & eExt(M,x,N) = eExt(M2,x2,N2) & Q = eExt(M3,x2,N2) ) or
+  ( ex M2,N2,N3 being EnvEpsTerm of V, x2 being Element of V st [N2,N3] in
+    BetaRed(V) & eExt(M,x,N) = eExt(M2,x2,N2) & Q = eExt(M2,x2,N3) )
+proof
+  let V be non empty set, M,N be EnvEpsTerm of V, x be Element of V, Q be
+    EnvEpsTerm of V;
+  assume A1: [eExt(M,x,N), Q] in BetaRed(V);
+  A2:
+    ( ex M2,N2 being EnvEpsTerm of V, x2 being Element of V st eExt(M,x,N) =
+      eApp(eLam(x2,M2),N2) & Q = eComp(M2,eExt(N2,x2,eId V)) ) or
+    ( ex M2,N2,L2 being EnvEpsTerm of V, x2 being Element of V st eExt(M,x,N)
+      = eApp(eComp(eLam(x2,M2),L2),N2) & Q = eComp(M2,eExt(N2,x2,L2)) ) or
+    ( ex M2,N2 being EnvEpsTerm of V st eExt(M,x,N) = eApp(eEps M2,N2) & Q =
+      eComp(M2,N2) ) or
+    ( ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in BetaRed(V) & eExt(M,x,N)
+      = eApp(M2,N2) & Q = eApp(M3,N2) ) or
+    ( ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in BetaRed(V) & eExt(M,x,N)
+      = eApp(M2,N2) & Q = eApp(M2,N3) ) or
+    ( ex M2,M3 being EnvEpsTerm of V, x2 being Element of V st [M2,M3] in
+      BetaRed(V) & eExt(M,x,N) = eLam(x2,M2) & Q = eLam(x2,M3) ) or
+    ( ex M2,M3,N2 being EnvEpsTerm of V, x2 being Element of V st [M2,M3] in
+      BetaRed(V) & eExt(M,x,N) = eExt(M2,x2,N2) & Q = eExt(M3,x2,N2) ) or
+    ( ex M2,N2,N3 being EnvEpsTerm of V, x2 being Element of V st [N2,N3] in
+      BetaRed(V) & eExt(M,x,N) = eExt(M2,x2,N2) & Q = eExt(M2,x2,N3) ) or
+    ( ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in BetaRed(V) & eExt(M,x,N)
+      = eComp(M2,N2) & Q = eComp(M3,N2) ) or
+    ( ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in BetaRed(V) & eExt(M,x,N)
+      = eComp(M2,N2) & Q = eComp(M2,N3) ) or
+    ( ex M2,M3 being EnvEpsTerm of V st [M2,M3] in BetaRed(V) & eExt(M,x,N) =
+      eEps M2 & Q = eEps M3 )
+    by A1,Th3;
+  per cases by A2;
+  suppose ex M2,N2 being EnvEpsTerm of V, x2 being Element of V st eExt(M,x,N)
+      = eApp(eLam(x2,M2),N2) & Q = eComp(M2,eExt(N2,x2,eId V));
+    then consider M2,N2 being EnvEpsTerm of V, x2 being Element of V such that
+    E1: eExt(M,x,N) = eApp(eLam(x2,M2),N2) & Q = eComp(M2,eExt(N2,x2,eId V));
+    thus thesis by E1,ENVEPS_1:44;
+  end;
+  suppose ex M2,N2,L2 being EnvEpsTerm of V, x2 being Element of V st
+      eExt(M,x,N) = eApp(eComp(eLam(x2,M2),L2),N2) & Q =
+      eComp(M2,eExt(N2,x2,L2));
+    then consider M2,N2,L2 being EnvEpsTerm of V, x2 being Element of V such
+      that
+    E1: eExt(M,x,N) = eApp(eComp(eLam(x2,M2),L2),N2) & Q =
+      eComp(M2,eExt(N2,x2,L2));
+    thus thesis by E1,ENVEPS_1:44;
+  end;
+  suppose ex M2,N2 being EnvEpsTerm of V st eExt(M,x,N) = eApp(eEps M2,N2) & Q
+      = eComp(M2,N2);
+    then consider M2,N2 being EnvEpsTerm of V such that
+    E1: eExt(M,x,N) = eApp(eEps M2,N2) & Q = eComp(M2,N2);
+    thus thesis by E1,ENVEPS_1:44;
+  end;
+  suppose ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in BetaRed(V) &
+      eExt(M,x,N) = eApp(M2,N2) & Q = eApp(M3,N2);
+    then consider M2,M3,N2 being EnvEpsTerm of V such that
+    E1: [M2,M3] in BetaRed(V) & eExt(M,x,N) = eApp(M2,N2) & Q = eApp(M3,N2);
+    thus thesis by E1,ENVEPS_1:44;
+  end;
+  suppose ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in BetaRed(V) &
+      eExt(M,x,N) = eApp(M2,N2) & Q = eApp(M2,N3);
+    then consider M2,N2,N3 being EnvEpsTerm of V such that
+    E1: [N2,N3] in BetaRed(V) & eExt(M,x,N) = eApp(M2,N2) & Q = eApp(M2,N3);
+    thus thesis by E1,ENVEPS_1:44;
+  end;
+  suppose ex M2,M3 being EnvEpsTerm of V, x2 being Element of V st [M2,M3] in
+      BetaRed(V) & eExt(M,x,N) = eLam(x2,M2) & Q = eLam(x2,M3);
+    then consider M2,M3 being EnvEpsTerm of V, x2 being Element of V such that
+    E1: [M2,M3] in BetaRed(V) & eExt(M,x,N) = eLam(x2,M2) & Q = eLam(x2,M3);
+    thus thesis by E1,ENVEPS_1:44;
+  end;
+  suppose ex M2,M3,N2 being EnvEpsTerm of V, x2 being Element of V st [M2,M3]
+      in BetaRed(V) & eExt(M,x,N) = eExt(M2,x2,N2) & Q = eExt(M3,x2,N2);
+    hence thesis;
+  end;
+  suppose ex M2,N2,N3 being EnvEpsTerm of V, x2 being Element of V st [N2,N3]
+      in BetaRed(V) & eExt(M,x,N) = eExt(M2,x2,N2) & Q = eExt(M2,x2,N3);
+    hence thesis;
+  end;
+  suppose ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in BetaRed(V) &
+      eExt(M,x,N) = eComp(M2,N2) & Q = eComp(M3,N2);
+    then consider M2,M3,N2 being EnvEpsTerm of V such that
+    E1: [M2,M3] in BetaRed(V) & eExt(M,x,N) = eComp(M2,N2) & Q = eComp(M3,N2);
+    thus thesis by E1,ENVEPS_1:44;
+  end;
+  suppose ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in BetaRed(V) &
+      eExt(M,x,N) = eComp(M2,N2) & Q = eComp(M2,N3);
+    then consider M2,N2,N3 being EnvEpsTerm of V such that
+    E1: [N2,N3] in BetaRed(V) & eExt(M,x,N) = eComp(M2,N2) & Q = eComp(M2,N3);
+    thus thesis by E1,ENVEPS_1:44;
+  end;
+  suppose ex M2,M3 being EnvEpsTerm of V st [M2,M3] in BetaRed(V) &
+      eExt(M,x,N) = eEps M2 & Q = eEps M3;
+    then consider M2,M3 being EnvEpsTerm of V such that
+    E1: [M2,M3] in BetaRed(V) & eExt(M,x,N) = eEps M2 & Q = eEps M3;
+    thus thesis by E1,ENVEPS_1:44;
+  end;
+end;
+
+theorem Th29:
+  for V being non empty set, M,N being EnvEpsTerm of V, Q being EnvEpsTerm of
+    V
+  st [eComp(M,N), Q] in BetaRed(V) holds
+  ( ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in BetaRed(V) & eComp(M,N) =
+    eComp(M2,N2) & Q = eComp(M3,N2) ) or
+  ( ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in BetaRed(V) & eComp(M,N) =
+    eComp(M2,N2) & Q = eComp(M2,N3) )
+proof
+  let V be non empty set, M,N be EnvEpsTerm of V, Q be EnvEpsTerm of V;
+  assume A1: [eComp(M,N), Q] in BetaRed(V);
+  A2:
+    ( ex M2,N2 being EnvEpsTerm of V, x2 being Element of V st eComp(M,N) =
+      eApp(eLam(x2,M2),N2) & Q = eComp(M2,eExt(N2,x2,eId V)) ) or
+    ( ex M2,N2,L2 being EnvEpsTerm of V, x2 being Element of V st eComp(M,N) =
+      eApp(eComp(eLam(x2,M2),L2),N2) & Q = eComp(M2,eExt(N2,x2,L2)) ) or
+    ( ex M2,N2 being EnvEpsTerm of V st eComp(M,N) = eApp(eEps M2,N2) & Q =
+      eComp(M2,N2) ) or
+    ( ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in BetaRed(V) & eComp(M,N)
+      = eApp(M2,N2) & Q = eApp(M3,N2) ) or
+    ( ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in BetaRed(V) & eComp(M,N)
+      = eApp(M2,N2) & Q = eApp(M2,N3) ) or
+    ( ex M2,M3 being EnvEpsTerm of V, x2 being Element of V st [M2,M3] in
+      BetaRed(V) & eComp(M,N) = eLam(x2,M2) & Q = eLam(x2,M3) ) or
+    ( ex M2,M3,N2 being EnvEpsTerm of V, x2 being Element of V st [M2,M3] in
+      BetaRed(V) & eComp(M,N) = eExt(M2,x2,N2) & Q = eExt(M3,x2,N2) ) or
+    ( ex M2,N2,N3 being EnvEpsTerm of V, x2 being Element of V st [N2,N3] in
+      BetaRed(V) & eComp(M,N) = eExt(M2,x2,N2) & Q = eExt(M2,x2,N3) ) or
+    ( ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in BetaRed(V) & eComp(M,N)
+      = eComp(M2,N2) & Q = eComp(M3,N2) ) or
+    ( ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in BetaRed(V) & eComp(M,N)
+      = eComp(M2,N2) & Q = eComp(M2,N3) ) or
+    ( ex M2,M3 being EnvEpsTerm of V st [M2,M3] in BetaRed(V) & eComp(M,N) =
+      eEps M2 & Q = eEps M3 )
+    by A1,Th3;
+  per cases by A2;
+  suppose ex M2,N2 being EnvEpsTerm of V, x2 being Element of V st eComp(M,N)
+      = eApp(eLam(x2,M2),N2) & Q = eComp(M2,eExt(N2,x2,eId V));
+    then consider M2,N2 being EnvEpsTerm of V, x2 being Element of V such that
+    E1: eComp(M,N) = eApp(eLam(x2,M2),N2) & Q = eComp(M2,eExt(N2,x2,eId V));
+    thus thesis by E1,ENVEPS_1:44;
+  end;
+  suppose ex M2,N2,L2 being EnvEpsTerm of V, x2 being Element of V st
+      eComp(M,N) = eApp(eComp(eLam(x2,M2),L2),N2) & Q =
+      eComp(M2,eExt(N2,x2,L2));
+    then consider M2,N2,L2 being EnvEpsTerm of V, x2 being Element of V such
+      that
+    E1: eComp(M,N) = eApp(eComp(eLam(x2,M2),L2),N2) & Q =
+      eComp(M2,eExt(N2,x2,L2));
+    thus thesis by E1,ENVEPS_1:44;
+  end;
+  suppose ex M2,N2 being EnvEpsTerm of V st eComp(M,N) = eApp(eEps M2,N2) & Q
+      = eComp(M2,N2);
+    then consider M2,N2 being EnvEpsTerm of V such that
+    E1: eComp(M,N) = eApp(eEps M2,N2) & Q = eComp(M2,N2);
+    thus thesis by E1,ENVEPS_1:44;
+  end;
+  suppose ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in BetaRed(V) &
+      eComp(M,N) = eApp(M2,N2) & Q = eApp(M3,N2);
+    then consider M2,M3,N2 being EnvEpsTerm of V such that
+    E1: [M2,M3] in BetaRed(V) & eComp(M,N) = eApp(M2,N2) & Q = eApp(M3,N2);
+    thus thesis by E1,ENVEPS_1:44;
+  end;
+  suppose ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in BetaRed(V) &
+      eComp(M,N) = eApp(M2,N2) & Q = eApp(M2,N3);
+    then consider M2,N2,N3 being EnvEpsTerm of V such that
+    E1: [N2,N3] in BetaRed(V) & eComp(M,N) = eApp(M2,N2) & Q = eApp(M2,N3);
+    thus thesis by E1,ENVEPS_1:44;
+  end;
+  suppose ex M2,M3 being EnvEpsTerm of V, x2 being Element of V st [M2,M3] in
+      BetaRed(V) & eComp(M,N) = eLam(x2,M2) & Q = eLam(x2,M3);
+    then consider M2,M3 being EnvEpsTerm of V, x2 being Element of V such that
+    E1: [M2,M3] in BetaRed(V) & eComp(M,N) = eLam(x2,M2) & Q = eLam(x2,M3);
+    thus thesis by E1,ENVEPS_1:44;
+  end;
+  suppose ex M2,M3,N2 being EnvEpsTerm of V, x2 being Element of V st [M2,M3]
+      in BetaRed(V) & eComp(M,N) = eExt(M2,x2,N2) & Q = eExt(M3,x2,N2);
+    then consider M2,M3,N2 being EnvEpsTerm of V, x2 being Element of V such
+      that
+    E1: [M2,M3] in BetaRed(V) & eComp(M,N) = eExt(M2,x2,N2) & Q =
+      eExt(M3,x2,N2);
+    thus thesis by E1,ENVEPS_1:44;
+  end;
+  suppose ex M2,N2,N3 being EnvEpsTerm of V, x2 being Element of V st [N2,N3]
+      in BetaRed(V) & eComp(M,N) = eExt(M2,x2,N2) & Q = eExt(M2,x2,N3);
+    then consider M2,N2,N3 being EnvEpsTerm of V, x2 being Element of V such
+      that
+    E1: [N2,N3] in BetaRed(V) & eComp(M,N) = eExt(M2,x2,N2) & Q =
+      eExt(M2,x2,N3);
+    thus thesis by E1,ENVEPS_1:44;
+  end;
+  suppose ex M2,M3,N2 being EnvEpsTerm of V st [M2,M3] in BetaRed(V) &
+      eComp(M,N) = eComp(M2,N2) & Q = eComp(M3,N2);
+    hence thesis;
+  end;
+  suppose ex M2,N2,N3 being EnvEpsTerm of V st [N2,N3] in BetaRed(V) &
+      eComp(M,N) = eComp(M2,N2) & Q = eComp(M2,N3);
+    hence thesis;
+  end;
+  suppose ex M2,M3 being EnvEpsTerm of V st [M2,M3] in BetaRed(V) & eComp(M,N)
+      = eEps M2 & Q = eEps M3;
+    then consider M2,M3 being EnvEpsTerm of V such that
+    E1: [M2,M3] in BetaRed(V) & eComp(M,N) = eEps M2 & Q = eEps M3;
+    thus thesis by E1,ENVEPS_1:44;
+  end;
+end;
+
+begin :: The full beta/sigma reduction
+
+definition
+  let V be non empty set;
+  func BetaSigmaRed(V) -> Relation of TS(EnvEpsGram(V)) equals
+  :Def3:
+  BetaRed(V) \/ SigmaRed(V);
+  coherence
+  proof
+    set G = EnvEpsGram(V);
+    A1: BetaRed(V) c= [:TS G, TS G:];
+    SigmaRed(V) c= [:TS G, TS G:];
+    hence thesis by A1,XBOOLE_1:8;
+  end;
+end;
+
+theorem Th30:
+  for V being non empty set, M,N being EnvEpsTerm of V holds
+  ( [M,N] in BetaSigmaRed(V) iff
+    [M,N] in BetaRed(V) or [M,N] in SigmaRed(V) )
+proof
+  let V be non empty set, M,N be EnvEpsTerm of V;
+  BetaSigmaRed(V) = BetaRed(V) \/ SigmaRed(V) by Def3;
+  hence thesis by XBOOLE_0:def 3;
+end;
+
+theorem Th31:
+  for V being non empty set, M,N being EnvEpsTerm of V, x being Element of V
+    holds
+  [eApp(eLam(x,M),N), eComp(M,eExt(N,x,eId V))] in BetaSigmaRed(V)
+proof
+  let V be non empty set, M,N be EnvEpsTerm of V, x be Element of V;
+  [eApp(eLam(x,M),N), eComp(M,eExt(N,x,eId V))] in BetaRed(V) by Th4;
+  hence thesis by Th30;
+end;
+
+theorem Th32:
+  for V being non empty set, M,N,L being EnvEpsTerm of V, x being Element of V
+    holds
+  [eApp(eComp(eLam(x,M),L),N), eComp(M,eExt(N,x,L))] in BetaSigmaRed(V)
+proof
+  let V be non empty set, M,N,L be EnvEpsTerm of V, x be Element of V;
+  [eApp(eComp(eLam(x,M),L),N), eComp(M,eExt(N,x,L))] in BetaRed(V) by Th5;
+  hence thesis by Th30;
+end;
+
+theorem Th33:
+  for V being non empty set, M,N being EnvEpsTerm of V holds
+  [eApp(eEps M,N), eComp(M,N)] in BetaSigmaRed(V)
+proof
+  let V be non empty set, M,N be EnvEpsTerm of V;
+  [eApp(eEps M,N), eComp(M,N)] in BetaRed(V) by Th6;
+  hence thesis by Th30;
+end;
+
+theorem Th34:
+  for V being non empty set, M,N,L being EnvEpsTerm of V holds
+  [eComp(eComp(M,N),L), eComp(M,eComp(N,L))] in BetaSigmaRed(V)
+proof
+  let V be non empty set, M,N,L be EnvEpsTerm of V;
+  [eComp(eComp(M,N),L), eComp(M,eComp(N,L))] in SigmaRed(V) by ENVEPS_2:10;
+  hence thesis by Th30;
+end;
+
+theorem Th35:
+  for V being non empty set, M being EnvEpsTerm of V holds
+  [eComp(eId V,M), M] in BetaSigmaRed(V)
+proof
+  let V be non empty set, M be EnvEpsTerm of V;
+  [eComp(eId V,M), M] in SigmaRed(V) by ENVEPS_2:11;
+  hence thesis by Th30;
+end;
+
+theorem Th36:
+  for V being non empty set, M being EnvEpsTerm of V holds
+  [eComp(M,eId V), M] in BetaSigmaRed(V)
+proof
+  let V be non empty set, M be EnvEpsTerm of V;
+  [eComp(M,eId V), M] in SigmaRed(V) by ENVEPS_2:12;
+  hence thesis by Th30;
+end;
+
+theorem Th37:
+  for V being non empty set, L,M,N being EnvEpsTerm of V, x being Element of V
+    holds
+  [eComp(eExt(L,x,M),N), eExt(eComp(L,N),x,eComp(M,N))] in BetaSigmaRed(V)
+proof
+  let V be non empty set, L,M,N be EnvEpsTerm of V, x be Element of V;
+  [eComp(eExt(L,x,M),N), eExt(eComp(L,N),x,eComp(M,N))] in SigmaRed(V) by
+    ENVEPS_2:13;
+  hence thesis by Th30;
+end;
+
+theorem Th38:
+  for V being non empty set, M,N being EnvEpsTerm of V, x being Element of V
+    holds
+  [eComp(eVar x, eExt(M,x,N)), M] in BetaSigmaRed(V)
+proof
+  let V be non empty set, M,N be EnvEpsTerm of V, x be Element of V;
+  [eComp(eVar x, eExt(M,x,N)), M] in SigmaRed(V) by ENVEPS_2:14;
+  hence thesis by Th30;
+end;
+
+theorem Th39:
+  for V being non empty set, M,N being EnvEpsTerm of V, x,y being Element of V
+    st x <> y holds
+  [eComp(eVar x, eExt(M,y,N)), eComp(eVar x, N)] in BetaSigmaRed(V)
+proof
+  let V be non empty set, M,N be EnvEpsTerm of V, x,y be Element of V;
+  assume A0: x <> y;
+  [eComp(eVar x, eExt(M,y,N)), eComp(eVar x, N)] in SigmaRed(V) by
+    A0,ENVEPS_2:15;
+  hence thesis by Th30;
+end;
+
+theorem Th40:
+  for V being non empty set, M,N,L being EnvEpsTerm of V holds
+  [eComp(eApp(M,N),L), eApp(eComp(M,L),eComp(N,L))] in BetaSigmaRed(V)
+proof
+  let V be non empty set, M,N,L be EnvEpsTerm of V;
+  [eComp(eApp(M,N),L), eApp(eComp(M,L),eComp(N,L))] in SigmaRed(V) by
+    ENVEPS_2:16;
+  hence thesis by Th30;
+end;
+
+theorem Th41:
+  for V being non empty set, M,N being EnvEpsTerm of V holds
+  [eComp(eEps M,N), eEps M] in BetaSigmaRed(V)
+proof
+  let V be non empty set, M,N be EnvEpsTerm of V;
+  [eComp(eEps M,N), eEps M] in SigmaRed(V) by ENVEPS_2:17;
+  hence thesis by Th30;
+end;
+
+theorem Th42:
+  for V being non empty set, M,M1,N being EnvEpsTerm of V st [M,M1] in
+    BetaSigmaRed(V) holds
+  [eApp(M,N), eApp(M1,N)] in BetaSigmaRed(V)
+proof
+  let V be non empty set, M,M1,N be EnvEpsTerm of V;
+  assume [M,M1] in BetaSigmaRed(V);
+  then A0: [M,M1] in BetaRed(V) or [M,M1] in SigmaRed(V) by Th30;
+  per cases by A0;
+  suppose A1: [M,M1] in BetaRed(V);
+    [eApp(M,N), eApp(M1,N)] in BetaRed(V) by A1,Th7;
+    hence thesis by Th30;
+  end;
+  suppose A1: [M,M1] in SigmaRed(V);
+    [eApp(M,N), eApp(M1,N)] in SigmaRed(V) by A1,ENVEPS_2:18;
+    hence thesis by Th30;
+  end;
+end;
+
+theorem Th43:
+  for V being non empty set, M,N,N1 being EnvEpsTerm of V st [N,N1] in
+    BetaSigmaRed(V) holds
+  [eApp(M,N), eApp(M,N1)] in BetaSigmaRed(V)
+proof
+  let V be non empty set, M,N,N1 be EnvEpsTerm of V;
+  assume [N,N1] in BetaSigmaRed(V);
+  then A0: [N,N1] in BetaRed(V) or [N,N1] in SigmaRed(V) by Th30;
+  per cases by A0;
+  suppose A1: [N,N1] in BetaRed(V);
+    [eApp(M,N), eApp(M,N1)] in BetaRed(V) by A1,Th8;
+    hence thesis by Th30;
+  end;
+  suppose A1: [N,N1] in SigmaRed(V);
+    [eApp(M,N), eApp(M,N1)] in SigmaRed(V) by A1,ENVEPS_2:19;
+    hence thesis by Th30;
+  end;
+end;
+
+theorem Th44:
+  for V being non empty set, M,M1 being EnvEpsTerm of V, x being Element of V
+    st [M,M1] in BetaSigmaRed(V) holds
+  [eLam(x,M), eLam(x,M1)] in BetaSigmaRed(V)
+proof
+  let V be non empty set, M,M1 be EnvEpsTerm of V, x be Element of V;
+  assume [M,M1] in BetaSigmaRed(V);
+  then A0: [M,M1] in BetaRed(V) or [M,M1] in SigmaRed(V) by Th30;
+  per cases by A0;
+  suppose A1: [M,M1] in BetaRed(V);
+    [eLam(x,M), eLam(x,M1)] in BetaRed(V) by A1,Th9;
+    hence thesis by Th30;
+  end;
+  suppose A1: [M,M1] in SigmaRed(V);
+    [eLam(x,M), eLam(x,M1)] in SigmaRed(V) by A1,ENVEPS_2:20;
+    hence thesis by Th30;
+  end;
+end;
+
+theorem Th45:
+  for V being non empty set, M,M1,N being EnvEpsTerm of V, x being Element of
+    V st [M,M1] in BetaSigmaRed(V) holds
+  [eExt(M,x,N), eExt(M1,x,N)] in BetaSigmaRed(V)
+proof
+  let V be non empty set, M,M1,N be EnvEpsTerm of V, x be Element of V;
+  assume [M,M1] in BetaSigmaRed(V);
+  then A0: [M,M1] in BetaRed(V) or [M,M1] in SigmaRed(V) by Th30;
+  per cases by A0;
+  suppose A1: [M,M1] in BetaRed(V);
+    [eExt(M,x,N), eExt(M1,x,N)] in BetaRed(V) by A1,Th10;
+    hence thesis by Th30;
+  end;
+  suppose A1: [M,M1] in SigmaRed(V);
+    [eExt(M,x,N), eExt(M1,x,N)] in SigmaRed(V) by A1,ENVEPS_2:21;
+    hence thesis by Th30;
+  end;
+end;
+
+theorem Th46:
+  for V being non empty set, M,N,N1 being EnvEpsTerm of V, x being Element of
+    V st [N,N1] in BetaSigmaRed(V) holds
+  [eExt(M,x,N), eExt(M,x,N1)] in BetaSigmaRed(V)
+proof
+  let V be non empty set, M,N,N1 be EnvEpsTerm of V, x be Element of V;
+  assume [N,N1] in BetaSigmaRed(V);
+  then A0: [N,N1] in BetaRed(V) or [N,N1] in SigmaRed(V) by Th30;
+  per cases by A0;
+  suppose A1: [N,N1] in BetaRed(V);
+    [eExt(M,x,N), eExt(M,x,N1)] in BetaRed(V) by A1,Th11;
+    hence thesis by Th30;
+  end;
+  suppose A1: [N,N1] in SigmaRed(V);
+    [eExt(M,x,N), eExt(M,x,N1)] in SigmaRed(V) by A1,ENVEPS_2:22;
+    hence thesis by Th30;
+  end;
+end;
+
+theorem Th47:
+  for V being non empty set, M,M1,N being EnvEpsTerm of V st [M,M1] in
+    BetaSigmaRed(V) holds
+  [eComp(M,N), eComp(M1,N)] in BetaSigmaRed(V)
+proof
+  let V be non empty set, M,M1,N be EnvEpsTerm of V;
+  assume [M,M1] in BetaSigmaRed(V);
+  then A0: [M,M1] in BetaRed(V) or [M,M1] in SigmaRed(V) by Th30;
+  per cases by A0;
+  suppose A1: [M,M1] in BetaRed(V);
+    [eComp(M,N), eComp(M1,N)] in BetaRed(V) by A1,Th12;
+    hence thesis by Th30;
+  end;
+  suppose A1: [M,M1] in SigmaRed(V);
+    [eComp(M,N), eComp(M1,N)] in SigmaRed(V) by A1,ENVEPS_2:23;
+    hence thesis by Th30;
+  end;
+end;
+
+theorem Th48:
+  for V being non empty set, M,N,N1 being EnvEpsTerm of V st [N,N1] in
+    BetaSigmaRed(V) holds
+  [eComp(M,N), eComp(M,N1)] in BetaSigmaRed(V)
+proof
+  let V be non empty set, M,N,N1 be EnvEpsTerm of V;
+  assume [N,N1] in BetaSigmaRed(V);
+  then A0: [N,N1] in BetaRed(V) or [N,N1] in SigmaRed(V) by Th30;
+  per cases by A0;
+  suppose A1: [N,N1] in BetaRed(V);
+    [eComp(M,N), eComp(M,N1)] in BetaRed(V) by A1,Th13;
+    hence thesis by Th30;
+  end;
+  suppose A1: [N,N1] in SigmaRed(V);
+    [eComp(M,N), eComp(M,N1)] in SigmaRed(V) by A1,ENVEPS_2:24;
+    hence thesis by Th30;
+  end;
+end;
+
+theorem Th49:
+  for V being non empty set, M,M1 being EnvEpsTerm of V st [M,M1] in
+    BetaSigmaRed(V) holds
+  [eEps M, eEps M1] in BetaSigmaRed(V)
+proof
+  let V be non empty set, M,M1 be EnvEpsTerm of V;
+  assume [M,M1] in BetaSigmaRed(V);
+  then A0: [M,M1] in BetaRed(V) or [M,M1] in SigmaRed(V) by Th30;
+  per cases by A0;
+  suppose A1: [M,M1] in BetaRed(V);
+    [eEps M, eEps M1] in BetaRed(V) by A1,Th14;
+    hence thesis by Th30;
+  end;
+  suppose A1: [M,M1] in SigmaRed(V);
+    [eEps M, eEps M1] in SigmaRed(V) by A1,ENVEPS_2:25;
+    hence thesis by Th30;
+  end;
+end;
+
+begin :: Multi-step congruence for the beta/sigma reduction
+
+theorem Th50:
+  for V being non empty set, M,M1,N being EnvEpsTerm of V
+  st BetaSigmaRed(V) reduces M,M1
+  holds BetaSigmaRed(V) reduces eApp(M,N), eApp(M1,N)
+proof
+  let V be non empty set, M,M1,N be EnvEpsTerm of V;
+  set G = EnvEpsGram(V);
+  set R = BetaSigmaRed(V);
+  deffunc F(object) = eApp(In($1,TS G), N);
+  A1: for u,v being object st [u,v] in R holds [F(u),F(v)] in R
+  proof
+    let u,v be object;
+    assume B1: [u,v] in R;
+    R c= [:TS G,TS G:];
+    then [u,v] in [:TS G,TS G:] by B1;
+    then u in TS G & v in TS G by ZFMISC_1:87;
+    then reconsider a1 = u, b1 = v as EnvEpsTerm of V;
+    B2: In(u,TS G) = a1 & In(v,TS G) = b1;
+    [a1,b1] in R by B1;
+    then [eApp(a1,N), eApp(b1,N)] in R by Th42;
+    hence thesis by B2;
+  end;
+  A2: for u,v being object st R reduces u,v holds R reduces F(u),F(v)
+    from ENVEPS_2:sch 1(A1);
+  assume A3: R reduces M,M1;
+  A4: In(M,TS G) = M & In(M1,TS G) = M1;
+  thus thesis by A2,A3,A4;
+end;
+
+theorem Th51:
+  for V being non empty set, M,N,N1 being EnvEpsTerm of V
+  st BetaSigmaRed(V) reduces N,N1
+  holds BetaSigmaRed(V) reduces eApp(M,N), eApp(M,N1)
+proof
+  let V be non empty set, M,N,N1 be EnvEpsTerm of V;
+  set G = EnvEpsGram(V);
+  set R = BetaSigmaRed(V);
+  deffunc F(object) = eApp(M, In($1,TS G));
+  A1: for u,v being object st [u,v] in R holds [F(u),F(v)] in R
+  proof
+    let u,v be object;
+    assume B1: [u,v] in R;
+    R c= [:TS G,TS G:];
+    then [u,v] in [:TS G,TS G:] by B1;
+    then u in TS G & v in TS G by ZFMISC_1:87;
+    then reconsider a1 = u, b1 = v as EnvEpsTerm of V;
+    B2: In(u,TS G) = a1 & In(v,TS G) = b1;
+    [a1,b1] in R by B1;
+    then [eApp(M,a1), eApp(M,b1)] in R by Th43;
+    hence thesis by B2;
+  end;
+  A2: for u,v being object st R reduces u,v holds R reduces F(u),F(v)
+    from ENVEPS_2:sch 1(A1);
+  assume A3: R reduces N,N1;
+  A4: In(N,TS G) = N & In(N1,TS G) = N1;
+  thus thesis by A2,A3,A4;
+end;
+
+theorem Th52:
+  for V being non empty set, M,M1 being EnvEpsTerm of V, x0 being Element of V
+  st BetaSigmaRed(V) reduces M,M1
+  holds BetaSigmaRed(V) reduces eLam(x0,M), eLam(x0,M1)
+proof
+  let V be non empty set, M,M1 be EnvEpsTerm of V, x0 be Element of V;
+  set G = EnvEpsGram(V);
+  set R = BetaSigmaRed(V);
+  deffunc F(object) = eLam(x0, In($1,TS G));
+  A1: for u,v being object st [u,v] in R holds [F(u),F(v)] in R
+  proof
+    let u,v be object;
+    assume B1: [u,v] in R;
+    R c= [:TS G,TS G:];
+    then [u,v] in [:TS G,TS G:] by B1;
+    then u in TS G & v in TS G by ZFMISC_1:87;
+    then reconsider a1 = u, b1 = v as EnvEpsTerm of V;
+    B2: In(u,TS G) = a1 & In(v,TS G) = b1;
+    [a1,b1] in R by B1;
+    then [eLam(x0,a1), eLam(x0,b1)] in R by Th44;
+    hence thesis by B2;
+  end;
+  A2: for u,v being object st R reduces u,v holds R reduces F(u),F(v)
+    from ENVEPS_2:sch 1(A1);
+  assume A3: R reduces M,M1;
+  A4: In(M,TS G) = M & In(M1,TS G) = M1;
+  thus thesis by A2,A3,A4;
+end;
+
+theorem Th53:
+  for V being non empty set, M,M1,N being EnvEpsTerm of V, x0 being Element of
+    V
+  st BetaSigmaRed(V) reduces M,M1
+  holds BetaSigmaRed(V) reduces eExt(M,x0,N), eExt(M1,x0,N)
+proof
+  let V be non empty set, M,M1,N be EnvEpsTerm of V, x0 be Element of V;
+  set G = EnvEpsGram(V);
+  set R = BetaSigmaRed(V);
+  deffunc F(object) = eExt(In($1,TS G), x0, N);
+  A1: for u,v being object st [u,v] in R holds [F(u),F(v)] in R
+  proof
+    let u,v be object;
+    assume B1: [u,v] in R;
+    R c= [:TS G,TS G:];
+    then [u,v] in [:TS G,TS G:] by B1;
+    then u in TS G & v in TS G by ZFMISC_1:87;
+    then reconsider a1 = u, b1 = v as EnvEpsTerm of V;
+    B2: In(u,TS G) = a1 & In(v,TS G) = b1;
+    [a1,b1] in R by B1;
+    then [eExt(a1,x0,N), eExt(b1,x0,N)] in R by Th45;
+    hence thesis by B2;
+  end;
+  A2: for u,v being object st R reduces u,v holds R reduces F(u),F(v)
+    from ENVEPS_2:sch 1(A1);
+  assume A3: R reduces M,M1;
+  A4: In(M,TS G) = M & In(M1,TS G) = M1;
+  thus thesis by A2,A3,A4;
+end;
+
+theorem Th54:
+  for V being non empty set, M,N,N1 being EnvEpsTerm of V, x0 being Element of
+    V
+  st BetaSigmaRed(V) reduces N,N1
+  holds BetaSigmaRed(V) reduces eExt(M,x0,N), eExt(M,x0,N1)
+proof
+  let V be non empty set, M,N,N1 be EnvEpsTerm of V, x0 be Element of V;
+  set G = EnvEpsGram(V);
+  set R = BetaSigmaRed(V);
+  deffunc F(object) = eExt(M, x0, In($1,TS G));
+  A1: for u,v being object st [u,v] in R holds [F(u),F(v)] in R
+  proof
+    let u,v be object;
+    assume B1: [u,v] in R;
+    R c= [:TS G,TS G:];
+    then [u,v] in [:TS G,TS G:] by B1;
+    then u in TS G & v in TS G by ZFMISC_1:87;
+    then reconsider a1 = u, b1 = v as EnvEpsTerm of V;
+    B2: In(u,TS G) = a1 & In(v,TS G) = b1;
+    [a1,b1] in R by B1;
+    then [eExt(M,x0,a1), eExt(M,x0,b1)] in R by Th46;
+    hence thesis by B2;
+  end;
+  A2: for u,v being object st R reduces u,v holds R reduces F(u),F(v)
+    from ENVEPS_2:sch 1(A1);
+  assume A3: R reduces N,N1;
+  A4: In(N,TS G) = N & In(N1,TS G) = N1;
+  thus thesis by A2,A3,A4;
+end;
+
+theorem Th55:
+  for V being non empty set, M,M1,N being EnvEpsTerm of V
+  st BetaSigmaRed(V) reduces M,M1
+  holds BetaSigmaRed(V) reduces eComp(M,N), eComp(M1,N)
+proof
+  let V be non empty set, M,M1,N be EnvEpsTerm of V;
+  set G = EnvEpsGram(V);
+  set R = BetaSigmaRed(V);
+  deffunc F(object) = eComp(In($1,TS G), N);
+  A1: for u,v being object st [u,v] in R holds [F(u),F(v)] in R
+  proof
+    let u,v be object;
+    assume B1: [u,v] in R;
+    R c= [:TS G,TS G:];
+    then [u,v] in [:TS G,TS G:] by B1;
+    then u in TS G & v in TS G by ZFMISC_1:87;
+    then reconsider a1 = u, b1 = v as EnvEpsTerm of V;
+    B2: In(u,TS G) = a1 & In(v,TS G) = b1;
+    [a1,b1] in R by B1;
+    then [eComp(a1,N), eComp(b1,N)] in R by Th47;
+    hence thesis by B2;
+  end;
+  A2: for u,v being object st R reduces u,v holds R reduces F(u),F(v)
+    from ENVEPS_2:sch 1(A1);
+  assume A3: R reduces M,M1;
+  A4: In(M,TS G) = M & In(M1,TS G) = M1;
+  thus thesis by A2,A3,A4;
+end;
+
+theorem Th56:
+  for V being non empty set, M,N,N1 being EnvEpsTerm of V
+  st BetaSigmaRed(V) reduces N,N1
+  holds BetaSigmaRed(V) reduces eComp(M,N), eComp(M,N1)
+proof
+  let V be non empty set, M,N,N1 be EnvEpsTerm of V;
+  set G = EnvEpsGram(V);
+  set R = BetaSigmaRed(V);
+  deffunc F(object) = eComp(M, In($1,TS G));
+  A1: for u,v being object st [u,v] in R holds [F(u),F(v)] in R
+  proof
+    let u,v be object;
+    assume B1: [u,v] in R;
+    R c= [:TS G,TS G:];
+    then [u,v] in [:TS G,TS G:] by B1;
+    then u in TS G & v in TS G by ZFMISC_1:87;
+    then reconsider a1 = u, b1 = v as EnvEpsTerm of V;
+    B2: In(u,TS G) = a1 & In(v,TS G) = b1;
+    [a1,b1] in R by B1;
+    then [eComp(M,a1), eComp(M,b1)] in R by Th48;
+    hence thesis by B2;
+  end;
+  A2: for u,v being object st R reduces u,v holds R reduces F(u),F(v)
+    from ENVEPS_2:sch 1(A1);
+  assume A3: R reduces N,N1;
+  A4: In(N,TS G) = N & In(N1,TS G) = N1;
+  thus thesis by A2,A3,A4;
+end;
+
+theorem Th57:
+  for V being non empty set, M,M1 being EnvEpsTerm of V
+  st BetaSigmaRed(V) reduces M,M1
+  holds BetaSigmaRed(V) reduces eEps M, eEps M1
+proof
+  let V be non empty set, M,M1 be EnvEpsTerm of V;
+  set G = EnvEpsGram(V);
+  set R = BetaSigmaRed(V);
+  deffunc F(object) = eEps (In($1,TS G));
+  A1: for u,v being object st [u,v] in R holds [F(u),F(v)] in R
+  proof
+    let u,v be object;
+    assume B1: [u,v] in R;
+    R c= [:TS G,TS G:];
+    then [u,v] in [:TS G,TS G:] by B1;
+    then u in TS G & v in TS G by ZFMISC_1:87;
+    then reconsider a1 = u, b1 = v as EnvEpsTerm of V;
+    B2: In(u,TS G) = a1 & In(v,TS G) = b1;
+    [a1,b1] in R by B1;
+    then [eEps a1, eEps b1] in R by Th49;
+    hence thesis by B2;
+  end;
+  A2: for u,v being object st R reduces u,v holds R reduces F(u),F(v)
+    from ENVEPS_2:sch 1(A1);
+  assume A3: R reduces M,M1;
+  A4: In(M,TS G) = M & In(M1,TS G) = M1;
+  thus thesis by A2,A3,A4;
+end;
+

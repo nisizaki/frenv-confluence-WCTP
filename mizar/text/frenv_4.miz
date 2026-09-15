@@ -1,0 +1,473 @@
+:: The translation simulates beta-sigma reduction
+
+environ
+
+ vocabularies NUMBERS, XBOOLE_0, SUBSET_1, TARSKI, ZFMISC_1, FINSEQ_1,
+      RELAT_1, FUNCT_1, ORDINAL1, CARD_1, ARYTM_3, XXREAL_0, NAT_1, TREES_1,
+      TREES_2, TREES_3, TREES_4, LANG1, STRUCT_0, DTCONSTR, MCART_1, XTUPLE_0,
+      FINSET_1, TDGROUP, FUNCOP_1, ARYTM_1, FUNCT_7, XREAL_0, XCMPLX_0,
+      REWRITE1, PBOOLE, ENVEPS_1, ENVEPS_6, FRENV_1, FRENV_2, FRENV_3;
+ notations TARSKI, XBOOLE_0, ZFMISC_1, SUBSET_1, ORDINAL1, NUMBERS, XCMPLX_0,
+      XXREAL_0, NAT_1, RELAT_1, RELSET_1, FUNCT_1, FUNCT_2, FINSEQ_1, FINSEQ_2,
+      MCART_1, XTUPLE_0, DOMAIN_1, STRUCT_0, LANG1, TREES_1, TREES_2, TREES_3,
+      TREES_4, DTCONSTR, FUNCOP_1, XREAL_0, PBOOLE, REWRITE1, ENVEPS_1,
+      ENVEPS_6, FRENV_1, FRENV_2, FRENV_3;
+ constructors NUMBERS, XCMPLX_0, XXREAL_0, NAT_1, RELSET_1, FUNCT_2, FINSEQ_1,
+      FINSEQ_2, MCART_1, XTUPLE_0, DOMAIN_1, STRUCT_0, LANG1, TREES_1, TREES_2,
+      TREES_3, TREES_4, DTCONSTR, PARTFUN1, BINOP_1, SETWISEO, XREAL_0,
+      FUNCOP_1, SUBSET_1, CARD_3, FINSEQOP, FINSEQ_4, FINSOP_1, PRE_POLY,
+      FUNCT_1, RELAT_1, PBOOLE, REWRITE1, ENVEPS_1, ENVEPS_6, FRENV_1,
+      FRENV_2, FRENV_3;
+ registrations XBOOLE_0, SUBSET_1, RELAT_1, FUNCT_1, ORDINAL1, XREAL_0, NAT_1,
+      FINSEQ_1, FINSEQ_2, FINSET_1, CARD_1, STRUCT_0, LANG1, TREES_1, TREES_2,
+      TREES_3, TREES_4, DTCONSTR, XTUPLE_0, VALUED_0, FUNCOP_1, XCMPLX_0,
+      XXREAL_0, NUMBERS, MEMBERED, PBOOLE, REWRITE1, ENVEPS_1, ENVEPS_4,
+      FRENV_1, FRENV_3;
+ requirements NUMERALS, REAL, BOOLE, SUBSET, ARITHM;
+ definitions TARSKI, XBOOLE_0, DTCONSTR, TREES_3, TREES_4, RELAT_1, FUNCT_1,
+      FINSEQ_1, FUNCOP_1, SUBSET_1, REWRITE1, ENVEPS_1, ENVEPS_6;
+ theorems TARSKI, XBOOLE_0, ZFMISC_1, XTUPLE_0, REWRITE1, ENVEPS_1, ENVEPS_6,
+      FRENV_1, FRENV_2, FRENV_3;
+ schemes ENVEPS_8;
+
+begin :: Translating the identity environment
+
+reserve V for non empty set;
+
+theorem Th1:
+  tr (eId V) = fId V
+proof
+  set v = the Element of V;
+  tr (eVar v) = fVar v & tr (eId V) = fId V by FRENV_3:8;
+  hence thesis;
+end;
+
+begin :: Simulation
+
+theorem Th2:
+  for M,N being EnvEpsTerm of V st [M,N] in BetaSigmaRed(V)
+  holds FrRed(V) reduces tr M, tr N
+proof
+  let M,N be EnvEpsTerm of V;
+  set G = EnvEpsGram(V);
+  set Q = { z where z is Element of [:TS G, TS G:] :
+    ex A,B being EnvEpsTerm of V st z = [A,B] &
+      FrRed(V) reduces tr A, tr B };
+  A1: Q c= [:TS G, TS G:]
+  proof
+    let u be object;
+    assume u in Q;
+    then ex z being Element of [:TS G, TS G:] st u = z &
+      ex A,B being EnvEpsTerm of V st z = [A,B] &
+        FrRed(V) reduces tr A, tr B;
+    hence thesis;
+  end;
+  reconsider Q1 = Q as Relation of TS G by A1;
+  A2: for a,b being EnvEpsTerm of V holds
+    ( [a,b] in Q1 iff FrRed(V) reduces tr a, tr b )
+  proof
+    let a,b be EnvEpsTerm of V;
+    hereby
+      assume [a,b] in Q1;
+      then consider z being Element of [:TS G, TS G:] such that
+      B1: [a,b] = z and
+      B2: ex A,B being EnvEpsTerm of V st z = [A,B] &
+        FrRed(V) reduces tr A, tr B;
+      consider A,B being EnvEpsTerm of V such that
+      B3: z = [A,B] & FrRed(V) reduces tr A, tr B by B2;
+      a = A & b = B by B1,B3,XTUPLE_0:1;
+      hence FrRed(V) reduces tr a, tr b by B3;
+    end;
+    assume C1: FrRed(V) reduces tr a, tr b;
+    C2: [a,b] in [:TS G, TS G:] by ZFMISC_1:87;
+    then reconsider z = [a,b] as Element of [:TS G, TS G:];
+    ex A,B being EnvEpsTerm of V st z = [A,B] &
+      FrRed(V) reduces tr A, tr B by C1;
+    hence thesis;
+  end;
+  AL: for A,B being EnvEpsTerm of V st [tr A, tr B] in FrRed(V)
+    holds [A,B] in Q1
+  proof
+    let A,B be EnvEpsTerm of V;
+    assume [tr A, tr B] in FrRed(V);
+    then FrRed(V) reduces tr A, tr B by REWRITE1:15;
+    hence thesis by A2;
+  end;
+  AC: for A,B being EnvEpsTerm of V holds
+    tr (eComp(A,B)) = fApp(fEps (tr A), tr B) by FRENV_3:13;
+  A3: Q1 is beta-closed
+  proof
+    thus for A,B being EnvEpsTerm of V, x being Element of V holds
+      [eApp(eLam(x,A),B), eComp(A,eExt(B,x,eId V))] in Q1
+    proof
+      let A,B be EnvEpsTerm of V, x be Element of V;
+      B1: tr (eApp(eLam(x,A),B)) = fApp(tr (eLam(x,A)), tr B) by FRENV_3:11
+        .= fApp(fLam(x, tr A), tr B) by FRENV_3:9;
+      B2: tr (eComp(A,eExt(B,x,eId V)))
+          = fApp(fEps (tr A), tr (eExt(B,x,eId V))) by AC
+        .= fApp(fEps (tr A), fExt(tr B, x, tr (eId V))) by FRENV_3:12
+        .= fApp(fEps (tr A), fExt(tr B, x, fId V)) by Th1;
+      [fApp(fLam(x, tr A), tr B),
+        fApp(fEps (tr A), fExt(tr B, x, fId V))] in FrRed(V) by FRENV_2:4;
+      hence thesis by AL,B1,B2;
+    end;
+    thus for A,B,L being EnvEpsTerm of V, x being Element of V holds
+      [eApp(eComp(eLam(x,A),L),B), eComp(A,eExt(B,x,L))] in Q1
+    proof
+      let A,B,L be EnvEpsTerm of V, x be Element of V;
+      B1: tr (eApp(eComp(eLam(x,A),L),B))
+          = fApp(tr (eComp(eLam(x,A),L)), tr B) by FRENV_3:11
+        .= fApp(fApp(fEps (tr (eLam(x,A))), tr L), tr B) by AC
+        .= fApp(fApp(fEps (fLam(x, tr A)), tr L), tr B) by FRENV_3:9;
+      B2: tr (eComp(A,eExt(B,x,L))) = fApp(fEps (tr A), tr (eExt(B,x,L)))
+          by AC
+        .= fApp(fEps (tr A), fExt(tr B, x, tr L)) by FRENV_3:12;
+      [fApp(fApp(fEps (fLam(x, tr A)), tr L), tr B),
+        fApp(fEps (tr A), fExt(tr B, x, tr L))] in FrRed(V) by FRENV_2:5;
+      hence thesis by AL,B1,B2;
+    end;
+    thus for A,B being EnvEpsTerm of V holds
+      [eApp(eEps A,B), eComp(A,B)] in Q1
+    proof
+      let A,B be EnvEpsTerm of V;
+      B1: tr (eApp(eEps A,B)) = fApp(tr (eEps A), tr B) by FRENV_3:11
+        .= fApp(fEps (tr A), tr B) by FRENV_3:10;
+      B2: tr (eComp(A,B)) = fApp(fEps (tr A), tr B) by AC;
+      FrRed(V) reduces tr (eApp(eEps A,B)), tr (eComp(A,B)) by B1,B2,
+        REWRITE1:12;
+      hence thesis by A2;
+    end;
+    thus for A,A1,B being EnvEpsTerm of V st [A,A1] in Q1 holds
+      [eApp(A,B), eApp(A1,B)] in Q1
+    proof
+      let A,A1,B be EnvEpsTerm of V;
+      assume [A,A1] in Q1;
+      then B0: FrRed(V) reduces tr A, tr A1 by A2;
+      B1: tr (eApp(A,B)) = fApp(tr A, tr B) by FRENV_3:11;
+      B2: tr (eApp(A1,B)) = fApp(tr A1, tr B) by FRENV_3:11;
+      FrRed(V) reduces fApp(tr A, tr B), fApp(tr A1, tr B) by B0,FRENV_2:20;
+      hence thesis by A2,B1,B2;
+    end;
+    thus for A,B,B1 being EnvEpsTerm of V st [B,B1] in Q1 holds
+      [eApp(A,B), eApp(A,B1)] in Q1
+    proof
+      let A,B,B1 be EnvEpsTerm of V;
+      assume [B,B1] in Q1;
+      then C0: FrRed(V) reduces tr B, tr B1 by A2;
+      C1: tr (eApp(A,B)) = fApp(tr A, tr B) by FRENV_3:11;
+      C2: tr (eApp(A,B1)) = fApp(tr A, tr B1) by FRENV_3:11;
+      FrRed(V) reduces fApp(tr A, tr B), fApp(tr A, tr B1) by C0,FRENV_2:21;
+      hence thesis by A2,C1,C2;
+    end;
+    thus for A,A1 being EnvEpsTerm of V, x being Element of V st [A,A1] in Q1
+      holds [eLam(x,A), eLam(x,A1)] in Q1
+    proof
+      let A,A1 be EnvEpsTerm of V, x be Element of V;
+      assume [A,A1] in Q1;
+      then C0: FrRed(V) reduces tr A, tr A1 by A2;
+      C1: tr (eLam(x,A)) = fLam(x, tr A) by FRENV_3:9;
+      C2: tr (eLam(x,A1)) = fLam(x, tr A1) by FRENV_3:9;
+      FrRed(V) reduces fLam(x, tr A), fLam(x, tr A1) by C0,FRENV_2:22;
+      hence thesis by A2,C1,C2;
+    end;
+    thus for A,A1,B being EnvEpsTerm of V, x being Element of V
+      st [A,A1] in Q1 holds [eExt(A,x,B), eExt(A1,x,B)] in Q1
+    proof
+      let A,A1,B be EnvEpsTerm of V, x be Element of V;
+      assume [A,A1] in Q1;
+      then C0: FrRed(V) reduces tr A, tr A1 by A2;
+      C1: tr (eExt(A,x,B)) = fExt(tr A, x, tr B) by FRENV_3:12;
+      C2: tr (eExt(A1,x,B)) = fExt(tr A1, x, tr B) by FRENV_3:12;
+      FrRed(V) reduces fExt(tr A, x, tr B), fExt(tr A1, x, tr B)
+        by C0,FRENV_2:23;
+      hence thesis by A2,C1,C2;
+    end;
+    thus for A,B,B1 being EnvEpsTerm of V, x being Element of V
+      st [B,B1] in Q1 holds [eExt(A,x,B), eExt(A,x,B1)] in Q1
+    proof
+      let A,B,B1 be EnvEpsTerm of V, x be Element of V;
+      assume [B,B1] in Q1;
+      then C0: FrRed(V) reduces tr B, tr B1 by A2;
+      C1: tr (eExt(A,x,B)) = fExt(tr A, x, tr B) by FRENV_3:12;
+      C2: tr (eExt(A,x,B1)) = fExt(tr A, x, tr B1) by FRENV_3:12;
+      FrRed(V) reduces fExt(tr A, x, tr B), fExt(tr A, x, tr B1)
+        by C0,FRENV_2:24;
+      hence thesis by A2,C1,C2;
+    end;
+    thus for A,A1,B being EnvEpsTerm of V st [A,A1] in Q1 holds
+      [eComp(A,B), eComp(A1,B)] in Q1
+    proof
+      let A,A1,B be EnvEpsTerm of V;
+      assume [A,A1] in Q1;
+      then C0: FrRed(V) reduces tr A, tr A1 by A2;
+      C1: tr (eComp(A,B)) = fApp(fEps (tr A), tr B) by AC;
+      C2: tr (eComp(A1,B)) = fApp(fEps (tr A1), tr B) by AC;
+      FrRed(V) reduces fEps (tr A), fEps (tr A1) by C0,FRENV_2:25;
+      then FrRed(V) reduces fApp(fEps (tr A), tr B), fApp(fEps (tr A1), tr B)
+        by FRENV_2:20;
+      hence thesis by A2,C1,C2;
+    end;
+    thus for A,B,B1 being EnvEpsTerm of V st [B,B1] in Q1 holds
+      [eComp(A,B), eComp(A,B1)] in Q1
+    proof
+      let A,B,B1 be EnvEpsTerm of V;
+      assume [B,B1] in Q1;
+      then C0: FrRed(V) reduces tr B, tr B1 by A2;
+      C1: tr (eComp(A,B)) = fApp(fEps (tr A), tr B) by AC;
+      C2: tr (eComp(A,B1)) = fApp(fEps (tr A), tr B1) by AC;
+      FrRed(V) reduces fApp(fEps (tr A), tr B), fApp(fEps (tr A), tr B1)
+        by C0,FRENV_2:21;
+      hence thesis by A2,C1,C2;
+    end;
+    thus for A,A1 being EnvEpsTerm of V st [A,A1] in Q1 holds
+      [eEps A, eEps A1] in Q1
+    proof
+      let A,A1 be EnvEpsTerm of V;
+      assume [A,A1] in Q1;
+      then C0: FrRed(V) reduces tr A, tr A1 by A2;
+      C1: tr (eEps A) = fEps (tr A) by FRENV_3:10;
+      C2: tr (eEps A1) = fEps (tr A1) by FRENV_3:10;
+      FrRed(V) reduces fEps (tr A), fEps (tr A1) by C0,FRENV_2:25;
+      hence thesis by A2,C1,C2;
+    end;
+  end;
+  A4: Q1 is sigma-closed
+  proof
+    thus for A,B,L being EnvEpsTerm of V holds
+      [eComp(eComp(A,B),L), eComp(A,eComp(B,L))] in Q1
+    proof
+      let A,B,L be EnvEpsTerm of V;
+      B1: tr (eComp(eComp(A,B),L))
+          = fApp(fEps (tr (eComp(A,B))), tr L) by AC
+        .= fApp(fEps (fApp(fEps (tr A), tr B)), tr L) by AC;
+      B2: tr (eComp(A,eComp(B,L))) = fApp(fEps (tr A), tr (eComp(B,L))) by AC
+        .= fApp(fEps (tr A), fApp(fEps (tr B), tr L)) by AC;
+      [fApp(fEps (fApp(fEps (tr A), tr B)), tr L),
+        fApp(fEps (tr A), fApp(fEps (tr B), tr L))] in FrRed(V) by FRENV_2:7;
+      hence thesis by AL,B1,B2;
+    end;
+    thus for A being EnvEpsTerm of V holds [eComp(eId V,A), A] in Q1
+    proof
+      let A be EnvEpsTerm of V;
+      B1: tr (eComp(eId V,A)) = fApp(fEps (tr (eId V)), tr A) by AC
+        .= fApp(fEps (fId V), tr A) by Th1;
+      [fApp(fEps (fId V), tr A), tr A] in FrRed(V) by FRENV_2:8;
+      hence thesis by AL,B1;
+    end;
+    thus for A being EnvEpsTerm of V holds [eComp(A,eId V), A] in Q1
+    proof
+      let A be EnvEpsTerm of V;
+      B1: tr (eComp(A,eId V)) = fApp(fEps (tr A), tr (eId V)) by AC
+        .= fApp(fEps (tr A), fId V) by Th1;
+      [fApp(fEps (tr A), fId V), tr A] in FrRed(V) by FRENV_2:9;
+      hence thesis by AL,B1;
+    end;
+    thus for L,A,B being EnvEpsTerm of V, x being Element of V holds
+      [eComp(eExt(L,x,A),B), eExt(eComp(L,B),x,eComp(A,B))] in Q1
+    proof
+      let L,A,B be EnvEpsTerm of V, x be Element of V;
+      B1: tr (eComp(eExt(L,x,A),B))
+          = fApp(fEps (tr (eExt(L,x,A))), tr B) by AC
+        .= fApp(fEps (fExt(tr L, x, tr A)), tr B) by FRENV_3:12;
+      B2: tr (eExt(eComp(L,B),x,eComp(A,B)))
+          = fExt(tr (eComp(L,B)), x, tr (eComp(A,B))) by FRENV_3:12
+        .= fExt(fApp(fEps (tr L), tr B), x, tr (eComp(A,B))) by AC
+        .= fExt(fApp(fEps (tr L), tr B), x, fApp(fEps (tr A), tr B)) by AC;
+      [fApp(fEps (fExt(tr L, x, tr A)), tr B),
+        fExt(fApp(fEps (tr L), tr B), x, fApp(fEps (tr A), tr B))]
+        in FrRed(V) by FRENV_2:10;
+      hence thesis by AL,B1,B2;
+    end;
+    thus for A,B being EnvEpsTerm of V, x being Element of V holds
+      [eComp(eVar x, eExt(A,x,B)), A] in Q1
+    proof
+      let A,B be EnvEpsTerm of V, x be Element of V;
+      B1: tr (eComp(eVar x, eExt(A,x,B)))
+          = fApp(fEps (tr (eVar x)), tr (eExt(A,x,B))) by AC
+        .= fApp(fEps (fVar x), tr (eExt(A,x,B))) by FRENV_3:8
+        .= fApp(fEps (fVar x), fExt(tr A, x, tr B)) by FRENV_3:12;
+      [fApp(fEps (fVar x), fExt(tr A, x, tr B)), tr A] in FrRed(V)
+        by FRENV_2:11;
+      hence thesis by AL,B1;
+    end;
+    thus for A,B being EnvEpsTerm of V, x,y being Element of V st x <> y
+      holds [eComp(eVar x, eExt(A,y,B)), eComp(eVar x, B)] in Q1
+    proof
+      let A,B be EnvEpsTerm of V, x,y be Element of V;
+      assume B0: x <> y;
+      B1: tr (eComp(eVar x, eExt(A,y,B)))
+          = fApp(fEps (tr (eVar x)), tr (eExt(A,y,B))) by AC
+        .= fApp(fEps (fVar x), tr (eExt(A,y,B))) by FRENV_3:8
+        .= fApp(fEps (fVar x), fExt(tr A, y, tr B)) by FRENV_3:12;
+      B2: tr (eComp(eVar x, B)) = fApp(fEps (tr (eVar x)), tr B) by AC
+        .= fApp(fEps (fVar x), tr B) by FRENV_3:8;
+      [fApp(fEps (fVar x), fExt(tr A, y, tr B)),
+        fApp(fEps (fVar x), tr B)] in FrRed(V) by B0,FRENV_2:12;
+      hence thesis by AL,B1,B2;
+    end;
+    thus for A,B,L being EnvEpsTerm of V holds
+      [eComp(eApp(A,B),L), eApp(eComp(A,L),eComp(B,L))] in Q1
+    proof
+      let A,B,L be EnvEpsTerm of V;
+      B1: tr (eComp(eApp(A,B),L)) = fApp(fEps (tr (eApp(A,B))), tr L) by AC
+        .= fApp(fEps (fApp(tr A, tr B)), tr L) by FRENV_3:11;
+      B2: tr (eApp(eComp(A,L),eComp(B,L)))
+          = fApp(tr (eComp(A,L)), tr (eComp(B,L))) by FRENV_3:11
+        .= fApp(fApp(fEps (tr A), tr L), tr (eComp(B,L))) by AC
+        .= fApp(fApp(fEps (tr A), tr L), fApp(fEps (tr B), tr L)) by AC;
+      [fApp(fEps (fApp(tr A, tr B)), tr L),
+        fApp(fApp(fEps (tr A), tr L), fApp(fEps (tr B), tr L))]
+        in FrRed(V) by FRENV_2:13;
+      hence thesis by AL,B1,B2;
+    end;
+    thus for A,B being EnvEpsTerm of V holds [eComp(eEps A,B), eEps A] in Q1
+    proof
+      let A,B be EnvEpsTerm of V;
+      B1: tr (eComp(eEps A,B)) = fApp(fEps (tr (eEps A)), tr B) by AC
+        .= fApp(fEps (fEps (tr A)), tr B) by FRENV_3:10;
+      B2: tr (eEps A) = fEps (tr A) by FRENV_3:10;
+      [fApp(fEps (fEps (tr A)), tr B), fEps (tr A)] in FrRed(V)
+        by FRENV_2:6;
+      hence thesis by AL,B1,B2;
+    end;
+    thus for A,A1,B being EnvEpsTerm of V st [A,A1] in Q1 holds
+      [eApp(A,B), eApp(A1,B)] in Q1
+    proof
+      let A,A1,B be EnvEpsTerm of V;
+      assume [A,A1] in Q1;
+      then C0: FrRed(V) reduces tr A, tr A1 by A2;
+      C1: tr (eApp(A,B)) = fApp(tr A, tr B) by FRENV_3:11;
+      C2: tr (eApp(A1,B)) = fApp(tr A1, tr B) by FRENV_3:11;
+      FrRed(V) reduces fApp(tr A, tr B), fApp(tr A1, tr B) by C0,FRENV_2:20;
+      hence thesis by A2,C1,C2;
+    end;
+    thus for A,B,B1 being EnvEpsTerm of V st [B,B1] in Q1 holds
+      [eApp(A,B), eApp(A,B1)] in Q1
+    proof
+      let A,B,B1 be EnvEpsTerm of V;
+      assume [B,B1] in Q1;
+      then C0: FrRed(V) reduces tr B, tr B1 by A2;
+      C1: tr (eApp(A,B)) = fApp(tr A, tr B) by FRENV_3:11;
+      C2: tr (eApp(A,B1)) = fApp(tr A, tr B1) by FRENV_3:11;
+      FrRed(V) reduces fApp(tr A, tr B), fApp(tr A, tr B1) by C0,FRENV_2:21;
+      hence thesis by A2,C1,C2;
+    end;
+    thus for A,A1 being EnvEpsTerm of V, x being Element of V st [A,A1] in Q1
+      holds [eLam(x,A), eLam(x,A1)] in Q1
+    proof
+      let A,A1 be EnvEpsTerm of V, x be Element of V;
+      assume [A,A1] in Q1;
+      then C0: FrRed(V) reduces tr A, tr A1 by A2;
+      C1: tr (eLam(x,A)) = fLam(x, tr A) by FRENV_3:9;
+      C2: tr (eLam(x,A1)) = fLam(x, tr A1) by FRENV_3:9;
+      FrRed(V) reduces fLam(x, tr A), fLam(x, tr A1) by C0,FRENV_2:22;
+      hence thesis by A2,C1,C2;
+    end;
+    thus for A,A1,B being EnvEpsTerm of V, x being Element of V
+      st [A,A1] in Q1 holds [eExt(A,x,B), eExt(A1,x,B)] in Q1
+    proof
+      let A,A1,B be EnvEpsTerm of V, x be Element of V;
+      assume [A,A1] in Q1;
+      then C0: FrRed(V) reduces tr A, tr A1 by A2;
+      C1: tr (eExt(A,x,B)) = fExt(tr A, x, tr B) by FRENV_3:12;
+      C2: tr (eExt(A1,x,B)) = fExt(tr A1, x, tr B) by FRENV_3:12;
+      FrRed(V) reduces fExt(tr A, x, tr B), fExt(tr A1, x, tr B)
+        by C0,FRENV_2:23;
+      hence thesis by A2,C1,C2;
+    end;
+    thus for A,B,B1 being EnvEpsTerm of V, x being Element of V
+      st [B,B1] in Q1 holds [eExt(A,x,B), eExt(A,x,B1)] in Q1
+    proof
+      let A,B,B1 be EnvEpsTerm of V, x be Element of V;
+      assume [B,B1] in Q1;
+      then C0: FrRed(V) reduces tr B, tr B1 by A2;
+      C1: tr (eExt(A,x,B)) = fExt(tr A, x, tr B) by FRENV_3:12;
+      C2: tr (eExt(A,x,B1)) = fExt(tr A, x, tr B1) by FRENV_3:12;
+      FrRed(V) reduces fExt(tr A, x, tr B), fExt(tr A, x, tr B1)
+        by C0,FRENV_2:24;
+      hence thesis by A2,C1,C2;
+    end;
+    thus for A,A1,B being EnvEpsTerm of V st [A,A1] in Q1 holds
+      [eComp(A,B), eComp(A1,B)] in Q1
+    proof
+      let A,A1,B be EnvEpsTerm of V;
+      assume [A,A1] in Q1;
+      then C0: FrRed(V) reduces tr A, tr A1 by A2;
+      C1: tr (eComp(A,B)) = fApp(fEps (tr A), tr B) by AC;
+      C2: tr (eComp(A1,B)) = fApp(fEps (tr A1), tr B) by AC;
+      FrRed(V) reduces fEps (tr A), fEps (tr A1) by C0,FRENV_2:25;
+      then FrRed(V) reduces fApp(fEps (tr A), tr B), fApp(fEps (tr A1), tr B)
+        by FRENV_2:20;
+      hence thesis by A2,C1,C2;
+    end;
+    thus for A,B,B1 being EnvEpsTerm of V st [B,B1] in Q1 holds
+      [eComp(A,B), eComp(A,B1)] in Q1
+    proof
+      let A,B,B1 be EnvEpsTerm of V;
+      assume [B,B1] in Q1;
+      then C0: FrRed(V) reduces tr B, tr B1 by A2;
+      C1: tr (eComp(A,B)) = fApp(fEps (tr A), tr B) by AC;
+      C2: tr (eComp(A,B1)) = fApp(fEps (tr A), tr B1) by AC;
+      FrRed(V) reduces fApp(fEps (tr A), tr B), fApp(fEps (tr A), tr B1)
+        by C0,FRENV_2:21;
+      hence thesis by A2,C1,C2;
+    end;
+    thus for A,A1 being EnvEpsTerm of V st [A,A1] in Q1 holds
+      [eEps A, eEps A1] in Q1
+    proof
+      let A,A1 be EnvEpsTerm of V;
+      assume [A,A1] in Q1;
+      then C0: FrRed(V) reduces tr A, tr A1 by A2;
+      C1: tr (eEps A) = fEps (tr A) by FRENV_3:10;
+      C2: tr (eEps A1) = fEps (tr A1) by FRENV_3:10;
+      FrRed(V) reduces fEps (tr A), fEps (tr A1) by C0,FRENV_2:25;
+      hence thesis by A2,C1,C2;
+    end;
+  end;
+  A5: BetaRed(V) c= Q1 by A3,ENVEPS_6:2;
+  A6: SigmaRed(V) c= Q1 by A4,ENVEPS_1:33;
+  assume A7: [M,N] in BetaSigmaRed(V);
+  per cases by A7,ENVEPS_6:30;
+  suppose [M,N] in BetaRed(V);
+    then [M,N] in Q1 by A5;
+    hence thesis by A2;
+  end;
+  suppose [M,N] in SigmaRed(V);
+    then [M,N] in Q1 by A6;
+    hence thesis by A2;
+  end;
+end;
+
+theorem Th3:
+  for M,N being EnvEpsTerm of V st BetaSigmaRed(V) reduces M,N
+  holds FrRed(V) reduces tr M, tr N
+proof
+  let M,N be EnvEpsTerm of V;
+  set G = EnvEpsGram(V);
+  assume A3: BetaSigmaRed(V) reduces M,N;
+  defpred P[object] means ex A being EnvEpsTerm of V st A = $1 &
+    FrRed(V) reduces tr M, tr A;
+  A4: for a,b being object st P[a] & [a,b] in BetaSigmaRed(V) holds P[b]
+  proof
+    let a,b be object;
+    assume that B1: P[a] and B2: [a,b] in BetaSigmaRed(V);
+    consider A being EnvEpsTerm of V such that
+    B3: A = a & FrRed(V) reduces tr M, tr A by B1;
+    BetaSigmaRed(V) c= [:TS G, TS G:];
+    then [a,b] in [:TS G, TS G:] by B2;
+    then b in TS G by ZFMISC_1:87;
+    then reconsider b1 = b as EnvEpsTerm of V;
+    [A,b1] in BetaSigmaRed(V) by B2,B3;
+    then FrRed(V) reduces tr A, tr b1 by Th2;
+    then FrRed(V) reduces tr M, tr b1 by B3,REWRITE1:16;
+    hence thesis;
+  end;
+  A5: for a,b being object st BetaSigmaRed(V) reduces a,b & P[a] holds P[b]
+    from ENVEPS_8:sch 1(A4);
+  FrRed(V) reduces tr M, tr M by REWRITE1:12;
+  then P[M];
+  then P[N] by A3,A5;
+  then consider A being EnvEpsTerm of V such that
+  A6: A = N & FrRed(V) reduces tr M, tr A;
+  thus thesis by A6;
+end;
